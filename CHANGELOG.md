@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-28
+
 ### Added
 
 - After a crash, `crash.log` in the app's `logs` folder records what happened. Send it along
