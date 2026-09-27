@@ -10,6 +10,12 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- When the app crashes inside a graphics driver or other native code, `logs/crash.log` now
+  records where it was, so a bug report can say what failed. The log also names the graphics
+  card and driver version.
+
 ## [1.0.0] - 2026-09-27
 
 ### Added

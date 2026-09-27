@@ -38,6 +38,7 @@ def chosen(monkeypatch: pytest.MonkeyPatch) -> list[object]:
     calls: list[object] = []
     monkeypatch.delenv(BACKEND_ENV, raising=False)
     monkeypatch.setattr(graphics.QQuickWindow, "setGraphicsApi", calls.append)
+    monkeypatch.setattr(graphics, "_renderer", lambda _context: "a test GPU")
     return calls
 
 

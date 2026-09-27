@@ -4,17 +4,22 @@ A user reporting "the overlay stopped following the map" cannot paste a stack tr
 printed to a console that does not exist -- a windowed build has no stdout at all. So the log
 goes to a file under the user's data directory, and everything that can raise off the main
 path is routed into it: uncaught exceptions on any thread, Qt's own warnings, and the messages
-the React pages write to their console.
+the React pages write to their console. A crash in native code -- a graphics driver, Qt --
+kills the process before any of that runs, so faulthandler writes the Python stack of every
+thread to a file of its own.
 
 The header written at start-up is there because most reports come down to which capture
 backend, which Qt build or which monitor layout the user has.
 """
 
+import faulthandler
 import logging
 import logging.handlers
+import os
 import platform
 import sys
 import threading
+import time
 from types import TracebackType
 from typing import Any
 
@@ -25,6 +30,7 @@ from map_overlay.core.paths import DataDirs
 log = logging.getLogger(__name__)
 
 LOG_NAME = "map-overlay.log"
+CRASH_NAME = "crash.log"
 MAX_BYTES = 1_000_000
 BACKUP_COUNT = 3
 FORMAT = "%(asctime)s %(levelname)s %(name)s: %(message)s"
@@ -68,6 +74,26 @@ def _install_excepthooks() -> None:
         )
 
     threading.excepthook = thread_hook
+
+
+def _enable_crash_trace(dirs: DataDirs) -> None:
+    """On a native crash, write where every thread was to crash.log.
+
+    Windows' own report names only the DLL that faulted. The Python stacks tell which of our
+    threads was inside it: the engine's capture calls or the GUI thread's event loop.
+
+    The file is appended to rather than replaced, so a restart after a crash does not wipe the
+    trace before anyone has seen it. It starts over once it grows past MAX_BYTES: on Windows
+    faulthandler also writes exceptions that native code goes on to handle, and nothing else
+    would bound it.
+    """
+    path = dirs.logs / CRASH_NAME
+    mode = "w" if path.exists() and path.stat().st_size > MAX_BYTES else "a"
+    # Left open for the life of the process: faulthandler writes to its descriptor.
+    trace = path.open(mode, encoding="utf-8")
+    trace.write(f"--- {time.strftime('%Y-%m-%d %H:%M:%S')} pid {os.getpid()} {__version__}\n")
+    trace.flush()
+    faulthandler.enable(trace, all_threads=True)
 
 
 def route_qt_messages() -> None:
@@ -160,3 +186,4 @@ def setup_logging(dirs: DataDirs, level: int = logging.INFO) -> None:
         root.addHandler(stream)
 
     _install_excepthooks()
+    _enable_crash_trace(dirs)

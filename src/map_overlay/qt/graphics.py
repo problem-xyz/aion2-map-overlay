@@ -3,13 +3,16 @@
 import logging
 import os
 
-from PySide6.QtGui import QOpenGLContext
+from PySide6.QtGui import QOffscreenSurface, QOpenGLContext
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
 
 log = logging.getLogger(__name__)
 
 # Qt's own switch. Set, it wins over the choice made here.
 BACKEND_ENV = "QSG_RHI_BACKEND"
+
+GL_RENDERER = 0x1F01
+GL_VERSION = 0x1F02
 
 
 def choose_graphics_api() -> str:
@@ -37,5 +40,24 @@ def choose_graphics_api() -> str:
         return "d3d11"
     fmt = probe.format()
     QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
-    log.info("graphics: opengl %d.%d", fmt.majorVersion(), fmt.minorVersion())
+    log.info(
+        "graphics: opengl %d.%d on %s", fmt.majorVersion(), fmt.minorVersion(), _renderer(probe)
+    )
     return "opengl"
+
+
+def _renderer(context: QOpenGLContext) -> str:
+    """The GPU and its driver version, as the driver names them.
+
+    A crash inside a graphics driver is reported by the DLL's name alone, and the driver
+    version is what decides whether it is ours to work around.
+    """
+    surface = QOffscreenSurface()
+    surface.create()
+    if not context.makeCurrent(surface):
+        return "an unnamed renderer"
+    try:
+        gl = context.functions()
+        return f"{gl.glGetString(GL_RENDERER)}, {gl.glGetString(GL_VERSION)}"
+    finally:
+        context.doneCurrent()
