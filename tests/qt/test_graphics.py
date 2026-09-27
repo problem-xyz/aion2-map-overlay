@@ -72,3 +72,12 @@ def test_the_environment_variable_wins(
 
     assert choose_graphics_api() == "d3d11"
     assert chosen == [], "the variable is Qt's to act on, not ours to repeat"
+
+
+def test_direct3d_stays_after_a_crash_on_opengl(
+    chosen: list[object], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(graphics, "QOpenGLContext", _context(created=True))
+
+    assert choose_graphics_api(allow_opengl=False) == "d3d11"
+    assert chosen == []

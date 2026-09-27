@@ -21,7 +21,7 @@ import sys
 import threading
 import time
 from types import TracebackType
-from typing import Any
+from typing import Any, TextIO
 
 from map_overlay import __version__
 from map_overlay.core.appinfo import APP_NAME
@@ -31,6 +31,8 @@ log = logging.getLogger(__name__)
 
 LOG_NAME = "map-overlay.log"
 CRASH_NAME = "crash.log"
+# The last line of a session that ended on its own; a session without it may have crashed.
+CLEAN_EXIT = "--- clean exit"
 MAX_BYTES = 1_000_000
 BACKUP_COUNT = 3
 FORMAT = "%(asctime)s %(levelname)s %(name)s: %(message)s"
@@ -44,6 +46,9 @@ _QT_LEVELS = {
     3: logging.ERROR,
     4: logging.CRITICAL,
 }
+
+# The open crash.log, once setup_logging has made it; empty before that and in tests.
+_crash_trace: list[TextIO] = []
 
 
 def _has_console() -> bool:
@@ -94,6 +99,18 @@ def _enable_crash_trace(dirs: DataDirs) -> None:
     trace.write(f"--- {time.strftime('%Y-%m-%d %H:%M:%S')} pid {os.getpid()} {__version__}\n")
     trace.flush()
     faulthandler.enable(trace, all_threads=True)
+    _crash_trace[:] = [trace]
+
+
+def mark_clean_exit() -> None:
+    """Close this session in crash.log: anything faulthandler wrote above it was survived.
+
+    Called once the event loop has returned. A crash while the process tears down after that
+    is not counted, and it costs the user nothing they would notice.
+    """
+    for trace in _crash_trace:
+        trace.write(CLEAN_EXIT + "\n")
+        trace.flush()
 
 
 def route_qt_messages() -> None:

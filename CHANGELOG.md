@@ -16,6 +16,12 @@ changes are left out unless they change how the app is installed, run or updated
   records where it was, so a bug report can say what failed. The log also names the graphics
   card and driver version.
 
+### Fixed
+
+- A crash inside the graphics driver no longer repeats. On the next start the app switches the
+  part that crashed (screen capture, or how its windows are drawn) to a slower but safer method
+  and says so.
+
 ## [1.0.0] - 2026-09-27
 
 ### Added

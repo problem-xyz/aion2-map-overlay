@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from map_overlay.core.logs import CRASH_NAME, MAX_BYTES
+from map_overlay.core.logs import CLEAN_EXIT, CRASH_NAME, MAX_BYTES
 
 # Faults on a thread of its own, so the trace has to show more than the main thread.
 CRASHING_COPY = """
@@ -66,3 +66,18 @@ def test_an_oversized_trace_starts_over(tmp_path: Path) -> None:
 
     assert "x" * 100 not in trace
     assert "capture_thread_body" in trace
+
+
+def test_a_clean_exit_closes_the_session(tmp_path: Path) -> None:
+    script = (
+        "import sys\n"
+        "from pathlib import Path\n"
+        "from map_overlay.core.logs import mark_clean_exit, setup_logging\n"
+        "from map_overlay.core.paths import DataDirs\n"
+        "setup_logging(DataDirs.from_root(Path(sys.argv[1])))\n"
+        "mark_clean_exit()\n"
+    )
+    subprocess.run([sys.executable, "-c", script, str(tmp_path)], timeout=60, check=True)
+
+    lines = (tmp_path / "logs" / CRASH_NAME).read_text(encoding="utf-8").splitlines()
+    assert lines[-1] == CLEAN_EXIT
