@@ -22,6 +22,7 @@ import pytest
 
 import map_overlay
 from map_overlay.core.appinfo import APP_NAME, PACK_ID, PUBLISHER
+from map_overlay.store.routes import SHIPPED_DIGESTS, route_digest
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -639,6 +640,41 @@ def test_a_release_is_committed_and_tagged_as_the_repository_identity(
     changelog = (repo / bump.CHANGELOG).read_text(encoding="utf-8")
     assert f"## [Unreleased]\n\n## [{NEW}] - 2026-09-22\n\n### Added\n\n- A new thing." in changelog
     assert f"git push --atomic origin main v{NEW}" in capsys.readouterr().out
+
+
+STARTER = REPO / "assets" / "routes" / "Asmodians_-_Level_10-17.json"
+DIGESTS = f"{bump.STARTER_ROUTES}/{SHIPPED_DIGESTS}"
+
+
+def add_starter_route(root: Path, digests: str | None) -> str:
+    """Commit a starter route, and a digests file if given; the line a release adds for it."""
+    (root / bump.STARTER_ROUTES).mkdir(parents=True)
+    (root / bump.STARTER_ROUTES / STARTER.name).write_bytes(STARTER.read_bytes())
+    if digests is not None:
+        (root / DIGESTS).write_bytes(digests.encode())
+    run_git(root, "add", "--all")
+    run_git(root, "commit", "--quiet", "-m", "starter route")
+    return f"{route_digest(STARTER.read_bytes())}  {STARTER.name}"
+
+
+def test_a_release_records_the_starter_routes_it_ships(repo: Path) -> None:
+    line = add_starter_route(repo, "# header\n")
+
+    assert bump.main([NEW], root=repo, today=DAY) == 0
+
+    assert (repo / DIGESTS).read_text(encoding="utf-8") == f"# header\n{line}\n"
+    assert DIGESTS in run_git(repo, "show", "--name-only", "--format=", "HEAD").split("\n")
+
+
+def test_a_starter_route_already_recorded_changes_nothing(repo: Path) -> None:
+    line = add_starter_route(repo, None)
+    (repo / DIGESTS).write_bytes(f"{line}\n".encode())
+    run_git(repo, "add", "--all")
+    run_git(repo, "commit", "--quiet", "-m", "digests")
+
+    _, changes = bump.plan_release(repo, NEW, DAY)
+
+    assert {change.path for change in changes} == RELEASE_FILES
 
 
 def test_the_identity_the_guard_checked_is_the_one_recorded(repo: Path) -> None:

@@ -10,6 +10,11 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Changed
+
+- The routes that come with the app now get their new version with an update, as long as you
+  never edited them. Routes you made, edited or deleted are left as they are.
+
 ## [1.0.1] - 2026-09-28
 
 ### Added

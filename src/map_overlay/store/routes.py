@@ -1,10 +1,12 @@
 """Route documents: numbered points on a map, one JSON file per route."""
 
 import contextlib
+import hashlib
 import json
 import logging
 import math
 from collections.abc import Collection, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -324,36 +326,123 @@ def bundled_routes_root() -> Path:
     return resource_path("assets/routes")
 
 
+# Beside the starter routes: the digest of every version of them a release has shipped, one
+# "<sha256>  <file name>" line each, in sha256sum's format. A route in routes/ whose bytes are one
+# of these is a starter the user never changed, and a newer version may replace it.
+SHIPPED_DIGESTS = "shipped.sha256"
+
+
+def route_digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def starter_bytes(src: Path) -> bytes:
+    """A bundled route as the bytes it is copied into routes/ with, and so as a digest takes it."""
+    return route_bytes(read_route_file(src))
+
+
+def parse_shipped_digests(text: str) -> dict[str, set[str]]:
+    """The digests in a SHIPPED_DIGESTS text, by route id. A line starting with # is a comment."""
+    out: dict[str, set[str]] = {}
+    for line in text.splitlines():
+        digest, _, name = line.strip().partition("  ")
+        if digest and name and not digest.startswith("#"):
+            out.setdefault(Path(name).stem, set()).add(digest.lower())
+    return out
+
+
+def read_shipped_digests(root: Path) -> dict[str, set[str]]:
+    try:
+        return parse_shipped_digests((root / SHIPPED_DIGESTS).read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def record_shipped_digests(root: Path, text: str) -> str:
+    """`text`, a SHIPPED_DIGESTS file, with a line added for each route under `root` it lacks.
+
+    Every release runs this, so the file holds each version a user may have been given.
+    """
+    known = parse_shipped_digests(text)
+    lines = [text.rstrip("\n")] if text.strip() else []
+    for src in sorted(root.glob("*.json"), key=lambda p: p.name.lower()):
+        digest = route_digest(starter_bytes(src))
+        if digest not in known.get(src.stem, set()):
+            lines.append(f"{digest}  {src.name}")
+    return "\n".join(lines) + "\n" if lines else ""
+
+
+@dataclass(frozen=True)
+class Seeded:
+    """What seed_bundled_routes did: the ids to record as handled, and the routes it updated."""
+
+    handled: list[str]
+    updated: list[str]  # the route names, for the notice
+
+
 def seed_bundled_routes(
     dirs: DataDirs, seeded: Collection[str], root: Path | None = None
-) -> list[str]:
-    """Copy each bundled route not in `seeded` into routes/, and return the ids now handled.
+) -> Seeded:
+    """Copy each bundled route not in `seeded` into routes/, and update each one left untouched.
 
-    A route is offered once per id, and the caller records the ids returned so that a route
-    the user deleted or rewrote does not come back on the next start. An id already taken in
-    routes/ -- by the route itself, a share code of it, or its .bak -- counts as handled and is
-    left alone. A bundled file that does not read, or a copy that cannot be written, is only
-    logged and tried again on the next start.
+    A route is offered once per id, and the caller records the ids handled so that a route the
+    user deleted does not come back on the next start. An id already taken in routes/ -- by the
+    route itself, a share code of it, or its .bak -- counts as handled.
+
+    A route in routes/ whose bytes are a version a release shipped (SHIPPED_DIGESTS) is a starter
+    nobody changed, and it is replaced by the version bundled now, the old one kept as its .bak.
+    One the user edited, or a route of their own on the id, never matches and is left alone.
+
+    A bundled file that does not read, or a copy that cannot be written, is only logged and
+    tried again on the next start.
     """
     base = bundled_routes_root() if root is None else Path(root)
     if not base.is_dir():
-        return []
+        return Seeded([], [])
+    shipped = read_shipped_digests(base)
     handled: list[str] = []
+    updated: list[str] = []
     for src in sorted(base.glob("*.json"), key=lambda p: p.name.lower()):
         route_id = src.stem
+        path = route_path(dirs, route_id)
+        if path.exists():
+            name = _update_untouched(dirs, src, shipped.get(route_id, set()))
+            if name:
+                updated.append(name)
+            if route_id not in seeded:
+                handled.append(route_id)
+            continue
         if route_id in seeded:
             continue
-        if route_path(dirs, route_id).exists() or backup_path(dirs, route_id).exists():
+        if backup_path(dirs, route_id).exists():
             handled.append(route_id)
             continue
         try:
-            atomic_write_bytes(route_path(dirs, route_id), route_bytes(read_route_file(src)))
+            atomic_write_bytes(path, starter_bytes(src))
         except (AppError, OSError) as e:
             log.warning("bundled route %s is not copied: %s", src.name, e)
             continue
         log.info("bundled route %s copied into routes/", route_id)
         handled.append(route_id)
-    return handled
+    return Seeded(handled, updated)
+
+
+def _update_untouched(dirs: DataDirs, src: Path, shipped: set[str]) -> str | None:
+    """Replace routes/<id>.json with `src` if it is an older shipped version; the route's name."""
+    route_id = src.stem
+    try:
+        current = route_path(dirs, route_id).read_bytes()
+        if route_digest(current) not in shipped:
+            return None  # edited by the user, or not a starter at all
+        doc = read_route_file(src)
+        if route_bytes(doc) == current:
+            return None
+        save_route(dirs, route_id, doc)  # keeps the replaced version as the .bak
+    except (AppError, OSError) as e:
+        log.warning("bundled route %s is not updated: %s", src.name, e)
+        return None
+    log.info("bundled route %s updated in routes/", route_id)
+    return doc["name"]
 
 
 def route_thumb(

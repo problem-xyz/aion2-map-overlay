@@ -11,7 +11,9 @@ is rewritten to keep the next unrelated `npm install` from carrying the change.
 
 `CHANGELOG.md` gets its `[Unreleased]` entries moved under `## [<version>] - <date>`, with an
 empty `[Unreleased]` left above them (Keep a Changelog 1.1.0), and its compare links, if it has
-any, moved on by one release. Then one commit, `chore(release): <version>`, and an annotated tag
+any, moved on by one release. `assets/routes/shipped.sha256` gets the digest of each starter route
+as it ships now, so that a later release can tell an untouched copy from one the user edited.
+Then one commit, `chore(release): <version>`, and an annotated tag
 `v<version>`, which is what the release workflow builds from. Nothing is pushed.
 
 What counts as a version is decided by packaging/version_info.py, which has to stamp it into
@@ -39,7 +41,9 @@ from types import ModuleType
 from typing import Any
 
 from map_overlay.core.appinfo import APP_NAME
+from map_overlay.core.errors import AppError
 from map_overlay.core.fileio import atomic_write_bytes
+from map_overlay.store.routes import SHIPPED_DIGESTS, record_shipped_digests
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION_INFO = ROOT / "packaging" / "version_info.py"
@@ -48,6 +52,7 @@ INIT_FILE = "src/map_overlay/__init__.py"
 PACKAGE_JSON = "ui/package.json"
 PACKAGE_LOCK = "ui/package-lock.json"
 CHANGELOG = "CHANGELOG.md"
+STARTER_ROUTES = "assets/routes"
 
 INIT_VERSION = re.compile(r'^__version__ = "(?P<version>[^"]*)"$', re.MULTILINE)
 UNRELEASED_HEADING = re.compile(r"^## \[unreleased\]\s*$", re.IGNORECASE)
@@ -264,7 +269,7 @@ def plan_release(root: Path, version: str, day: date) -> tuple[str, list[Change]
     lock = _read(root, PACKAGE_LOCK)
     changelog = _read(root, CHANGELOG)
     lock_fields = [("version",), ("packages", "", "version")]
-    return current, [
+    changes = [
         Change(INIT_FILE, init_text, INIT_VERSION.sub(f'__version__ = "{version}"', init_text)),
         Change(
             PACKAGE_JSON, package, set_json_versions(package, [("version",)], version, PACKAGE_JSON)
@@ -272,6 +277,24 @@ def plan_release(root: Path, version: str, day: date) -> tuple[str, list[Change]
         Change(PACKAGE_LOCK, lock, set_json_versions(lock, lock_fields, version, PACKAGE_LOCK)),
         Change(CHANGELOG, changelog, release_changelog(changelog, version, day)),
     ]
+    digests = shipped_digests_change(root)
+    if digests is not None:
+        changes.append(digests)
+    return current, changes
+
+
+def shipped_digests_change(root: Path) -> Change | None:
+    """The starter routes' digests file with this release's versions in; None if it has them."""
+    path = f"{STARTER_ROUTES}/{SHIPPED_DIGESTS}"
+    try:
+        before = (root / path).read_bytes().decode("utf-8")
+    except FileNotFoundError:
+        before = ""
+    try:
+        after = record_shipped_digests(root / STARTER_ROUTES, before)
+    except (AppError, OSError) as error:
+        raise RefusedError(f"a starter route in {STARTER_ROUTES} does not read: {error}") from None
+    return None if after == before else Change(path, before, after)
 
 
 def git(root: Path, *args: str, stdin: str | None = None) -> subprocess.CompletedProcess[str]:

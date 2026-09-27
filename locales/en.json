@@ -248,6 +248,7 @@
       "rescaled": "This route was drawn on a map of a different size, so its points were rescaled.",
       "save_failed": "The route was not saved: {reason}",
       "saved": "Route “{name}” saved.",
+      "starters_updated": "Starter routes updated to their new version: {names}.",
       "too_large": "That route is too large: its file would be over {limit} MB, and the app cannot open a file that size. Its points carry too much text.",
       "too_many_markers": "That route has more than {limit} points."
     },

@@ -217,11 +217,13 @@ class Backend(QObject):
             self._notifier.queue("legacy.routes_moved", names=", ".join(moved))
 
     def _seed_routes(self) -> None:
-        """Give a new install the starter routes, each once, whatever became of it since."""
+        """Give a new install the starter routes, each once, and update the untouched ones."""
         seeded = self._store.state.seeded_routes
-        handled = self._routes.seed_bundled(seeded)
-        if handled:
-            self._store.set_state(seeded_routes=[*seeded, *handled])
+        result = self._routes.seed_bundled(seeded)
+        if result.handled:
+            self._store.set_state(seeded_routes=[*seeded, *result.handled])
+        if result.updated:
+            self._notifier.queue("route.starters_updated", names=", ".join(result.updated))
 
     def _probe_capture_exclusion(self) -> bool:
         """Can the windows over the game be hidden from capture here? Warns once if not."""

@@ -120,6 +120,7 @@ ui/
   dist/index.html       build output, not in git
 locales/                en.json, ru.json — shared by Python and the UI
 assets/object-sets/     ready-made points of interest (CC BY-NC 4.0, see NOTICE)
+assets/routes/          starter routes; its README says how to add or update one
 tests/                  pytest suite
 scripts/                developer scripts
 userdata/               maps, routes, settings and logs in a checkout; git-ignored
@@ -168,7 +169,8 @@ git push --atomic origin main v1.0.0-beta.1                    # the tag starts 
 
 The script writes the version into `src/map_overlay/__init__.py`, which is its one source, and
 into `ui/package.json` and `ui/package-lock.json`; moves the `[Unreleased]` entries into a dated
-section for the release, leaving `[Unreleased]` empty above it; commits that as
+section for the release, leaving `[Unreleased]` empty above it; adds the digest of each starter
+route as it ships now to `assets/routes/shipped.sha256` (see the README there); commits that as
 `chore(release): <version>` and creates the annotated tag `v<version>`. It pushes nothing. The
 dry run writes nothing either, and works on a tree with uncommitted changes, so it can be run while
 the changelog is still being edited.

@@ -36,8 +36,10 @@ a = Analysis(  # noqa: F821
         (str(ROOT / "assets" / "maps"), "assets/maps"),  # the two bundled maps, ~11 MB
         # their object sets, ~360 KB; the README in that folder is for the repository only
         *((str(p), "assets/object-sets") for p in (ROOT / "assets" / "object-sets").glob("*.json")),
-        # the starter routes, copied into a new user's routes/ on first run
+        # the starter routes, copied into a new user's routes/ on first run, and the digests of
+        # their earlier versions, by which an untouched copy is brought up to date
         *((str(p), "assets/routes") for p in (ROOT / "assets" / "routes").glob("*.json")),
+        (str(ROOT / "assets" / "routes" / "shipped.sha256"), "assets/routes"),
     ],
     # Reached only through a runtime import or a platform backend, so the analyser cannot see
     # them: dxcam pulls comtypes, and mss picks its backend by platform.
