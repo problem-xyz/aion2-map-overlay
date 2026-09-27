@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-27
+
 ### Added
 
 - Under every section of the panel: Buy me a coffee and Donate in crypto, and links to the
