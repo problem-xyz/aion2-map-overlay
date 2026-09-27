@@ -18,6 +18,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ### Fixed
 
+- On AMD graphics cards the app no longer eats memory until it crashes, within a minute of
+  starting. It draws its windows through Direct3D 11 there.
 - A crash inside the graphics driver no longer repeats. On the next start the app switches the
   part that crashed (screen capture, or how its windows are drawn) to a slower but safer method
   and says so.

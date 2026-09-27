@@ -2,6 +2,8 @@
 
 import logging
 import os
+import re
+from dataclasses import dataclass
 
 from PySide6.QtGui import QOffscreenSurface, QOpenGLContext
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
@@ -11,8 +13,22 @@ log = logging.getLogger(__name__)
 # Qt's own switch. Set, it wins over the choice made here.
 BACKEND_ENV = "QSG_RHI_BACKEND"
 
+GL_VENDOR = 0x1F00
 GL_RENDERER = 0x1F01
 GL_VERSION = 0x1F02
+
+# How AMD's OpenGL driver names itself: "ATI Technologies Inc." on current drivers.
+_AMD_VENDOR = re.compile(r"\b(ATI|AMD)\b|Advanced Micro Devices")
+
+
+@dataclass(frozen=True)
+class GLDriver:
+    vendor: str
+    renderer: str
+    version: str
+
+    def __str__(self) -> str:
+        return f"{self.renderer}, {self.version}"
 
 
 def choose_graphics_api(allow_opengl: bool = True) -> str:
@@ -27,6 +43,11 @@ def choose_graphics_api(allow_opengl: bool = True) -> str:
     after which Qt no longer takes a choice. QSG_RHI_BACKEND stays in charge when it is set, so
     a machine can be put back on d3d11 to compare. Where no OpenGL 2 context can be made at
     all, Direct3D 11 stays: a map that flickers beats a window that draws nothing.
+
+    AMD stays on Direct3D 11 too. On OpenGL, Qt WebEngine brings every frame over from
+    Direct3D 11 through the driver's WGL_NV_DX_interop, and on AMD the process then grew by
+    gigabytes within a minute of sitting idle and died inside amdxx64.dll. The panel animates,
+    so there is a frame to bring over all the time.
 
     allow_opengl=False keeps Direct3D 11 as well, for a machine whose driver crashed the app on
     OpenGL (see core/crash_guard.py).
@@ -45,15 +66,22 @@ def choose_graphics_api(allow_opengl: bool = True) -> str:
         log.warning("graphics: no usable OpenGL context, staying on Direct3D 11")
         return "d3d11"
     fmt = probe.format()
+    driver = _driver(probe)
+    if driver is not None and _AMD_VENDOR.search(driver.vendor):
+        log.info("graphics: d3d11 on %s -- AMD's opengl interop leaks under Qt WebEngine", driver)
+        return "d3d11"
     QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.OpenGL)
     log.info(
-        "graphics: opengl %d.%d on %s", fmt.majorVersion(), fmt.minorVersion(), _renderer(probe)
+        "graphics: opengl %d.%d on %s",
+        fmt.majorVersion(),
+        fmt.minorVersion(),
+        driver or "an unnamed renderer",
     )
     return "opengl"
 
 
-def _renderer(context: QOpenGLContext) -> str:
-    """The GPU and its driver version, as the driver names them.
+def _driver(context: QOpenGLContext) -> GLDriver | None:
+    """Who made the GPU, what it is and its driver version, as the driver names them.
 
     A crash inside a graphics driver is reported by the DLL's name alone, and the driver
     version is what decides whether it is ours to work around.
@@ -61,9 +89,13 @@ def _renderer(context: QOpenGLContext) -> str:
     surface = QOffscreenSurface()
     surface.create()
     if not context.makeCurrent(surface):
-        return "an unnamed renderer"
+        return None
     try:
         gl = context.functions()
-        return f"{gl.glGetString(GL_RENDERER)}, {gl.glGetString(GL_VERSION)}"
+        return GLDriver(
+            vendor=gl.glGetString(GL_VENDOR),
+            renderer=gl.glGetString(GL_RENDERER),
+            version=gl.glGetString(GL_VERSION),
+        )
     finally:
         context.doneCurrent()
