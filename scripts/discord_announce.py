@@ -6,9 +6,12 @@
 
 The message is plain text, not an embed, with the downloads as link buttons under it. The
 release workflow posts it once the release is published, to the English and the Russian
-download channel alike: the CHANGELOG is English, and the buttons are file names, so the message
-has no other words. The section is the one scripts/release_notes.py takes, without the install
-notes the release page carries: the GitHub button leads there. The files themselves are not
+download channel. The CHANGELOG is English; `--lang ru` takes the section from
+`.github/discord/<version>.ru.md` instead, written by hand before the release in the same shape
+as a CHANGELOG section, and falls back to the English one with a warning when there is none.
+The buttons are file names, so the message has no other words. The section is the one
+scripts/release_notes.py takes, without the install notes the release page carries: the GitHub
+button leads there. The files themselves are not
 attached: the installer is far past the size Discord takes from a webhook.
 
 Discord does not reflow text: a CHANGELOG entry wrapped at 100 columns would arrive as broken
@@ -42,12 +45,15 @@ from map_overlay.core.fileio import atomic_write_bytes
 
 ROOT = Path(__file__).resolve().parents[1]
 CHANGELOG = ROOT / "CHANGELOG.md"
+TRANSLATIONS = ROOT / ".github" / "discord"
 RELEASE_NOTES = Path(__file__).with_name("release_notes.py")
 
 API = "https://discord.com/api/v10"
 # Discord refuses a request without one of this shape.
 USER_AGENT = f"DiscordBot ({REPO_URL}, 1)"
 CONTENT_LIMIT = 2000
+# The link a cut message ends with, in its channel's language.
+FULL_NOTES = {"en": "the full notes", "ru": "полные заметки"}  # allow-cyrillic: the Russian channel
 # No link previews under the text: the buttons already say where each link goes.
 SUPPRESS_EMBEDS = 1 << 2
 ACTION_ROW, BUTTON, LINK_STYLE = 1, 2, 5
@@ -101,13 +107,13 @@ def discord_markdown(section: str) -> list[str]:
     return blocks
 
 
-def content(head: str, section: str, version: str) -> str:
+def content(head: str, section: str, version: str, lang: str = "en") -> str:
     """`head`, then the section, cut at an entry when the two would not fit in one message."""
     lines = [head, "", *discord_markdown(section)]
     text = "\n".join(lines)
     if len(text) <= CONTENT_LIMIT:
         return text
-    more = f"\n\n[... the full notes]({release_url(version)})"
+    more = f"\n\n[... {FULL_NOTES[lang]}]({release_url(version)})"
     kept: list[str] = []
     for line in lines:
         if len("\n".join([*kept, line])) + len(more) > CONTENT_LIMIT:
@@ -125,19 +131,43 @@ def link_button(label: str, url: str, emoji: str | None = None) -> dict[str, Any
     return button
 
 
+def translated_section(version: str, lang: str, root: Path | None = None) -> str | None:
+    """The section in `lang` from `<version>.<lang>.md`, or None when nobody wrote one."""
+    try:
+        text = ((root or TRANSLATIONS) / f"{version}.{lang}.md").read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return None
+    return text.strip("\n") or None
+
+
 def announcement(
-    changelog: str, version: str, *, role: str | None = None, dry_run: bool = False
+    changelog: str,
+    version: str,
+    *,
+    role: str | None = None,
+    dry_run: bool = False,
+    lang: str = "en",
+    translation: str | None = None,
 ) -> dict[str, Any]:
+    """The message for one channel: `translation`, in `lang`, when given, else the CHANGELOG's.
+
+    The CHANGELOG section is read either way, so a version that was never cut is refused in
+    every language alike.
+    """
     try:
         section = release_notes.changelog_section(changelog, version)
     except release_notes.NotesError:
         if not dry_run:
             raise
         section = release_notes.changelog_section(changelog, "Unreleased")
+    if translation is not None:
+        section = translation
+    else:
+        lang = "en"
     title = f"## {APP_NAME} {version}"
     head = f"<@&{role}>\n{title}" if role else title
     return {
-        "content": content(head, section, version),
+        "content": content(head, section, version, lang),
         "flags": SUPPRESS_EMBEDS,
         "components": [
             {
@@ -203,6 +233,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument("version", help="the version, without the leading v")
     parser.add_argument("--role", help="id of the role to ping; none when omitted or empty")
+    parser.add_argument(
+        "--lang",
+        choices=sorted(FULL_NOTES),
+        default="en",
+        help="the channel's language; any but en reads .github/discord/<version>.<lang>.md",
+    )
     where = parser.add_mutually_exclusive_group()
     where.add_argument("--output", "-o", type=Path, help="write here instead of to stdout")
     where.add_argument(
@@ -220,9 +256,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.post and not webhook:
         print("refused: --post needs the webhook in DISCORD_WEBHOOK", file=sys.stderr)
         return 1
+    translation = None
+    if args.lang != "en":
+        translation = translated_section(args.version, args.lang)
+        if translation is None:
+            print(
+                f"warning: no .github/discord/{args.version}.{args.lang}.md, "
+                f"so the {args.lang} channel gets the English notes",
+                file=sys.stderr,
+            )
     try:
         changelog = CHANGELOG.read_text(encoding="utf-8")
-        message = announcement(changelog, args.version, role=role, dry_run=args.dry_run)
+        message = announcement(
+            changelog,
+            args.version,
+            role=role,
+            dry_run=args.dry_run,
+            lang=args.lang,
+            translation=translation,
+        )
     except release_notes.NotesError as error:
         print(f"refused: {error}", file=sys.stderr)
         return 1
