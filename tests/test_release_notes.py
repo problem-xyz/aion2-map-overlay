@@ -106,10 +106,11 @@ def test_the_notes_end_with_how_to_install_under_the_app_s_own_names() -> None:
 
 
 def test_the_section_bump_version_writes_is_the_one_the_notes_take() -> None:
-    real = (REPO / "CHANGELOG.md").read_text(encoding="utf-8")
-    released = bump.release_changelog(real, "9.9.9", date(2026, 9, 23))
+    # Not the repository's CHANGELOG.md: its [Unreleased] is empty on every release commit, and
+    # the release workflow runs the tests on exactly that commit.
+    released = bump.release_changelog(CHANGELOG, "9.9.9", date(2026, 9, 23))
     section = notes.changelog_section(released, "9.9.9")
-    unreleased = real.split("## [Unreleased]", 1)[1]
+    unreleased = CHANGELOG.split("## [Unreleased]", 1)[1]
     assert section.split("\n", 1)[0] == unreleased.strip().split("\n", 1)[0]
     assert section.strip() in unreleased
 
