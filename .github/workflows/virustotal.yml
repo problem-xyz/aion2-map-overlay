@@ -1,0 +1,77 @@
+name: VirusTotal
+
+# Sends a release's installer and portable zip to VirusTotal and links their reports at the end
+# of the release notes. The release workflow calls it once a release is out; run it by hand for a
+# release made before it, or to send one again. The key is VT_API_KEY, from a free virustotal.com
+# account (profile > API key); without it nothing is sent, and nothing fails.
+on:
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+    secrets:
+      VT_API_KEY:
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, such as v1.0.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    # Writes the release notes, and nothing else.
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      VT_API_KEY: ${{ secrets.VT_API_KEY }}
+      TAG: ${{ inputs.tag }}
+    steps:
+      - name: Send to VirusTotal and link the reports
+        run: |
+          set -euo pipefail
+          if [ -z "$VT_API_KEY" ]; then
+            echo "::notice::VT_API_KEY is not set: $TAG is not sent to VirusTotal"
+            exit 0
+          fi
+
+          # The files players download, taken from the release itself: the updater's packages
+          # hold the same app.
+          gh release download "$TAG" --dir assets --pattern '*-Setup.exe' --pattern '*-Portable.zip'
+          links=""
+          for file in assets/*; do
+            name=$(basename "$file")
+            sha=$(sha256sum "$file" | cut -d' ' -f1)
+            # Past 32 MB a file goes to a one-off upload URL, and every file here is past it.
+            upload=$(curl -sSf -H "x-apikey: $VT_API_KEY" https://www.virustotal.com/api/v3/files/upload_url | jq -r .data)
+            curl -sSf -H "x-apikey: $VT_API_KEY" -F "file=@$file" "$upload" > /dev/null
+            # By hash, not by analysis id: the page stays and shows the latest verdict.
+            links+="- [\`$name\`](https://www.virustotal.com/gui/file/$sha)"$'\n'
+            echo "$name: https://www.virustotal.com/gui/file/$sha"
+          done
+          if [ -z "$links" ]; then
+            echo "::error::$TAG has no Setup.exe or Portable.zip"
+            exit 1
+          fi
+
+          # The section is always last, so a second run cuts at the marker and writes it afresh.
+          marker="<!-- virustotal -->"
+          body=$(gh release view "$TAG" --json body --jq .body)
+          body="${body%%"$marker"*}"
+          body="${body%"${body##*[![:space:]]}"}"
+          {
+            printf '%s\n\n%s\n' "$body" "$marker"
+            printf '### VirusTotal\n\n'
+            printf 'Each download, checked by some 70 antivirus engines. A report can take a few\n'
+            printf 'minutes to fill in after the release comes out.\n\n'
+            printf '%s' "$links"
+          } > notes.md
+          gh release edit "$TAG" --notes-file notes.md

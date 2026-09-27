@@ -249,6 +249,17 @@ jobs:
           --token $env:GH_TOKEN --outputDir Releases --publish
           --releaseName "$env:APP_NAME $env:VERSION" --tag "v$env:VERSION"
 
+  # VirusTotal reports for the downloads, linked at the end of the release notes.
+  virustotal:
+    needs: [build, publish]
+    permissions:
+      contents: write
+    uses: ./.github/workflows/virustotal.yml
+    with:
+      tag: v${{ needs.build.outputs.version }}
+    secrets:
+      VT_API_KEY: ${{ secrets.VT_API_KEY }}
+
   # The news in the Discord server's download channels, once the release is out: one for the
   # English players, one for the Russian, each seen only by its language role. A channel's
   # webhook (Edit Channel > Integrations > Webhooks) is kept in DISCORD_RELEASES_WEBHOOK_EN or

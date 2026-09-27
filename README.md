@@ -70,6 +70,8 @@ A portable copy is removed by deleting its folder.
   for you.
 - **The source is open.** Everything the app does is in this repository, and each `Setup.exe` and
   `Portable.zip` on the Releases page is built from it by GitHub Actions, in a public build log.
+- Every release links a [VirusTotal](https://www.virustotal.com) report for both files at the
+  end of its notes.
 - There is no telemetry and no account. The only thing it sends is the update check to GitHub,
   which carries the installed version, the app's name and a random number made once per
   installation.
