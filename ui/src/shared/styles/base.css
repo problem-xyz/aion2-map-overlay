@@ -343,7 +343,8 @@ textarea:focus-visible {
 /* ---------- a living surface, under a control's content: shared/ui/Sheen.tsx ---------- */
 /* Silk ribbons of light drift across it and a few motes come and go; on the ice tone a glint
    runs along its top and bottom glow lines every few seconds, as along the client's selected
-   tab. Transform and opacity only: the compositor runs it with no repaint. */
+   tab. Transform and opacity only, so nothing repaints -- but every frame of it is still
+   composited and carried to the screen, so it runs only while its window has the focus. */
 .ui-sheen {
   --sheen-mote: rgb(from var(--color-info) r g b / 55%);
   position: absolute;
@@ -370,6 +371,12 @@ textarea:focus-visible {
 .ui-sheen-gold .ui-sheen-silk {
   opacity: 0.32;
   animation-duration: 10s;
+}
+/* At rest: the ribbons stand (the loop has no seam, so they pick up again without a jump), and
+   the motes and the glint are out, as they are between their runs. */
+:root:not([data-window-focused]) .ui-sheen > *,
+.ui-sheen.ui-sheen-still > * {
+  animation: none;
 }
 @keyframes ui-sheen-drift {
   from {

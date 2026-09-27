@@ -211,6 +211,9 @@ html:has(.pn-app) {
     animation: none;
   }
 }
+:root:not([data-window-focused]) .status-search .dot {
+  animation: none;
+}
 /* On the status's line while they fit beside it, under it when they do not */
 .nums {
   display: flex;

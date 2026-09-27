@@ -10,6 +10,12 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Changed
+
+- The app no longer uses the CPU and GPU while you play: the shimmer on the selected tab and
+  the Start button pauses while its window is not in focus, and the current step on the checklist
+  over the game no longer shimmers at all. An idle panel used about a third of a CPU core on it.
+
 ### Added
 
 - When the app crashes inside a graphics driver or other native code, `logs/crash.log` now
