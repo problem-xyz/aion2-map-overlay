@@ -210,7 +210,10 @@ run's summary lists the SHA-256 of `Setup.exe`, `Portable.zip` and the packages.
 A third job announces the published release in the Discord server's two download channels,
 English and Russian, each seen only by its language role: the version's CHANGELOG section as
 text, with buttons for `Setup.exe`, `Portable.zip` and the release page, which
-`scripts/discord_announce.py` writes and posts. It posts to the webhooks in the secrets
+`scripts/discord_announce.py` writes and posts. The Russian channel gets `.github/discord/<version>.ru.md`
+instead of the English section: write it before cutting the release, in the same shape as a
+CHANGELOG section (`### ` headings, `- ` entries). Without one, that channel gets the English
+text and the run notes it. It posts to the webhooks in the secrets
 `DISCORD_RELEASES_WEBHOOK_EN` and `DISCORD_RELEASES_WEBHOOK_RU` (in Discord: the channel's *Edit
 Channel > Integrations > Webhooks*, *Copy Webhook URL*; then `gh secret set <name>`). A channel
 whose secret is not set is skipped with a note. The optional repository variables

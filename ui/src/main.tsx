@@ -9,6 +9,7 @@ import { createRoot } from "react-dom/client";
 
 import { AppShell } from "@/app/AppShell";
 import { PAGES, pageFromHash } from "@/app/pages";
+import { followWindowFocus } from "@/app/windowFocus";
 import { BackendGate } from "@/shared/backend/BackendGate";
 import { BackendProvider } from "@/shared/backend/BackendProvider";
 import { I18nProvider } from "@/shared/i18n";
@@ -19,6 +20,8 @@ const isSteps = page === "steps";
 
 // The plaque lives in a transparent window: a dark page background would paint over the game.
 if (isSteps) document.documentElement.classList.add("steps-page");
+
+followWindowFocus();
 
 // The plaque talks to a different Qt object, with its own state signal and getter.
 const connection = isSteps

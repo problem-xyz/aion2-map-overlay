@@ -99,7 +99,7 @@ app.SingleInstance = Instance
 app.Backend = Backend
 app.ControlWindow = Window
 app.log_screens = lambda: None
-app.choose_graphics_api = lambda: "stub"  # it needs the real QApplication replaced above
+app.choose_graphics_api = lambda **_: "stub"  # it needs the real QApplication replaced above
 app.app_root = lambda: root
 if mode == "bug":
     app.migrate_dev_layout = migration_bug

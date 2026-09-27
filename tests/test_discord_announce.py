@@ -200,3 +200,65 @@ def test_post_needs_the_webhook_in_the_environment(
     monkeypatch.delenv("DISCORD_WEBHOOK", raising=False)
     assert announce.main(["1.0.0-beta.1", "--dry-run", "--post"]) == 1
     assert "needs the webhook in DISCORD_WEBHOOK" in capsys.readouterr().err
+
+
+# Stands in for the Russian text: tests stay free of Cyrillic (scripts/check_no_cyrillic.py).
+TRANSLATION = "### Fixed (ru)\n\n- The same fix, translated,\n  over two lines."
+
+
+def test_a_translation_takes_the_place_of_the_section() -> None:
+    message = announce.announcement(CHANGELOG, "1.0.0-beta.1", lang="ru", translation=TRANSLATION)
+
+    assert (
+        message["content"]
+        == f"{HEAD}\n\n### Fixed (ru)\n\n- The same fix, translated, over two lines."
+    )
+    assert message["components"] == announce.announcement(CHANGELOG, "1.0.0-beta.1")["components"]
+
+
+def test_a_translation_does_not_let_an_uncut_version_through() -> None:
+    with pytest.raises(announce.release_notes.NotesError):
+        announce.announcement(CHANGELOG, "2.0.0", lang="ru", translation=TRANSLATION)
+
+
+def test_a_long_translation_links_the_full_notes_in_its_own_language() -> None:
+    long = "\n".join(f"- Entry {i} " + "x" * 90 for i in range(100))
+    text = announce.announcement(CHANGELOG, "1.0.0-beta.1", lang="ru", translation=long)["content"]
+
+    assert len(text) <= announce.CONTENT_LIMIT
+    assert text.endswith(
+        f"[... {announce.FULL_NOTES['ru']}]({REPO_URL}/releases/tag/v1.0.0-beta.1)"
+    )
+
+
+def test_the_command_reads_the_translation_or_falls_back_to_english(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(CHANGELOG, encoding="utf-8")
+    monkeypatch.setattr(announce, "CHANGELOG", changelog)
+    monkeypatch.setattr(announce, "TRANSLATIONS", tmp_path)
+    out = tmp_path / "announce.json"
+
+    assert announce.main(["1.0.0-beta.1", "--lang", "ru", "--output", str(out)]) == 0
+    english = announce.announcement(CHANGELOG, "1.0.0-beta.1")
+    assert json.loads(out.read_text(encoding="utf-8")) == english
+    assert "the ru channel gets the English notes" in capsys.readouterr().err
+
+    (tmp_path / "1.0.0-beta.1.ru.md").write_text(f"\n{TRANSLATION}\n", encoding="utf-8")
+    assert announce.main(["1.0.0-beta.1", "--lang", "ru", "--output", str(out)]) == 0
+    translated = announce.announcement(
+        CHANGELOG, "1.0.0-beta.1", lang="ru", translation=TRANSLATION
+    )
+    assert json.loads(out.read_text(encoding="utf-8")) == translated
+    assert capsys.readouterr().err == ""
+
+
+def test_every_translation_in_the_repository_is_one_the_script_can_post() -> None:
+    for path in sorted((REPO / ".github" / "discord").glob("*.md")):
+        version, lang, _ = path.name.rsplit(".", 2)
+        assert lang in announce.FULL_NOTES, path.name
+        text = announce.translated_section(version, lang)
+        assert text is not None and text.startswith("### "), path.name
+        head = f"## {APP_NAME} {version}"
+        assert len(announce.content(head, text, version, lang)) <= announce.CONTENT_LIMIT
