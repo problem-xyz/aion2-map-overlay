@@ -275,8 +275,9 @@ export default function StepsPage() {
             className={s.n === next ? "so-row next" : "so-row"}
             aria-current={s.n === next ? "step" : undefined}
           >
-            {/* the current step lives, as the selected tile of the panel's menu does */}
-            {s.n === next ? <Sheen /> : null}
+            {/* the current step wears the selected tile's surface, standing still: the plaque is
+                always in view over the game, and a loop there would never stop drawing */}
+            {s.n === next ? <Sheen still /> : null}
             {dot(s)}
             {icon(s)}
             {s.text ? <span className="so-text">{s.text}</span> : null}

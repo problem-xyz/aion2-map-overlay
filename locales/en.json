@@ -188,6 +188,10 @@
     }
   },
   "notify": {
+    "crash": {
+      "capture": "The app closed unexpectedly last time while capturing the screen. It now uses a slower capture method, so that does not happen again.",
+      "graphics": "The app closed unexpectedly last time inside the graphics driver. It now draws its windows through Direct3D 11, so that does not happen again. Zooming the map may be less smooth."
+    },
     "data": {
       "migrated": "Your data was moved to {path}",
       "migration_failed": "Some of your data could not be moved and is still in {path}. The log names the file that stopped it."

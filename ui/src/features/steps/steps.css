@@ -200,9 +200,9 @@ html.steps-page body {
 }
 
 /* The nearest labelled step, as the client draws its selected menu tile: the steel band, and
-   over it the tile's living sheen (shared/ui/Sheen.tsx) -- the glow lines along its edges with
-   a glint running on them, silk drifting through, a few motes. Found by the band's shape and
-   the heavier label, not by colour or motion alone. The band is opaque, so the list's ink holds
+   over it the tile's sheen (shared/ui/Sheen.tsx) standing still -- the glow lines along its
+   edges and the silk, nothing running. Found by the band's shape and the heavier label, not by
+   colour or motion alone. The band is opaque, so the list's ink holds
    9.9:1 on it whatever the game shows behind. */
 .so-row.next {
   overflow: hidden;

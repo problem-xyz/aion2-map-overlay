@@ -42,9 +42,15 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 
 from map_overlay.bridge.backend import Backend  # noqa: E402
 from map_overlay.core.appinfo import APP_NAME, ORG_NAME, PACK_ID  # noqa: E402
+from map_overlay.core.crash_guard import (  # noqa: E402
+    CrashSite,
+    apply_crash,
+    read_last_crash,
+)
 from map_overlay.core.logs import (  # noqa: E402
     log_environment,
     log_screens,
+    mark_clean_exit,
     route_qt_messages,
     setup_logging,
 )
@@ -63,6 +69,7 @@ from map_overlay.core.single_instance import Answer, SingleInstance  # noqa: E40
 from map_overlay.qt import win32  # noqa: E402
 from map_overlay.qt.control_window import ControlWindow  # noqa: E402
 from map_overlay.qt.graphics import choose_graphics_api  # noqa: E402
+from map_overlay.vision.capture import Capture  # noqa: E402
 
 
 def _data_dir_override(argv):
@@ -98,6 +105,7 @@ def main():
     dirs.root.mkdir(parents=True, exist_ok=True)
     instance = SingleInstance(dirs)
     first = instance.try_acquire()
+    crashed_in = read_last_crash(dirs)  # before setup_logging starts a session of its own
     setup_logging(dirs)
     answer = None if first else _raise_running_copy(instance)
     if answer is Answer.RAISED:
@@ -116,6 +124,10 @@ def main():
         "moving the pre-userdata layout", lambda: migrate_dev_layout(app_root(), dirs)
     )
     dirs.ensure()
+    fallbacks, fell_back = apply_crash(dirs, crashed_in)
+    if crashed_in is not None:
+        log.warning("the last run crashed in native code, on the %s thread", crashed_in)
+    Capture.dxcam_allowed = not fallbacks.mss
 
     if not is_frozen():
         # A build is its own exe and gets its identity from it and from Velopack's shortcuts;
@@ -131,13 +143,16 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     log_screens()
-    choose_graphics_api()
+    choose_graphics_api(allow_opengl=not fallbacks.direct3d)
 
     backend = Backend(dirs, dev=dev)
     if moved is None:
         backend.queue_notice("data.migration_failed", "warning", path=str(app_root()))
     elif moved:
         backend.queue_notice("data.migrated", path=str(dirs.root))
+    if fell_back:
+        notice = "crash.capture" if crashed_in is CrashSite.CAPTURE else "crash.graphics"
+        backend.queue_notice(notice, "warning")
     window = ControlWindow(backend, dev)
     backend.setParent(window)
     # closeEvent does not fire on log-off or a Qt-level quit; the settings must still land.
@@ -146,6 +161,7 @@ def main():
     instance.listen(lambda: _raise_window(window))
     app.aboutToQuit.connect(instance.release)
     code = app.exec()
+    mark_clean_exit()
     # After aboutToQuit has flushed the settings and released the lock: Update.exe may apply a
     # downloaded update as soon as it starts, without waiting for this process to be gone.
     backend.hand_over_update()

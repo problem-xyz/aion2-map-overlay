@@ -261,7 +261,8 @@ jobs:
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
 
   # The news in the Discord server's download channels, once the release is out: one for the
-  # English players, one for the Russian, each seen only by its language role. A channel's
+  # English players, one for the Russian, each seen only by its language role; the Russian one
+  # gets .github/discord/<version>.ru.md when it exists (see discord_announce.py). A channel's
   # webhook (Edit Channel > Integrations > Webhooks) is kept in DISCORD_RELEASES_WEBHOOK_EN or
   # _RU; a channel without one is not announced to, and nothing fails. The repository variables
   # DISCORD_RELEASES_ROLE_EN and _RU, role ids, ping the players who took that role. With
@@ -293,5 +294,5 @@ jobs:
               echo "::notice::DISCORD_RELEASES_WEBHOOK_$lang is not set: that channel is not announced to"
               continue
             fi
-            DISCORD_WEBHOOK="${!webhook}" python scripts/discord_announce.py "$VERSION" --role "${!role}" --post
+            DISCORD_WEBHOOK="${!webhook}" python scripts/discord_announce.py "$VERSION" --role "${!role}" --lang "${lang,,}" --post
           done

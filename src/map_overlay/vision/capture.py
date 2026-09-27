@@ -2,6 +2,7 @@
 
 import contextlib
 import logging
+from typing import ClassVar
 
 import numpy as np
 
@@ -26,11 +27,15 @@ class Capture:
     on the engine thread, and `grab` may legitimately return no frame at all.
     """
 
+    # Cleared, for the life of the process, on a machine where dxcam crashed it once
+    # (see core/crash_guard.py). Set before the engine first runs.
+    dxcam_allowed: ClassVar[bool] = True
+
     def __init__(self, region, screen_size=None) -> None:
         self.region = dict(region)
         self.cam = None
         self.sct = None
-        if dxcam is not None:
+        if dxcam is not None and self.dxcam_allowed:
             self.cam = self._open_dxcam(screen_size)
         if self.cam is None:
             self.sct = mss.mss()
@@ -41,6 +46,8 @@ class Capture:
             log.info("capture backend: dxcam")
         elif dxcam is None:
             log.warning("capture backend: mss -- dxcam did not import (%s)", _dxcam_error)
+        elif not self.dxcam_allowed:
+            log.warning("capture backend: mss -- dxcam is off since it crashed the app")
         else:
             log.warning("capture backend: mss -- no dxcam output matched the primary monitor")
 

@@ -161,6 +161,15 @@ describe("StepsPage", () => {
     expect(current[0]?.textContent).toContain("Follow the road");
   });
 
+  it("lays the selected surface under the nearest step standing still: it is over the game", () => {
+    mount();
+
+    const sheens = document.querySelectorAll(".ui-sheen");
+    expect(sheens).toHaveLength(1);
+    expect(marked()[0]?.contains(sheens[0] ?? null)).toBe(true);
+    expect(sheens[0]?.classList.contains("ui-sheen-still")).toBe(true);
+  });
+
   it("gives an unlabelled point a line of its own, and marks it when it is the nearest", () => {
     // everything labelled is done, so the next point is one with no label
     mount({ done: 3 });
