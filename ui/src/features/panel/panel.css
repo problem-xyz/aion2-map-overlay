@@ -1,0 +1,1437 @@
+/* The control panel. Tokens, the form controls and document-level rules live in shared/styles. */
+
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 18px var(--space-6);
+}
+/* The panel window: a faint cool light at the top, as behind the client's menus. Named, since
+   the warm-up's cover wears it too. */
+html:has(.pn-app) {
+  --pn-page: radial-gradient(ellipse 120% 60% at 50% -10%, #1a2230, var(--color-bg) 70%);
+  background: var(--pn-page);
+  background-attachment: fixed;
+}
+.pn-app {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: 18px;
+}
+
+.empty {
+  padding: var(--space-12) var(--space-2);
+  text-align: center;
+}
+.empty h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+.pn-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- the hero card: the active route, the engine's status along its foot ---------- */
+.pn-hero {
+  display: flex;
+  flex-direction: column;
+  background: var(--fill-panel-deep);
+}
+.pn-hero-main {
+  display: flex;
+  gap: 14px;
+  padding: 16px 14px 12px;
+}
+.pn-ring {
+  position: relative;
+  flex: none;
+  width: 84px;
+  height: 84px;
+}
+.pn-ring svg {
+  width: 84px;
+  height: 84px;
+  transform: rotate(-90deg);
+}
+.pn-ring circle {
+  fill: none;
+  stroke-width: 6;
+}
+.pn-ring-track {
+  stroke: var(--color-surface-raised);
+}
+.pn-ring-fill {
+  stroke: url(#pn-ring-gold);
+  stroke-linecap: round;
+  /* the arc runs on to the new share when a point is passed, rather than jumping there */
+  transition: stroke-dashoffset 300ms var(--ease-in-out);
+}
+.pn-ring stop:first-child {
+  stop-color: var(--gold-700);
+}
+.pn-ring stop:last-child {
+  stop-color: var(--gold-300);
+}
+.pn-ring b {
+  position: absolute;
+  inset: 0 0 12px;
+  display: grid;
+  place-items: center;
+  font: 600 21px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.pn-ring small {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  text-align: center;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.pn-hero-body {
+  flex: 1;
+  min-width: 0;
+}
+.pn-hero-kicker {
+  font: 600 var(--text-2xs) / 1.2 var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-frame-strong);
+}
+.pn-hero-name {
+  margin: 3px 0 2px;
+  font: 600 21px / 1.15 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pn-hero-meta {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.pn-hero-next {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: var(--space-2) 0 0;
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+}
+.pn-hero-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 1px 5px 0;
+  border-radius: 10px;
+  background: var(--num-color, var(--color-route-default));
+  color: var(--color-on-badge);
+  font: 700 var(--text-2xs) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 3px var(--color-accent);
+}
+.pn-hero-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.pn-hero-next-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The status strip at the foot of the card: what the engine is doing, and its numbers. */
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--space-3);
+  min-height: 34px;
+  padding: 6px 14px;
+  border-top: 1px solid var(--color-veil-line);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background: rgb(0 0 0 / 22%);
+}
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  flex: none;
+}
+.status-text {
+  white-space: nowrap;
+  font: 600 var(--text-sm) / 1.2 var(--font-display);
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+}
+.status-found .dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px rgb(from var(--color-accent) r g b / 18%);
+}
+.status-found .status-text {
+  color: var(--color-accent);
+}
+.status-search .dot {
+  background: var(--color-warning);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-search .dot {
+    animation: none;
+  }
+}
+/* On the status's line while they fit beside it, under it when they do not */
+.nums {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+/* Stopped, the strip would say only that, which the Start under it already does: it goes out
+   of sight, and stays in the tree, since its text is the live region a Start is announced by. */
+.status-idle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.num {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.num-value {
+  font: 600 var(--text-sm) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.num-value small {
+  font-size: var(--text-2xs);
+  margin-left: 1px;
+  color: var(--color-text-muted);
+}
+.num-label {
+  order: -1;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- the run row: Start, and beside it two quick slots ---------- */
+.pn-run {
+  display: flex;
+  gap: 6px;
+}
+.btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* "Start overlay" broke onto two lines beside the quick slots */
+  white-space: nowrap;
+  padding: 0 var(--space-4);
+  /* Every box in the run row has the same 1px rim, so their fills stand exactly as tall: the
+     gold ran to its very edge beside slots whose dark rim vanished into the page, and read
+     taller than them though both were 52px. */
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition:
+    filter var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+.pn-run .btn {
+  height: 52px;
+}
+.btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+/* The one main action: gold, as the client's own. Under the pointer a soft light wells up from
+   its top edge and settles, and ebbs away as the pointer leaves: a glow, not a stripe (owner: the
+   sweep that crossed it was too bright and too quick). */
+.btn-start {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: var(--gold-700);
+  background: var(--fill-primary);
+  color: var(--color-on-primary);
+  text-shadow: var(--shadow-on-primary);
+}
+.btn-start:not(:disabled) .ui-icon {
+  filter: var(--filter-on-primary);
+}
+.btn-start::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 90% at 50% 0%, rgb(255 255 255 / 26%), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-enter) var(--ease-out);
+}
+.btn-start:hover:not(:disabled)::after {
+  opacity: 1;
+  transition-duration: 320ms;
+}
+.btn-start:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  text-shadow: none;
+  cursor: not-allowed;
+}
+/* Bahnschrift's capitals stand above the middle of its line box, so an icon centred by flex sat
+   about 2px below the middle of the word. */
+.btn .ui-icon {
+  translate: 0 -0.12em;
+}
+/* Stop while the overlay runs: an ember, not a tile. A dark red with its rim and the square
+   lit, so it reads as the live control it is; under the pointer the glow comes up. */
+.btn-stop {
+  border-color: rgb(from var(--color-danger) r g b / 45%);
+  background: var(--fill-stop);
+  color: var(--color-text);
+  text-shadow: var(--shadow-text);
+  box-shadow:
+    inset 0 1px 0 rgb(from var(--color-danger) r g b / 16%),
+    inset 0 0 14px rgb(from var(--color-danger) r g b / 8%);
+  transition:
+    border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+.btn-stop .ui-icon {
+  color: var(--color-danger);
+  filter: drop-shadow(0 0 4px rgb(from var(--color-danger) r g b / 60%));
+}
+.btn-stop:hover:not(:disabled) {
+  filter: none;
+  border-color: var(--color-danger);
+  box-shadow:
+    inset 0 1px 0 rgb(from var(--color-danger) r g b / 28%),
+    inset 0 0 20px rgb(from var(--color-danger) r g b / 20%);
+}
+.btn-stop:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* A quick slot: a checkbox drawn as a tile, the icon over its short name. */
+.pn-chip {
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 72px;
+  height: 52px;
+  padding: 0 10px;
+  white-space: nowrap;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--fill-tile);
+  color: var(--color-text-muted);
+  font-size: var(--text-2xs);
+  line-height: 1.1;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+.pn-chip-icon {
+  width: 18px;
+  height: 18px;
+}
+/* Where Start would be cut short, the slots give up their names and stand square (RunRow). */
+.pn-run.compact .pn-chip {
+  min-width: 52px;
+  padding: 0;
+}
+.pn-run.compact .pn-chip-label {
+  display: none;
+}
+/* The checkbox stays in the tree for the keyboard and the screen reader, and paints nothing. */
+.pn-chip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  box-shadow: none;
+  opacity: 0;
+  cursor: inherit;
+}
+.pn-chip:has(input:checked) {
+  border-color: var(--color-selected-border);
+  background: var(--fill-tile-on);
+  color: var(--color-text);
+}
+.pn-chip:has(input:checked)::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 1px;
+  background: var(--line-shine);
+  animation: ui-shine-in var(--duration-shine) var(--ease-out-strong);
+}
+.pn-chip:has(input:focus-visible) {
+  box-shadow: var(--focus-ring);
+}
+.pn-chip:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-chip:hover {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+
+/* Under the run row: the capture warning, and the hint while the map is not found. */
+.pn-capture-warning,
+.pn-search-hint {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+}
+.pn-capture-warning {
+  color: var(--color-warning);
+}
+.pn-search-hint {
+  color: var(--color-text-muted);
+}
+
+/* ---------- the menu: tiles like the client's main menu ---------- */
+.pn-menu {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: var(--space-1);
+}
+.pn-menu-tabs {
+  display: contents;
+}
+.pn-tile {
+  transition:
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 52px;
+  padding: 0 10px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  background: var(--fill-tile);
+  color: var(--color-text);
+  font: 500 var(--text-md) / 1.15 var(--font-display);
+  cursor: pointer;
+  /* the selected tile's sheen lives inside it */
+  overflow: hidden;
+  isolation: isolate;
+}
+.pn-tile:hover {
+  border-color: var(--color-frame-strong);
+}
+.pn-tile.on {
+  border-color: var(--color-selected-border);
+  background: var(--fill-tile-on);
+}
+.pn-tile:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pn-tile-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.3;
+  color: var(--color-icon-warm);
+}
+.pn-tile.on .pn-tile-icon {
+  color: var(--color-text);
+}
+.pn-tile-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pn-tile-key {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  padding: 0 3px;
+  font-size: 9.5px;
+  line-height: 1.25;
+}
+.pn-tile-badge {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+
+/* ---------- a section and its cards ---------- */
+.pn-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+/* Framed as the editor's inspector: a title with its switch or button, the ice rule, rows. */
+.pn-card {
+  display: flex;
+  flex-direction: column;
+}
+.pn-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: 8px 12px 6px 14px;
+}
+.pn-card-head h2,
+.pn-advanced-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font: 600 15px / 1.2 var(--font-display);
+  letter-spacing: 0.01em;
+}
+.pn-card-rule {
+  height: 1px;
+  margin: 0 14px;
+  background: var(--line-rule);
+}
+/* The rows of a card, apart by space alone: the rule under the title is the card's one line */
+.pn-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 14px 14px 16px;
+}
+.pn-card-body > * {
+  margin: 0;
+}
+.pn-card-text {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+/* A group of fields inside a card, under a small heading of its own: Advanced has two */
+.pn-subgroup {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.pn-subgroup + .pn-subgroup {
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+.pn-subhead {
+  margin: 0;
+  font: 600 var(--text-2xs) / 1.2 var(--font-display);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.pn-section-foot {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* The advanced settings, folded away in a card whose head is the <details> summary. */
+.pn-advanced {
+  /* lets the block size below run to and from auto */
+  interpolate-size: allow-keywords;
+}
+/* The card folds open rather than appears: the native <details> keeps its keyboard and
+   screen-reader behaviour, and only the box it draws round its content moves. */
+.pn-advanced::details-content {
+  block-size: 0;
+  overflow-y: clip;
+  transition:
+    block-size var(--duration-enter) var(--ease-out),
+    content-visibility var(--duration-enter) allow-discrete;
+}
+.pn-advanced[open]::details-content {
+  block-size: auto;
+}
+.pn-advanced > summary {
+  list-style: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.pn-advanced > summary::-webkit-details-marker {
+  display: none;
+}
+.pn-advanced-title {
+  color: var(--color-text-secondary);
+  transition: color var(--duration-fast) ease;
+}
+.pn-advanced[open] .pn-advanced-title,
+.pn-advanced > summary:hover .pn-advanced-title {
+  color: var(--color-text);
+}
+.pn-advanced-chevron {
+  width: 16px;
+  height: 16px;
+  margin-inline-end: 4px;
+  color: var(--color-text-muted);
+  transition: rotate var(--duration-enter) var(--ease-out);
+}
+.pn-advanced[open] .pn-advanced-chevron {
+  rotate: 180deg;
+}
+.pn-advanced > summary:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--color-focus);
+}
+
+/* ---------- Progress: the meter, and the points to tick off ---------- */
+.pn-meter-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.pn-meter-done {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+/* A thin gold bar under the count, as the ring on the card fills: the same share, drawn twice */
+.pn-meter-bar {
+  position: relative;
+  height: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-sunken);
+  box-shadow: var(--shadow-inset);
+}
+.pn-meter-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--fill-primary);
+  transform-origin: left center;
+  scale: var(--share) 1;
+  transition: scale 300ms var(--ease-in-out);
+}
+/* The points as the editor lists them: the number in its colour, the icon of what the point is,
+   the label -- rows between hairlines, as the client's lists are ruled. */
+.progress-list {
+  list-style: none;
+  padding-inline: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 6px;
+  border-bottom: 1px solid var(--color-veil-line);
+  cursor: pointer;
+}
+.progress-list li:last-child .progress-row {
+  border-bottom: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .progress-row:hover {
+    background: rgb(255 255 255 / 3%);
+  }
+}
+.progress-num {
+  flex: 0 0 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--num-color, var(--color-route-default));
+  color: var(--color-on-badge);
+  font: 600 var(--text-xs) / 1 var(--font-display);
+  transition:
+    background-color var(--duration-base) ease,
+    color var(--duration-base) ease;
+}
+.progress-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  transition: opacity var(--duration-base) ease;
+}
+.progress-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13.5px;
+  transition: color var(--duration-base) ease;
+}
+.progress-text.ph {
+  color: var(--color-text-placeholder);
+}
+.progress-list li.passed .progress-num {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+}
+.progress-list li.passed .progress-icon {
+  opacity: 0.45;
+}
+.progress-list li.passed .progress-text {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+/* ---------- Settings: the map area, and what detection sees in it ---------- */
+.pn-area {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pn-area-size {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+.pn-area-reset {
+  flex: none;
+  margin-left: auto;
+}
+.pn-area b {
+  font: 500 var(--text-lg) / 1.2 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.preview {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+.preview.pickable {
+  cursor: crosshair;
+}
+.pn-updates-version {
+  margin: 0;
+}
+.pn-updates-skipped {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* ---------- Routes: the way into the editor, and the routes as picture tiles ---------- */
+.pn-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pn-routes-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: 2px;
+}
+.pn-routes-gap {
+  flex: 1;
+}
+/* The pencil in the parchment gold of the menu's icons, as the tiles' own pencil and bin */
+.pn-routes-editor .ui-icon {
+  color: var(--color-icon-warm);
+}
+.pn-routes-editor .ui-kbd {
+  margin-inline-start: 2px;
+}
+.pn-routes-folder {
+  width: 32px;
+  padding: 0;
+}
+.pn-routes-empty {
+  margin: 0;
+  padding: var(--space-2) 2px;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+.routes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* A route is a picture tile, as the client's Season and Abyss tiles: the part of the map it
+   crosses behind, with the route drawn between the name and the buttons, each over a dark fade.
+   The active route carries a gold frame: it is the one Start runs. */
+.route {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 76px;
+  padding-right: var(--space-2);
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-bg-sunken);
+  isolation: isolate;
+}
+.route img,
+.thumb-empty {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The middle of THUMB_ROUTE_SPAN in store/routes.py: a tile of other proportions than the
+     picture crops it evenly round the route */
+  object-position: 62% center;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.8;
+  transition: opacity var(--duration-base) ease;
+}
+.route::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    90deg,
+    rgb(7 10 14 / 94%) 0%,
+    rgb(7 10 14 / 88%) 22%,
+    rgb(7 10 14 / 72%) 34%,
+    rgb(7 10 14 / 50%) 44%,
+    rgb(7 10 14 / 34%) 54%,
+    rgb(7 10 14 / 26%) 64%,
+    rgb(7 10 14 / 26%) 80%,
+    rgb(7 10 14 / 72%) 100%
+  );
+  pointer-events: none;
+}
+.route:hover {
+  border-color: var(--color-frame-strong);
+}
+.route:hover img {
+  opacity: 1;
+}
+.route.active {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px rgb(from var(--color-primary) r g b / 35%);
+}
+/* The whole tile gives under the press, not the button inside it: the tile is a picture, and
+   a button shrinking inside its own frame reads as the picture breaking. The selector outranks
+   the shared button:not(:disabled):active. */
+.route {
+  transition:
+    border-color var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+  touch-action: none;
+}
+/* While a tile is dragged: it rides over the others under the pointer, and they step aside. */
+.routes.is-sorting {
+  cursor: grabbing;
+  user-select: none;
+}
+.routes.is-sorting .pn-route-main,
+.routes.is-sorting .icon-btn {
+  cursor: grabbing;
+}
+.route.is-dragged {
+  z-index: 1;
+  transition:
+    border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
+  border-color: var(--color-frame-strong);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 55%);
+}
+.route.is-dragged.active {
+  border-color: var(--color-primary);
+}
+.route:has(> .pn-route-main:active) {
+  scale: 0.985;
+}
+.route > .pn-route-main:not(:disabled):active {
+  scale: none;
+}
+.pn-route-main {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* Inset, so the ring is not clipped by the tile's own edge. */
+.pn-route-main:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+.route-body {
+  flex: 1;
+  min-width: 0;
+}
+/* Both are spans, because they sit inside a button and a button may only hold phrasing content;
+   the ellipsis needs a block box, so it is asked for here. */
+.route-label {
+  display: block;
+  font: 600 15px / 1.25 var(--font-display);
+  text-shadow: var(--shadow-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.route-name {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pn-route-new {
+  width: 100%;
+  min-height: 48px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: 500 var(--text-md) var(--font-display);
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+.pn-route-new:hover {
+  border-color: var(--color-frame-strong);
+  color: var(--color-text);
+}
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  /* The menu's parchment gold, not the grey of muted text; the shadow holds it off the map
+     picture where that is light */
+  color: var(--color-icon-warm);
+  filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 70%));
+  line-height: 1;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-text);
+}
+.icon-btn.danger:hover {
+  color: var(--color-danger);
+}
+.icon-btn:disabled {
+  opacity: 0.4;
+}
+.route-actions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+/* ---------- the first run: the two steps to a route on the game map ---------- */
+.pn-first-run {
+  margin: 0;
+  padding-bottom: var(--space-4);
+  background: var(--fill-panel-deep);
+}
+.pn-first-run-steps {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-4) var(--space-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.pn-first-run-steps li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pn-first-run-mark {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--color-frame-strong);
+  border-radius: 50%;
+  color: var(--color-primary);
+  font: 600 var(--text-sm) / 1 var(--font-display);
+}
+.pn-first-run-text {
+  flex: 1;
+  line-height: var(--leading-snug);
+}
+.pn-first-run-hint {
+  margin: var(--space-4) var(--space-4) 0;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ---------- support: donations and links, under every section ---------- */
+.pn-support {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--space-2);
+}
+.pn-support-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px;
+}
+.pn-support-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  background: var(--fill-tile);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+/* The donations are the warm row: a gold edge and a glow rising from the tile's foot */
+.pn-support-row.give .pn-support-tile {
+  min-height: 58px;
+  border-color: rgb(from var(--color-primary) r g b / 32%);
+  background:
+    radial-gradient(
+      ellipse 90% 70% at 50% 120%,
+      rgb(from var(--color-primary) r g b / 14%),
+      transparent
+    ),
+    var(--fill-tile);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-support-tile:hover {
+    border-color: var(--color-frame-strong);
+  }
+  .pn-support-row.give .pn-support-tile:hover {
+    border-color: rgb(from var(--color-primary) r g b / 70%);
+  }
+  .pn-support-tile:hover .pn-support-mark {
+    scale: 1.08;
+  }
+  .pn-support-tile:hover .pn-support-out {
+    color: var(--color-text);
+    translate: 1px -1px;
+  }
+}
+.pn-support-tile:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pn-support-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  transition: scale var(--duration-base) var(--ease-out);
+}
+.pn-support-mark .ui-icon {
+  width: 28px;
+  height: 28px;
+}
+.pn-support-row.give .pn-support-mark .ui-icon {
+  width: 32px;
+  height: 32px;
+}
+/* The four coins fanned out, each ringed in the tile's dark so the one beneath reads apart */
+.pn-support-coins {
+  display: flex;
+}
+.pn-support-row.give .pn-support-coins .ui-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+.pn-support-coins .ui-icon + .ui-icon {
+  margin-left: -6px;
+}
+.pn-support-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pn-support-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 var(--text-md) / 1.15 var(--font-display);
+  letter-spacing: 0.01em;
+}
+.pn-support-hint {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+}
+.pn-support-out {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 12px;
+  height: 12px;
+  color: var(--color-text-muted);
+  transition:
+    color var(--duration-fast) ease,
+    translate var(--duration-fast) var(--ease-out);
+}
+
+/* ---------- the crypto dialog (CryptoDialog.tsx) ---------- */
+/* Held by its top rather than centred: a coin whose address runs longer would otherwise make
+   the dialog taller and shift the QR code on every switch. Where the dialog stands matches the
+   centred one for the usual height. */
+.ui-modal-scrim:has(> .pn-crypto) {
+  align-items: start;
+  padding-top: max(var(--space-4), calc(50vh - 250px));
+}
+.pn-crypto {
+  width: min(400px, 100%);
+  padding: var(--space-6) var(--space-5) var(--space-5);
+}
+.pn-crypto-title {
+  margin: 0 0 var(--space-4);
+  text-align: center;
+  font: 600 var(--text-lg) / var(--leading-tight) var(--font-display);
+  letter-spacing: 0.01em;
+}
+.pn-crypto-title::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: var(--space-3) var(--space-4) 0;
+  background: var(--line-rule);
+}
+.pn-crypto-coins {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.pn-crypto-coin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 6px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  background: var(--fill-tile);
+  color: var(--color-text-muted);
+  font: 600 var(--text-sm) / 1 var(--font-display);
+  letter-spacing: 0.03em;
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+.pn-crypto-coin-mark {
+  width: 20px;
+  height: 20px;
+  filter: saturate(0.55) brightness(0.8);
+  transition: filter var(--duration-fast) ease;
+}
+.pn-crypto-coin[aria-checked="true"] {
+  border-color: var(--color-selected-border);
+  background: var(--fill-tile-on);
+  color: var(--color-text);
+  box-shadow: inset 0 -1px 0 rgb(from var(--color-info) r g b / 55%);
+}
+.pn-crypto-coin[aria-checked="true"] .pn-crypto-coin-mark {
+  filter: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-crypto-coin:hover:not([aria-checked="true"]) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+  .pn-crypto-coin:hover .pn-crypto-coin-mark {
+    filter: none;
+  }
+}
+.pn-crypto-coin:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pn-crypto-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  animation: pn-crypto-in var(--duration-enter) var(--ease-out);
+}
+@keyframes pn-crypto-in {
+  from {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+.pn-qr {
+  display: block;
+  width: 188px;
+  height: 188px;
+  box-shadow: var(--shadow-raised);
+  border-radius: var(--radius-lg);
+}
+/* A code is read by a camera: dark ink on white, whatever the theme */
+.pn-qr-plate {
+  fill: #fff;
+}
+.pn-qr-ink {
+  fill: var(--color-bg-sunken);
+}
+.pn-crypto-network {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+  text-align: center;
+}
+.pn-crypto-network strong {
+  font: 600 var(--text-md) / 1.2 var(--font-display);
+  letter-spacing: 0.02em;
+}
+.pn-crypto-network span {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+}
+.pn-crypto-address {
+  align-self: stretch;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  box-shadow: var(--shadow-inset);
+  color: var(--color-text-muted-on-selected);
+  /* Small enough that the longest address, Solana's 44 characters, keeps to one line */
+  font: 500 var(--text-xs) / 1.45 var(--font-mono);
+  text-align: center;
+  word-break: break-all;
+  user-select: all;
+}
+.pn-crypto-address b {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.pn-crypto-copy {
+  align-self: stretch;
+}
+.pn-crypto-copy .ui-icon {
+  width: 15px;
+  height: 15px;
+}
+.pn-crypto-copy.done {
+  border-color: rgb(from var(--color-accent) r g b / 60%);
+  color: var(--color-accent);
+}
+
+/* ---------- toasts, in every window ---------- */
+.toasts {
+  position: fixed;
+  z-index: var(--z-toast);
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.toast {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  border-left: 3px solid var(--color-info);
+  box-shadow: var(--shadow-raised);
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    translate var(--duration-enter) var(--ease-out);
+}
+@starting-style {
+  .toast {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+/* On its way out: Toasts keeps it drawn for the fade, after the queue has let it go */
+.toast.leaving {
+  opacity: 0;
+  translate: 0 4px;
+  transition-duration: var(--duration-base);
+}
+.toast-error {
+  border-left-color: var(--color-danger);
+}
+.toast-warning {
+  border-left-color: var(--color-warning);
+}
+
+/* The update banner, above the card. Accent on the left, so it reads as the app talking about
+   itself rather than as one of the cards below. */
+.pn-update {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    translate var(--duration-enter) var(--ease-out);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-frame);
+  border-left: 3px solid var(--color-info);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel);
+}
+@starting-style {
+  .pn-update {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+.pn-update-text {
+  margin: 0 0 var(--space-2);
+  line-height: var(--leading-snug);
+}
+.pn-update-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.pn-update-primary {
+  border-color: var(--color-info);
+}
+.pn-update-link {
+  margin-left: auto;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-sm);
+  color: var(--color-info);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.pn-update-link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.pn-update-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+.pn-update-progress progress {
+  flex: 1;
+  height: 6px;
+  accent-color: var(--color-info);
+}
+
+/* The sections not on screen, drawn once while the panel opens (WarmUp.tsx): over the viewport,
+   where they are sure to be drawn, behind the page, and under a cover in the page's own
+   background, so the gaps between the cards above still show the page. At full opacity: drawn
+   at 1% they went through a transparency layer, and the list's icons and check boxes still
+   froze the first click after (measured, 170ms). */
+.pn-warm {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pn-warm::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--pn-page);
+}

@@ -1,0 +1,466 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Asmodians - Level 17-20",
+  "map": "altgard",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1695.9,
+      "y": 1355.6,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1639.04,
+      "y": 1358.29,
+      "text": "Main quest - Ollen",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1636.35,
+      "y": 1358.64,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1632.25,
+      "y": 1360.85,
+      "text": "Main quest - Monolith",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1695.9,
+      "y": 1355.6,
+      "text": "Main quest - Nemon (open chest)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1590.75,
+      "y": 1436.8,
+      "text": "Side quest - VeKauf",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1582.81,
+      "y": 1458.32,
+      "text": "Side quest - Hadala",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1576.38,
+      "y": 1464.88,
+      "text": "Side quest - Markan",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1569.5,
+      "y": 1463.5,
+      "text": "Side quest - Tomgus",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1567.54,
+      "y": 1438.92,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1557.3,
+      "y": 1425.82,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1508.97,
+      "y": 1403.78,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1515.93,
+      "y": 1424.59,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1286.55,
+      "y": 1658.88,
+      "text": "User Teleport (7)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1289.88,
+      "y": 1665.38,
+      "text": "Side quest - Tagar",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1288.75,
+      "y": 1653.75,
+      "text": "Side quest - Rizel",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1189.89,
+      "y": 1566.31,
+      "text": "Use Teleport (8)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1197.02,
+      "y": 1566.75,
+      "text": "Side quest - Ulgorn (pres F to read)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1168.18,
+      "y": 1597.44,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1147.7,
+      "y": 1589.66,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1107.75,
+      "y": 1583.75,
+      "text": "Side quest - Dungeon",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1562.64,
+      "y": 1556.38,
+      "text": "Side quest - Galorik",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1739.98,
+      "y": 1633.89,
+      "text": "Use Teleport (4)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1800.19,
+      "y": 1652.33,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1826.81,
+      "y": 1655.25,
+      "text": "Run",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1862.45,
+      "y": 1640.04,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1887.87,
+      "y": 1604.63,
+      "text": "Side quest - Hadala",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1844.43,
+      "y": 1579.83,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1848.52,
+      "y": 1577.37,
+      "text": "Sealed Dungeons (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1921.02,
+      "y": 1646.18,
+      "text": "Sealed Dungeons (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1556.48,
+      "y": 1689.6,
+      "text": "Use Teleport (5)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1560.02,
+      "y": 1695.13,
+      "text": "Side quest - Benekt",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1524.51,
+      "y": 1731.75,
+      "text": "Main quest - Baba",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1449.22,
+      "y": 1714.73,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1405.34,
+      "y": 1757.18,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1343.08,
+      "y": 1787.08,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1278.27,
+      "y": 1787.0,
+      "text": "Main quest - Kill 2 mobs + 1 take loot",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1282.77,
+      "y": 1799.5,
+      "text": "Side quest - Dungeon (Baba school)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1343.08,
+      "y": 1787.08,
+      "text": "Use Telepor (10)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1331.62,
+      "y": 1787.88,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1280.0,
+      "y": 1857.95,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1290.88,
+      "y": 1871.88,
+      "text": "Main quest - Kill 3 mobs + take 1 chest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1264.03,
+      "y": 1865.32,
+      "text": "Sealed Dungeons (die, read book)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1230.85,
+      "y": 1872.69,
+      "text": "Sealed Dungeons (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1343.08,
+      "y": 1787.08,
+      "text": "Use Teleport (10)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1331.62,
+      "y": 1787.88,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1330.25,
+      "y": 1803.13,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1257.94,
+      "y": 1928.81,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1238.63,
+      "y": 1948.88,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1209.15,
+      "y": 1988.91,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1257.59,
+      "y": 1988.74,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1280.5,
+      "y": 1977.0,
+      "text": "Main quest - Gamilla",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1289.01,
+      "y": 1963.62,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1262.63,
+      "y": 1963.38,
+      "text": "Main quest - Kill 3 mobs + take remnants",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1280.5,
+      "y": 1977.0,
+      "text": "Main quest - Gamilla",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1293.11,
+      "y": 2019.33,
+      "text": "Sealed Dungeons (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1207.5,
+      "y": 2039.4,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1200.95,
+      "y": 2088.96,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1215.69,
+      "y": 2118.86,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1153.02,
+      "y": 2127.87,
+      "text": "Sealed Dungeons (open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1148.93,
+      "y": 2110.67,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1147.4,
+      "y": 2090.0,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1151.63,
+      "y": 2076.75,
+      "text": "Main quest - Kill 1 mob",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1124.25,
+      "y": 2103.25,
+      "text": "Main quest - Bataar + Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1116.57,
+      "y": 2033.66,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1138.27,
+      "y": 1904.38,
+      "text": "Main quest - Storage",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1098.96,
+      "y": 1921.84,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1048.75,
+      "y": 2026.25,
+      "text": "Main quest - Dungeon (Tyrant)",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}

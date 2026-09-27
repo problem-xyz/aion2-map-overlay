@@ -1,0 +1,286 @@
+name: Release
+
+# A pushed tag v<version> builds, tests and packs that version, then publishes it as a GitHub
+# release: the update feed (releases/latest/download/) serves whatever release is newest. A manual
+# run is a dry run unless told otherwise: the same build and pack, kept as a workflow artifact
+# for a few days, with no release. To publish by hand, run it on the tag with dry_run off.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build, without the v; must equal __version__ on the chosen ref"
+        required: true
+        type: string
+      dry_run:
+        description: "Pack only and publish nothing (publishing needs the run to be on the tag)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# One release at a time. Two runs side by side would both build their delta against the same
+# previous release, and the second to publish would carry a feed that skips the first. GitHub
+# keeps one pending run per group and cancels an older pending one, so dry runs get their own
+# group and cannot cancel a waiting release.
+concurrency:
+  group: ${{ (github.event_name == 'push' || inputs.dry_run == false) && 'release' || 'release-dry-run' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      GH_TOKEN: ${{ github.token }}
+      # python.org's CPython, which setup-python installs: packaging/third-party/cpython/ holds
+      # its texts, and the spec stops a build on any other version (collect_licenses.CPYTHON).
+      UV_PYTHON: "3.14.2"
+      UV_PYTHON_PREFERENCE: only-system
+      QT_QPA_PLATFORM: offscreen
+    outputs:
+      version: ${{ steps.mode.outputs.version }}
+      publish: ${{ steps.mode.outputs.publish }}
+      app_name: ${{ steps.names.outputs.app_name }}
+      releases_repo: ${{ steps.where.outputs.repo }}
+      vpk: ${{ steps.names.outputs.vpk }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # Releases go to the repository appinfo.REPO_URL names, the one installed apps take updates
+      # from. Read from the file, as uv is not set up yet. A fork runs this workflow too, and
+      # publishing to the upstream repository from a fork would fail late: say so up front.
+      - id: where
+        name: Where releases go
+        run: |
+          $m = Select-String -Path src/map_overlay/core/appinfo.py -Pattern '^REPO_URL = "https://github\.com/([\w.-]+/[\w.-]+)"$'
+          if (-not $m) { throw "src/map_overlay/core/appinfo.py has no REPO_URL on github.com" }
+          $repo = $m.Matches[0].Groups[1].Value
+          "repo=$repo" >> $env:GITHUB_OUTPUT
+          "RELEASES_REPO=$repo" >> $env:GITHUB_ENV
+
+      - id: mode
+        name: Version and mode
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if ($env:GITHUB_EVENT_NAME -eq "push") {
+            $version = $env:GITHUB_REF_NAME.Substring(1)
+            $publish = $true
+          } else {
+            $version = $env:INPUT_VERSION
+            $publish = $env:DRY_RUN -ne "true"
+            if ($env:GITHUB_REF_TYPE -eq "tag" -and $env:GITHUB_REF_NAME -ne "v$version") {
+              throw "the run is on the tag $env:GITHUB_REF_NAME, and the version asked for is $version"
+            }
+            if ($publish -and $env:GITHUB_REF_TYPE -ne "tag") {
+              throw "a release is published from its tag: run the workflow on v$version, or leave dry_run on"
+            }
+          }
+          if ($publish -and $env:RELEASES_REPO -ne $env:GITHUB_REPOSITORY) {
+            throw "releases are published to $env:RELEASES_REPO, and this run is in $env:GITHUB_REPOSITORY: leave dry_run on"
+          }
+          # check_version.py holds the full rule; this only keeps the value safe to pass around.
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$') {
+            throw "'$version' is not a version"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "publish=$($publish.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          "VERSION=$version" >> $env:GITHUB_ENV
+          "PUBLISH=$($publish.ToString().ToLower())" >> $env:GITHUB_ENV
+
+      # Before the build, which takes a while: vpk would refuse the same release at the end.
+      - name: Refuse a version that is already released
+        if: steps.mode.outputs.publish == 'true'
+        run: |
+          $tags = gh api "repos/$env:RELEASES_REPO/releases" --paginate --jq '.[].tag_name'
+          if ($LASTEXITCODE -ne 0) { throw "could not list the releases" }
+          if ($tags -contains "v$env:VERSION") {
+            throw "v$env:VERSION is already released. A version is released once: cut the next one with scripts/bump_version.py"
+          }
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - run: npm ci
+        working-directory: ui
+      - run: npm run check
+        working-directory: ui
+      - run: npm run build
+        working-directory: ui
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14.2"
+      # Pinned exactly: setup-uv publishes no floating v10 major tag, unlike v5.
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+      - run: uv sync --group dev --locked
+
+      - name: Tag and __version__ agree
+        run: uv run python scripts/check_version.py "v$env:VERSION"
+      - run: uv run pytest -q
+      - name: Every component has its licence
+        run: uv run python scripts/collect_licenses.py --check
+
+      - name: PyInstaller
+        run: scripts/build.ps1 -SkipUi -NoPack
+
+      - id: names
+        name: Names and the vpk version
+        run: |
+          $appName = uv run python -c "from map_overlay.core.appinfo import APP_NAME; print(APP_NAME)"
+          if ($LASTEXITCODE -ne 0) { throw "could not read APP_NAME" }
+          $vpk = uv run python -c "import importlib.metadata as m; print(m.version('velopack'))"
+          if ($LASTEXITCODE -ne 0) { throw "could not read the velopack version" }
+          "app_name=$appName" >> $env:GITHUB_OUTPUT
+          "vpk=$vpk" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+      # vpk makes Setup.exe and Update.exe, the wheel is the library in the app: one version,
+      # which uv.lock pins. scripts/pack.ps1 refuses any other.
+      - name: Install vpk ${{ steps.names.outputs.vpk }}
+        env:
+          VPK_VERSION: ${{ steps.names.outputs.vpk }}
+        run: |
+          dotnet tool install -g vpk --version $env:VPK_VERSION
+          if ($LASTEXITCODE -ne 0) { throw "could not install vpk $env:VPK_VERSION" }
+          "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+
+      # A delta is made against the newest release, so its full package has to be in Releases/
+      # before the pack. The first release has none, and no delta. Neither has a dry run of a
+      # version that is not newer than that release (__version__ stays at the last release until
+      # the next bump): vpk refuses to pack beside an equal or greater one.
+      - id: previous
+        name: Previous release
+        run: |
+          $tag = gh release list --repo $env:RELEASES_REPO --exclude-drafts --exclude-pre-releases --limit 1 --json tagName --jq '.[].tagName'
+          if ($LASTEXITCODE -ne 0) { throw "could not list the releases" }
+          $note = if ($tag) { "Deltas against $tag." } else { "No release yet: this is the first, and it has no delta." }
+          if ($tag -and $env:PUBLISH -ne "true") {
+            $newer = uv run python -c "import sys; sys.path.insert(0, 'scripts'); from bump_version import parse_version as p; print(int(p(sys.argv[1]) < p(sys.argv[2])))" $tag.Substring(1) $env:VERSION
+            if ($LASTEXITCODE -ne 0) { throw "could not compare $tag with $env:VERSION" }
+            if ($newer -ne "1") {
+              $note = "Dry run of $env:VERSION, and $tag is already released: packed without a delta."
+              $note >> $env:GITHUB_STEP_SUMMARY
+              $tag = ""
+            }
+          }
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          $note
+      - name: Download ${{ steps.previous.outputs.tag }}
+        if: steps.previous.outputs.tag != ''
+        run: |
+          vpk download github --repoUrl "$env:GITHUB_SERVER_URL/$env:RELEASES_REPO" --token $env:GH_TOKEN --outputDir Releases
+          if ($LASTEXITCODE -ne 0) { throw "vpk download github failed" }
+          # vpk reports a checksum mismatch in the log and still exits 0.
+          if (-not (Get-ChildItem Releases -Filter "*-full.nupkg")) { throw "vpk downloaded no full package" }
+
+      - name: Pack
+        run: |
+          if ($env:PUBLISH -eq "true") { scripts/pack.ps1 -OutputDir Releases } else { scripts/pack.ps1 -OutputDir Releases -DryRun }
+
+      # Of what this build made (assets.win.json lists it), not of the previous package beside it.
+      # vpk upload writes releases.win.json and RELEASES afresh, so those are left out.
+      - name: Checksums
+        run: |
+          $rows = (Get-Content Releases/assets.win.json -Raw | ConvertFrom-Json) | ForEach-Object {
+            $file = Get-Item (Join-Path Releases $_.RelativeFileName)
+            $hash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash.ToLower()
+            "| ``$($file.Name)`` | $($file.Length) | ``$hash`` |"
+          }
+          $mode = if ($env:PUBLISH -eq "true") { "release" } else { "dry run, not published" }
+          @("### $env:VERSION ($mode)", "", "| File | Bytes | SHA-256 |", "| --- | ---: | --- |") + $rows |
+            Add-Content $env:GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: releases-${{ steps.mode.outputs.version }}
+          path: Releases
+          retention-days: 5
+          compression-level: 0
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: needs.build.outputs.publish == 'true'
+    runs-on: windows-latest
+    # The only job that writes: the release and its files.
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: releases-${{ needs.build.outputs.version }}
+          path: Releases
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+      - name: Install vpk ${{ needs.build.outputs.vpk }}
+        env:
+          VPK_VERSION: ${{ needs.build.outputs.vpk }}
+        run: |
+          dotnet tool install -g vpk --version $env:VPK_VERSION
+          if ($LASTEXITCODE -ne 0) { throw "could not install vpk $env:VPK_VERSION" }
+          "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+      # A normal release, never a pre-release, even for 1.0.0-alpha.1: latest/download/ serves
+      # only the newest normal one. The body is the notes vpk stored in the package.
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASES_REPO: ${{ needs.build.outputs.releases_repo }}
+          VERSION: ${{ needs.build.outputs.version }}
+          APP_NAME: ${{ needs.build.outputs.app_name }}
+        run: >
+          vpk upload github --repoUrl "$env:GITHUB_SERVER_URL/$env:RELEASES_REPO"
+          --token $env:GH_TOKEN --outputDir Releases --publish
+          --releaseName "$env:APP_NAME $env:VERSION" --tag "v$env:VERSION"
+
+  # The news in the Discord server's download channels, once the release is out: one for the
+  # English players, one for the Russian, each seen only by its language role. A channel's
+  # webhook (Edit Channel > Integrations > Webhooks) is kept in DISCORD_RELEASES_WEBHOOK_EN or
+  # _RU; a channel without one is not announced to, and nothing fails. The repository variables
+  # DISCORD_RELEASES_ROLE_EN and _RU, role ids, ping the players who took that role. With
+  # DISCORD_BOT_TOKEN, a bot allowed to pin messages there pins the post in place of the last.
+  announce:
+    needs: [build, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      # release_notes.py and appinfo.py need nothing outside the standard library, so no uv sync.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14.2"
+      - name: Post to Discord
+        env:
+          WEBHOOK_EN: ${{ secrets.DISCORD_RELEASES_WEBHOOK_EN }}
+          WEBHOOK_RU: ${{ secrets.DISCORD_RELEASES_WEBHOOK_RU }}
+          ROLE_EN: ${{ vars.DISCORD_RELEASES_ROLE_EN }}
+          ROLE_RU: ${{ vars.DISCORD_RELEASES_ROLE_RU }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          VERSION: ${{ needs.build.outputs.version }}
+          PYTHONPATH: src
+        run: |
+          for lang in EN RU; do
+            webhook="WEBHOOK_$lang"; role="ROLE_$lang"
+            if [ -z "${!webhook}" ]; then
+              echo "::notice::DISCORD_RELEASES_WEBHOOK_$lang is not set: that channel is not announced to"
+              continue
+            fi
+            DISCORD_WEBHOOK="${!webhook}" python scripts/discord_announce.py "$VERSION" --role "${!role}" --post
+          done

@@ -1,0 +1,6808 @@
+{
+  "mapName": "Verteron",
+  "backgroundImage": "images/verteron.webp",
+  "categories": [
+    {
+      "id": "collectibles",
+      "name": "Collectibles",
+      "icon": "",
+      "color": "#a78bfa",
+      "visible": true
+    },
+    {
+      "id": "empyrean-trace-verteron",
+      "name": "Empyrean Trace",
+      "parentId": "collectibles",
+      "icon": "images/Empyrean-Trace-Verteron.png",
+      "iconWidth": 32,
+      "iconHeight": 32,
+      "color": "#38bdf8",
+      "visible": true
+    },
+    {
+      "id": "locations",
+      "name": "Locations",
+      "icon": "",
+      "color": "#22c55e",
+      "visible": true
+    },
+    {
+      "id": "hidden-cube-verteron",
+      "name": "Hidden Cube",
+      "icon": "",
+      "color": "#eab308",
+      "visible": true,
+      "parentId": "collectibles"
+    },
+    {
+      "id": "teleports",
+      "name": "Teleports",
+      "icon": "",
+      "color": "#16a34a",
+      "visible": true,
+      "parentId": "locations"
+    },
+    {
+      "id": "seals",
+      "name": "Sealed Dungeons",
+      "icon": "",
+      "color": "#22c55e",
+      "visible": true,
+      "parentId": "locations"
+    },
+    {
+      "id": "occupation",
+      "name": "Occupation",
+      "icon": "",
+      "color": "#86efac",
+      "visible": true,
+      "parentId": "locations"
+    },
+    {
+      "id": "villages",
+      "name": "Villages",
+      "icon": "",
+      "color": "#15803d",
+      "visible": true,
+      "parentId": "locations"
+    },
+    {
+      "id": "battlefields",
+      "name": "Battlefields",
+      "icon": "",
+      "color": "#4ade80",
+      "visible": true,
+      "parentId": "locations"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "oss-38f4124a-a94a-4033-848a-53e4d93d2262",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.34,
+      "y": 36.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-472f973c-c823-4926-a306-e446f37ef368",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.5,
+      "y": 42.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3a718256-fa36-44b8-894c-d49194ed864e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.51,
+      "y": 36.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6f471243-65dc-43ad-9c29-e83bcb27a2fb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.63,
+      "y": 39.73,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-66263d26-8e9a-41b1-98f1-03c079a37469",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.02,
+      "y": 36.69,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1682df7d-6d82-468d-a614-7197d13538f2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.51,
+      "y": 37.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ea798af0-2fcd-40e1-8be0-2235390125b1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.09,
+      "y": 39.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-01553329-cddc-47b9-b4e3-ba943d9b324e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.43,
+      "y": 43.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8fb047f9-76b9-4888-bf43-3983341f1a2f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.72,
+      "y": 45.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2629f2eb-387e-4aa5-b7fc-e2cdf305a636",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.26,
+      "y": 45.37,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d303e4e3-4862-427a-b1e7-38d5d324e227",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.88,
+      "y": 47.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-983b38cc-cc98-4012-a0fd-04ffd7beee58",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.9,
+      "y": 48.84,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-190e1531-0237-424c-ba36-add906c4a749",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.15,
+      "y": 50.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-79da3132-e5d6-4a29-872e-9411dab577b4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.18,
+      "y": 51.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ed7d8ff6-0286-4b66-bc6f-91379ca0b03a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.01,
+      "y": 50.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-57722588-b2c1-4ac1-b590-1c2bf2c48583",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.99,
+      "y": 39.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b0ed11ad-be7f-4faf-a2ec-e7ad14c24d71",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.48,
+      "y": 44.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5d2efac8-2c18-495d-aaef-d2c91122b7e1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.15,
+      "y": 43.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fec945b8-2593-4484-beaf-67abd6afe0e9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.4,
+      "y": 36.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-58912d6d-1320-48e3-a606-a9e6c3f596e1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.36,
+      "y": 37.46,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9faba42f-c730-4374-8a19-156cd9e50feb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.59,
+      "y": 39.05,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-739a7f37-dbb6-4caa-aa03-3495fc6219ac",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.28,
+      "y": 48.82,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-21cfd77c-8770-4af8-8598-2a8a4532402c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.08,
+      "y": 54.26,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-189a3b93-2f5d-4f33-b995-e0250c0ed577",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.15,
+      "y": 54.39,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-52ea3dfc-1f1d-4407-919f-2de86caaa122",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.15,
+      "y": 36.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-47956f36-fe45-42c4-af1f-eb49aa166727",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 35.27,
+      "y": 37.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7d2bb186-5cc3-4138-a6b2-7e0111fb9623",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.71,
+      "y": 36.5,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-97e740b4-5bce-4854-8495-85a7b9b49728",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.98,
+      "y": 42.5,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d742675b-2635-4af9-a8da-e330c01ce1cb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.16,
+      "y": 47.92,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-317f4bb4-2239-4ea8-8819-d14eb1c12e26",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 35.67,
+      "y": 36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1bdaa360-7795-4d9d-990f-c5bc23319b9a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.71,
+      "y": 43.85,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-535d1a47-cc74-4f97-a93b-df0deca0d53f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.86,
+      "y": 43.27,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8fef6a3e-3470-4514-8472-2da2ffed8158",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 35.79,
+      "y": 36.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cbfbb8bb-59d1-47bf-9b11-76aef62ac4c3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.78,
+      "y": 37.46,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3e6faa14-d30d-445d-bcc4-85d1c2d738f2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.55,
+      "y": 47.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9559a1d6-6dbf-41c6-a62a-22b73cd6c5b4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.83,
+      "y": 38.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d11aaea1-8142-40ad-b173-3772ca4d5a89",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.56,
+      "y": 36.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8d10307b-3098-4fa8-a152-2683e1a7dc57",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.33,
+      "y": 46.23,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a74eade9-21d8-4223-9f09-81321e586b7a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.72,
+      "y": 46.85,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3e094b72-0d59-4e77-9a1a-5257354ae863",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 34.99,
+      "y": 37.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ce8dcc10-2e28-4cb2-bf3e-53d7c8814adb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.84,
+      "y": 48.24,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b0d2f761-7618-4847-ac1c-8097ab5a789e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.24,
+      "y": 43.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-637883e7-f408-43c6-ad28-3abca775e252",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.43,
+      "y": 42.53,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5f677b37-c42a-4b1f-b39f-c73a45dec359",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.07,
+      "y": 42.31,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7b863288-b9a9-417c-8fc1-114f50e8465b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.33,
+      "y": 43.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-535edce0-5623-4e4b-b815-d474fc0201a5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.87,
+      "y": 37.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-34107de2-781e-47a5-ad68-3abcef2661ae",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.27,
+      "y": 43.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9c88be83-d731-4446-8dc1-b7ba310d7b3e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.54,
+      "y": 44.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-172739e2-7315-4b02-b9aa-6eb270cf8df3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.78,
+      "y": 45.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b9ce3ea0-2852-41ca-89fe-d5d8e8ef8b3c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.05,
+      "y": 45.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-34c01b60-23fe-4313-a4c0-23d2119a5a99",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.88,
+      "y": 45.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f7cb0365-304f-4162-85a7-9c98c43a7287",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.05,
+      "y": 37.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-aa13e386-cdb1-492e-911c-1e5a5d408ce5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.24,
+      "y": 37.02,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-920e0a9c-58c5-4bd5-9dc9-d4fd99451db0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.09,
+      "y": 44.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a545ecf2-b068-4896-a349-b2a619951a74",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.47,
+      "y": 41.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cac026f9-a13f-4860-aa8b-ada362af07d8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.35,
+      "y": 43.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bff4472d-c2b2-407e-980c-ffb457696a19",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.76,
+      "y": 45.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7d2a4a2b-d164-4b1e-a37c-0e7b5b4c851c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.48,
+      "y": 41.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-108c3a35-70d4-4322-a2bf-bc0903898a2d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.94,
+      "y": 41.3,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1f888b12-0ad0-413b-9a21-65761e3a2d09",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 35.79,
+      "y": 35.07,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8cf503be-1959-4863-a077-f7d5ba6855d4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.37,
+      "y": 41.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7d9cadd2-77b0-4ad0-a18c-9ffff1232baf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.95,
+      "y": 57.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7868477c-22ac-4377-a21c-0bcc6099b265",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.05,
+      "y": 57.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e624df12-e347-42cb-910f-555a0448f7d6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.02,
+      "y": 59.19,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d5c5e858-b995-4dcf-871e-b8dc4a7dc9a7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.89,
+      "y": 60.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d73d1c40-34dd-46c6-8564-74767d261124",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.59,
+      "y": 60.18,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-077d64e1-5d46-43bc-b658-04f295d596f4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.97,
+      "y": 60.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-05ae7443-cdbb-4275-b710-d7779db25903",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.94,
+      "y": 59.59,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-41f01c24-91dd-4255-85ab-5aee2b252f30",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.44,
+      "y": 58.9,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ef11f150-ab2f-4495-a3f1-a9fa94ba9fc6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.03,
+      "y": 59.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-30815887-bcc4-4118-a173-c6fa59266db1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.38,
+      "y": 41.32,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9b1dac42-fc39-4dab-a3b8-e3bf6c72bcdd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.25,
+      "y": 48.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a17fc103-5ff8-4690-b279-84039ddb6aaa",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.45,
+      "y": 49.91,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a241682c-8960-49a8-b43b-55fff0a168eb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.46,
+      "y": 50.24,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-95e995cb-20bb-4837-8566-e4951fb97461",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.85,
+      "y": 50.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-daac1428-5e37-48a0-8fc4-2db7fc31c297",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.77,
+      "y": 49.26,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-59f60fb1-6a16-4fae-b16b-99d617494037",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.55,
+      "y": 49.52,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-596e5201-eb45-4904-8ad8-079846f6d2c1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.91,
+      "y": 39.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fc004129-2834-4efb-a0a2-950f6f5b16b9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.31,
+      "y": 48.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-37c93462-197e-43eb-be63-cb238dc30ec1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.5,
+      "y": 49.44,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cf5c7196-52fc-49e6-ad83-76401dd52914",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.55,
+      "y": 52.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-566999af-33db-4598-b066-8b265d8934ad",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.15,
+      "y": 39.07,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6009b4c0-dd79-4311-b987-d98d2c4d6106",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.67,
+      "y": 44.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-43c7cc61-1b22-429d-a76b-1daf56ca7de4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.87,
+      "y": 40.47,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-475fec51-28cf-40cc-9583-53a20065dcb4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.71,
+      "y": 38.73,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-11ac73ff-baa5-45bd-bdd6-1eda4ab269d3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.69,
+      "y": 38.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d8c83147-892e-44e1-8cea-c54fdd915f47",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.98,
+      "y": 45.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-788dc1a7-91c3-408e-a673-c44059a976be",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.83,
+      "y": 46.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4095951d-7126-4c86-963a-5629d2cb09a8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.33,
+      "y": 38.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a7c80f19-74d7-4fe0-a166-5cbea52c2195",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.29,
+      "y": 53.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9945669e-ee6a-4204-ab74-378bdf2d0d51",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.36,
+      "y": 46.58,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-90c3e6aa-304f-45e6-a8b5-ce720b5adb43",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.35,
+      "y": 47.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-529c56ba-a268-4b7a-be23-85cac5a1f2a2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.15,
+      "y": 47.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b59e5e29-21c2-42bd-a483-28d4b977918a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.84,
+      "y": 47.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-51effc06-af35-4444-929b-fd268a8f2fab",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.3,
+      "y": 47.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f14b8cc8-57b9-436b-bede-7991a3e82689",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.55,
+      "y": 46.59,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c2f387b3-cb30-4cb1-92eb-cacd99bcbc64",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.11,
+      "y": 55.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3b7ab28b-cff3-45a0-9593-d8c0c2f7a8b4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.93,
+      "y": 48.96,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f834c545-91df-4e13-acd1-97f8507ac222",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.51,
+      "y": 55.48,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3b1533a4-8cc2-47db-a80d-3f843c1a3988",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.6,
+      "y": 55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-239e05f5-65d5-4734-b82f-7860280d6312",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.09,
+      "y": 55.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cf2ee84d-fa5a-4853-adc1-3a353d8e700a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.18,
+      "y": 51.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0bdb44b5-960b-4f05-b11a-3a725ba7001e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.91,
+      "y": 51.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4d21634a-6a00-4366-97fd-cf087215f7b6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.66,
+      "y": 47.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a962ca3d-3bd1-445d-bfc8-0dc2fb1a976f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.7,
+      "y": 51.18,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c0c807ac-7155-47f7-90e7-47e5e55339e7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.11,
+      "y": 38.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-294d92df-5a4e-4a75-b796-499fc037ae47",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.33,
+      "y": 52.82,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-30e0e069-7d11-4de1-88f6-19d70f4fe3f1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.54,
+      "y": 49.93,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7779ccbd-1b12-4660-b9f7-9f156b61d21e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.73,
+      "y": 54.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2a8b729b-612a-4bce-b9d7-0b1893646392",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.13,
+      "y": 61.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0d71b21a-a682-4d88-b0cd-ca2df26c704a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.63,
+      "y": 61.24,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-19624dec-1536-431e-891c-16d74d4cf857",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.59,
+      "y": 61.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-98066d17-b406-4c46-8918-25fd3710745f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.66,
+      "y": 50.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2be32a28-3609-40c0-9c0c-d2b1cc10b830",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.09,
+      "y": 54.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3fca4b77-6f0f-48f7-a08f-d5247de98f41",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.61,
+      "y": 51.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3c43c31f-f5da-4ba0-a064-9402eecd643c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.9,
+      "y": 49.12,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4108538f-8cff-4271-a8c1-c1ed1b157780",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.39,
+      "y": 49.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-99c1ef6e-76b0-4e8d-af2a-ef310b5ee330",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 53.53,
+      "y": 50.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-71880fdb-5ba5-4e31-8b18-cc52a26d4f39",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.5,
+      "y": 65.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-87dee76b-b473-4e8c-8aa0-99389480f94f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.43,
+      "y": 64.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ec2d856e-d52c-4ad6-a888-bff2194c62f3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.5,
+      "y": 64.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fbae853b-c2cd-461f-9e75-9a048d9549ce",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.04,
+      "y": 64.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d59b00aa-1655-4882-a844-86a858f8e78d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.86,
+      "y": 64.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-315bf8d0-b69a-4000-aa2f-49d55321e300",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.51,
+      "y": 52.58,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-09690daf-b4b2-45d5-a120-54809d02e1da",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47,
+      "y": 67.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-13533794-0472-4a2c-a29a-0f979ac18e3f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.03,
+      "y": 45.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e89f51d0-133e-4be0-9ff5-3af799106f50",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.35,
+      "y": 40.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e8f5a3ed-f3f4-4d0f-83e1-b3e62755091c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.51,
+      "y": 40.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e7545bff-4e53-44ed-af7a-48dc10eabc33",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.14,
+      "y": 68.3,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-dcecc488-a6cb-44a5-b2d8-3facfd56bfd0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.17,
+      "y": 69.71,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7089f260-1b45-40e3-ac27-c65de67bdd92",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.97,
+      "y": 52,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-eae2ebc3-572d-40f3-8971-8254815e78ad",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.79,
+      "y": 62.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5c25079c-4271-40c8-8901-69c2ae0ca776",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.01,
+      "y": 53.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-65769a59-8997-401c-b5ae-127e2dd8de1f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.72,
+      "y": 53.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b4917d5d-4367-4d54-8eb5-4b342c14a3bf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 71,
+      "y": 53.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3f5dcef0-ce7a-4a8d-9279-61ed21956b43",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.46,
+      "y": 52.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-59695e71-84b2-4e6c-bc1d-6faa1280df5c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.13,
+      "y": 56.9,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-98b3356c-02e6-481d-8fd6-b2069a767ec8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.13,
+      "y": 58.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4a09e945-5c26-4e17-bbc6-08d4673ea014",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50,
+      "y": 53.44,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2b2a69b3-aa5a-452f-9977-0cf47188fc8b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.94,
+      "y": 59.84,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a43eadc1-b92e-4c16-abea-aa791d0ee5e3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.05,
+      "y": 55.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d88bc076-0282-42bc-b9be-56a508348f46",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.27,
+      "y": 51.48,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d4eb9b60-3071-451a-9cdb-9aa4551e1fee",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.34,
+      "y": 53.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a2aa2730-d137-45ee-850b-9e2f7a5e6409",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.16,
+      "y": 53.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f6d29144-a5ed-4b8d-b2a6-ef791650632a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.95,
+      "y": 50.98,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-981750a9-cfe4-44be-af0d-40fb4763f372",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.56,
+      "y": 51.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c7a688dc-2976-45bb-b527-5484f8ff6f1f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.56,
+      "y": 50.28,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-88aa82f1-773a-43d8-80af-c9d0af52af87",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.06,
+      "y": 38.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b21ea6a2-bd61-40cc-bb92-8347a12e88b2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 35.85,
+      "y": 38.05,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-72e149e3-509e-4c23-a505-0d4b34700d33",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.41,
+      "y": 50.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4011e717-f7c4-4684-a97f-56a538af8b19",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.35,
+      "y": 51.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-63b8c6e0-eed1-472d-bb7f-422d4a4fb6a0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.66,
+      "y": 39.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-917b3f51-18b9-4edf-ad64-8c916010ad80",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.27,
+      "y": 53.96,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a7ed85e5-3bde-4db0-9346-20532a4d783e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.75,
+      "y": 56.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-aa8bb125-bb7e-4221-8b5a-8f32d7de8872",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.97,
+      "y": 60.39,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-05ac8925-1eb9-4269-89d4-4748bac7361f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.67,
+      "y": 47.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f9ee4be1-6731-4124-b07a-fe6e8f0f8940",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 53.89,
+      "y": 60.73,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-705066f4-e5c4-4aad-ab77-44d6c67931e8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.32,
+      "y": 61.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e0d2753d-e636-4677-9523-fadc16d9b9a4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.57,
+      "y": 50.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cda98ee3-cf5a-4c63-83f4-2f4c6850edeb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.32,
+      "y": 52.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9ce81f5d-1d02-40e0-9874-68103df0836d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.15,
+      "y": 55.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a1cbc667-344c-4654-86cc-1c9748d02c47",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.38,
+      "y": 56.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b2f0eccf-3718-4391-915f-285829abfd82",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58,
+      "y": 58.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2f36a374-517e-4e55-a99b-14ae701d4ce3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.74,
+      "y": 58.33,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2ea91c05-0f67-41ea-a859-cf6064564ff2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.84,
+      "y": 58.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-913417b1-2b3f-4122-82aa-616bda627c80",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.91,
+      "y": 50.59,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-53889be9-194d-4b5f-a536-22e50b06fc21",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 53.47,
+      "y": 36.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-611aa8e1-74da-49d5-b4b2-889d30a05148",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.69,
+      "y": 37.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a20e46c3-1409-4e48-994b-3255b2b09853",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.55,
+      "y": 37.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3ab367d7-9224-45cf-a42d-f3c66bae2978",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.62,
+      "y": 41.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fec5456d-2ac9-43cc-b0f1-17f865318956",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.35,
+      "y": 72.44,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bb29408c-29a8-4925-8b7b-15aadd8536cd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.58,
+      "y": 72.42,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b336c14f-08a0-4810-aad6-471b386c95eb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.84,
+      "y": 72.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-45aaae54-d62b-405c-bbd4-4662fcdebbe8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.61,
+      "y": 71.57,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7a392424-523f-4033-9504-eebd50518cda",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.06,
+      "y": 70.45,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bf9e38fa-93a6-46cb-a7fc-d9e20395df3b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.56,
+      "y": 70.26,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b30683b7-70bb-4468-8bf5-73d303e1897d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.5,
+      "y": 71.28,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-463347f8-7a86-4176-9301-73180900f97f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63,
+      "y": 70.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5aec49d6-b4ef-4cd8-bd26-c0f007b2c2ea",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.48,
+      "y": 69.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-21fdc96f-8d4d-4277-9cb3-cc41b016a2eb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.53,
+      "y": 68.31,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6a26337e-9961-4e8f-9afd-068bc9df464e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.85,
+      "y": 68.75,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-50734941-5313-45e9-b4c0-db6d581b24e9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.13,
+      "y": 68.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b69d2159-1589-4e98-8801-e97cd30a5c9e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.17,
+      "y": 68.18,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-61caa748-5b50-4aec-8cdb-0e65be6877a9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.46,
+      "y": 66.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-575859ea-9e6f-474d-9b55-4f92325db068",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.76,
+      "y": 68.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-07262c81-c495-4e58-9a8f-00385c253f79",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.88,
+      "y": 66.11,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e0bfa469-050f-4b28-99ee-d210557e7d85",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.52,
+      "y": 71.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c826e5bb-c768-4d79-8780-aa7d9f4f500f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.95,
+      "y": 62.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-760e5034-03a8-4e4c-bc83-da0191d29ae1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.55,
+      "y": 61.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-87b3edd5-b077-4a4c-bf18-fafdff250da9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.38,
+      "y": 54.64,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9c434ed2-2a4e-43e1-86ed-5fe117d93d1f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.57,
+      "y": 58.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cead2251-f427-46f7-ba50-55b3725eb979",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.45,
+      "y": 46.45,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-68489a46-d232-485a-9860-63fd5fd24bdc",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.32,
+      "y": 46.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-befcd08c-0fa4-4401-bd85-3e758c81bf5a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.04,
+      "y": 45.39,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2c03e5ef-9eab-4301-900d-1d9d569647c2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.55,
+      "y": 42.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d9d77604-7c57-42a4-9e7b-afd8ba898178",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.85,
+      "y": 41.11,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b7b40bc8-030f-422d-bb3c-07f1e7a3689c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.35,
+      "y": 37.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-53809ef8-1d1a-4358-a0c8-a94fd8cb083e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.41,
+      "y": 39.39,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-86607198-85d4-4c0a-83b7-8d7fb919b835",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.79,
+      "y": 37.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3a846f98-07c4-4637-ac36-17fc79b89e72",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.67,
+      "y": 42.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-40267fc0-b39b-4d31-a234-7cc4565d3a6d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.71,
+      "y": 42.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-04f71839-ab1b-4444-b190-c3ecb79b5c3b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.68,
+      "y": 44.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b982fe42-0701-4139-95ae-4d18b00fbc98",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.18,
+      "y": 43.12,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a79e56f8-08f5-4f69-ae61-9ead467b6b23",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.27,
+      "y": 40.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f8df7f82-0dd8-4245-89b0-97194545e18d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.13,
+      "y": 38.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bcd7b474-b6c2-42ec-b827-5553c32cfb22",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.38,
+      "y": 37.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f7ad9e99-4543-4e7f-9e32-2b9bc40c32c2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.45,
+      "y": 36.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-18405719-0edb-4c4e-acc0-6beea916ea55",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.87,
+      "y": 36.02,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8c7e0812-3ee5-4a76-8263-f54e8be1b56d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.38,
+      "y": 34.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-49726556-2e9f-4978-96bd-89e2d10e1196",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.75,
+      "y": 36.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3d592169-b440-47ab-93f9-cd68eb57b191",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.13,
+      "y": 36.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a9fd92d0-f733-4d6f-8e0c-acb160b44719",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.4,
+      "y": 36.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ea9a0673-7270-4ebc-a1f6-6d6744ad9f23",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.36,
+      "y": 37.33,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-41fdd9c2-7bbc-4222-87fd-899e58f2812f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.08,
+      "y": 37.6,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-03bea744-7b7a-4f98-981d-217af2da16ec",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.7,
+      "y": 38.34,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fe04cac5-dd0e-44cc-bb72-d56dd1e32f1c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.94,
+      "y": 33.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6c248ca5-848a-4514-bdd0-1d1e3cc933c1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.89,
+      "y": 32.97,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-859b0530-cb36-42a7-abfb-fcb9e501d775",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.33,
+      "y": 45.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2dded8b6-c338-4920-841e-76a5ad9a5077",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.55,
+      "y": 26.46,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-77ff7285-ad5e-4d41-88ac-4c4523c3f997",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.81,
+      "y": 24.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7f6f2cf5-ab9d-4150-b434-a5d3afaca851",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.68,
+      "y": 26.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5e5b71e0-8e3c-4248-ae04-6e85ffa5e24c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.91,
+      "y": 26.78,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b79e61ee-d256-4112-9b10-4a8d2cc3c5f1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.9,
+      "y": 24.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3ddc3264-baff-49d4-867f-58606fbf9f62",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.48,
+      "y": 24.82,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d6bc0c85-92f3-44aa-9344-2a13ab0a0455",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.95,
+      "y": 23.82,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6834316d-528d-4372-8834-5375fe18e5dd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.67,
+      "y": 24.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7b386b23-ce46-4c9b-851f-4dfb2a6eb74a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.01,
+      "y": 24.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f6bc2683-f6a6-4354-ba66-039eaa1fa5c5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.52,
+      "y": 57.64,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-500370a3-f569-4a1c-af1c-29e70ee3ece4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.9,
+      "y": 22.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7e5c698a-aea0-468d-9c37-c077288f126c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.41,
+      "y": 23.34,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b14b12bc-7d04-491a-83a8-acbd0624b4fe",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.39,
+      "y": 23.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3866a082-5965-49ef-875e-3d9be80fd01e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.16,
+      "y": 23.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-437f3cd0-2fcf-4ccf-8dd3-dcd51e09fdaa",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.03,
+      "y": 54.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-60bbaf24-99ad-4034-ab01-0608f4e52659",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.37,
+      "y": 58.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-65795245-7af0-4eec-90c7-bdc89b71bb05",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.53,
+      "y": 55.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d8d4c268-9c52-4a9a-a766-98598f65f218",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.04,
+      "y": 55.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3ef968ec-4e5c-4f35-8dfd-05320673293d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.15,
+      "y": 41.32,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-10cb7495-f2e2-47be-b798-0ec3c0daa2d8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.9,
+      "y": 43.98,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9ead0d3c-e699-4182-98d9-e052e1ac7e47",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.56,
+      "y": 40.75,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-58e595c3-8c89-4a05-9d8b-cd4d643d826c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.11,
+      "y": 40.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9fbde7eb-b9c1-4672-9b00-5e67f7883828",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.51,
+      "y": 37.27,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-be64f4b4-e1b8-4425-a51a-a3a77a765634",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.05,
+      "y": 37.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b5a1ee6e-c537-4087-8876-db398de7f637",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.66,
+      "y": 57.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-31b5fb31-6f06-4fa8-a538-0417c8cc8aa3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.41,
+      "y": 45.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4f4e81ac-a12e-471c-9b79-6a363b6db257",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.09,
+      "y": 40.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bbcc1dd4-d08d-42f6-b7ef-ce43e5fa9165",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 19.95,
+      "y": 76.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-92c2d88e-7437-4950-b07c-f45107afefcf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 20.36,
+      "y": 78.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-27b83e15-9460-4d50-a4ea-7ec3f3d1ea99",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 21.81,
+      "y": 77.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-da0baed7-e123-4849-81ac-e3f6b8bf9f44",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 22.35,
+      "y": 77.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-aaec7ce7-f506-47fd-bd67-f6179af78d49",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.17,
+      "y": 77.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d7ebc45c-da02-4fa9-aa22-e8ba8e3740db",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.26,
+      "y": 76.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-824427be-a41a-4c92-bed9-aba810fd4eec",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.26,
+      "y": 77.37,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-275bc028-75bb-4a47-965b-4b887078acc8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.95,
+      "y": 79.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a7289632-8d3c-4fb0-9714-462b44cc5c79",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.19,
+      "y": 78.58,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c74d1eb3-9d8f-4e34-91d6-e3de9835fa58",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.03,
+      "y": 78.98,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-934bfd0f-27d7-4631-bd02-27b6044f4efe",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.65,
+      "y": 78.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2fe3467d-4cd4-4ab5-9dfc-485c7ee2b615",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.82,
+      "y": 78.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f5cdd7f6-62c7-46f9-bb79-c16bc0ceea98",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.96,
+      "y": 79.3,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0b859dc4-180a-4cf7-9cff-5000025d3080",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.78,
+      "y": 79.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4455dc8a-a971-48cd-96ab-d4a34f960a23",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 20.5,
+      "y": 76.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7c67754d-9457-4019-8b5c-abb8687af513",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.71,
+      "y": 80.15,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-01bd284e-bce5-4c36-a8e3-46b215a2e665",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 21.41,
+      "y": 79.61,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-13ef732a-37e9-436e-8170-a6b6de5a7325",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.37,
+      "y": 79.75,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-016c086c-45b0-407d-92a5-60eefc3a96f6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 22.02,
+      "y": 79.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-18350497-e336-45e9-afb1-51d911d0ff48",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 21.56,
+      "y": 81.07,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-46b88c7f-4c06-48ac-b3eb-5120bcbe5ba7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 20.41,
+      "y": 80.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9c6d2204-e799-458e-b42f-b13a5f71f04e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 22.6,
+      "y": 81.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c3cd973e-913a-4d6b-8982-d1be5306160e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 21.64,
+      "y": 82.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c2302da3-783e-4b6b-a21d-3a485b1c7734",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 20.85,
+      "y": 82.19,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-754e1697-29eb-401d-9f5a-ddf85101e036",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.19,
+      "y": 81.9,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0b312cd8-b3e1-4dbf-9dbd-02e80f1830ff",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.11,
+      "y": 81.65,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3215fd9e-9f48-4f2b-bbf2-211f0d1e16c1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.65,
+      "y": 80.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fd61aa0b-2ec5-4b7a-8894-ce784e322bfd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.16,
+      "y": 80.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bcf35101-95e8-4e06-a1de-1ebe80822a64",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.43,
+      "y": 80.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2df9c4b0-579d-42b0-8d7c-d9f070d65fcc",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 23.85,
+      "y": 80.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-83329456-53cb-404c-a898-c6012f7deedf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 19.26,
+      "y": 81.71,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-11e67f76-db6e-4940-af83-4846a35caa10",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 19.74,
+      "y": 80.47,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6f399a62-5c2d-4b72-ae96-69d10582c004",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.84,
+      "y": 25.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b34db197-a353-4df4-ab60-a76eacd6e04a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.44,
+      "y": 23.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-64773cff-1be9-4687-b91e-639613fcecc3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.04,
+      "y": 24.98,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f7ac5bc3-96c4-43e2-b8ec-56df6ee525e2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.3,
+      "y": 63.59,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f1f30f98-0e90-4284-9ab2-c0c5ebbeaa3f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.54,
+      "y": 64.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ce5d0908-c14b-44a7-9a6b-aee71708f6a1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.14,
+      "y": 61.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-564810d0-1df7-40a9-a37f-6077392eb72a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.78,
+      "y": 62.02,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-dbc3d1d3-2f95-407d-a765-37ae41bb5151",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.97,
+      "y": 58.57,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-beb88415-f3a5-4932-bd18-c77890b6c5e2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.77,
+      "y": 59.07,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c1cfca12-bbd7-49af-97a1-7ef562d934c7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.23,
+      "y": 59.58,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9a9eecfd-5d20-45a6-8ad7-e65894dc7b55",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 34.81,
+      "y": 58.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-86131da1-dd0b-486a-b691-83907b7de357",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.38,
+      "y": 55.92,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-155f0235-f02e-4f53-b967-154bd21a47f1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.53,
+      "y": 54.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7ad4aff8-2a9f-4031-8335-b2baf897e7bb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.61,
+      "y": 63.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a278de5e-a78c-4ac5-ba86-9879f7d3ac1f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.56,
+      "y": 61.9,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7825fe89-3107-41cd-a2a4-f72592afb0b1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.85,
+      "y": 61.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ddf8b719-1de4-4fa2-867e-126156a55d57",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.03,
+      "y": 62.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9cfd5bfd-39a5-4b22-b4d1-d345af0dd0e3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.64,
+      "y": 62.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1c142f5f-a1b4-4b20-88fb-f6dd58a2ac30",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.05,
+      "y": 58.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-62a006e3-1131-4ab7-b114-51dbd4a18e34",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.29,
+      "y": 46.91,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5b90b5db-cd72-448c-bd51-de25d4fca456",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.01,
+      "y": 46.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9b6f9d93-cc5d-4c62-bf7d-e0cfa5793f3d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.85,
+      "y": 46.73,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-39305f66-46bc-498a-a564-8aff9196f350",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.33,
+      "y": 41.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2db51bf0-f1f6-4215-ade9-afeb03b6bce2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.07,
+      "y": 46.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9379e4ef-c2a6-41c0-a5f2-92af91f4868a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.04,
+      "y": 46.56,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8a62e289-8f9c-4894-85a0-773b2c41369b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.81,
+      "y": 39.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6d6c1787-73ae-4dae-9f29-ad9581733740",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.99,
+      "y": 79.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9fbf8b76-102d-4710-be97-992a0321a011",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.08,
+      "y": 25.2,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fadcec1e-e247-4f41-9e64-dc76227d0574",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 30.82,
+      "y": 42.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a77fad82-00ab-44fe-9310-b91f1e2cc3ba",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 30.14,
+      "y": 41.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-691c8e6a-d99c-4cc9-b837-ccd02ff7ba4b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 33.78,
+      "y": 58.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8b9f5ad3-656c-4cbb-a20d-c4fab163e1fc",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.06,
+      "y": 50.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2a10fe73-bd07-45b0-9ab6-5ae50eda5785",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.07,
+      "y": 54.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9a315d4b-0171-4fea-b92a-7c1623e2f26d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.53,
+      "y": 51.97,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-68f705ca-4b72-49b9-9bab-abb3ee8b6eef",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.65,
+      "y": 64.12,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a390d8fa-7a67-4bbe-835d-0976dfa6cfe2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.61,
+      "y": 64.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-41acc033-a3c0-4da7-886b-9b2e538761e0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.2,
+      "y": 65.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-44652355-cc86-4bfd-9812-33831a7d4867",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.04,
+      "y": 66.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1b085294-4280-4b0b-a507-f60c85204c65",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.88,
+      "y": 65.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-35cf9cca-155f-4570-915f-44ef02253eb4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.78,
+      "y": 64.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d40015c4-c678-4f48-9f19-653622598ca5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.66,
+      "y": 65.2,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c7404d95-2c58-4e2b-8d20-e314c41fa2b8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.62,
+      "y": 61.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d8fd25df-d0ac-45f0-88a5-fa18874471df",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.03,
+      "y": 41.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6bc0063b-f385-4a1a-8ca3-8fda59b25514",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.12,
+      "y": 58.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-dcce46fa-ac9b-45e8-95c7-7ef2f52eab5b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.72,
+      "y": 57.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5bc08f42-c0f1-4d10-9a53-3c74a9dd3954",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.31,
+      "y": 23.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bcac095a-7681-4ecc-a01e-9815d645a7d3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.62,
+      "y": 25.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f2648ef0-5ae4-465b-ae12-e86c38334ff1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.37,
+      "y": 60.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-69b7d262-cbb6-48d9-b001-e6983f14c4fe",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.39,
+      "y": 54.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a4a69796-eb42-4f7b-b714-089c95828aab",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.36,
+      "y": 57.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1a4112c4-090d-478b-a1ad-11a7500cb7cb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.96,
+      "y": 36.11,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3f8a295b-d8f3-480f-8317-25287ecb26b4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.03,
+      "y": 41.26,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3e453fad-e03a-44fd-8106-25fa5da4732c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.39,
+      "y": 41.15,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3426153d-3591-4fc0-ada0-ba29f08fc863",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47,
+      "y": 41.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-721f7d0f-a90d-4b28-aac1-290f2d4bdae4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.07,
+      "y": 56.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a9ffd42c-7377-4386-9dc1-50147af8d125",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.62,
+      "y": 25.94,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1c31f824-3c0f-4bde-b268-64848f7d2ef8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.36,
+      "y": 56.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4131c56d-9d5b-4b8e-a387-d126210ee53b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.05,
+      "y": 46.85,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-014bc87f-27a1-44ef-a30f-090878b6668f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.95,
+      "y": 57.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-961231f1-c965-4a0a-a927-8066eaaf4544",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.76,
+      "y": 46.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-eb7d9d8c-b778-4b69-bf30-90f0a0674e3c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.81,
+      "y": 57.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-25935aaf-81df-4d30-9dd4-0a279b6505bb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.14,
+      "y": 46.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c70fb92f-63f6-4009-9336-da7e83c3d709",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 71.48,
+      "y": 46.34,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8cb612f8-e04b-4b6d-b0fd-0b7745b87005",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.3,
+      "y": 50.24,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8856e9a3-fde5-4b11-b0a5-629ce3aee9db",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.07,
+      "y": 49.57,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f6e349e8-4a80-47d0-bc66-5d2318573bd7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.9,
+      "y": 49.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a2a2e1fe-09b7-453c-b18f-c6e356967de5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.13,
+      "y": 49.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fcbcd16a-3c35-4f4b-9d43-490875c7b233",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.8,
+      "y": 50.46,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3287d965-4c9a-4f48-a2de-7f6966495a57",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.03,
+      "y": 49.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a2aff922-4d0d-46ce-864b-597af1d6831b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.31,
+      "y": 48.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-15d999c4-373a-41b1-84fe-cc72926a5b6c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.08,
+      "y": 48.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5131b427-4a36-49c2-9740-f96da107dd3f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.4,
+      "y": 49.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-494cdf47-c18d-4eda-97e5-2128ca56064c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.75,
+      "y": 51.71,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ae6154d8-4a0c-4383-8236-e22fd4ff3404",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.04,
+      "y": 52.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e223060b-52d7-4a0d-97dd-bd9517751ce6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.48,
+      "y": 49.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bd43b01f-2f2b-4db5-88e4-340f0c761c39",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 53.11,
+      "y": 53.15,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-15b0b9a1-c007-413c-a9b2-8f4449b4e97c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.83,
+      "y": 47.6,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a4668c38-f859-43ce-8146-94087e1395cd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 38.18,
+      "y": 55.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4c07ae9d-3f7d-4e7f-a30c-d55d917d3f6d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.43,
+      "y": 59.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e49d68e0-d0c5-492b-b8c6-e89427f24bb6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 49.11,
+      "y": 59.44,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5c198e19-2179-4198-bc25-7701e39e223b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.97,
+      "y": 59.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6665870a-8ecb-442b-b75f-dab2e51f89c2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.86,
+      "y": 58.47,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9e4934f9-6dac-436c-bbc3-7501d9bd52bd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.93,
+      "y": 63.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0e474361-c843-4698-87f5-1a3bb3561a68",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.54,
+      "y": 69.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e0d8c6fc-d1fb-46f9-a2e0-b692d92e70cc",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.21,
+      "y": 69.93,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-57c66cc6-d637-42d4-9fc5-97bbf8b6f8c0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.42,
+      "y": 68.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-432446f1-d819-4579-bd88-d0c725adbe11",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 22.12,
+      "y": 79.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-626f3639-26ee-4d8a-87de-8ee55cd5f716",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 22.49,
+      "y": 84.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-951d5c79-00e7-455b-be29-b76a859e890b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 39.5,
+      "y": 57.85,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7e21f51a-a827-43a8-a696-e5db29d96e71",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.04,
+      "y": 49.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e30ae42c-b3f0-43b7-8778-b69b46c7147c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 43.87,
+      "y": 62.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-edf4bc17-59d8-48e8-81fd-051da32caea4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.46,
+      "y": 49.71,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-62b439f8-92b9-437f-a9e0-c2deb9b8fa41",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.66,
+      "y": 42.31,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6119bfc4-f3d5-4980-8e4d-e5c3447f8bf3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.53,
+      "y": 61.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-138065a2-2e34-4a18-8799-2cbb4699bfb2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.91,
+      "y": 55.49,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-13af0c7e-9512-4b67-87d0-5680ffb088f5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.99,
+      "y": 55.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3d23fa81-558b-4772-98e7-ddd7384cef9e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.36,
+      "y": 53.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-27b3cb6b-8389-44dd-9d64-1843ae3ce83f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.8,
+      "y": 60.94,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-69d5b97d-6ba8-4007-ab99-f5e81a0d096a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.74,
+      "y": 62.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ded47dad-7ad9-4265-9065-9581bee36286",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.94,
+      "y": 62.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-32ed203d-d51a-4614-9a1d-7169064760ce",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.68,
+      "y": 52.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b6ccdcfe-9126-4e9f-841a-b6e5171d6804",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.12,
+      "y": 48.19,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1cbabb0d-c1d1-4291-9bb2-af49967345e9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.23,
+      "y": 58.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b4a9f060-6a66-4544-833e-075f7862a7fd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.91,
+      "y": 60.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-74570efb-6c2d-4ca4-a24e-b44c5d31dff8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.64,
+      "y": 56.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-92bc706f-0e42-4394-a3e3-24ab67c7956a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.43,
+      "y": 41.93,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2702f02a-d174-4879-ac19-53a6574b04df",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.56,
+      "y": 43.01,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-621d977d-7888-4a93-8474-d7758ae001b6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.4,
+      "y": 34.33,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8207fa35-dbf1-4df5-80d6-e126026378b7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.39,
+      "y": 42.8,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-45a1691b-7351-4605-92d8-87b77fbd514f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.68,
+      "y": 60.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-027fdfdd-c906-4e2f-8db5-8d4917bbfd36",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.23,
+      "y": 59.45,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-204c28b5-2d21-44e5-946a-74cc67e9e5b5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.66,
+      "y": 64.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3b66fbf8-04ff-4956-bca4-69ad93f28055",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.04,
+      "y": 37.37,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-79932a1d-9be7-409a-84f4-88eb879c116d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.47,
+      "y": 39.12,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fa5fc45c-050d-4c46-a977-df7a4fa409c2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.4,
+      "y": 40.83,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e98b2644-5c81-4445-9ccc-1a740a2db83a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 27.31,
+      "y": 79.57,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-60c43b8f-92cc-4d3f-9bf0-bcbc8761c438",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 19.76,
+      "y": 77.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-abd0236c-48d2-4dd5-965d-62bb1c11568a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.48,
+      "y": 63.53,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b907af46-ca8a-4b2f-bb9a-71e071b8a09c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.34,
+      "y": 61.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bc0bd3ea-8fd6-419d-9320-47024e1a85ac",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.32,
+      "y": 62.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0980ea0b-ea5a-4a40-beef-0869457a11bd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.66,
+      "y": 83.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7c934229-0e56-4370-a91f-290dc5502204",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.83,
+      "y": 65.92,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1ca4805b-3a7f-4eb8-823a-d4fac959849a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.54,
+      "y": 65.97,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d54ba16d-7ac7-4e03-a53b-71f0c7490563",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.22,
+      "y": 37.33,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-540edcf5-b951-476c-8acc-25441273f22f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.7,
+      "y": 65.67,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b7a30fc3-dad9-422a-9c2d-ac6b9349dfe2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.13,
+      "y": 40.52,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9946efbb-db65-4719-afac-ad8145f1962e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.05,
+      "y": 65.94,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ecb1390f-71ad-45a2-876c-caec3bc893f9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.49,
+      "y": 65.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f9432522-d4e4-4ee4-a8f4-38eeb9868e1c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.52,
+      "y": 66.24,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c6af758e-e97d-44d1-baf8-b14aaff98cee",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.62,
+      "y": 58.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fb088204-6d9e-480a-bb1c-f2d795883493",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.56,
+      "y": 57.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3b3e6fe3-c5b8-472b-8f48-8924cc08afc6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.48,
+      "y": 56.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-59661009-1a43-4e65-8164-c69283129bf1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.42,
+      "y": 56.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bddbb2cf-6d4f-4081-8d44-699823c1f3b9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 45.1,
+      "y": 68.46,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-45139481-145a-4170-abb3-f81b4e4afbb8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.98,
+      "y": 65.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-802a1971-bfa5-4ade-9d63-380eb69a7020",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.42,
+      "y": 39.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3b678ded-0a57-4366-ad43-09e195ed6c08",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.59,
+      "y": 40.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-96f03a98-a0ba-4fa3-af02-9853d314d431",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 46.59,
+      "y": 62.3,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b856d614-f4ff-4788-b569-18aaefd1150e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.44,
+      "y": 68.47,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8f8b1c97-c911-48d0-b48c-b195108868fb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.35,
+      "y": 68.87,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-045cdc69-4255-4cb3-b170-446abc55de10",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.03,
+      "y": 69.35,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c80e2c4f-61ca-4ae6-8896-f76aa4d35f8d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.84,
+      "y": 70.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-00dc717b-9b0b-4f6c-8db1-f6f7e4978408",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.7,
+      "y": 69.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7446aad2-f21a-479e-be11-a345fea655e5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.96,
+      "y": 73.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1b49490c-53c5-4b57-86e4-6c94e9e03680",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.84,
+      "y": 70.42,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8e61a17b-157d-41d4-824f-5cca3b87bc43",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.82,
+      "y": 40.56,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6f5210bb-12a0-4909-b5d9-9cded29367b5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.14,
+      "y": 65.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d888878c-0fd3-484c-b515-dc2a0af44f09",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.73,
+      "y": 65.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-abf59a1f-f17c-4de9-ad06-e5432c3c53b7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.5,
+      "y": 65.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f8f2522f-82ee-4f1e-8848-908a4d32b9e9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.25,
+      "y": 65.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-806f8763-3b7f-403f-aced-174051af44c1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.76,
+      "y": 66.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b81fdf4e-acd0-4b94-9b8e-9ee06628e36c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.29,
+      "y": 66.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4a187e79-5645-497c-b451-a817d74722b7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.71,
+      "y": 61.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1a602824-2f39-4eba-952f-41a804ffd520",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.25,
+      "y": 61.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b491f78b-cd61-4589-88e8-2f263165bf76",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 53.85,
+      "y": 61.54,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a5b61f58-6aac-40b9-b0ac-aef836968c76",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.01,
+      "y": 67.16,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-786ac17e-cdff-45c6-9867-c6fb26d4830d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.28,
+      "y": 67.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1cd61199-2006-460c-a36f-12da4fab0f4b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.02,
+      "y": 52.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2c14e78a-ff28-42c8-923b-f4ad45bd3a4f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.76,
+      "y": 52.98,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d31f1cc7-d311-4837-aaa5-7ca2912b907f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.02,
+      "y": 53.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d160efcf-d7e5-4199-b750-1a3488e0d568",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.75,
+      "y": 49.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6e5ffc76-87d2-445b-be59-1f8b4fcd4d76",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.74,
+      "y": 49.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3a9e78bc-8b66-460c-8ddc-00aa484496d0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.45,
+      "y": 67.48,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-855031be-f504-4b41-83f6-714700770ac4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.94,
+      "y": 68.05,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c2b9a495-9d6e-418f-81d8-13d270561230",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.29,
+      "y": 47.18,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1bbd2d82-b807-4797-ab67-34fa0cbfe9bf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.22,
+      "y": 67.57,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d4d72102-3468-435c-8a14-e222139c7a72",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.87,
+      "y": 42.27,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-19c8ed53-6685-42d4-9878-7e034260a3e1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.13,
+      "y": 49.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-71ff9e3d-11f4-46ce-b3fe-f9b341291d03",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61,
+      "y": 47.94,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ad457cba-76c6-49af-97fd-cc8c6c97d0d7",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.22,
+      "y": 47.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-74997671-fdf7-4cfe-aa5d-26df1095a7ab",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.7,
+      "y": 44.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cff1f695-2377-45f4-9e89-9d0b8644db30",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.04,
+      "y": 40.93,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-22e27881-790c-4703-b0fa-ab0701bd0fc5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.53,
+      "y": 64.14,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-51606848-c954-4631-bf33-e66f2aafc49b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.21,
+      "y": 37.15,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-c0b61c90-1e2d-461c-97c0-9550da4c6505",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.93,
+      "y": 35.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-231ff804-32ff-4199-b892-b5a9e9f3e5b3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.78,
+      "y": 35.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-190b9796-e4fb-4bda-a67a-968b104b34c6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.59,
+      "y": 35.61,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-968e43e9-77ee-4120-b4ab-8bbff02b8ab6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.72,
+      "y": 34.34,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ca88f580-9b22-46bc-9988-289e0aaa5154",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.04,
+      "y": 34.45,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d243dce5-c435-4596-8d09-05022a2abeda",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.89,
+      "y": 50.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-85809dca-e735-4066-b4b2-91ce699d9e23",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.63,
+      "y": 52.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-20a03c97-14b3-4800-a063-19da50e3bc37",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.49,
+      "y": 37.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6aaefef5-a318-4975-b250-24641c4c0b09",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.38,
+      "y": 39.84,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ef526f9b-c831-40ed-a4e3-69d79693b91a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.34,
+      "y": 37.39,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6f8a18c9-18b2-47fe-9a29-64387e13f016",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.52,
+      "y": 62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b31706f3-f22c-4f0f-b488-55e616d7be8d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.93,
+      "y": 59.69,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b66b1bcd-827d-4d8f-8976-81efe80edc20",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 72.85,
+      "y": 39.73,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-83e7bf18-e1cb-4f1d-a630-f52b878cdbc5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.97,
+      "y": 58.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ad9abea0-1374-4fbf-b4e5-235db32747b3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 72.34,
+      "y": 41.22,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-88286ff5-6b3d-4d94-8f68-17e805a1f3ae",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 74.18,
+      "y": 43.15,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a60c7bf4-547b-48ac-94c7-abff580e0456",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 72.68,
+      "y": 44.36,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a23e0ca9-5532-4f33-9d60-4b46e4437e0d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.72,
+      "y": 57.02,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-aa8ebf45-a39d-425c-aa61-1ac1666e3409",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.67,
+      "y": 57.2,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9606cafc-68d6-4ed3-aa6b-9fbaf49e69fd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 74.8,
+      "y": 45.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-9277f21e-42a6-4c5c-a052-fbfe3396500c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.03,
+      "y": 39.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-081ba4b6-827d-4e9c-af20-fba6c0068fbb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.54,
+      "y": 42.1,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-be1f5c8d-7844-4a8a-8426-513ed1da9516",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.41,
+      "y": 48.12,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e67dda53-fc89-4348-b46c-f7137ef4ddee",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.11,
+      "y": 62.89,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d939ef3e-9de2-4c42-b5b6-c7ac96dea9c4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.86,
+      "y": 53.82,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0bf37acc-4fd8-4e5e-b972-61be2b9a11a1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 52.1,
+      "y": 48.69,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-de93e0c9-e310-4e58-9a79-48d697ce5b16",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.46,
+      "y": 51.6,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-98d6f2bc-c8ca-40c0-874f-b2fed77beb32",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.14,
+      "y": 51.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-40665cd7-81a4-41fb-aa31-a886c706a967",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.68,
+      "y": 60.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a71288fa-a17e-4800-8178-07611b3904fd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.73,
+      "y": 60.85,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a1347739-8677-4bd3-a679-70afd16c2105",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.25,
+      "y": 61.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bf482f3f-f668-41be-822f-910ca6ce686e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.64,
+      "y": 58.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-39fa18c1-8186-4b0a-8ec9-027749a36c41",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.17,
+      "y": 62.93,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bb6a2f3d-e687-4015-8c9d-2d660972c51c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.39,
+      "y": 62.3,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bd4f11d5-5c95-4499-8719-f4bb1d97098c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 44.08,
+      "y": 67.86,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7f7c2a05-074e-48f3-a1b9-af8d87664c2c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.76,
+      "y": 61.78,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-f1b77694-58eb-4179-ba36-dee063a11e51",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.84,
+      "y": 64.42,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b40f2a1c-1797-4d50-9c57-aac5aa620d3b",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.03,
+      "y": 62.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-997cf02b-4820-4923-a445-a0980c1e9450",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.06,
+      "y": 46.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-a77a41d0-66fa-4b4a-ac65-c98ca90b079a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 71.51,
+      "y": 45.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-828e1475-3405-4292-883e-873e0c0c1465",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.82,
+      "y": 39.43,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8ef4fd93-877d-44a8-b808-b67e3db32d12",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.95,
+      "y": 34.8,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3086c227-d526-40f8-aed4-492a09ddef8c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.14,
+      "y": 35.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-89c47149-8f57-4a47-9491-e1d170186c92",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.15,
+      "y": 33.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2b7b2cc6-3b4c-4bf2-9731-52d03e7f7144",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.96,
+      "y": 33.03,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-29d42759-633a-4ef6-956a-0f1efd5fd983",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.52,
+      "y": 33.78,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-61ec9091-5057-48f6-9203-04ad254d1e2d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.27,
+      "y": 38.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5819cc33-8c96-4450-a36b-d20f2b4ec979",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.73,
+      "y": 38.59,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-4336d0fe-e979-423a-bd2c-e1352ba9f19c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 25.01,
+      "y": 81.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0e743cc0-ea6d-4ec4-b81e-70968daaa1be",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.79,
+      "y": 58.04,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-362f8f9c-ee33-46c7-8b47-9c901cc387fb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 24.38,
+      "y": 78.08,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-19a20ee4-ef3b-4e67-be30-5fef7dee21a6",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.09,
+      "y": 56.68,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7188bd0e-2831-40e4-9646-d06cb3dd9da5",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.94,
+      "y": 36.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cecdff89-b5df-401e-8372-135b59370112",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.63,
+      "y": 41.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3868e3c8-8fa0-4cc0-b400-5ac5df6fd506",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.25,
+      "y": 41.69,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-8ea306df-c60f-4d38-912d-900005fd21e1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.19,
+      "y": 42.97,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-b29b6383-3c6c-432c-a208-5223f1abec6c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.6,
+      "y": 43.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-123232f2-d5a7-4fb0-81eb-a0d9daac5d94",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.71,
+      "y": 63.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d487f96a-19cd-45cd-814f-d671537de6f8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.21,
+      "y": 40.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cf8a23d2-1736-449b-b7e7-b566b440820a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.93,
+      "y": 62.28,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-99ed38f0-8e0a-4703-b22a-284031fbfa57",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.44,
+      "y": 62.21,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d69f154b-485c-4853-98c2-c05eb043a59a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.27,
+      "y": 62.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-fc2f4422-6cf2-4136-a42c-916fd4db66af",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 60.55,
+      "y": 50.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-3e629eaa-7a7a-4b46-9801-14aeedb8e31f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.09,
+      "y": 43.25,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7437e283-87dc-4808-a869-d5a2b99ce83a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.03,
+      "y": 44.38,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d44a92c7-c278-410c-9ccf-c6db3e3b856c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 61.58,
+      "y": 52.76,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-59487202-f21a-496e-95bd-583ece149b59",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 51.21,
+      "y": 36.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d83827f2-cea7-4127-b659-c2e7a4dbcec9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 59.07,
+      "y": 34.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-27ad3952-061f-4669-9f51-58f9b84c07cd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.55,
+      "y": 39.81,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1dda3715-9260-45dc-8624-706914057040",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.8,
+      "y": 42.13,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-acc410be-8a44-4f07-8fad-103c9e35ef88",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 50.6,
+      "y": 52.55,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-cf8ad5a4-a15f-4379-92a1-5d25413d5af9",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 36.02,
+      "y": 41.66,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-de8925fb-6c4f-47da-a3b1-441c6c00395c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.02,
+      "y": 33.91,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1b3dccfc-31ea-45ca-9492-e03505929f14",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.86,
+      "y": 35.53,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-63b433bb-12da-45ca-a4f2-0eb6bf979971",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.47,
+      "y": 35.95,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e32991d4-520c-41c9-869d-faee050294eb",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.43,
+      "y": 34.7,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-38b77bc9-e849-4996-bcde-7c82525dc154",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 58.78,
+      "y": 68.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5b84b483-6786-4000-8b62-39b9321df8b3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 63.32,
+      "y": 71.74,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bb1e1651-77d4-43cb-8410-301fb6120b5e",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 47.3,
+      "y": 68.33,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-15785262-9d18-42e8-91c0-6fb95675f303",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.57,
+      "y": 33.29,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-1b505472-e7bc-4c16-b990-b34692e2e1d8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 37.63,
+      "y": 44.58,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-48a6eafb-d622-4e52-9ff0-c539d76925b1",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.62,
+      "y": 46.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-736fa9c6-19e7-4398-8d6d-2d4c03ca27b3",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 68.1,
+      "y": 47.05,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-531fbcc0-b558-446c-a3ee-b2c7978da31f",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.63,
+      "y": 34.72,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-6e03338d-2787-4d54-86db-ce79fbf8ac53",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.69,
+      "y": 51.53,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-115cddab-a0d8-45b5-b165-2b65c7351413",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.93,
+      "y": 47.94,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-889f0a5e-8bea-4b58-9c6b-01d6158d0f42",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.54,
+      "y": 62.06,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bd0284d9-ddea-4df9-9e46-ef90c63f550c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.41,
+      "y": 44.52,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e261dba6-81ac-4ea2-aa7c-bad5497e620d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 56.99,
+      "y": 45.92,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-aab82a75-cec1-49a2-8eee-6449723fe3cd",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 57.65,
+      "y": 43.62,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-63d8b14a-1d3e-4204-bddd-3baf1bfbfb24",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 69.38,
+      "y": 33.92,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-77e83aa5-9bb7-4a2c-92a8-ded81daae232",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.48,
+      "y": 63.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-5294fb20-ee4b-4706-a7a1-a18297b0bc09",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 54.68,
+      "y": 55.09,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d90dba87-b75b-4132-9259-4c6191eeb192",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.39,
+      "y": 60.69,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-61ec5cdb-2af6-41ef-83a3-a617d1dae45c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 67.68,
+      "y": 34.79,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0183ba57-4707-4572-9931-8ff12b0c52b0",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 65.65,
+      "y": 38.99,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-54a2d447-0ca8-4120-aa4c-3531147a36a8",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 66.54,
+      "y": 39.17,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-feb00f1d-be2a-4ca8-ba40-30439e48eb8d",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.83,
+      "y": 36.63,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e73878cb-2e1f-44e3-908e-b6fdf0774bc4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 42.82,
+      "y": 62.77,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-685a66ec-e5f5-44ba-af79-1efe7b8d4a82",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 55.53,
+      "y": 68.47,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-bfb5b304-bbcb-4bf6-89c6-e9ee0432d021",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 48.66,
+      "y": 54.41,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d732f2f3-d8a1-428f-8c2a-00b31bd4f6cf",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 72.69,
+      "y": 49.27,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-ce6a9646-d48f-4705-b284-1dc12b1318d4",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.71,
+      "y": 65.05,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-0383ad29-583a-4d94-85b0-9521eec8d084",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 41.37,
+      "y": 63.96,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-adbe5355-1a32-4db9-8f36-8a192d432d12",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 40.99,
+      "y": 63.51,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-2465b420-ac0b-487b-a74f-2f85ae759456",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 70.28,
+      "y": 60.45,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-87f890bb-59d4-4e95-ac4a-c9e645f32e8a",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.45,
+      "y": 63.4,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-e8a00345-8710-4d14-b833-8f53a31a6df2",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 62.96,
+      "y": 61.88,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-7f2d18e4-6825-4dd4-80eb-f4ea6ba7012c",
+      "categoryId": "empyrean-trace-verteron",
+      "x": 64.21,
+      "y": 36.18,
+      "title": "Empyrean Trace",
+      "description": ""
+    },
+    {
+      "id": "oss-d7ddaf1e-8d53-473f-84c7-a87898c50f61",
+      "categoryId": "hidden-cube-verteron",
+      "x": 64.27,
+      "y": 50.4,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f28fcf8b-d22b-423d-ba77-6b7d82378332",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.9,
+      "y": 49.11,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5359e51f-32a0-457e-b3b9-6b9e20d94727",
+      "categoryId": "hidden-cube-verteron",
+      "x": 53.26,
+      "y": 51.14,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-7543c1d4-3285-48e1-8a3b-610d4ebd8d90",
+      "categoryId": "hidden-cube-verteron",
+      "x": 33.65,
+      "y": 58.69,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-a2a6ce4b-e437-4549-baf3-7855860763cb",
+      "categoryId": "hidden-cube-verteron",
+      "x": 61.06,
+      "y": 43.4,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5faa13b3-107f-4ded-ad8c-443b00702425",
+      "categoryId": "hidden-cube-verteron",
+      "x": 56.92,
+      "y": 38.02,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-2155163f-61c6-4003-8da5-1f33759e3cb3",
+      "categoryId": "hidden-cube-verteron",
+      "x": 58.87,
+      "y": 42.47,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-33b81fa1-3e32-4808-a641-a0bb0449a01c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 60.46,
+      "y": 39.15,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-a3aed295-20ea-4d07-9922-659f888d516a",
+      "categoryId": "hidden-cube-verteron",
+      "x": 68.04,
+      "y": 41.28,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6af1dad4-791c-4187-94ff-5929d7a9b9cb",
+      "categoryId": "hidden-cube-verteron",
+      "x": 60.12,
+      "y": 38.54,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-06d1ec69-c4a2-47df-9227-fb37be7a55bf",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.45,
+      "y": 35.39,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-a12ca286-eceb-4f1d-b549-9b8c18919101",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.15,
+      "y": 38.15,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-841e22c2-07a2-41eb-a4e8-4210c777fe4f",
+      "categoryId": "hidden-cube-verteron",
+      "x": 55.63,
+      "y": 40.76,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-9bebca85-654a-41f6-9a22-c03276eb7323",
+      "categoryId": "hidden-cube-verteron",
+      "x": 66.76,
+      "y": 39.07,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6a8763b2-bf30-4281-bbbd-e44d49e62649",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.02,
+      "y": 24.49,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-df9d0ec0-07b0-4848-91c1-7c9a328a9beb",
+      "categoryId": "hidden-cube-verteron",
+      "x": 66.8,
+      "y": 48.07,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6a622571-4eae-4ddd-8b00-88ae292d072c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 43.7,
+      "y": 67.82,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-c014db99-0029-4560-ab72-8554138d0efd",
+      "categoryId": "hidden-cube-verteron",
+      "x": 54.57,
+      "y": 33.26,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-166ffb8b-aaff-4d97-88db-669a07959b1a",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.76,
+      "y": 48.29,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-079be6cb-db17-4a6c-8698-6f832fddc818",
+      "categoryId": "hidden-cube-verteron",
+      "x": 45.52,
+      "y": 50.21,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-595653eb-df9c-4e03-be04-429b5d3ae77c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.01,
+      "y": 47.08,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-b7e28aad-1ef7-468b-b5f4-c8ecf989c612",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.63,
+      "y": 45.73,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-b797a9c7-3545-4981-bd88-fdb297ef197f",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.72,
+      "y": 52.26,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-d3df60ea-151a-4b7c-94b5-f5638eb80d2d",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.52,
+      "y": 40.19,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-2605062f-60a6-41fb-9147-f10ef17ddf24",
+      "categoryId": "hidden-cube-verteron",
+      "x": 46.44,
+      "y": 45.56,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-1e59b8db-0a12-4059-8c3f-c79afd55ead7",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.99,
+      "y": 41.94,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-09f116ad-157e-4df8-b79e-2136f0dffa5c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.21,
+      "y": 62.41,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6d8c2333-fac4-40d9-9214-9479444fe8f6",
+      "categoryId": "hidden-cube-verteron",
+      "x": 43.96,
+      "y": 68.48,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ce830aec-eb67-46bd-88d8-f4e24aadfe71",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.07,
+      "y": 62.34,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-3f6df8d9-8c68-4027-8b6e-9b7e7ce8b6d6",
+      "categoryId": "hidden-cube-verteron",
+      "x": 43.95,
+      "y": 68.33,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-3ae706a7-7e3c-4835-b383-ca4d431b3d62",
+      "categoryId": "hidden-cube-verteron",
+      "x": 45.63,
+      "y": 65.11,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-29ecbe0e-c5a9-4a74-90f5-6dc9c642c033",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.19,
+      "y": 34.4,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-1c040c12-18d4-4624-b651-830d6df30c88",
+      "categoryId": "hidden-cube-verteron",
+      "x": 47.79,
+      "y": 59.89,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-505bb228-e135-4a45-b876-d93a4db4ce3f",
+      "categoryId": "hidden-cube-verteron",
+      "x": 38.35,
+      "y": 44.89,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-e4c65b2e-120a-471c-ab97-515b7a7714b2",
+      "categoryId": "hidden-cube-verteron",
+      "x": 39.78,
+      "y": 40.33,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-22b5933c-85e4-40bb-beb6-78678821dbdf",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.22,
+      "y": 40.76,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-42e9f326-77bc-452a-90c0-7a2c6c2d17bb",
+      "categoryId": "hidden-cube-verteron",
+      "x": 42.48,
+      "y": 63.53,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-0b25398a-6481-42b9-9320-91845fb1dbcf",
+      "categoryId": "hidden-cube-verteron",
+      "x": 69.79,
+      "y": 35.44,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-49e097a4-b5bd-402f-af36-180a846141aa",
+      "categoryId": "hidden-cube-verteron",
+      "x": 45.43,
+      "y": 64.01,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-d82d9c08-f0e1-4901-9f1f-33d7606b0d71",
+      "categoryId": "hidden-cube-verteron",
+      "x": 43.62,
+      "y": 62.63,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-d7dad401-a901-4e54-a73a-c9bda690dc93",
+      "categoryId": "hidden-cube-verteron",
+      "x": 20.15,
+      "y": 75.4,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-79351794-ae84-469c-920a-ff8efaeb9dd2",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.06,
+      "y": 39.71,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-4b32188f-4c31-438f-b009-13093f9873f7",
+      "categoryId": "hidden-cube-verteron",
+      "x": 50.89,
+      "y": 69.1,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-52515d14-36f6-4ae7-9da8-ffd3d8759cd9",
+      "categoryId": "hidden-cube-verteron",
+      "x": 42.83,
+      "y": 60.91,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-eff586ed-4063-42d8-911c-f719cc0b5778",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36,
+      "y": 41.71,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-b94b0b36-6650-4481-9a96-cdc5b976a3e0",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.06,
+      "y": 65.71,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-e3645f59-693e-4e49-90c1-5081c344f566",
+      "categoryId": "hidden-cube-verteron",
+      "x": 58.06,
+      "y": 65.81,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-7d96dbfe-0392-46ba-9ec1-9e5fa31d257f",
+      "categoryId": "hidden-cube-verteron",
+      "x": 66.96,
+      "y": 42.26,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-c0cc7283-338e-4755-b5a1-d2d8fe443bd4",
+      "categoryId": "hidden-cube-verteron",
+      "x": 23.72,
+      "y": 78.59,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-2d981a3d-08f0-4b1c-a546-de8295223948",
+      "categoryId": "hidden-cube-verteron",
+      "x": 63.1,
+      "y": 39.94,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-7c741536-640c-49c2-bd4b-e4bfdda81f61",
+      "categoryId": "hidden-cube-verteron",
+      "x": 61.54,
+      "y": 24.93,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5ddc24d1-6a50-428d-8642-998a8ba98b21",
+      "categoryId": "hidden-cube-verteron",
+      "x": 23.06,
+      "y": 76.95,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5d0e2c41-3e62-4e0f-a1ec-4f6fbe51a021",
+      "categoryId": "hidden-cube-verteron",
+      "x": 21.9,
+      "y": 79.8,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-10c984f0-251f-456f-8fb0-5245d786c516",
+      "categoryId": "hidden-cube-verteron",
+      "x": 22.13,
+      "y": 84.66,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5b2fdfbd-4885-4a7c-bf2b-860e5fec8bb9",
+      "categoryId": "hidden-cube-verteron",
+      "x": 23.61,
+      "y": 80.81,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-dfbb8e48-2241-4060-81da-04c970ea73ae",
+      "categoryId": "hidden-cube-verteron",
+      "x": 57.96,
+      "y": 36.9,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-acd840bb-2a75-4327-b1cc-6593b6f67866",
+      "categoryId": "hidden-cube-verteron",
+      "x": 23.5,
+      "y": 78.41,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-5748e254-1ab6-4ffc-89b4-a16dc85434f4",
+      "categoryId": "hidden-cube-verteron",
+      "x": 58.64,
+      "y": 61.6,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f36e241c-620d-4e26-ba80-39acabe11ec9",
+      "categoryId": "hidden-cube-verteron",
+      "x": 61.19,
+      "y": 40.19,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6006ef3f-b4c4-47c9-b464-81fed1dc7287",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.58,
+      "y": 33.08,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ee50c60a-d4dd-4b37-86dc-f5096905486b",
+      "categoryId": "hidden-cube-verteron",
+      "x": 34,
+      "y": 58.4,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-74ad98c9-c327-4c23-ac47-7b8cc341a743",
+      "categoryId": "hidden-cube-verteron",
+      "x": 40.98,
+      "y": 69.58,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-7eca8501-57f7-40ee-9696-bcf1479422b5",
+      "categoryId": "hidden-cube-verteron",
+      "x": 59.67,
+      "y": 34.95,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6f0bc4a7-bad9-41e2-b657-3a3a01021221",
+      "categoryId": "hidden-cube-verteron",
+      "x": 53.78,
+      "y": 33.08,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-20b77475-4521-410e-a56c-59ba4e5bb4be",
+      "categoryId": "hidden-cube-verteron",
+      "x": 42.58,
+      "y": 37.87,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-8ca94559-ae97-49a6-810b-313fae3d1c18",
+      "categoryId": "hidden-cube-verteron",
+      "x": 39.48,
+      "y": 39.77,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f99bbce5-aed2-4716-b9f7-776af3f04c86",
+      "categoryId": "hidden-cube-verteron",
+      "x": 55.29,
+      "y": 70.57,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-79e39fd5-4870-4c25-8eb4-a9a6088bd9ea",
+      "categoryId": "hidden-cube-verteron",
+      "x": 47.55,
+      "y": 59.85,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-a27466b6-21fc-4b29-bb53-b2a17bff42f2",
+      "categoryId": "hidden-cube-verteron",
+      "x": 60.14,
+      "y": 51.95,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f56c7612-d22b-4d3d-bac7-bf0dd1eff1b7",
+      "categoryId": "hidden-cube-verteron",
+      "x": 40.78,
+      "y": 56.64,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-14194d6c-adc8-4017-bf85-574ac1eb3631",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.99,
+      "y": 52.42,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ab9302d3-fa04-4dd0-b7ba-64cf565c42be",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.23,
+      "y": 50.18,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-0d3750b4-fd3b-485c-9e0e-c0a787747503",
+      "categoryId": "hidden-cube-verteron",
+      "x": 63.9,
+      "y": 71.67,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-b9eeb3ec-3dbf-4925-8e30-8e84bf68b002",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.63,
+      "y": 52.31,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f2f34cc2-5377-4742-af72-ceae9e3bb019",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.96,
+      "y": 41.53,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-42ae0cec-6985-418f-a01f-342c6cd8573e",
+      "categoryId": "hidden-cube-verteron",
+      "x": 63.62,
+      "y": 62.12,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-33801007-9643-4e44-ad23-930be13106b5",
+      "categoryId": "hidden-cube-verteron",
+      "x": 47.28,
+      "y": 49.55,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-66b549bc-bccd-45bb-9a34-ded663abcd73",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.45,
+      "y": 38.89,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ea2b1ded-9557-4814-a9e1-b8b7b30ca134",
+      "categoryId": "hidden-cube-verteron",
+      "x": 43.68,
+      "y": 45.24,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-97b65c03-4995-4338-a755-4deed87188aa",
+      "categoryId": "hidden-cube-verteron",
+      "x": 51.75,
+      "y": 48.28,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ca7a31aa-c135-4895-9859-42e4af0ed377",
+      "categoryId": "hidden-cube-verteron",
+      "x": 63.24,
+      "y": 25.17,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-965b4940-d4c3-4297-b4e4-b334402fe943",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.76,
+      "y": 25.44,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-fb678243-a3d9-44b1-a230-212667f4a2c5",
+      "categoryId": "hidden-cube-verteron",
+      "x": 50.96,
+      "y": 66.56,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-56df78e7-ca86-4129-8d25-55ab3899dbcc",
+      "categoryId": "hidden-cube-verteron",
+      "x": 40.04,
+      "y": 58.39,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-18ce2a6f-429d-44fe-8a67-84303fd9d1f7",
+      "categoryId": "hidden-cube-verteron",
+      "x": 20.75,
+      "y": 77.58,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-04200af9-0c59-4df8-853b-51ae27c4724c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 19.65,
+      "y": 76.62,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-52366cf2-7bcf-4d4b-8187-a7abb2ee70cc",
+      "categoryId": "hidden-cube-verteron",
+      "x": 33.95,
+      "y": 40.55,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-101055b5-9f6c-45eb-b299-52f1b4dc0809",
+      "categoryId": "hidden-cube-verteron",
+      "x": 42.75,
+      "y": 38.33,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-3ed03b43-75d2-483d-a7a5-daeffb57c79e",
+      "categoryId": "hidden-cube-verteron",
+      "x": 39.16,
+      "y": 41.6,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-59c0b48d-38e9-48f6-81aa-5adcbbd74cd3",
+      "categoryId": "hidden-cube-verteron",
+      "x": 60.31,
+      "y": 33.62,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-c0c93ecd-d4d6-46e2-845b-ca22c12efa73",
+      "categoryId": "hidden-cube-verteron",
+      "x": 42.91,
+      "y": 62.99,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-8f063f92-9391-4037-a43b-1b872f5545c5",
+      "categoryId": "hidden-cube-verteron",
+      "x": 68.46,
+      "y": 61.94,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-bb07d1cd-7105-484b-a4ee-3ac4b9f07df2",
+      "categoryId": "hidden-cube-verteron",
+      "x": 62.21,
+      "y": 46.66,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-f1aaf69a-d42d-41cc-8a11-23dfd0e6a995",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.84,
+      "y": 56.65,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-9771a261-428c-49f7-bbb1-4539bca8dc7c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 54.31,
+      "y": 53.32,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-56ff2cde-3653-423f-9c8c-5a807c558efe",
+      "categoryId": "hidden-cube-verteron",
+      "x": 41.48,
+      "y": 63.48,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-308672ac-df05-4b6c-a922-3f85fa0422f0",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.03,
+      "y": 60.52,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-955879c5-4cb0-48f1-908f-6d311f8880bf",
+      "categoryId": "hidden-cube-verteron",
+      "x": 60.14,
+      "y": 40.95,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-3c7d2258-746b-4de0-a32f-1461a3cbc789",
+      "categoryId": "hidden-cube-verteron",
+      "x": 64.07,
+      "y": 36.43,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-4d932178-4c74-47d3-bbc8-a3fd49342352",
+      "categoryId": "hidden-cube-verteron",
+      "x": 57.78,
+      "y": 39.71,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-0c47521b-9e30-4c7f-8de2-b804bf02d858",
+      "categoryId": "hidden-cube-verteron",
+      "x": 55.42,
+      "y": 40.1,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-413d70de-c54e-4fad-872f-ef15fe01e25f",
+      "categoryId": "hidden-cube-verteron",
+      "x": 39.98,
+      "y": 43.6,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-16890ced-2995-4398-be1e-04c99d26d51c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.49,
+      "y": 35.13,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-9f1651dd-6561-4f5c-b51f-fc6f0c33def8",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.49,
+      "y": 35.13,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-bf4be0aa-3047-4f93-b78e-6cfea75544e4",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.49,
+      "y": 35.13,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-6d96d288-d2e5-45ea-a6b3-992a8597c1dd",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.49,
+      "y": 35.13,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-339089a3-7b33-4cf6-8608-b13cdd0e1152",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.49,
+      "y": 35.13,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-99c92b65-7571-4c65-99db-347b58a63dda",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.53,
+      "y": 35.24,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-9fe14c5e-fb1d-43db-b3a1-6165d683346d",
+      "categoryId": "hidden-cube-verteron",
+      "x": 67.47,
+      "y": 35.27,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-97ccfc10-acc8-4bed-9d6d-53be400cf44d",
+      "categoryId": "hidden-cube-verteron",
+      "x": 55.46,
+      "y": 40.17,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-3ae4f440-73e7-4db3-a2f1-8c56e4734fcc",
+      "categoryId": "hidden-cube-verteron",
+      "x": 46.47,
+      "y": 43.49,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-8fe7d32f-310e-4572-9b3e-5ef2b8352c67",
+      "categoryId": "hidden-cube-verteron",
+      "x": 50.56,
+      "y": 57.48,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-06b0d5e5-6bc8-472e-9648-7da6d82ae1fe",
+      "categoryId": "hidden-cube-verteron",
+      "x": 58.76,
+      "y": 47.96,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ea3c2b93-2ec8-44cd-b1df-335e18cab78c",
+      "categoryId": "hidden-cube-verteron",
+      "x": 48.58,
+      "y": 61.96,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-696373e3-8ab2-4fb7-b2e7-0119d2b290ce",
+      "categoryId": "hidden-cube-verteron",
+      "x": 36.79,
+      "y": 46.44,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-b72030ff-6a3b-4401-a407-c3951519a695",
+      "categoryId": "hidden-cube-verteron",
+      "x": 46.01,
+      "y": 51.56,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-ada05e4d-cc3a-42d8-a59b-3fd724680a9e",
+      "categoryId": "hidden-cube-verteron",
+      "x": 69.37,
+      "y": 42.91,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-9a08ffae-9a54-4b0e-9a0a-7906cd1839dd",
+      "categoryId": "hidden-cube-verteron",
+      "x": 23.83,
+      "y": 75.46,
+      "title": "Hidden Cube",
+      "description": ""
+    },
+    {
+      "id": "oss-2ff12ef9-6317-48d4-84a6-7cca9905beee",
+      "categoryId": "teleports",
+      "x": 36.39,
+      "y": 36.89,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-952537e7-0a8a-4742-a024-550554680ac3",
+      "categoryId": "teleports",
+      "x": 38.6,
+      "y": 40.75,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-cbf40708-d332-49c2-b261-641b6dd214f4",
+      "categoryId": "teleports",
+      "x": 36.5,
+      "y": 43.93,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-1f031b1c-95d6-4b66-a022-3a1a8690eeec",
+      "categoryId": "teleports",
+      "x": 38.37,
+      "y": 45.91,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-8ed1c656-fd6e-4b64-8a35-b08e49ffaee3",
+      "categoryId": "teleports",
+      "x": 47.2,
+      "y": 41.48,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-aa87e417-621c-4678-99dc-3961df292cb0",
+      "categoryId": "teleports",
+      "x": 49.38,
+      "y": 36.96,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-7a1fdea4-5565-4daa-ba59-e993340ca75c",
+      "categoryId": "teleports",
+      "x": 41.13,
+      "y": 41.22,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-ea3c8375-fa53-4c6e-95f4-57298b7fe8a1",
+      "categoryId": "teleports",
+      "x": 54,
+      "y": 37.27,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-5f334a9e-bdae-40bc-80fa-7caedfce0a90",
+      "categoryId": "teleports",
+      "x": 47.69,
+      "y": 44.59,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-0f310a22-7edf-4ce4-8dff-4d58ea68dfb6",
+      "categoryId": "teleports",
+      "x": 41.97,
+      "y": 49.69,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-1bacf715-6079-40a9-9561-4a708911b3a6",
+      "categoryId": "teleports",
+      "x": 44.84,
+      "y": 48.08,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-821ac64f-705b-45d5-9ac6-e630d79edd3c",
+      "categoryId": "teleports",
+      "x": 48.84,
+      "y": 49.9,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-f5432610-67ea-4d7a-bb56-7a3c19332e94",
+      "categoryId": "teleports",
+      "x": 47.05,
+      "y": 55.46,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-d8ba6dce-aca6-45be-92a1-72748a472326",
+      "categoryId": "teleports",
+      "x": 39.59,
+      "y": 54.91,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-226e716d-a52c-4abb-9f3c-5e863ff43413",
+      "categoryId": "teleports",
+      "x": 41.36,
+      "y": 57.18,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-36ab5c1d-f4f1-4c4d-9b36-b3ef1689819f",
+      "categoryId": "teleports",
+      "x": 37.4,
+      "y": 57.85,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-5e66bf2d-53e2-4f3b-bc78-8e2c56a3ea2e",
+      "categoryId": "teleports",
+      "x": 42.05,
+      "y": 60.62,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-c933a390-ea02-4c6e-a6ef-e917dde0b2f5",
+      "categoryId": "teleports",
+      "x": 45.75,
+      "y": 56.91,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-f030c709-ec7a-423a-9477-f69fd9620d0c",
+      "categoryId": "teleports",
+      "x": 47.12,
+      "y": 59.01,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-0d4d8ad6-5fa9-43f4-89fd-5e9c32e0054d",
+      "categoryId": "teleports",
+      "x": 44.84,
+      "y": 64.29,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-a93e91f9-04a5-46a1-9fb2-04b3de32b0a6",
+      "categoryId": "teleports",
+      "x": 57.47,
+      "y": 52.1,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-e7fec432-c704-4337-a8ed-c4428a989bb4",
+      "categoryId": "teleports",
+      "x": 54.38,
+      "y": 57.26,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-7bd65d38-267c-4265-83d6-ae77534b3e93",
+      "categoryId": "teleports",
+      "x": 59.75,
+      "y": 57.9,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-172cf3a8-0dd0-409e-8a8b-0065399530a0",
+      "categoryId": "teleports",
+      "x": 64.82,
+      "y": 54.28,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-5d33d64d-eeda-4cb5-9985-24b48a9ae8f5",
+      "categoryId": "teleports",
+      "x": 69.81,
+      "y": 55.19,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-b47cf722-3211-4a16-98a9-7d456ab23c6c",
+      "categoryId": "teleports",
+      "x": 63.9,
+      "y": 44.42,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-50082305-4419-4ebc-a83e-174683bd61e1",
+      "categoryId": "teleports",
+      "x": 60.24,
+      "y": 43.33,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-ea4e3187-46fb-4490-95bc-2f989fcfda13",
+      "categoryId": "teleports",
+      "x": 65.11,
+      "y": 42.26,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-fce1aa76-e434-44f6-b463-9b8eda162099",
+      "categoryId": "teleports",
+      "x": 55.7,
+      "y": 64.36,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-799b6758-69ff-4f17-90b9-7b612d147bd4",
+      "categoryId": "teleports",
+      "x": 59.73,
+      "y": 68.15,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-c1cbb36d-270c-4e34-b1f4-4950fbf6f7ce",
+      "categoryId": "teleports",
+      "x": 59.45,
+      "y": 37.1,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-25c360fe-39e8-40ea-81bf-d5cb98f6d5b2",
+      "categoryId": "teleports",
+      "x": 66.81,
+      "y": 33.79,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-e22ddc2b-35c8-4af4-bcce-eef331e0c8c9",
+      "categoryId": "teleports",
+      "x": 61.11,
+      "y": 26.67,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-eb195660-e015-4ed1-b910-32e9ed3ede10",
+      "categoryId": "teleports",
+      "x": 52.26,
+      "y": 41.39,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-6302e04a-697f-4dd1-b57b-6fea2b3fdc0e",
+      "categoryId": "teleports",
+      "x": 42.04,
+      "y": 47.13,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-fc837f0e-b40f-43cd-83ce-64012866c569",
+      "categoryId": "teleports",
+      "x": 43.25,
+      "y": 38.54,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-0bfd0d02-c085-4912-8624-d433dab3a21c",
+      "categoryId": "teleports",
+      "x": 47.13,
+      "y": 51.15,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-3e6f7f6c-89a6-46ba-bf03-b9ad608babf1",
+      "categoryId": "teleports",
+      "x": 38.01,
+      "y": 51.04,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-8ceebebe-0da5-47b5-b965-2ada5239a587",
+      "categoryId": "teleports",
+      "x": 42.31,
+      "y": 67.24,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-1dc00815-6bea-4acc-850f-e5a699ba526d",
+      "categoryId": "teleports",
+      "x": 34.36,
+      "y": 58.19,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-010cec84-8e74-4552-a247-5433ba88b7c5",
+      "categoryId": "teleports",
+      "x": 57.24,
+      "y": 69.86,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-291e5b1c-6a20-4fb5-80ae-b6e9905c3ec2",
+      "categoryId": "teleports",
+      "x": 30.91,
+      "y": 42.88,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-fc0f01e3-9bdb-4f8b-b9fa-01a57a23f9fa",
+      "categoryId": "teleports",
+      "x": 43.9,
+      "y": 42.63,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-0d905d73-638f-43a3-b1a2-3e08319e4a02",
+      "categoryId": "teleports",
+      "x": 45.72,
+      "y": 38.71,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-a9b0a139-62fd-4652-8742-3bad8d85bc51",
+      "categoryId": "teleports",
+      "x": 36.61,
+      "y": 54.11,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-3c9aa67b-b828-4102-81ec-bdddd8a38455",
+      "categoryId": "teleports",
+      "x": 51.67,
+      "y": 48.9,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-5d1f76ae-f3cf-4b97-b07e-c215f3a9b3c9",
+      "categoryId": "teleports",
+      "x": 42.02,
+      "y": 69.49,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-7a55c978-5ade-45b7-81dc-9ebc2afe8e0c",
+      "categoryId": "teleports",
+      "x": 47.67,
+      "y": 67.72,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-7a39630f-1c30-4fa4-b845-0612a1abd3b5",
+      "categoryId": "teleports",
+      "x": 54.55,
+      "y": 52.43,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-49692b31-3dae-43e6-83a8-653b6a29c3df",
+      "categoryId": "teleports",
+      "x": 50.29,
+      "y": 60.78,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-c463b435-cf5a-40a4-911f-3bfa65adb860",
+      "categoryId": "teleports",
+      "x": 67.31,
+      "y": 52.5,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-215ad48b-9cfd-4930-9332-23044d051a1c",
+      "categoryId": "teleports",
+      "x": 63.35,
+      "y": 57.71,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-389850ba-89a9-461f-ab63-2c67e73b6b5b",
+      "categoryId": "teleports",
+      "x": 62.81,
+      "y": 62.63,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-5d4c9dd1-bb01-41b1-9075-f8c546ccd8d4",
+      "categoryId": "teleports",
+      "x": 58.67,
+      "y": 63.96,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-e7b049eb-a51e-4e0d-964f-a28ca83efc1d",
+      "categoryId": "teleports",
+      "x": 55.37,
+      "y": 71.12,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-b3717663-31b6-4c79-a02f-58b389335faa",
+      "categoryId": "teleports",
+      "x": 62.16,
+      "y": 49.74,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-b335de89-eff5-4eea-9b75-274d90d4517a",
+      "categoryId": "teleports",
+      "x": 54.31,
+      "y": 45.72,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-48e9c9bb-ae2a-4a47-952b-1b28f8dd9d6e",
+      "categoryId": "teleports",
+      "x": 71.84,
+      "y": 46.09,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-d3929b56-c9fd-482e-9939-35f5f73538cd",
+      "categoryId": "teleports",
+      "x": 56.53,
+      "y": 40.61,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-afeb9856-2f7e-400b-9997-2aa12b7d09f1",
+      "categoryId": "teleports",
+      "x": 61.35,
+      "y": 72.5,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-88c604d5-e041-49a5-bc42-55f431055b64",
+      "categoryId": "teleports",
+      "x": 65.48,
+      "y": 67.48,
+      "title": "Teleports",
+      "description": ""
+    },
+    {
+      "id": "oss-c650f5a3-1b19-402a-8c87-a56a3e942309",
+      "categoryId": "seals",
+      "x": 41.67,
+      "y": 39.07,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-7794e058-3350-4f7f-b9a0-f12189b44f02",
+      "categoryId": "seals",
+      "x": 42.65,
+      "y": 37.84,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-a825b343-f932-4224-9482-e14b3cabdd1c",
+      "categoryId": "seals",
+      "x": 45.31,
+      "y": 40.3,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-34551edc-7c9a-4fc3-9c17-8d85394a9dad",
+      "categoryId": "seals",
+      "x": 45.7,
+      "y": 55.85,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-58326d58-8240-4977-b0d1-306f767c8fc2",
+      "categoryId": "seals",
+      "x": 45.83,
+      "y": 47.29,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-6af029e9-b5c7-4cab-9040-68894994e5f1",
+      "categoryId": "seals",
+      "x": 69.71,
+      "y": 40.09,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-3de0b016-8997-4e3a-873c-b64ef071a983",
+      "categoryId": "seals",
+      "x": 47.71,
+      "y": 52.66,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-4f3ca1e5-33ef-4893-98db-200aaf81e615",
+      "categoryId": "seals",
+      "x": 58.41,
+      "y": 59.91,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-66bbf622-252c-4f36-9ecd-fc3381b039c8",
+      "categoryId": "seals",
+      "x": 55.14,
+      "y": 47.01,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-edb2ba38-bd0e-4673-a555-a3089601b268",
+      "categoryId": "seals",
+      "x": 64.79,
+      "y": 37.3,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-ca721be4-d3aa-4bd6-a62a-fb45315ac2f7",
+      "categoryId": "seals",
+      "x": 60.03,
+      "y": 48.45,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-f83db532-3a27-4dd3-bafb-0cc0a1c67d64",
+      "categoryId": "seals",
+      "x": 41.65,
+      "y": 65.8,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-95c71829-0294-44b3-ab7c-6c19df38cfac",
+      "categoryId": "seals",
+      "x": 51.48,
+      "y": 48.77,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-78703a8a-1272-4e01-aea5-81e7e340e743",
+      "categoryId": "seals",
+      "x": 46.02,
+      "y": 61.4,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-3c509651-5a24-4326-a12e-2a154aed12db",
+      "categoryId": "seals",
+      "x": 58.62,
+      "y": 61.69,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-7a3ddbde-fbe4-48f7-9752-f0348e0e2c48",
+      "categoryId": "seals",
+      "x": 67.47,
+      "y": 61.82,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-287e6909-12fa-480f-b2bf-ee26c8b28dbf",
+      "categoryId": "seals",
+      "x": 47.63,
+      "y": 56.97,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-aba9eeb3-15e3-40d5-8f79-65759b62897c",
+      "categoryId": "seals",
+      "x": 42.92,
+      "y": 60.72,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-33232cc4-5c74-49a1-a2af-b31f12a96e94",
+      "categoryId": "seals",
+      "x": 50.12,
+      "y": 51.75,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-3b464394-ae99-40ff-aeb6-d6b0f2bf077d",
+      "categoryId": "seals",
+      "x": 45.1,
+      "y": 50.87,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-2dd24759-c009-48fe-ae59-12e1a7af93b9",
+      "categoryId": "seals",
+      "x": 53.61,
+      "y": 52.84,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-deed3135-4679-4647-8dfc-254d409cefcb",
+      "categoryId": "seals",
+      "x": 38,
+      "y": 56.15,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-a5e8b51d-7876-43a1-9857-c46151007108",
+      "categoryId": "seals",
+      "x": 45.5,
+      "y": 59.25,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-111009b4-ff29-40c4-a3aa-87fb846a44a2",
+      "categoryId": "seals",
+      "x": 42.16,
+      "y": 52.88,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-efb8b125-8fe5-4b5b-a215-577a8a3efd76",
+      "categoryId": "seals",
+      "x": 61.83,
+      "y": 58.28,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-391c1073-eea4-4682-8836-28dfcdb29919",
+      "categoryId": "seals",
+      "x": 60.52,
+      "y": 36.11,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-759667e9-2072-438a-b2bb-85e76461bf0c",
+      "categoryId": "seals",
+      "x": 52.25,
+      "y": 36.52,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-b9004495-b212-4830-ac86-a10f1d6008b4",
+      "categoryId": "seals",
+      "x": 37.34,
+      "y": 57.07,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-901dafb6-2b65-46c4-bef8-e5b4c733881e",
+      "categoryId": "seals",
+      "x": 48.07,
+      "y": 46.77,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-0a0e74fc-94fc-490e-9015-82ac3d67d357",
+      "categoryId": "seals",
+      "x": 41.06,
+      "y": 46.12,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-22069f56-fbfc-4b89-8f1d-9b7585d22f63",
+      "categoryId": "seals",
+      "x": 52.92,
+      "y": 48.13,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-09bec912-16cd-4b5e-8d76-01731c6ecf4d",
+      "categoryId": "seals",
+      "x": 38.92,
+      "y": 60.16,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-db3a54f7-ac17-4838-8a38-7a20ca20fbd2",
+      "categoryId": "seals",
+      "x": 58.09,
+      "y": 57.73,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-4781c32f-a6ea-4d1c-b166-3d2d75e2bf54",
+      "categoryId": "seals",
+      "x": 52.69,
+      "y": 39.42,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-66271d00-0ab2-4e2c-93c0-263ba4857d85",
+      "categoryId": "seals",
+      "x": 66.67,
+      "y": 38.94,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-2c76598b-657d-421a-b207-addb236d49d3",
+      "categoryId": "seals",
+      "x": 52.37,
+      "y": 40.77,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-61742db0-d769-44c2-a091-358b00512c30",
+      "categoryId": "seals",
+      "x": 36.66,
+      "y": 44.87,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-523fa66d-c9cb-4035-9292-177db69fd021",
+      "categoryId": "seals",
+      "x": 49.4,
+      "y": 49.91,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-bd0a897c-f7cb-46cf-ac6c-d37d43def2be",
+      "categoryId": "seals",
+      "x": 62.78,
+      "y": 38.56,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-dcbfeae7-af4b-45f9-9457-463e303ae0ed",
+      "categoryId": "seals",
+      "x": 68.49,
+      "y": 41.49,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-afbe1f02-bd69-4c86-a742-f47c55efbb9c",
+      "categoryId": "seals",
+      "x": 39.11,
+      "y": 49.56,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-dcd755aa-fd65-4725-823f-33cba6a26fa8",
+      "categoryId": "seals",
+      "x": 50.95,
+      "y": 68.23,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-24684211-c4d8-4629-8675-8028c700b55b",
+      "categoryId": "seals",
+      "x": 62.55,
+      "y": 55.59,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-2c70ad7c-d0ce-4df8-8145-2f64e17cea7d",
+      "categoryId": "seals",
+      "x": 56.41,
+      "y": 70.09,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-7fec00e7-34c8-4f07-99a7-a7a384156802",
+      "categoryId": "seals",
+      "x": 47.57,
+      "y": 65.33,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-795d7349-92ae-4878-b97f-8bd9a24d4384",
+      "categoryId": "seals",
+      "x": 49.28,
+      "y": 56.31,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-36bbbca7-efe2-4169-b524-9d0484952c22",
+      "categoryId": "seals",
+      "x": 51.67,
+      "y": 50.38,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-87b759be-558f-4386-8f31-d76d852b5dfa",
+      "categoryId": "seals",
+      "x": 61.24,
+      "y": 71.42,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-b72d9916-77ce-475c-9c9f-987eebd8c642",
+      "categoryId": "seals",
+      "x": 44.35,
+      "y": 44.21,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-2f438df2-996d-4516-97e0-13751855fbec",
+      "categoryId": "seals",
+      "x": 34.02,
+      "y": 58.34,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-58ae002c-6cf3-4950-9bb3-8a19f58c48db",
+      "categoryId": "seals",
+      "x": 40.12,
+      "y": 62.37,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-a15dd64d-1e3a-4e3d-8501-6cb89bf49240",
+      "categoryId": "seals",
+      "x": 67.24,
+      "y": 53.75,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-af044f88-38bd-423a-9450-f5d8d55efce2",
+      "categoryId": "seals",
+      "x": 48.21,
+      "y": 62.44,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-33191488-b4e5-44bf-87ee-104e2580f4b0",
+      "categoryId": "seals",
+      "x": 60.47,
+      "y": 63.44,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-76ebdd7c-c229-4b40-a86a-d471af609a6d",
+      "categoryId": "seals",
+      "x": 43.93,
+      "y": 68.27,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-0e9dd3cb-3eab-4f7f-8c8b-00d798fbbf24",
+      "categoryId": "seals",
+      "x": 66.03,
+      "y": 51.38,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-88bf1d0b-b23e-40e7-bfe5-15c9a54c44cb",
+      "categoryId": "seals",
+      "x": 57.47,
+      "y": 38.28,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-afd3a38b-ade0-4483-8149-22855f5e1c2d",
+      "categoryId": "seals",
+      "x": 71.25,
+      "y": 46.3,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-facd7ea9-d068-4275-84d1-ac9ce04af759",
+      "categoryId": "seals",
+      "x": 53.11,
+      "y": 59.13,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-daaecffd-0232-420e-9bf3-82b0eef7e042",
+      "categoryId": "seals",
+      "x": 58.04,
+      "y": 41.2,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-79147418-2fcb-48cc-b1a0-420556ed41bb",
+      "categoryId": "seals",
+      "x": 44.46,
+      "y": 45.25,
+      "title": "Sealed Dungeons",
+      "description": ""
+    },
+    {
+      "id": "oss-2be94f4e-f20f-484b-818a-6a78d7acac77",
+      "categoryId": "occupation",
+      "x": 57.54,
+      "y": 37.38,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-f117a107-1c1b-4969-86fa-998ba2f1e6a9",
+      "categoryId": "occupation",
+      "x": 67.85,
+      "y": 43.73,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-47ad0d99-9b6c-416d-b84f-387ef86d9261",
+      "categoryId": "occupation",
+      "x": 61.87,
+      "y": 35.66,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-c882cc38-0598-481c-988c-3aa71101694b",
+      "categoryId": "occupation",
+      "x": 64.56,
+      "y": 59.5,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-332827ed-dabf-444e-af2b-ac3c6717c7a4",
+      "categoryId": "occupation",
+      "x": 55.13,
+      "y": 66.19,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-9f7e9fe6-cd49-4504-9ee8-2769ec501d38",
+      "categoryId": "occupation",
+      "x": 51.53,
+      "y": 71.01,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-45f2ae64-61ca-4e3f-a113-c757a46bfad6",
+      "categoryId": "occupation",
+      "x": 60.56,
+      "y": 56.77,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-daa4113d-7c91-45db-bb73-45f7f462010b",
+      "categoryId": "occupation",
+      "x": 51.07,
+      "y": 58.3,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-5ebe12ef-67c8-4d99-9f2a-c2bb62aadb28",
+      "categoryId": "occupation",
+      "x": 37.93,
+      "y": 59.02,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-3191bd04-ae3d-4ff0-aa73-23f1609de55f",
+      "categoryId": "occupation",
+      "x": 49.26,
+      "y": 46.11,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-d8fc9d77-cf5e-4a60-b7f8-e7436c08da80",
+      "categoryId": "occupation",
+      "x": 50.34,
+      "y": 54.24,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-76ffb3f9-d3ca-4696-9bb8-967d4513acef",
+      "categoryId": "occupation",
+      "x": 43.57,
+      "y": 40.94,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-091176f0-b64c-4b84-a648-e6f0bc9a9424",
+      "categoryId": "occupation",
+      "x": 58.9,
+      "y": 46.12,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-04c6a3f6-b2b3-4cb8-94b8-65556a05453c",
+      "categoryId": "occupation",
+      "x": 56.37,
+      "y": 43.59,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-c4234bfb-969f-4e38-9cca-4b8d3f38a464",
+      "categoryId": "occupation",
+      "x": 41.31,
+      "y": 49.77,
+      "title": "Occupation",
+      "description": ""
+    },
+    {
+      "id": "oss-54360ce8-b784-4554-9b45-deb68744a43f",
+      "categoryId": "villages",
+      "x": 36.83,
+      "y": 38.29,
+      "title": "Villages",
+      "description": "DawnLegionBase"
+    },
+    {
+      "id": "oss-2d7a1670-fbe7-4831-97e5-791f22ca2136",
+      "categoryId": "villages",
+      "x": 35.93,
+      "y": 43.64,
+      "title": "Villages",
+      "description": "EasternCantasValley"
+    },
+    {
+      "id": "oss-231f5f1f-0c04-4c32-a551-4a1e11928818",
+      "categoryId": "villages",
+      "x": 34.36,
+      "y": 58.19,
+      "title": "Villages",
+      "description": "AullaeuFuneralIsland"
+    },
+    {
+      "id": "oss-3d1d1d49-55f4-4a92-a582-6cd9889d6d31",
+      "categoryId": "villages",
+      "x": 57.19,
+      "y": 51.06,
+      "title": "Villages",
+      "description": "ZumionVillage"
+    },
+    {
+      "id": "oss-86e5f9d3-a33c-4483-a68c-6901a9bc1b7a",
+      "categoryId": "battlefields",
+      "x": 37.98,
+      "y": 44.26,
+      "title": "Battlefields",
+      "description": "WesternCantasValley"
+    },
+    {
+      "id": "oss-99761429-fe39-46a1-9452-92bdc34433f6",
+      "categoryId": "battlefields",
+      "x": 44.89,
+      "y": 46.84,
+      "title": "Battlefields",
+      "description": "EllunRiverMidstream"
+    },
+    {
+      "id": "oss-8bc27f1f-b90b-45b7-a16b-b5a711510f46",
+      "categoryId": "battlefields",
+      "x": 48,
+      "y": 50.65,
+      "title": "Battlefields",
+      "description": "VerteronFortressRuins"
+    },
+    {
+      "id": "oss-b8c9396e-1ea5-42ce-9f20-8e6fd0b4f386",
+      "categoryId": "battlefields",
+      "x": 43.13,
+      "y": 56.1,
+      "title": "Battlefields",
+      "description": "NorthernTolbasForest"
+    },
+    {
+      "id": "oss-4aa05d94-2151-40f9-acf6-a085a78a74a8",
+      "categoryId": "battlefields",
+      "x": 46.03,
+      "y": 61.41,
+      "title": "Battlefields",
+      "description": "AullaeuVillage"
+    },
+    {
+      "id": "oss-14aa1733-6db0-4a42-9c8c-69592127c4fc",
+      "categoryId": "battlefields",
+      "x": 43.07,
+      "y": 64.64,
+      "title": "Battlefields",
+      "description": "ForestofExiles"
+    },
+    {
+      "id": "oss-a63da667-749a-425b-a1ee-f6c393b3aa3d",
+      "categoryId": "battlefields",
+      "x": 55.59,
+      "y": 59.97,
+      "title": "Battlefields",
+      "description": "WesternAltamiaHighland"
+    },
+    {
+      "id": "oss-60a58a49-9a2e-40a8-bdbd-df9929172cac",
+      "categoryId": "battlefields",
+      "x": 54.06,
+      "y": 67.21,
+      "title": "Battlefields",
+      "description": "SouthernAltamiaHighland"
+    },
+    {
+      "id": "oss-7d1a8486-04e6-410e-935b-bddb8183199f",
+      "categoryId": "battlefields",
+      "x": 66.56,
+      "y": 55.33,
+      "title": "Battlefields",
+      "description": "EasternAltamiaHighland"
+    },
+    {
+      "id": "oss-f6a0a7c3-d6ba-472b-a8da-be3ab2644376",
+      "categoryId": "battlefields",
+      "x": 63.75,
+      "y": 41.04,
+      "title": "Battlefields",
+      "description": "DranaPlantation"
+    },
+    {
+      "id": "oss-6b835219-9b2c-4b9e-ab60-c2951674946c",
+      "categoryId": "battlefields",
+      "x": 59.55,
+      "y": 38.22,
+      "title": "Battlefields",
+      "description": "ScarletForest"
+    },
+    {
+      "id": "oss-a20f2cda-a83b-489f-a616-1b27846cef4d",
+      "categoryId": "battlefields",
+      "x": 67.59,
+      "y": 35.34,
+      "title": "Battlefields",
+      "description": "NahidBrigadeFortress"
+    },
+    {
+      "id": "oss-c785dbdb-3b51-41e0-938f-8f7903d78bea",
+      "categoryId": "battlefields",
+      "x": 62.19,
+      "y": 69.17,
+      "title": "Battlefields",
+      "description": "GardenoftheIllusionGod"
+    },
+    {
+      "id": "oss-99e81aa0-1a28-46be-88c6-70e37994a786",
+      "categoryId": "battlefields",
+      "x": 45.34,
+      "y": 43.08,
+      "title": "Battlefields",
+      "description": "EllunRiverMeadow"
+    },
+    {
+      "id": "oss-f3cf020e-9330-47b7-a23c-c6fcd9e1b31f",
+      "categoryId": "battlefields",
+      "x": 47.62,
+      "y": 39.65,
+      "title": "Battlefields",
+      "description": "EllunRiverMarsh"
+    },
+    {
+      "id": "oss-795136a0-4b96-4396-a446-ac6da886bcef",
+      "categoryId": "battlefields",
+      "x": 46.02,
+      "y": 58.26,
+      "title": "Battlefields",
+      "description": "EasternTolbasForest"
+    },
+    {
+      "id": "oss-ac40ebf8-c475-43ed-82ce-0a23b024b244",
+      "categoryId": "battlefields",
+      "x": 41.5,
+      "y": 59.33,
+      "title": "Battlefields",
+      "description": "SouthernTolbasForest"
+    },
+    {
+      "id": "oss-5dec21b6-b987-46c7-a575-a047fcaa4b73",
+      "categoryId": "battlefields",
+      "x": 50.71,
+      "y": 55.44,
+      "title": "Battlefields",
+      "description": "PilgrimsRidge"
+    },
+    {
+      "id": "oss-e3e8faea-76a4-4ed3-8aa6-a62b4c21c61a",
+      "categoryId": "battlefields",
+      "x": 60.19,
+      "y": 60.13,
+      "title": "Battlefields",
+      "description": "AltamiaCanyon"
+    },
+    {
+      "id": "oss-36c9c2e3-5ee9-4978-abb9-c395526550e1",
+      "categoryId": "battlefields",
+      "x": 61.98,
+      "y": 47.39,
+      "title": "Battlefields",
+      "description": "KrakaFootpath"
+    },
+    {
+      "id": "oss-9e5b6757-9894-403a-be54-f0fb45f9f600",
+      "categoryId": "battlefields",
+      "x": 61.4,
+      "y": 24.98,
+      "title": "Battlefields",
+      "description": "CrimsonIsle"
+    },
+    {
+      "id": "oss-6061ee78-47f4-4c95-aa40-51fa0795b6ba",
+      "categoryId": "battlefields",
+      "x": 23.07,
+      "y": 79.86,
+      "title": "Battlefields",
+      "description": "EternalIsle"
+    }
+  ]
+}

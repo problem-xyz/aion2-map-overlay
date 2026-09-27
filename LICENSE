@@ -1,0 +1,64 @@
+Aion 2 - Map Overlay
+Copyright (c) 2026 problem-xyz. All rights reserved.
+
+This licence covers Aion 2 - Map Overlay (the "app"): its source code, its program files, its
+installer and its portable package. The app is free of charge, and its source is published so
+that anyone can see what it does, but it is not open source. It is licensed, not sold.
+
+1. What you may do
+
+   You may download the app from its official releases page,
+   https://github.com/problem-xyz/aion2-map-overlay/releases, and install and use it free of
+   charge on as many computers as you like. Linking to that page is always welcome.
+
+   You may read the source, check it, and build the app from it for your own use. You may fork
+   the repository on GitHub to propose a change to it in a pull request; what you propose is
+   then under the terms in CONTRIBUTING.md, "Licence of contributions".
+
+2. What needs the author's written permission
+
+   - sharing copies of the app or its source, whole or in part, anywhere else than as section 1
+     allows: uploading them, mirroring them or bundling them with something else, including a
+     build you made yourself;
+   - selling the app, or charging for it or for access to it;
+   - modifying the app, or making other works from it, for anything but your own use or a pull
+     request to this repository;
+   - removing or changing its copyright notices, this licence or its third-party notices.
+
+3. Parts under other licences
+
+   The app contains software and data by others, each under its own licence. The
+   THIRD-PARTY-NOTICES folder next to the app's exe, and packaging/third-party/ in the source,
+   list them, with their texts. Nothing in this licence limits the rights those licences give
+   you.
+
+   In particular, Qt and Qt for Python are used under the GNU Lesser General Public License
+   version 3: you may modify them, run the app with your modified versions in place of the ones
+   it ships, and reverse-engineer the app as far as needed to debug such modifications. The maps
+   and their object sets are under CC BY-NC 4.0; NOTICE credits their authors.
+
+4. What you make
+
+   Routes you draw and export are yours. This licence covers the app, not what you make with it.
+
+5. No warranty
+
+   THE APP IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE APP OR THE USE OR OTHER DEALINGS IN THE APP.
+
+6. Aion 2 and NCSOFT
+
+   Aion, Aion 2 and NCSOFT are trademarks or registered trademarks of NCSOFT Corporation. Aion 2
+   and its content, including the map art and place names the app shows, are the intellectual
+   property of NCSOFT Corporation and remain theirs: this licence gives no rights to them, and
+   the author claims none. The app names the game only to say which game it works with.
+
+   The app is an unofficial fan project, not affiliated with, endorsed or sponsored by NCSOFT.
+   Whether the game allows it is up to the game's publisher; using it is at your own risk.
+
+7. Ending
+
+   If you break this licence, the rights it gives you end.

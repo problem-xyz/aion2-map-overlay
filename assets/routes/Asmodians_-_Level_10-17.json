@@ -1,0 +1,609 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Asmodians - Level 10-17",
+  "map": "altgard",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1695.62,
+      "y": 1355.08,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1659.76,
+      "y": 1374.55,
+      "text": "Exit from church",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1683.05,
+      "y": 1365.61,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1653.85,
+      "y": 1367.38,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1626.93,
+      "y": 1388.54,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1619.36,
+      "y": 1381.25,
+      "text": "Main quest - Hans (take chest)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1612.19,
+      "y": 1429.09,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1591.12,
+      "y": 1439.38,
+      "text": "Main quest - VeKauf",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1576.25,
+      "y": 1463.88,
+      "text": "Main quest - Markan + Dinoh (take pet)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1590.48,
+      "y": 1467.6,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1579.83,
+      "y": 1481.93,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Teleports",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1561.5,
+      "y": 1567.63,
+      "text": "Main quest - Hadala",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1576.55,
+      "y": 1601.13,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1605.63,
+      "y": 1601.24,
+      "text": "Kill 2 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1659.36,
+      "y": 1626.17,
+      "text": "Main quest - Matir",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1682.64,
+      "y": 1587.61,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1707.62,
+      "y": 1595.8,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1704.35,
+      "y": 1563.03,
+      "text": "Sealed Dungeon (find key, wait replica)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1739.98,
+      "y": 1633.89,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1558.63,
+      "y": 1564.88,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1739.98,
+      "y": 1633.89,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1737.59,
+      "y": 1636.13,
+      "text": "Main quest - Niror",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1782.47,
+      "y": 1664.5,
+      "text": "Main quest - Keller",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1784.59,
+      "y": 1686.0,
+      "text": "Kill 3 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1782.47,
+      "y": 1664.5,
+      "text": "Main quest - Keller",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1739.98,
+      "y": 1633.89,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1737.59,
+      "y": 1636.13,
+      "text": "Main quest - Niror",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1735.6,
+      "y": 1639.38,
+      "text": "Side quest - Dari",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1740.39,
+      "y": 1696.15,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1717.86,
+      "y": 1703.94,
+      "text": "Sealed Dungeon (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1658.06,
+      "y": 1687.96,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1619.97,
+      "y": 1694.92,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1615.37,
+      "y": 1702.38,
+      "text": "Kill 3 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1595.63,
+      "y": 1703.88,
+      "text": "Side quest - Take bag",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1556.48,
+      "y": 1689.6,
+      "text": "Open Telepor",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1554.43,
+      "y": 1745.31,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1562.62,
+      "y": 1782.17,
+      "text": "Sealed Dungeon (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1459.0,
+      "y": 1794.05,
+      "text": "Sealed Dungeon (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1461.45,
+      "y": 1739.16,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1450.39,
+      "y": 1726.87,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1435.65,
+      "y": 1724.01,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1487.75,
+      "y": 1745.5,
+      "text": "Side quest - Dari",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1478.25,
+      "y": 1726.75,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1483.37,
+      "y": 1701.75,
+      "text": "Kill all",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1485.0,
+      "y": 1714.25,
+      "text": "Main quest - Baba"
+    },
+    {
+      "x": 1522.5,
+      "y": 1733.88,
+      "text": "Main quest - Baba"
+    },
+    {
+      "x": 1523.69,
+      "y": 1715.5,
+      "text": "Main quest - Barvir + Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1435.65,
+      "y": 1663.39,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1408.61,
+      "y": 1657.65,
+      "text": "Sealed Dungeon (kill all mobs + boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1388.95,
+      "y": 1640.45,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1370.11,
+      "y": 1669.12,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1366.02,
+      "y": 1701.48,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1351.68,
+      "y": 1689.6,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1309.49,
+      "y": 1676.9,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1290.65,
+      "y": 1683.87,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1289.72,
+      "y": 1664.0,
+      "text": "Main quest - Tagar",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1317.45,
+      "y": 1657.0,
+      "text": "Kill 2 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1337.1,
+      "y": 1705.38,
+      "text": "Main quest - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1289.72,
+      "y": 1664.0,
+      "text": "Main quest - Ulgorn + Tagar",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1298.84,
+      "y": 1640.45,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1308.38,
+      "y": 1609.5,
+      "text": "Kill 2 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1323.83,
+      "y": 1592.12,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1322.19,
+      "y": 1532.31,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1348.81,
+      "y": 1520.84,
+      "text": "Sealed Dungeon (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1395.1,
+      "y": 1524.94,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1388.25,
+      "y": 1494.88,
+      "text": "Main quest - Clear Stronghold (chests + boss)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1286.55,
+      "y": 1658.88,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1289.72,
+      "y": 1664.0,
+      "text": "Main quest - Tagar",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1287.86,
+      "y": 1653.75,
+      "text": "Side quest - Rizel",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1187.02,
+      "y": 1660.52,
+      "text": "Sealed Dungeon (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1205.04,
+      "y": 1644.54,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1213.64,
+      "y": 1637.99,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1212.01,
+      "y": 1642.91,
+      "text": "Sealed Dungeon (key before door, kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1215.69,
+      "y": 1612.19,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1235.62,
+      "y": 1594.63,
+      "text": "Main quest + Side quest",
+      "color": "#22c55e",
+      "icon": "main"
+    },
+    {
+      "x": 1196.23,
+      "y": 1567.13,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1232.49,
+      "y": 1558.53,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1248.05,
+      "y": 1513.47,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1264.25,
+      "y": 1512.75,
+      "text": "Kill 2 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1198.49,
+      "y": 1482.34,
+      "text": "Sealed Dungeon (find key + find tablet)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1239.04,
+      "y": 1397.15,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1255.01,
+      "y": 1381.99,
+      "text": "Sealed Dungeon (quest, make picture)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1309.49,
+      "y": 1404.11,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1367.65,
+      "y": 1400.42,
+      "text": "Sealed Dungeon (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1332.43,
+      "y": 1454.08,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1296.72,
+      "y": 1424.5,
+      "text": "Main quest - Wudsson",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1281.22,
+      "y": 1476.25,
+      "text": "Take 2",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1268.98,
+      "y": 1510.5,
+      "text": "Run",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1247.21,
+      "y": 1492.75,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1205.04,
+      "y": 1449.57,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1169.98,
+      "y": 1446.5,
+      "text": "Main quest - Ulgorn + Dungeon (2 boss)",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}

@@ -1,0 +1,561 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Asmodians - Level 20-22 (Krao Cave)",
+  "map": "altgard",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1701.25,
+      "y": 1351.64,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1641.88,
+      "y": 1428.52,
+      "text": "Main quest - Hadala",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1643.63,
+      "y": 1431.52,
+      "text": "Main quest - Ulgorn (read letter F)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1644.13,
+      "y": 1446.3,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1617.92,
+      "y": 1450.39,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1570.13,
+      "y": 1463.28,
+      "text": "Side quest - Tomgus",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1561.75,
+      "y": 1568.28,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1487.67,
+      "y": 1717.04,
+      "text": "Use Teleport (6)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1524.0,
+      "y": 1732.84,
+      "text": "Side quest - Baba",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1526.5,
+      "y": 1863.57,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1508.97,
+      "y": 1857.95,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1474.5,
+      "y": 1892.38,
+      "text": "Kill 3 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1447.88,
+      "y": 1920.59,
+      "text": "Open chest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1442.2,
+      "y": 1912.83,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1439.33,
+      "y": 1928.81,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1427.87,
+      "y": 1941.5,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1522.48,
+      "y": 1865.32,
+      "text": "Use Teleport (16)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1526.5,
+      "y": 1863.57,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1629.8,
+      "y": 1871.46,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1635.94,
+      "y": 1866.55,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1642.09,
+      "y": 1862.04,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1649.38,
+      "y": 1826.75,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1682.64,
+      "y": 1813.3,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1710.88,
+      "y": 1799.0,
+      "text": "Side quest - do quest (kill mobs)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1688.75,
+      "y": 1881.49,
+      "text": "Side quest - Ulgorn",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1642.61,
+      "y": 1963.72,
+      "text": "Fly up on bridge",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1673.63,
+      "y": 2000.49,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1714.73,
+      "y": 2081.14,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1697.38,
+      "y": 2093.88,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1787.08,
+      "y": 2039.81,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1804.36,
+      "y": 2054.32,
+      "text": "Main quest - Nana",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1805.52,
+      "y": 2073.8,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1814.12,
+      "y": 2086.91,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1796.51,
+      "y": 2088.55,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1789.13,
+      "y": 2072.58,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1776.03,
+      "y": 2077.9,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1556.48,
+      "y": 1689.6,
+      "text": "Use Teleport (5)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1558.5,
+      "y": 1696.03,
+      "text": "Side quest - Benekt",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1559.38,
+      "y": 1550.87,
+      "text": "Side quest - Galorik",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1598.67,
+      "y": 1425.41,
+      "text": "Use Teleport (1)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1632.38,
+      "y": 1360.38,
+      "text": "Monolith",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1732.75,
+      "y": 1329.25,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1735.88,
+      "y": 1304.58,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1728.92,
+      "y": 1325.88,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1835.42,
+      "y": 1293.11,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1794.87,
+      "y": 2050.05,
+      "text": "Use Teleport (18)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1817.8,
+      "y": 2104.12,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1781.0,
+      "y": 2133.5,
+      "text": "Main quest - do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1765.38,
+      "y": 2168.01,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1655.19,
+      "y": 2118.04,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1585.56,
+      "y": 2093.47,
+      "text": "Teleports",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1572.45,
+      "y": 2097.56,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1633.48,
+      "y": 2192.59,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1657.65,
+      "y": 2265.09,
+      "text": "Sealed Dungeons (find history)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1770.75,
+      "y": 2167.77,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1710.67,
+      "y": 2198.04,
+      "text": "Main quest - Kill 4 mobs + take essence",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1683.46,
+      "y": 2218.8,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1765.38,
+      "y": 2168.01,
+      "text": "Use Teleport (19) + Main Quest - Ninir",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1749.56,
+      "y": 2213.3,
+      "text": "Main quest - Nemon (take 2 tree)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1770.42,
+      "y": 2282.19,
+      "text": "Main quest - Nemon (take 2 tree)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1823.13,
+      "y": 2304.41,
+      "text": "Open Teleport + Main quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1825.59,
+      "y": 2250.34,
+      "text": "Sealed Dungeons (puzzle easy)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1796.51,
+      "y": 2219.62,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1792.0,
+      "y": 2205.7,
+      "text": "Sealed Dungeons (boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1839.51,
+      "y": 2190.54,
+      "text": "Teleports",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1859.17,
+      "y": 2188.08,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1877.61,
+      "y": 2183.58,
+      "text": "Sealed Dungeons (take 3 seal)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1909.15,
+      "y": 2202.01,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1908.33,
+      "y": 2239.69,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1903.41,
+      "y": 2286.8,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1896.04,
+      "y": 2308.1,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1951.33,
+      "y": 2302.36,
+      "text": "Sealed Dungeons (rush open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1770.75,
+      "y": 2167.77,
+      "text": "Use Teleport (19) +  Main quest - Ninir",
+      "color": "#a78bfa",
+      "icon": "main"
+    },
+    {
+      "x": 1794.87,
+      "y": 2050.05,
+      "text": "Use Teleport (18) + Main quest - Hadala",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1830.5,
+      "y": 2075.21,
+      "text": "Main quest - Go to Rift",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1798.25,
+      "y": 2054.23,
+      "text": "Do 2nd Ascension (click on arrow)",
+      "color": "#f07178"
+    },
+    {
+      "x": 1827.38,
+      "y": 2060.48,
+      "text": "Jump in wind",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1987.38,
+      "y": 2126.64,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1985.33,
+      "y": 2137.7,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2011.55,
+      "y": 2165.56,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2003.35,
+      "y": 2192.18,
+      "text": "Sealed Dungeons (kill boss)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2004.58,
+      "y": 2206.52,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2005.63,
+      "y": 2216.4,
+      "text": "Krao Cave (make private room and do not open Cube)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1794.87,
+      "y": 2050.05,
+      "text": "Use Teleport (18)",
+      "color": "#a78bfa"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}

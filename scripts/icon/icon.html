@@ -1,0 +1,270 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>App icon</title></head>
+<body style="margin:0;background:#0b0f15;color:#c2c8d0;font:14px system-ui">
+<canvas id="out" width="1024" height="1024" style="display:block"></canvas>
+<p style="margin:12px"><a id="save" download="icon-master.png" style="color:#e3ae28">Save icon-master.png</a>
+  and put it at assets/icon-master.png, then run scripts/make_icon.py.</p>
+<script>
+// The master of the app icon: a gunmetal map pin with a gold lip, on white feathered wings, on a
+// dark plate with a bronze rim. The pin is ray-marched in WebGL; the wings are painted feather by
+// feather in 2D. Everything is drawn at 2048 px and brought down to 1024 for anti-aliasing.
+// Open this file in Chrome. Nothing here is random at run time, so a render is repeatable.
+const S = 2048, K = S / 256;           // the layout is authored on a 256 grid
+const TILT = 0.1;                      // a look from slightly above shows the pin's thickness
+const METAL = { main: [.3, .32, .36], high: [.6, .63, .68], deep: [.12, .13, .15], lip: [1, .78, .4], rough: .18 };
+function mk(w, h = w) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const lerp = (a, b, t) => a + (b - a) * t;
+
+// ------------------------------------------------------------------ the pin, ray-marched
+const PIN_FS = `#version 300 es
+precision highp float;
+uniform vec2 uRes; uniform float uRotX; uniform float uRough; uniform vec3 uMain, uHigh, uDeep, uLip;
+out vec4 o;
+// On the 256 grid the head is centred at (128, 114) with radius 44, which is one unit here.
+float sdUnevenCapsule(vec2 p, float r1, float r2, float h) {
+  p.x = abs(p.x);
+  float b = (r1 - r2) / h, a = sqrt(1.0 - b * b), k = dot(p, vec2(-b, a));
+  if (k < 0.0) return length(p) - r1;
+  if (k > a * h) return length(p - vec2(0.0, h)) - r2;
+  return dot(p, vec2(a, b)) - r1;
+}
+float smin(float a, float b, float k) { float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
+float smax(float a, float b, float k) { return -smin(-a, -b, k); }
+float sdTorus(vec3 p, vec2 t) { vec2 q = vec2(length(p.xy) - t.x, p.z); return length(q) - t.y; }
+float slab(vec3 p, float d2, float th) { vec2 w = vec2(d2, abs(p.z) - th); return min(max(w.x, w.y), 0.0) + length(max(w, 0.0)); }
+float dLip(vec3 p) { return sdTorus(p - vec3(0.0, 0.0, 0.335), vec2(0.705, 0.068)); }
+// A lens-shaped body, fuller in the middle, with a raised lip round a concave dish.
+float map(vec3 p) {
+  float d2 = sdUnevenCapsule(vec2(p.x, -p.y), 1.0, 0.07, 2.28);
+  float th = 0.36 * sqrt(clamp(-d2 / 0.85, 0.0, 1.0)) + 0.05;
+  float d = slab(p, d2, th) * 0.8;
+  d = smin(d, dLip(p), 0.06);
+  float cyl = length(p.xy) - 0.6;
+  float dish = length(p - vec3(0.0, 0.0, 1.2)) - 1.12;
+  return smax(d, -max(cyl, dish), 0.035);
+}
+vec3 nrm(vec3 p) { vec2 e = vec2(0.0015, 0.0); return normalize(vec3(map(p + e.xyy) - map(p - e.xyy), map(p + e.yxy) - map(p - e.yxy), map(p + e.yyx) - map(p - e.yyx))); }
+float ao(vec3 p, vec3 n) { float o = 0.0, s = 1.0; for (int i = 1; i <= 6; i++) { float h = 0.03 * float(i); o += (h - map(p + n * h)) * s; s *= 0.7; } return clamp(1.0 - 2.2 * o, 0.0, 1.0); }
+float box(vec3 r, vec3 dir, float size, float soft) { soft += uRough * 0.6; return smoothstep(cos(size + soft), cos(size), dot(r, normalize(dir))) * (1.0 - 0.45 * uRough); }
+// A studio: a key softbox top left, a rim strip right, a soft fill in front, a warm bounce below.
+vec3 env(vec3 r) {
+  vec3 c = mix(vec3(0.018, 0.014, 0.012), vec3(0.06, 0.05, 0.045), clamp(r.y * 0.5 + 0.5, 0.0, 1.0));
+  c += vec3(1.0, 0.95, 0.88) * 3.2 * box(r, vec3(-0.55, 0.75, 0.55), 0.32, 0.22);
+  c += vec3(1.0, 0.9, 0.8) * 1.3 * box(r, vec3(0.8, 0.25, 0.25), 0.12, 0.12);
+  c += vec3(0.9, 0.95, 1.0) * 0.6 * box(r, vec3(0.0, 0.1, 1.0), 0.45, 0.4);
+  c += vec3(0.5, 0.32, 0.16) * 0.35 * box(r, vec3(0.0, -1.0, 0.3), 0.8, 0.5);
+  return c;
+}
+vec3 aces(vec3 x) { return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
+vec4 shade(vec2 frag) {
+  vec2 px = frag / uRes * 256.0; px.y = 256.0 - px.y;
+  vec2 q = vec2((px.x - 128.0) / 44.0, -(px.y - 114.0) / 44.0);
+  vec3 ro = vec3(q, 6.0), rd = vec3(0.0, 0.0, -1.0);
+  float cx = cos(uRotX), sx = sin(uRotX);
+  ro.yz = mat2(cx, -sx, sx, cx) * ro.yz; rd.yz = mat2(cx, -sx, sx, cx) * rd.yz;
+  ro.y -= 0.55 * sx;
+  float t = 0.0; bool hit = false;
+  for (int i = 0; i < 220; i++) { float d = map(ro + rd * t); if (d < 0.0006) { hit = true; break; } t += d * 0.7; if (t > 12.0) break; }
+  if (!hit) return vec4(0.0);
+  vec3 p = ro + rd * t, n = nrm(p), v = -rd, r = reflect(rd, n);
+  float occ = ao(p, n);
+  float inRecess = 1.0 - smoothstep(0.58, 0.64, length(p.xy));
+  vec3 base = mix(uMain, uHigh, 0.55 * smoothstep(-0.9, 1.1, p.y - 0.4 * p.x));
+  base = mix(base, uDeep, clamp(0.6 * (1.0 - occ) + 0.55 * inRecess + 0.4 * smoothstep(-0.4, -2.3, p.y), 0.0, 1.0));
+  base = mix(base, uLip, 1.0 - smoothstep(0.0, 0.05, dLip(p) - 0.005));
+  float spec = mix(90.0, 30.0, uRough), specI = mix(2.5, 1.2, uRough);
+  float nv = clamp(dot(n, v), 0.0, 1.0);
+  vec3 F = base + (vec3(1.0) - base) * pow(1.0 - nv, 5.0);
+  vec3 col = env(r) * F * mix(0.3, 1.0, occ);
+  vec3 L = normalize(vec3(-0.55, 0.75, 0.55));
+  col += base * 0.1 * clamp(dot(n, L), 0.0, 1.0) * occ;
+  col += vec3(1.0, 0.94, 0.85) * pow(clamp(dot(r, L), 0.0, 1.0), spec) * specI * occ;
+  // the dish reflects the pin itself far more than the studio, so it sits darker
+  col *= mix(1.0, 0.45, inRecess * (1.0 - smoothstep(0.3, 0.58, length(p.xy))));
+  col = aces(col * 1.1);
+  return vec4(pow(col, vec3(1.0 / 2.2)), 1.0);
+}
+void main() {
+  vec4 acc = vec4(0.0);
+  for (int j = 0; j < 2; j++) for (int i = 0; i < 2; i++) acc += shade(gl_FragCoord.xy + (vec2(i, j) - 0.5) * 0.5);
+  acc /= 4.0;
+  o = vec4(acc.rgb * acc.a, acc.a);
+}`;
+function renderPin() {
+  const c = mk(S), gl = c.getContext('webgl2', { premultipliedAlpha: true, alpha: true, preserveDrawingBuffer: true });
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, `#version 300 es
+  in vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }`));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, PIN_FS)); gl.linkProgram(pr); gl.useProgram(pr);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  gl.uniform2f(gl.getUniformLocation(pr, 'uRes'), S, S);
+  gl.uniform1f(gl.getUniformLocation(pr, 'uRotX'), TILT);
+  gl.uniform1f(gl.getUniformLocation(pr, 'uRough'), METAL.rough);
+  for (const k of ['Main', 'High', 'Deep', 'Lip']) gl.uniform3fv(gl.getUniformLocation(pr, 'u' + k), METAL[k.toLowerCase()]);
+  gl.viewport(0, 0, S, S); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); gl.finish();
+  const c2 = mk(S); c2.getContext('2d').drawImage(c, 0, 0); return c2;
+}
+
+// ------------------------------------------------------------------ wings, painted feather by feather
+const JIT = Array.from({ length: 400 }, (_, k) => ((k * 7919) % 97) / 97 - 0.5);
+function featherGeom(bx, by, ang, len, width, bend, mirror) {
+  const a = ang * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a), nx = -dy, ny = dx;
+  const steps = 40, C = [], Lf = [], Rt = [];
+  for (let k = 0; k <= steps; k++) {
+    const s = k / steps;
+    let cx = bx + dx * s * len + nx * bend * len * s * s, cy = by + dy * s * len + ny * bend * len * s * s;
+    const hw = width * Math.pow(Math.sin(Math.PI * Math.min(s, .999)), .5) * (1 - .3 * s);
+    let lx = cx + nx * hw * .72, ly = cy + ny * hw * .72, rx = cx - nx * hw, ry = cy - ny * hw;
+    if (mirror) { cx = 256 - cx; lx = 256 - lx; rx = 256 - rx; }
+    C.push([cx * K, cy * K]); Lf.push([lx * K, ly * K]); Rt.push([rx * K, ry * K]);
+  }
+  return { C, Lf, Rt, steps };
+}
+function featherPath(g, F) {
+  g.beginPath(); g.moveTo(...F.Lf[0]);
+  for (let i = 1; i < F.Lf.length; i++) g.lineTo(...F.Lf[i]);
+  for (let i = F.Rt.length - 1; i >= 0; i--) g.lineTo(...F.Rt[i]);
+  g.closePath();
+}
+function mixHex(c1, c2, t) { const a = [1, 3, 5].map(i => parseInt(c1.slice(i, i + 2), 16)), b = [1, 3, 5].map(i => parseInt(c2.slice(i, i + 2), 16)); return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * t)).join(',')})`; }
+function paintFeather(g, F, tone, opts) {
+  const r = rng(opts.seed);
+  g.save(); g.filter = `blur(${opts.shadowBlur || 5}px)`; g.translate(opts.mirror ? -5 : 5, 9); featherPath(g, F); g.fillStyle = `rgba(3,6,10,${opts.shadow ?? .45})`; g.fill(); g.restore();
+  const b = F.C[0], tip = F.C[F.C.length - 1];
+  const gr = g.createLinearGradient(b[0], b[1], tip[0], tip[1]);
+  gr.addColorStop(0, mixHex('#6d7f91', '#b4c3cf', 1 - tone)); gr.addColorStop(.35, mixHex('#c3d0db', '#edf2f6', 1 - tone)); gr.addColorStop(.8, '#f8fbfd'); gr.addColorStop(1, '#ffffff');
+  featherPath(g, F); g.fillStyle = gr; g.fill();
+  // barbs: fine lines from the shaft out to the edge, raked toward the tip
+  g.save(); featherPath(g, F); g.clip();
+  const n = Math.floor(F.steps * (opts.len / 18));
+  for (let k = 0; k < n; k++) {
+    const s = .03 + .95 * k / n, i = Math.min(F.steps - 1, Math.floor(s * F.steps)), f = s * F.steps - i;
+    const c = [lerp(F.C[i][0], F.C[i + 1][0], f), lerp(F.C[i][1], F.C[i + 1][1], f)];
+    const j = Math.min(F.steps, i + 3);
+    for (const [E, dark] of [[F.Lf, false], [F.Rt, true]]) {
+      const e = E[j], w = r();
+      g.beginPath(); g.moveTo(c[0], c[1]);
+      g.quadraticCurveTo(lerp(c[0], e[0], .5) + (r() - .5) * 3, lerp(c[1], e[1], .5) + (r() - .5) * 3, e[0] + (r() - .5) * 5, e[1] + (r() - .5) * 5);
+      g.strokeStyle = w < .55 ? `rgba(255,255,255,${.16 + r() * .2})` : `rgba(${dark ? '52,66,82' : '90,105,120'},${.1 + r() * .16})`;
+      g.lineWidth = .9 + r() * .8; g.stroke();
+    }
+  }
+  // round the vane: light on the leading side, a cool shade on the trailing side
+  const m = Math.floor(F.steps / 2), vg = g.createLinearGradient(...F.Lf[m], ...F.Rt[m]);
+  vg.addColorStop(0, 'rgba(255,255,255,.3)'); vg.addColorStop(.45, 'rgba(255,255,255,0)'); vg.addColorStop(1, 'rgba(46,60,76,.4)');
+  featherPath(g, F); g.fillStyle = vg; g.fill();
+  if (opts.split) { const k0 = Math.floor(F.steps * (.55 + r() * .2)); const e = F.Rt[k0], c = F.C[k0 - 2]; g.beginPath(); g.moveTo(...e); g.lineTo(lerp(e[0], c[0], .6), lerp(e[1], c[1], .6)); g.strokeStyle = 'rgba(20,28,38,.55)'; g.lineWidth = 3; g.stroke(); }
+  g.restore();
+  if (opts.shaft) {
+    g.beginPath(); g.moveTo(...F.C[0]); for (let i = 1; i < F.C.length * .88; i++) g.lineTo(...F.C[i]);
+    const sg = g.createLinearGradient(...F.C[0], ...tip); sg.addColorStop(0, 'rgba(120,135,150,.8)'); sg.addColorStop(1, 'rgba(230,238,245,.5)');
+    g.strokeStyle = sg; g.lineWidth = 2.6; g.lineCap = 'round'; g.stroke();
+    g.beginPath(); g.moveTo(F.C[0][0] - 1.5, F.C[0][1]); for (let i = 1; i < F.C.length * .8; i++) g.lineTo(F.C[i][0] - 1.5, F.C[i][1]);
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 1; g.stroke();
+  }
+  featherPath(g, F); g.strokeStyle = 'rgba(30,40,52,.22)'; g.lineWidth = 1.4; g.stroke();
+}
+// Rows from the back: primaries, secondaries, greater coverts, then lesser coverts and the down
+// along the leading edge. A raised wing, as in the game's art: shoulder high, tips pointing down.
+function rows() {
+  const j = { i: 0, n() { return JIT[this.i++ % JIT.length]; } };
+  const R = [];
+  let row = [];
+  for (let i = 0, n = 11; i < n; i++) { const t = i / (n - 1); row.push({ g: [lerp(222, 180, t), lerp(62, 112, t), lerp(97, 116, t) + j.n() * 3, lerp(146, 96, t) * (1 + j.n() * .05), lerp(12, 10.5, t), lerp(.05, .02, t)], tone: lerp(.05, .45, t), shaft: true, split: i % 3 === 1 }); }
+  R.push(row); row = [];
+  for (let i = 0, n = 10; i < n; i++) { const t = i / (n - 1); row.push({ g: [lerp(204, 156, t), lerp(66, 114, t), lerp(104, 124, t) + j.n() * 3, lerp(100, 66, t) * (1 + j.n() * .05), lerp(11.5, 10, t), .04], tone: lerp(.3, .65, t), shaft: true, split: i % 4 === 2 }); }
+  R.push(row); row = [];
+  for (let i = 0, n = 16; i < n; i++) { const t = i / (n - 1); row.push({ g: [lerp(222, 154, t) + j.n() * 3, lerp(58, 102, t) + j.n() * 3, lerp(98, 122, t) + j.n() * 8, lerp(62, 42, t) * (1 + j.n() * .16), lerp(11.5, 10, t), .06], tone: lerp(0, .4, t) + j.n() * .15, shaft: i % 2 === 0 }); }
+  R.push(row);
+  for (const [ri, [n, lo, hi, w, tone0]] of [[20, 28, 38, 9, .3], [30, 14, 22, 6.5, .2]].entries()) {
+    row = [];
+    for (let i = 0; i < n; i++) {
+      const u = i / (n - 1);
+      const x = (1 - u) ** 2 * 150 + 2 * (1 - u) * u * 160 + u * u * 228, y = (1 - u) ** 2 * 100 + 2 * (1 - u) * u * 20 + u * u * 56 + (ri === 0 ? 10 : 0);
+      row.push({ g: [x + j.n() * 4, y + j.n() * 4 + (ri === 1 ? 2 : 0), lerp(120, 96, u) + j.n() * 16, lerp(lo, hi, u) * (1 + j.n() * .3), w * (1 + j.n() * .2), .08 + j.n() * .1], tone: lerp(tone0, 0, u) + j.n() * .2, shaft: false });
+    }
+    R.push(row);
+  }
+  return R;
+}
+function renderWings() {
+  const W = mk(S), wg = W.getContext('2d');
+  const layer = mk(S), lg = layer.getContext('2d');
+  let seed = 1;
+  const rl = rows(), rr = rows();
+  for (let k = 0; k < rl.length; k++) {
+    lg.clearRect(0, 0, S, S);
+    for (const [row, mirror] of [[rl[k], false], [rr[k], true]]) for (const f of row) {
+      const F = featherGeom(...f.g, mirror);
+      paintFeather(lg, F, f.tone, { seed: seed++, mirror, shaft: f.shaft, split: f.split, len: f.g[3], shadow: k < 2 ? .5 : .4, shadowBlur: k < 2 ? 6 : 4 });
+    }
+    // each row casts a soft shadow onto the rows behind it
+    wg.save(); wg.filter = 'blur(18px) brightness(0)'; wg.globalAlpha = .55; wg.drawImage(layer, 0, 16); wg.restore();
+    wg.drawImage(layer, 0, 0);
+  }
+  // soft down over the shoulders hides the regular edge of the rows
+  const fr = rng(77);
+  for (const m of [false, true]) for (let i = 0; i < 90; i++) {
+    const u = fr(), x = (1 - u) ** 2 * 150 + 2 * (1 - u) * u * 160 + u * u * 228, y = (1 - u) ** 2 * 100 + 2 * (1 - u) * u * 20 + u * u * 56;
+    const X = (m ? 256 - x : x) * K + (fr() - .5) * 30, Y = y * K + fr() * 40 + 6;
+    wg.save(); wg.globalCompositeOperation = 'source-atop'; wg.filter = `blur(${2 + fr() * 3}px)`; wg.globalAlpha = .3 + fr() * .3;
+    wg.beginPath(); wg.ellipse(X, Y, 8 + fr() * 14, 5 + fr() * 8, (m ? -1 : 1) * (.4 + fr() * .8), 0, 7);
+    wg.fillStyle = fr() > .3 ? '#f4f8fb' : '#c3cfda'; wg.fill(); wg.restore();
+  }
+  // key light from the top left, shade toward the bottom, warmth from the halo behind the pin
+  wg.save(); wg.globalCompositeOperation = 'source-atop';
+  const lgr = wg.createLinearGradient(0, 0, S * .4, S); lgr.addColorStop(0, 'rgba(255,248,235,.12)'); lgr.addColorStop(.55, 'rgba(0,0,0,0)'); lgr.addColorStop(1, 'rgba(10,16,26,.35)');
+  wg.fillStyle = lgr; wg.fillRect(0, 0, S, S);
+  const warm = wg.createRadialGradient(128 * K, 118 * K, 10, 128 * K, 118 * K, 90 * K); warm.addColorStop(0, 'rgba(255,190,110,.28)'); warm.addColorStop(1, 'rgba(255,190,110,0)');
+  wg.fillStyle = warm; wg.fillRect(0, 0, S, S);
+  wg.restore();
+  return W;
+}
+
+// ------------------------------------------------------------------ plate and composite
+function squircle(g, x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function render() {
+  const out = mk(S), g = out.getContext('2d');
+  const x0 = 8 * K, w = 240 * K, r = 58 * K;
+  g.save(); g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 40; g.shadowOffsetY = 18;
+  squircle(g, x0, x0, w, w, r); const pg = g.createLinearGradient(0, x0, 0, x0 + w); pg.addColorStop(0, '#1e2833'); pg.addColorStop(1, '#05080c'); g.fillStyle = pg; g.fill(); g.restore();
+  g.save(); squircle(g, x0, x0, w, w, r); g.clip();
+  // a faint grain in the plate
+  const n = mk(512), ng = n.getContext('2d'), d = ng.createImageData(512, 512), rr = rng(9);
+  for (let i = 0; i < d.data.length; i += 4) { const v = rr() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  ng.putImageData(d, 0, 0); g.globalCompositeOperation = 'overlay'; g.globalAlpha = .06; g.drawImage(n, 0, 0, S, S); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  // engraved emblem: two circles and a diamond, each a dark cut with a lit lower edge
+  const eng = (fn) => { g.save(); g.strokeStyle = 'rgba(0,0,0,.55)'; g.lineWidth = 5; fn(); g.stroke(); g.translate(0, 3); g.strokeStyle = 'rgba(214,170,100,.28)'; g.lineWidth = 3; fn(); g.stroke(); g.restore(); };
+  eng(() => { g.beginPath(); g.arc(128 * K, 128 * K, 100 * K, 0, 7); });
+  eng(() => { g.beginPath(); g.arc(128 * K, 128 * K, 92 * K, 0, 7); });
+  eng(() => { g.beginPath(); g.moveTo(128 * K, 36 * K); g.lineTo(220 * K, 128 * K); g.lineTo(128 * K, 220 * K); g.lineTo(36 * K, 128 * K); g.closePath(); });
+  const hg = g.createRadialGradient(128 * K, 116 * K, 0, 128 * K, 116 * K, 120 * K); hg.addColorStop(0, 'rgba(236,160,64,.5)'); hg.addColorStop(.5, 'rgba(190,105,40,.16)'); hg.addColorStop(1, 'rgba(190,105,40,0)');
+  g.globalCompositeOperation = 'screen'; g.fillStyle = hg; g.fillRect(0, 0, S, S); g.globalCompositeOperation = 'source-over';
+  const vg = g.createRadialGradient(S / 2, S / 2, S * .3, S / 2, S / 2, S * .62); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.45)'); g.fillStyle = vg; g.fillRect(0, 0, S, S);
+  const wings = renderWings(), pin = renderPin();
+  // the wings cast onto the plate, the pin onto the wings
+  g.save(); g.filter = 'blur(40px) brightness(0)'; g.globalAlpha = .7; g.drawImage(wings, 0, 30); g.restore();
+  g.drawImage(wings, 0, 0);
+  g.save(); g.filter = 'blur(26px) brightness(0)'; g.globalAlpha = .75; g.drawImage(pin, 14, 40); g.restore();
+  g.save(); g.filter = 'blur(60px) brightness(0)'; g.globalAlpha = .45; g.drawImage(pin, 30, 90); g.restore();
+  g.drawImage(pin, 0, 0);
+  g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = .35; g.filter = 'blur(22px) brightness(1.1) contrast(2.2)'; g.drawImage(pin, 0, 0); g.restore();
+  g.restore();
+  // the bronze rim, bevelled
+  g.save(); squircle(g, x0 + 14, x0 + 14, w - 28, w - 28, r - 14);
+  const rim = g.createLinearGradient(0, x0, 0, x0 + w); rim.addColorStop(0, 'rgba(240,196,120,.9)'); rim.addColorStop(.35, 'rgba(150,96,40,.7)'); rim.addColorStop(1, 'rgba(70,40,14,.8)');
+  g.strokeStyle = rim; g.lineWidth = 7; g.stroke();
+  squircle(g, x0 + 20, x0 + 20, w - 40, w - 40, r - 20); g.strokeStyle = 'rgba(0,0,0,.45)'; g.lineWidth = 3; g.stroke();
+  g.restore();
+  squircle(g, x0 + 2, x0 + 2, w - 4, w - 4, r - 2); g.strokeStyle = 'rgba(0,0,0,.6)'; g.lineWidth = 4; g.stroke();
+  const o = document.getElementById('out'), og = o.getContext('2d'); og.imageSmoothingQuality = 'high'; og.clearRect(0, 0, 1024, 1024); og.drawImage(out, 0, 0, 1024, 1024);
+  return o.toDataURL('image/png');
+}
+window.result = new Promise(res => setTimeout(() => {
+  try { const url = render(); document.getElementById('save').href = url; res(url); } catch (e) { res('ERR ' + e.message); }
+}, 50));
+</script></body></html>

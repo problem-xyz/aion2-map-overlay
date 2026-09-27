@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Pinned exactly: setup-uv publishes no floating v10 major tag, unlike v5.
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: "3.14"
+          enable-cache: true
+      - run: uv sync --group dev
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      # The wheel bundles pyright, and its nodejs extra brings Node, so nothing is fetched here.
+      # The variable only stops the wrapper asking PyPI whether a newer release exists.
+      - run: uv run pyright
+        env:
+          PYRIGHT_PYTHON_IGNORE_WARNINGS: "1"
+      - run: uv run python scripts/check_no_cyrillic.py
+      - run: uv run pytest -q
+        env:
+          QT_QPA_PLATFORM: offscreen
+
+  ui:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      # ui/dist is not in git, so a Python-side reviewer has no way to run the app against the
+      # UI a branch actually produces. Seven days outlives any review without filling the quota.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ui-dist
+          path: ui/dist
+          retention-days: 7
+          if-no-files-found: error

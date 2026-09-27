@@ -1,0 +1,17 @@
+{
+  "id": "verteron",
+  "label": "Verteron",
+  "size": [4096, 4096],
+  "detail": [8192, 8192],
+  "source": {
+    "project": "aion2-interactive-map",
+    "url": "https://github.com/aion2-interactive-map/aion2-interactive-map",
+    "file": "World_L_A.webp",
+    "retrieved": "2026-09-23",
+    "detail": {
+      "file": "public/UI/Map/WorldMap/World_L_A/Res/*.webp at commit 89ce398, 64 tiles joined",
+      "retrieved": "2026-09-24"
+    }
+  },
+  "licence": "CC BY-NC 4.0"
+}

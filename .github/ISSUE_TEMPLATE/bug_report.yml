@@ -1,0 +1,101 @@
+name: Bug report
+description: Something works differently than it should
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill in the environment fields. Most overlay problems come down to the display
+        mode, the capture backend or a multi-monitor setup, and without them a report usually
+        cannot be reproduced.
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: From the About section, or the update banner.
+      placeholder: 1.0.0-beta.1
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Run `winver`, or Settings -> System -> About.
+      placeholder: Windows 11 Pro 24H2 (build 26100)
+    validations:
+      required: true
+
+  - type: input
+    id: display
+    attributes:
+      label: GPU and monitors
+      description: GPU model, how many monitors, their resolution and scaling, and which one
+        runs the game.
+      placeholder: RTX 4070, two monitors, 2560x1440 @ 100% (game) + 1920x1080 @ 125%
+    validations:
+      required: true
+
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Capture backend
+      description: Shown in the status header. dxcam is the fast path; mss is the fallback.
+      options:
+        - dxcam
+        - mss
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: display_mode
+    attributes:
+      label: Game display mode
+      description: Overlays cannot be drawn over exclusive fullscreen.
+      options:
+        - Windowed fullscreen / borderless
+        - Windowed
+        - Exclusive fullscreen
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the map in game
+        2. Press "Select again" and drag over the map area
+        3. Start the overlay
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Screenshots or a short clip help a lot for anything visual.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: >-
+        Attach the newest file from the logs folder (Help -> Open logs folder, or
+        %LocalAppData%\<App>\logs). If you run from source and there is no logs folder yet,
+        paste the console output instead.
+      render: text
+    validations:
+      required: false

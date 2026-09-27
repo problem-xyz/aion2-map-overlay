@@ -1,0 +1,1084 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* The editor: a toolbar over a map that fills the rest of the window. Everything else floats
+   over the map -- the dock on the left, the inspector on the right, the keys at the foot. */
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Over the map, above Leaflet's own panes (200-700) and its tooltips, below the toasts. */
+.ed-dock,
+.ed-inspector,
+.ed-keys,
+.ed-zoom {
+  z-index: 950;
+}
+
+/* ---------- toolbar ---------- */
+.ed-toolbar {
+  position: relative;
+  z-index: 1001;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 52px;
+  padding: 0 var(--space-3);
+  background: linear-gradient(180deg, #0f141b, #0b1016);
+  border-bottom: 1px solid var(--color-frame);
+  /* One height for everything in the bar: the chips, the name, the history buttons and Save.
+     Those classes are smaller elsewhere in the editor, so the size is set here, for the bar. */
+  --ed-bar-item: 36px;
+}
+.ed-toolbar .ed-chip,
+.ed-toolbar .ed-title-input,
+.ed-toolbar .ed-save {
+  height: var(--ed-bar-item);
+}
+.ed-toolbar .ed-icon-btn {
+  width: var(--ed-bar-item);
+  height: var(--ed-bar-item);
+}
+.ed-title {
+  flex: 0 1 360px;
+  min-width: 0;
+}
+/* The route's name, edited in place: a title until the pointer or the focus says otherwise. */
+.ed-title-input {
+  width: 100%;
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: 600 17px / 1.2 var(--font-display);
+}
+.ed-title-input:hover {
+  border-color: var(--color-border);
+}
+.ed-title-input:focus {
+  border-color: var(--color-focus);
+  background: var(--color-bg-sunken);
+  outline: none;
+}
+.ed-title-input::placeholder {
+  color: var(--color-text-placeholder);
+}
+.ed-toolbar-gap {
+  flex: 1;
+}
+.ed-sep {
+  width: 1px;
+  height: 24px;
+  margin: 0 var(--space-1);
+  background: var(--color-border);
+}
+.ed-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.ed-chip:hover {
+  border-color: var(--color-frame-strong);
+  color: var(--color-text);
+}
+.ed-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+.ed-icon-btn:hover:not(:disabled) {
+  background: var(--color-veil-hover);
+  color: var(--color-text);
+}
+.ed-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+/* Wide enough for "Save Ctrl+S" and "Saved" alike, so the bar does not shift between them. */
+.ed-save {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: 148px;
+  padding: 0 24px;
+  font-size: var(--text-md);
+}
+.ed-save-key {
+  border-color: rgb(from var(--color-on-primary) r g b / 30%);
+  background: rgb(from var(--color-on-primary) r g b / 12%);
+  color: var(--color-on-primary);
+}
+.ed-menu {
+  position: relative;
+}
+.ed-menu-list {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    scale var(--duration-enter) var(--ease-out);
+  position: absolute;
+  top: calc(100% + 6px);
+  min-width: 210px;
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  box-shadow: var(--shadow-floating);
+}
+.ed-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  text-align: left;
+}
+.ed-menu-item:hover,
+.ed-menu-item:focus-visible {
+  background: var(--fill-selected);
+  box-shadow: none;
+}
+/* each list lines up with the edge of its chip that faces the middle of the bar, and grows
+   out of that corner */
+.ed-menu-list.start {
+  inset-inline-start: 0;
+  transform-origin: top left;
+}
+.ed-menu-list.end {
+  inset-inline-end: 0;
+  transform-origin: top right;
+}
+.ed-menu-check {
+  margin-inline-start: auto;
+  color: var(--color-accent);
+}
+
+/* ---------- left dock: rail and drawer ---------- */
+.ed-dock {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.ed-dock > * {
+  pointer-events: auto;
+}
+.ed-rail {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 6px;
+}
+.ed-rail-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-icon-warm);
+}
+.ed-rail-btn .ui-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.4;
+}
+.ed-rail-btn:hover {
+  background: var(--color-veil-hover);
+}
+.ed-rail-btn.on {
+  background: var(--fill-selected);
+  color: var(--color-text);
+}
+.ed-drawer {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    translate var(--duration-enter) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+  width: clamp(260px, 25vw, 330px);
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgb(14 19 26 / 97%), rgb(10 13 18 / 97%));
+}
+.ed-drawer .ui-title {
+  flex: none;
+}
+/* Pinned under the scroll box, so a long route does not push it out of reach. */
+.ed-drawer-foot {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid #1b212a;
+}
+/* Quiet until the pointer is on it, then red like a row's own delete. */
+.ed-clear-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 30px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+.ed-clear-all .ui-icon {
+  width: 16px;
+  height: 16px;
+}
+.ed-clear-all:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-danger);
+}
+.ed-drawer-count {
+  margin-left: var(--space-2);
+  font: 400 var(--text-xs) var(--font-body);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* The route view: a few settings, spaced as the panel's cards space theirs */
+.ed-view {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+  padding: var(--space-3) 14px 16px;
+  overflow-y: auto;
+}
+/* A scroll box that reserves its scrollbar: without the gutter every change laid the rows out
+   twice, once to learn whether a scrollbar was needed, and the drawer lagged. */
+.ed-drawer-scroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+.ed-drawer-empty {
+  margin: 0;
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+.ed-search {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-3) var(--space-3) var(--space-2);
+  padding: 0 10px;
+  height: 34px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  color: var(--color-text-muted);
+}
+.ed-search:has(input:focus) {
+  border-color: var(--color-focus);
+}
+.ed-search-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 100%;
+}
+.ed-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  outline: none;
+}
+/* Chromium's own clear button, replaced by .ed-search-clear */
+.ed-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.ed-search-clear {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-inline-end: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.ed-search-clear:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-text);
+}
+.ed-search input::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+/* ---------- the points ---------- */
+.ed-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ed-rows.dragging {
+  cursor: grabbing;
+}
+.ed-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 42px;
+  padding: 0 var(--space-2) 0 6px;
+  border-bottom: 1px solid #1b212a;
+  cursor: pointer;
+}
+.ed-row:hover {
+  background: rgb(255 255 255 / 3%);
+}
+/* The selected point, as the steps plaque draws its current step: the steel band, and over it
+   the living sheen (shared/ui/Sheen.tsx) with its glow lines and the glint running on them */
+.ed-row.sel,
+.ed-row.sel:hover {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--fill-selected);
+}
+.ed-row:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-focus);
+}
+/* Where a dragged point will land, as a gold line between two rows. */
+.ed-row.drop-before {
+  box-shadow: inset 0 2px 0 var(--color-primary);
+}
+.ed-row.drop-after {
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+.ed-row.dragging {
+  opacity: 0.45;
+}
+.ed-grip {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 28px;
+  color: #4b535e;
+  cursor: grab;
+  touch-action: none;
+}
+.ed-row:hover .ed-grip,
+.ed-row.sel .ed-grip {
+  color: var(--color-text-muted);
+}
+/* the icon of the object a point sits on, between its number and its label */
+.ed-row-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.ed-row-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13.5px;
+}
+.ed-row-text.ph {
+  color: var(--color-text-placeholder);
+}
+.ed-row.sel .ed-row-text.ph {
+  color: var(--color-text-muted-on-selected);
+}
+/* Delete is there on the selected row and under the pointer, and out of the way otherwise:
+   the Delete key does the same from anywhere. */
+.ed-row-del {
+  width: 28px;
+  height: 28px;
+  visibility: hidden;
+}
+.ed-row:hover .ed-row-del,
+.ed-row.sel .ed-row-del {
+  visibility: visible;
+}
+.ed-row-del:hover:not(:disabled) {
+  color: var(--color-danger);
+}
+
+/* ---------- the map's objects ---------- */
+.obj-actions {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  padding: var(--space-3) var(--space-3) var(--space-2);
+}
+.obj-tree {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 var(--space-2);
+}
+.obj-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 6px var(--space-4);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-align: left;
+}
+.obj-toggle.on {
+  color: var(--color-text);
+}
+.obj-toggle:hover {
+  background: rgb(255 255 255 / 3%);
+}
+.obj-toggle:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--color-focus);
+}
+.obj-row.level-1 .obj-toggle {
+  padding-left: 38px;
+}
+.obj-eye {
+  color: #4b535e;
+}
+.obj-toggle.on .obj-eye {
+  color: var(--color-text-secondary);
+}
+.obj-name {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.obj-count {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- the inspector ---------- */
+.ed-inspector {
+  position: absolute;
+  right: var(--space-3);
+  top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  width: clamp(260px, 24vw, 310px);
+  max-height: calc(100% - 84px);
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgb(14 19 26 / 97%), rgb(10 13 18 / 97%));
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    translate var(--duration-enter) var(--ease-out);
+}
+.ed-insp-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px var(--space-2) 10px 14px;
+}
+.ed-insp-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding-top: 2px;
+  border-radius: 50%;
+  background: var(--step-color, var(--color-route-default));
+  color: var(--color-on-badge);
+  font: 700 16px / 1 var(--font-display);
+  box-shadow: 0 0 0 2px var(--color-outline);
+}
+.ed-insp-heading {
+  flex: 1;
+  min-width: 0;
+}
+.ed-insp-heading h2 {
+  margin: 0;
+  font: 600 var(--text-lg) / 1.2 var(--font-display);
+}
+.ed-insp-rule {
+  height: 1px;
+  margin: 0 14px;
+  background: var(--line-rule);
+}
+.ed-insp-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 14px 14px;
+}
+.ed-insp-label {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.ed-insp-text {
+  width: 100%;
+  min-height: 72px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  color: var(--color-text);
+  font: inherit;
+  line-height: var(--leading-snug);
+  resize: vertical;
+}
+.ed-insp-text:focus {
+  border-color: var(--color-focus);
+  outline: none;
+}
+.ed-insp-text::placeholder {
+  color: var(--color-text-placeholder);
+}
+/* 8px apart: the chosen swatch's ring stands 4px off it, and must not touch the next one */
+.ed-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px;
+  margin: -4px;
+}
+/* The icon a point is given beside its number: three choices in a row, the chosen one pressed */
+.ed-insp-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ed-insp-icon-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.ed-insp-icon-choice:hover {
+  border-color: var(--color-frame-strong);
+  color: var(--color-text);
+}
+.ed-insp-icon-choice[aria-pressed="true"] {
+  border-color: var(--color-selected-border);
+  background: var(--fill-selected);
+  color: var(--color-text);
+}
+.ed-insp-icon-mark {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.ed-insp-object {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 0;
+  padding: 8px 10px;
+  border: 1px solid var(--color-frame);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+.ed-insp-object-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: -2px 0;
+}
+.ed-insp-object .ui-icon {
+  color: var(--color-frame-strong);
+}
+.ed-insp-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: var(--space-1) 0 0;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+.ed-insp-facts dt {
+  color: var(--color-text-muted);
+}
+.ed-insp-facts dd {
+  margin: 0;
+}
+.ed-insp-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: var(--space-2);
+}
+/* The inspector's own buttons: one height, one radius, one line of text each. */
+.ed-insp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.ed-insp-btn:hover:not(:disabled) {
+  border-color: var(--color-frame-strong);
+  color: var(--color-text);
+}
+.ed-insp-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.ed-insp-icon {
+  flex: none;
+  width: 32px;
+  padding: 0;
+}
+.ed-insp-show {
+  flex: 1;
+  min-width: 0;
+}
+/* Removal on a line of its own, in the danger colour and edge, apart from the moves above. */
+.ed-insp-delete {
+  width: 100%;
+  border-color: rgb(from var(--color-danger) r g b / 35%);
+  color: var(--color-danger);
+}
+.ed-insp-delete:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  background: rgb(from var(--color-danger) r g b / 12%);
+  color: var(--color-danger);
+}
+
+/* ---------- keys strip and card, zoom ---------- */
+/* Bottom right, beside the zoom: the left of the map belongs to the dock. */
+.ed-keys {
+  position: absolute;
+  right: calc(var(--space-3) + 126px);
+  bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+/* On a narrow window the strip keeps only its button, so it never runs under the dock. */
+@media (max-width: 1180px) {
+  .ed-strip-item {
+    display: none;
+  }
+}
+.ed-strip {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 16px;
+  padding: 6px 8px 6px 14px;
+  background: rgb(10 13 18 / 94%);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+.ed-strip-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.ed-keys-word {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.ed-strip-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+}
+.ed-strip-more:hover,
+.ed-strip-more[aria-expanded="true"] {
+  border-color: var(--color-frame-strong);
+  color: var(--color-text);
+}
+.ed-keys-card {
+  transform-origin: bottom right;
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    scale var(--duration-enter) var(--ease-out);
+  width: min(380px, 100%);
+  padding-bottom: var(--space-3);
+  background: rgb(10 13 18 / 96%);
+  box-shadow: var(--shadow-floating);
+}
+.ed-keys-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px var(--space-3);
+  margin: 0;
+  padding: var(--space-3) var(--space-4) 0;
+  font-size: var(--text-xs);
+}
+.ed-keys-row {
+  display: contents;
+}
+.ed-keys-list dt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+.ed-keys-list dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: var(--leading-snug);
+}
+.ed-zoom {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  padding: 3px;
+  background: rgb(10 13 18 / 94%);
+}
+.ed-zoom .ed-icon-btn {
+  width: 34px;
+  height: 34px;
+}
+
+/* ---------- badges and swatches ---------- */
+.step-num {
+  flex: 0 0 22px;
+  height: 22px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  /* --step-color: the marker colour MarkerList sets; the fallback is the default route amber */
+  background: var(--step-color, var(--color-route-default));
+  color: var(--color-on-badge);
+  font: 600 var(--text-xs) / 1 var(--font-display);
+  cursor: pointer;
+  /* numeric badge baseline: see .ui-badge-num in shared/styles/base.css */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.16em;
+}
+
+.step-num:hover {
+  box-shadow: 0 0 0 2px rgb(from var(--color-info) r g b / 70%);
+}
+
+/* the palette opens as a row under the marker it belongs to, so there is no portal and nothing
+   overlaps; closing it on an outside click is ColorPicker's own doing */
+.step-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px var(--space-1) 6px 30px;
+}
+
+/* 22px apart by 8px: 30px between centres, which meets the 24px target-spacing rule. */
+.swatch {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  /* --swatch: the sample colour the inspector sets; .swatch.none paints itself and wins on
+     specificity. The inset hairline keeps a pale swatch's edge on the dark panel. */
+  --swatch-edge: rgb(0 0 0 / 35%);
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px var(--swatch-edge);
+}
+
+/* IconButton wraps the glyph in a span: it is the grid item, and centres the icon in turn */
+.swatch > span {
+  display: grid;
+  place-items: center;
+}
+
+.swatch .ui-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.swatch:hover {
+  box-shadow:
+    inset 0 0 0 1px var(--swatch-edge),
+    0 0 0 2px var(--color-bg),
+    0 0 0 3px rgb(from var(--color-text) r g b / 45%);
+}
+
+/* The chosen colour: a white ring standing off the swatch by a dark gap. A border inside the
+   circle, as it was, vanished on the white swatch and barely showed on the pale ones. */
+.swatch[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px var(--color-text);
+}
+
+/* Focus adds its ring outside the chosen one instead of replacing it */
+.swatch:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+.swatch[aria-pressed="true"]:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px var(--color-text),
+    0 0 0 6px var(--color-focus);
+}
+
+.swatch.none {
+  --swatch-edge: var(--color-border-control);
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+.swatch.none[aria-pressed="true"] {
+  color: var(--color-text);
+}
+
+/* a group's place for a mark, kept empty so the names still line up */
+.obj-mark-none {
+  flex: none;
+  width: 9px;
+}
+
+/* a category's icon in the list, beside the dots of the others */
+.obj-icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: -3px;
+}
+
+.obj-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid var(--color-outline-soft);
+  flex: 0 0 auto;
+  /* --obj-color: the category colour ObjectsPanel sets */
+  background: var(--obj-color);
+}
+
+/* ---------- the map ---------- */
+.editor-main {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--color-bg-sunken);
+}
+
+.mo-map {
+  width: 100%;
+  height: 100%;
+}
+
+.ed-map,
+.leaflet-container {
+  /* Panning the map must not smear a text selection across the sidebar. */
+  user-select: none;
+}
+
+.leaflet-container {
+  background: var(--color-bg-sunken);
+  font: inherit;
+  cursor: crosshair;
+  outline: none;
+}
+
+.leaflet-container.leaflet-dragging,
+.leaflet-container.leaflet-dragging .leaflet-interactive {
+  cursor: grabbing;
+}
+
+.leaflet-marker-icon {
+  cursor: pointer;
+}
+
+.mo-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+/* The canvas steps aside while the map zooms. Leaflet would scale it with the tiles, and the
+   objects' dots and the route line swelled and shrank; drawing it again every frame kept them
+   their size but was the load under which QtWebEngine showed frames half drawn. So it vanishes
+   as a zoom begins, is drawn once where the zoom lands, and fades back in. The numbered points
+   are elements of their own and stay, moving with the map. */
+.mo-map .leaflet-zoom-anim .mo-canvas {
+  opacity: 0;
+}
+
+.mo-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--mo-color);
+  border: 2px solid rgb(from var(--color-outline) r g b / 85%);
+  box-sizing: border-box;
+  color: var(--color-on-marker);
+  font: 700 var(--text-xs) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  /* numeric badge baseline: see .ui-badge-num in shared/styles/base.css */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.16em;
+  /* A point the route comes back to sits beside the earlier ones on that spot rather than under
+     them, far enough over that its number shows: 3 and 7 on one teleport read as "3 7" */
+  translate: calc(var(--mo-stack, 0) * 20px) 0;
+}
+
+/* Away from the selected point, like the legs there: the route as seen from it */
+.mo-marker-host.far .mo-marker {
+  opacity: 0.45;
+}
+
+.mo-marker.last {
+  background: var(--color-accent);
+}
+
+.mo-marker.selected {
+  box-shadow: 0 0 0 3px rgb(from var(--color-info) r g b / 85%);
+}
+
+/* Positioned by a transform the map canvas writes on every mouse move, not by React. */
+.mo-tip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: var(--z-map-tip);
+  max-width: 260px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-scrim);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+}
+
+.editor-empty h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+}
+
+.editor-empty p {
+  margin: 0;
+  max-width: 420px;
+}
+
+/* Which bundled map is ready, under "Preparing the map..." on the first start. */
+.ed-tiles-maps {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+.obj-set-bundled {
+  white-space: nowrap;
+}
+
+/* ---------- entrances ---------- */
+/* What opens comes in from where it is anchored: menus and the keys card grow out of their
+   corner, the drawer and the inspector slide in a little from their own edge. Only opening is
+   animated; the dock swapping panes and a new point in the inspector redraw in place. */
+@starting-style {
+  .ed-menu-list,
+  .ed-keys-card {
+    opacity: 0;
+    scale: 0.96;
+  }
+  .ed-drawer {
+    opacity: 0;
+    translate: -8px 0;
+  }
+  .ed-inspector {
+    opacity: 0;
+    translate: 12px 0;
+  }
+}
+
+/* Leaflet's zoom animation -- the wheel's, the buttons', a point's -- at the pace of the rest of
+   the interface: its own 250ms felt slow when notches queue up one after another. It ends on
+   transitionend, and falls back to a 250ms timer, so it can be shorter but never longer. */
+.mo-map .leaflet-zoom-anim .leaflet-zoom-animated {
+  transition-duration: var(--duration-enter);
+}

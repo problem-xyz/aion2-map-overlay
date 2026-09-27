@@ -1,0 +1,518 @@
+{
+  "common": {
+    "backend": {
+      "channelFailed": "The channel to the app could not be opened.",
+      "noObject": "The app did not hand over the object this page needs. Restart the program.",
+      "noSlot": "This interface expects something the app does not provide. Update both to the same version.",
+      "noTransport": "This page was opened outside the app: run python app.py",
+      "slotTimeout": "The app did not answer in time. Restart the program."
+    },
+    "connecting": "Connecting…",
+    "dialog": {
+      "cancel": "Cancel",
+      "ok": "OK"
+    },
+    "noEngine": "No connection to the engine",
+    "points": {
+      "one": "{count} point",
+      "other": "{count} points"
+    },
+    "about": "About: {topic}"
+  },
+  "editor": {
+    "actions": {
+      "copyCode": "Copy code",
+      "export": "Export",
+      "import": "Import",
+      "pasteCode": "Paste code",
+      "redo": "Redo",
+      "save": "Save",
+      "saved": "Saved",
+      "undo": "Undo"
+    },
+    "colors": {
+      "amber": "Amber",
+      "asRoute": "Same as the route",
+      "blue": "Blue",
+      "green": "Green",
+      "purple": "Purple",
+      "red": "Red",
+      "sky": "Sky blue",
+      "teal": "Teal",
+      "white": "White"
+    },
+    "confirm": {
+      "changeMap": "The route points are tied to this map. Change the map and clear the route?",
+      "changeMapAction": "Change the map",
+      "clearPoints": "Delete all the route points? Ctrl+Z brings them back.",
+      "clearPointsAction": "Delete all",
+      "close": "The route has unsaved changes.",
+      "closeAction": "Close without saving",
+      "openOther": "There are unsaved changes. Open another route?",
+      "openOtherAction": "Open without saving",
+      "saveAndClose": "Save and close"
+    },
+    "defaultName": "New route",
+    "empty": {
+      "mapHint": "This route points at a map this version does not have. Choose one of the maps above; the points stay where they are.",
+      "pickMap": "Choose a map"
+    },
+    "map": {
+      "choose": "— choose a map —",
+      "label": "Map"
+    },
+    "markers": {
+      "delete": "Delete point",
+      "deleteAll": "Delete all points",
+      "empty": "Click the map to place points. A click on an object takes its coordinates and name, a click on the line inserts a point between its neighbours.",
+      "title": "Route points",
+      "search": "Find a point",
+      "clearSearch": "Clear the search",
+      "noMatch": "No point matches “{query}”.",
+      "drag": "Drag to change the order, or press Alt+Up/Down"
+    },
+    "objects": {
+      "empty": "This map has no objects to show.",
+      "showAll": "All",
+      "showNone": "None",
+      "title": "Map objects"
+    },
+    "route": {
+      "nameLabel": "Route name",
+      "namePlaceholder": "For example: Altgard, 20–25"
+    },
+    "tiles": {
+      "hint": "Cutting it into tiles so the editor stays fast. This is done once.",
+      "preparing": "Preparing the map…",
+      "mapReady": "{label}: ready",
+      "mapPreparing": "{label}: preparing…"
+    },
+    "title": {
+      "clean": "{name} — Route editor",
+      "dirty": "{name} • — Route editor"
+    },
+    "unnamedRoute": "Route",
+    "shortcuts": {
+      "title": "Shortcuts",
+      "click": "Click",
+      "clickLine": "Click the line",
+      "drag": "Drag a point",
+      "shiftClick": "Shift+click a point",
+      "addPoint": "Add a point",
+      "insertPoint": "Insert a point between two",
+      "movePoint": "Move it",
+      "repeatPoint": "Come back to it: the same point again at the end",
+      "deletePoint": "Delete the selected point",
+      "colorPoint": "Colour the selected point",
+      "routeColor": "Give it the route colour back",
+      "deselect": "Clear the selection",
+      "undoRedo": "Undo, redo",
+      "save": "Save",
+      "reorder": "Move the selected point along the route",
+      "editLabel": "Edit the selected point's label"
+    },
+    "toolbar": {
+      "share": "Share"
+    },
+    "dock": {
+      "label": "Panels"
+    },
+    "inspector": {
+      "title": "Point {n} of {total}",
+      "earlier": "Move earlier",
+      "later": "Move later",
+      "close": "Close",
+      "textLabel": "What to do here",
+      "textPlaceholder": "For example: talk to the quest giver",
+      "color": "Colour",
+      "colorHint": "keys 1–8, 9 for the route colour",
+      "onObject": "On object",
+      "position": "Position",
+      "coords": "x {x} · y {y}",
+      "show": "Show on map",
+      "icon": "Icon"
+    },
+    "zoom": {
+      "label": "Zoom",
+      "in": "Zoom in",
+      "out": "Zoom out",
+      "fit": "Show the whole route"
+    },
+    "hint": {
+      "add": "add a point",
+      "insert": "insert",
+      "colour": "colour",
+      "undo": "undo",
+      "all": "All keys"
+    },
+    "icons": {
+      "none": "None",
+      "main": "Main quest",
+      "side": "Side quest"
+    },
+    "view": {
+      "title": "Route view",
+      "opacity": "Arrow opacity",
+      "opacityTip": "How solid the route's lines and arrows are on the editor's map. Lower lets more of the map show through; the numbered points stay as they are.",
+      "show": "What to draw",
+      "dim": "All, faded",
+      "all": "All",
+      "showTip": "All, faded: with a point selected, the route is shown as the player will see it from there. The leg into the point and the steps after it are bright, the rest is faded and without arrows. With nothing selected the whole route is drawn in full.\nAll: the whole route in full, whatever is selected.\nEvery point is always drawn: the editor has no “steps” choice, as the overlay does.",
+      "ahead": "Steps ahead",
+      "aheadTip": "How many steps from the selected point are bright, with their arrows. The first is the leg into the point itself."
+    }
+  },
+  "native": {
+    "dialog": {
+      "jsonFilter": "JSON (*.json)",
+      "openRoute": "Open route",
+      "routeMap": "Map for the route",
+      "routeMapPrompt": "Map “{id}” was not found. Choose one of yours:",
+      "saveRoute": "Save route"
+    },
+    "selector": {
+      "prompt": "Drag out the area where the game shows the map.   Esc cancels",
+      "promptStart": "Drag out the area where the game shows the map: the overlay starts as soon as it is drawn.   Esc cancels"
+    },
+    "uiNotBuilt": {
+      "body": "The ui/dist folder is missing. Run this in the ui folder:",
+      "hint": "or start it with --dev alongside npm run dev.",
+      "title": "The interface is not built"
+    },
+    "window": {
+      "control": "Aion 2 - Map Overlay",
+      "editor": "Route editor",
+      "overlay": "Route overlay",
+      "selector": "Select area",
+      "steps": "Checklist"
+    }
+  },
+  "notify": {
+    "data": {
+      "migrated": "Your data was moved to {path}",
+      "migration_failed": "Some of your data could not be moved and is still in {path}. The log names the file that stopped it."
+    },
+    "legacy": {
+      "routes_moved": "Old routes {names} were moved to legacy_routes/. Routes are drawn in the editor now; the old screenshots and PNG overlays are kept there."
+    },
+    "map": {
+      "encode_failed": "The map image could not be saved: {path}",
+      "manifest_invalid": "The map “{id}” that ships with the app is damaged: {reason}. Reinstall the app.",
+      "not_found": "Map “{id}” was not found.",
+      "reference_missing": "The map image is missing: {path}",
+      "tiles_failed": "Map “{label}” could not be prepared for the editor.",
+      "tiles_ready": "Map “{label}” is ready to use in the editor.",
+      "unknown": "This route points at map “{id}”, which this version does not have."
+    },
+    "objects": {
+      "invalid": {
+        "empty": "That object set has no points with percentage coordinates.",
+        "not_object": "An object set must be a JSON object."
+      }
+    },
+    "overlay": {
+      "capture_visible_on": "The overlay is now visible in screen recordings. The engine sees the route on the map too, so detection may get slightly worse."
+    },
+    "region": {
+      "offscreen": "The map area ({width} x {height} at {left}, {top}) is no longer on any screen, probably because a monitor was disconnected. Select the area again.",
+      "selected": "Area selected: {width} x {height}"
+    },
+    "route": {
+      "export_failed": "The route was not exported: {reason}",
+      "exported": "Route exported to {file}",
+      "file_corrupt": "The route file {file} is damaged, so it is not in the list. It was kept as {backup}.",
+      "file_invalid": "That file is not a valid route: {reason}",
+      "file_skipped": "The route file {file} could not be read, so it is not in the list.",
+      "file_skipped_too_large": "The route file {file} is larger than {limit} MB, so it is not in the list.",
+      "file_too_large": "That file is too large to be a route (limit {limit} MB).",
+      "imported": {
+        "clipboard": "Route “{name}” added from the clipboard.",
+        "file": "Route “{name}” added from a file."
+      },
+      "invalid": {
+        "format": "That is not a route file for this app.",
+        "map_size": "The route has an invalid map size.",
+        "marker_coords": "A route point has no x and y coordinates.",
+        "marker_not_finite": "A route point has coordinates that are not numbers.",
+        "marker_not_object": "Every route point must be an object.",
+        "not_object": "A route must be a JSON object.",
+        "version": "Route version {version} is not supported."
+      },
+      "map_required": "Choose a map for the route first.",
+      "not_found": "Route “{id}” was not found.",
+      "required": "Choose a route, or create one in the editor.",
+      "rescaled": "This route was drawn on a map of a different size, so its points were rescaled.",
+      "save_failed": "The route was not saved: {reason}",
+      "saved": "Route “{name}” saved.",
+      "too_large": "That route is too large: its file would be over {limit} MB, and the app cannot open a file that size. Its points carry too much text.",
+      "too_many_markers": "That route has more than {limit} points."
+    },
+    "settings": {
+      "corrupt": "The settings file was damaged. The old one was kept as {backup}.",
+      "reset": "Settings are back to their defaults.",
+      "values_reset": "Some saved settings were invalid or out of range and have been corrected: {keys}"
+    },
+    "share": {
+      "copied": {
+        "one": "Route code copied ({count} character).",
+        "other": "Route code copied ({count} characters)."
+      },
+      "corrupt": "The route code is damaged.",
+      "not_a_code": "That is not a route code for this app.",
+      "too_large": "That route code is too large (limit {limit} bytes)."
+    },
+    "state": {
+      "corrupt": "The saved window state was damaged. The old file was kept as {backup}."
+    },
+    "steps": {
+      "drag_hint": "Unpin the checklist to drag it with the mouse, or to size it by its right or bottom edge."
+    },
+    "system": {
+      "old_windows": "Windows {version} cannot hide the overlay from screen capture; that needs Windows 10 version 2004 or later. The route will show in recordings and in the frames the map is searched in, so detection may get worse."
+    },
+    "update": {
+      "available": "Version {version} is available.",
+      "checking": "Checking for updates…",
+      "downloading": "Downloading the update… {percent}%",
+      "failed": "The update failed: {reason}",
+      "none": "You are on the latest version.",
+      "ready": "Version {version} is ready to install.",
+      "unavailable": "Updates are not available for this build."
+    },
+    "vision": {
+      "capture_backend": "Screen capture is using {name}. The faster method could not be started, so the overlay may use more processor time.",
+      "crashed": "The engine stopped: {reason}",
+      "detect_failed": "Map detection hit a problem: {reason}",
+      "detector_broken": "Map detection did not recover. The overlay has stopped.",
+      "no_region_or_route": "No screen area or route has been selected.",
+      "reference_too_plain": "This map has too few distinctive points. A more contrasted image is needed.",
+      "reference_unreadable": "The map image could not be read. Pick the map again in the editor.",
+      "tracker_rebuilt": "Map detection was restarted."
+    }
+  },
+  "panel": {
+    "footer": {
+      "capture": "capture: {backend}"
+    },
+    "preview": {
+      "alt": "Capture area",
+      "anchorHint": "The red crosshair is where the app looks for you on the map. If it is not on your marker, click the marker.",
+      "off": "The captured area and the map outline found in it. Uses a little CPU.",
+      "stopped": "Start the overlay to see the picture.",
+      "title": "What detection sees",
+      "waiting": "Waiting for a frame…"
+    },
+    "auto": {
+      "title": "Mark points on arrival",
+      "off": "Tick points off yourself: in the list below, or with the arrows on the checklist.",
+      "radius": "Arrival radius",
+      "radiusHint": "How close you have to come for a point to count as passed.",
+      "radiusPx": "{px} px of map"
+    },
+    "progress": {
+      "done": "{done} of {total} passed",
+      "finished": "Route completed",
+      "noLabel": "no label",
+      "noRoute": "Choose a route to mark points as passed.",
+      "reset": "Start over",
+      "title": "Route progress"
+    },
+    "region": {
+      "empty": "Open the map in the game, click “Select area” and drag a box around the place where it is shown.",
+      "origin": "from {left}, {top}",
+      "reselect": "Select again",
+      "reset": "Reset",
+      "select": "Select area",
+      "title": "Map area"
+    },
+    "routes": {
+      "confirmDelete": "Delete route “{label}”?",
+      "deleteNamed": "Delete route “{label}”",
+      "deleteTip": "Delete route",
+      "editNamed": "Edit route “{label}”",
+      "editTip": "Edit route",
+      "empty": "No routes yet. Draw one, or import a file or a share code.",
+      "folder": "Routes folder",
+      "folderTip": "Open the routes folder",
+      "import": "Import",
+      "importTip": "Open a route file",
+      "mapMissing": "map “{map}” not found",
+      "new": "New route",
+      "pasteCode": "Paste code",
+      "pasteCodeTip": "Paste a route share code from the clipboard",
+      "title": "Routes"
+    },
+    "run": {
+      "captureExclusionOff": "This version of Windows cannot hide the overlay from capture, so it always shows in recordings and in what detection sees. Hiding it needs Windows 10 version 2004 or later.",
+      "showArrows": "Show arrows",
+      "start": "Start overlay",
+      "startDisabledTip": "Choose a route below, or draw one in the editor",
+      "stop": "Stop",
+      "visibleInRecording": "Visible in screen recordings",
+      "visibleInRecordingTip": "The overlay is normally hidden from OBS, Discord and Game Bar, so the engine does not see its own route. Turn this on while you record a video.",
+      "arrowsShort": "Arrows",
+      "recordingShort": "In recordings",
+      "checklist": "Show the checklist over the game: the next points of the route",
+      "checklistShort": "Checklist"
+    },
+    "settings": {
+      "advanced": "Advanced",
+      "advancedHint": "The defaults suit most maps. Change one thing at a time.",
+      "confirmReset": "Put every setting back to its default, the language and the options for route progress and the checklist included? Routes, maps, the map area, your progress along each route and the update settings are kept.",
+      "detectInterval": "How often to refine the anchor",
+      "detectIntervalValue": "{value} s",
+      "detectScale": "Frame analysis scale",
+      "detector": "Detection",
+      "detectorOrb": "Fast (ORB)",
+      "detectorSift": "Accurate (SIFT)",
+      "fps": "Frame rate cap",
+      "fpsValue": "{value} fps",
+      "language": "Language",
+      "languageAuto": "System",
+      "minInliers": "Minimum matches",
+      "opacity": "Arrow opacity",
+      "routeView": "What to draw",
+      "routeViewSteps": "Steps",
+      "routeViewDim": "All, faded",
+      "routeViewAll": "All",
+      "routeAhead": "Steps ahead",
+      "routePast": "Steps passed",
+      "routePastNone": "none",
+      "reset": "Reset to defaults",
+      "smoothing": "Motion smoothing",
+      "smoothingOff": "off",
+      "tracking": "Map tracking",
+      "trackingDetect": "Detection only",
+      "trackingFlow": "By motion",
+      "transform": "Map movement",
+      "transformHomography": "Any perspective",
+      "transformSimilarity": "Pan, zoom, rotate",
+      "general": "General",
+      "overlay": "Route over the game",
+      "following": "How the overlay moves",
+      "finding": "Finding the map",
+      "languageTip": "The language of the panel, the editor and the checklist. System follows the language of Windows.",
+      "fpsTip": "How many frames a second the app captures and looks at. More follows the map more smoothly and costs more processor time.\nKeep it at or above the game's own frame rate, or the route lags behind the map.",
+      "opacityTip": "How solid the route drawn over the game is: its lines, arrows and numbered points. Lower lets more of the map show through.",
+      "routeViewTip": "Steps: only the route around you. The next steps bright, the last ones passed faded, nothing else. The easiest to follow when a route loops about.\nAll, faded: the whole route, bright only for the next steps and faded everywhere else.\nAll: the whole route ahead bright, what was passed faded.",
+      "routeAheadTip": "How many steps ahead are drawn bright, with their arrows. The leg you are walking now is the first of them.",
+      "routePastTip": "How many steps already passed stay on the checklist, and on the map in the Steps view, faded, so you can see where you came from. None leaves them out.",
+      "trackingTip": "By motion: the overlay follows how the picture moves from one frame to the next, and full detection only corrects it now and then. Smooth and light.\nDetection only: every frame is matched against the map from scratch. Heavier, and it can jitter, but it never drifts.",
+      "detectIntervalTip": "With tracking by motion: how often full detection checks where the map is and corrects the drift. More often corrects sooner and costs more.",
+      "smoothingTip": "How gently the overlay is pulled toward each new result of detection. More takes the shake out but trails behind a quick pan. Off follows every result at once.",
+      "transformTip": "Pan, zoom, rotate suits a flat map such as the game's and is the steadier of the two.\nAny perspective also allows for tilt, for a map shown at an angle. It can wobble on a flat one.",
+      "detectorTip": "Accurate (SIFT) finds the map reliably, zoomed out, zoomed in or dim.\nFast (ORB) is lighter on the processor but loses the map more easily.",
+      "detectScaleTip": "The frame is shrunk to this before it is analysed. Smaller is faster, but a map that is small on screen may no longer be found.",
+      "minInliersTip": "How many points have to match between the frame and the map before a position is trusted. More turns away false matches but can lose the map on a dim or busy screen."
+    },
+    "stats": {
+      "detect": "detect",
+      "error": "error",
+      "fps": "fps",
+      "frame": "frame",
+      "ms": "ms"
+    },
+    "status": {
+      "flow": "Tracking by motion",
+      "found": "Map found",
+      "fullscreenHint": "Run the game in borderless windowed mode: exclusive fullscreen cannot be captured.",
+      "idle": "Stopped",
+      "searching": "Looking for the map"
+    },
+    "steps": {
+      "pin": "Pin in place",
+      "pinHint": "Clicks pass through it to the game.",
+      "sizeLabel": "Zoom",
+      "sizeTip": "The size of the text and of the whole checklist. Unpinned, the checklist can also be made wider or taller by dragging its right or bottom edge.",
+      "title": "Checklist"
+    },
+    "update": {
+      "available": "Version {version} is available.",
+      "downloading": "Downloading version {version}…",
+      "ready": "Version {version} is ready. Restart the app to update.",
+      "download": "Download",
+      "restartNow": "Restart now",
+      "later": "Later",
+      "skip": "Skip this version",
+      "releaseNotes": "Release notes",
+      "progressLabel": "Download progress",
+      "confirmRestartEditor": "The route editor is open, and changes you have not saved there will be lost. Restart now?"
+    },
+    "updates": {
+      "title": "Updates",
+      "checkNow": "Check now",
+      "current": "Current version: {version}",
+      "portable": "Portable mode",
+      "unavailable": "This copy cannot update itself: it was not installed with Setup.exe or unpacked from the portable zip.",
+      "checking": "Checking for updates…",
+      "latest": "You have the latest version.",
+      "failed": "The last check failed: {reason}",
+      "autoCheck": "Check for updates automatically",
+      "autoDownload": "Download updates automatically",
+      "skipped": "Version {version} is skipped.",
+      "unskip": "Offer it again"
+    },
+    "firstRun": {
+      "title": "Get started",
+      "route": "Draw a route on one of the maps, or import one someone shared.",
+      "routeAction": "Open the editor",
+      "start": "Open the map in the game and press Start overlay. The first time, drag a box around the map."
+    },
+    "hero": {
+      "kicker": "Active route",
+      "none": "No route chosen",
+      "noneHint": "Pick one below or draw a new one.",
+      "of": "of {total}",
+      "area": "map area {width} × {height}",
+      "noArea": "no map area yet",
+      "next": "Next point",
+      "done": "Route complete",
+      "unnamed": "Point {n}"
+    },
+    "menu": {
+      "label": "Sections",
+      "routes": "Routes",
+      "progress": "Progress",
+      "settings": "Settings",
+      "editor": "Editor",
+      "editorTip": "Open the route editor",
+      "update": "An update is available"
+    },
+    "support": {
+      "title": "Support the project",
+      "coffee": "Buy me a coffee",
+      "coffeeHint": "By card",
+      "crypto": "Donate in crypto",
+      "discord": "Discord",
+      "discordHint": "Players' server",
+      "github": "GitHub",
+      "githubHint": "Releases and issues",
+      "network": "Network",
+      "accepts": {
+        "eth": "ETH and ERC-20 tokens, on Ethereum only",
+        "btc": "BTC on the Bitcoin network only",
+        "sol": "SOL and SPL tokens, on Solana only",
+        "trx": "TRX and TRC-20 tokens (USDT), on TRON only"
+      },
+      "qr": "QR code of the {network} address",
+      "copy": "Copy address",
+      "copied": "Copied",
+      "close": "Close"
+    }
+  },
+  "steps": {
+    "counter": {
+      "one": "{done} of {count} point done",
+      "other": "{done} of {count} points done"
+    },
+    "hide": "Hide the checklist",
+    "more": {
+      "one": "{count} more point",
+      "other": "{count} more points"
+    },
+    "pin": "Pin: clicks pass through to the game",
+    "unpin": "Unpin: the buttons come back, and the checklist can be moved and sized",
+    "stepBack": "Step back: the last point is not done",
+    "stepNext": "Step forward: the next point is done"
+  }
+}

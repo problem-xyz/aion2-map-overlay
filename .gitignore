@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+# vpk pack output (scripts/pack.ps1)
+/Releases/
+*.spec.bak
+# Node
+ui/node_modules/
+ui/dist/
+# User data (dev) lives under userdata/. The root-level names are the layout from before it;
+# anchored, so that assets/maps/ (the bundled maps, committed) is not caught by them.
+userdata/
+/settings.json
+/state.json
+/maps/
+/routes/*.json
+/routes/*.exe
+/legacy_routes/
+# Packaging output
+packaging/out/
+# Generated from __version__ by packaging/version_info.py on every build.
+# icon.ico and assets/icon.png are generated too, but they are committed: the spec needs
+# them and a build should not depend on Pillow being installed.
+packaging/version_info.txt
+Releases/
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+/docs/
+/marketing/
+/CLAUDE.md
+/.claude/
+/skills-lock.json

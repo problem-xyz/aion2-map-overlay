@@ -1,0 +1,38 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.8
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # Third-party licence texts are kept byte for byte, as their authors wrote them.
+      - id: end-of-file-fixer
+        exclude: '^packaging/third-party/'
+      - id: trailing-whitespace
+        exclude: '^packaging/third-party/'
+        # Two trailing spaces are a hard line break in Markdown.
+        args: [--markdown-linebreak-ext=md]
+      - id: check-json
+      - id: check-added-large-files
+        args: [--maxkb=2048]
+
+  - repo: local
+    hooks:
+      - id: lint-excluded
+        name: real errors in ruff-excluded modules
+        entry: uv run python scripts/lint_excluded.py
+        language: system
+        files: '^src/.*\.py$'
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: check-no-cyrillic
+        name: no Cyrillic outside *.ru.md and locales/ru.json
+        entry: uv run python scripts/check_no_cyrillic.py
+        language: system
+        pass_filenames: false

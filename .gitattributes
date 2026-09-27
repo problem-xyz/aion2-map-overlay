@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.ico binary
+# Verbatim copies of third-party licence texts: some arrive with CRLF, trailing spaces or no
+# final newline, and they ship byte for byte as their authors wrote them.
+packaging/third-party/** -text -whitespace
+*.webp binary

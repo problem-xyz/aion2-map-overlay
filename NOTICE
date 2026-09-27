@@ -1,0 +1,87 @@
+Aion 2 - Map Overlay
+Copyright (c) 2026 problem-xyz
+
+Aion 2 - Map Overlay is licensed under its own terms; see LICENSE.
+
+This repository and the app also carry material by others that LICENSE does not cover. It is
+listed below with the terms it is under, where it comes from and what was changed.
+
+Aion, Aion 2 and NCSOFT are trademarks or registered trademarks of NCSOFT Corporation. The maps
+below are Aion 2's world map art, and the object sets name and place locations of the game: that
+game content is the intellectual property of NCSOFT Corporation. The licences below cover the
+work of the projects they name, not NCSOFT's rights, which remain NCSOFT's; LICENSE gives none
+either. This is an unofficial fan project, not affiliated with, endorsed or sponsored by NCSOFT.
+
+
+assets/object-sets/verteron.json
+assets/object-sets/altgard.json
+-------------------------------------------------------------------------------------------------
+
+Source    The marker data of the aion2-interactive-map project by tc-imba:
+          https://github.com/aion2-interactive-map/aion2-interactive-map
+          verteron.json is adapted from public/data/markers/World_L_A.yaml and
+          altgard.json from public/data/markers/World_D_A.yaml; the category tree follows
+          public/data/types.yaml. Both files match the upstream markers as of upstream commit
+          d5a1863 (2025-12-03).
+
+Licence   Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0),
+          https://creativecommons.org/licenses/by-nc/4.0/
+          The upstream project licenses everything under its public/data directory this way,
+          in its LICENSE; its README carries the copyright notice for the data:
+          https://github.com/aion2-interactive-map/aion2-interactive-map/blob/master/LICENSE
+          https://github.com/aion2-interactive-map/aion2-interactive-map/blob/master/README.md
+
+          The adapted files in this repository are shared under the same licence, CC BY-NC 4.0.
+          They may be used, shared and adapted for non-commercial purposes, with credit to the
+          upstream project and a note of any changes. Commercial use needs the permission of the
+          upstream author. The data is provided as is, without warranties of any kind; see
+          section 5 of the licence.
+
+Changes   Established by comparing these files with the upstream data. The tool that made the
+          conversion is not known.
+          - Converted from upstream YAML to this app's object-set JSON format.
+          - Positions converted from pixels on the 8192 x 8192 map layer, measured from its
+            bottom-left corner, to percentages measured from the top-left corner:
+            x = x_px / 8192 * 100 and y = 100 - y_px / 8192 * 100, rounded to two decimals.
+          - Each marker's region became its description, its subtype became its category, and
+            its title was set to the name of that category.
+          - Marker ids gained an "oss-" prefix.
+          - The name field (a number on Empyrean Traces, a Chinese place name on teleports and
+            other locations, often empty), images and the per-marker category were dropped.
+            A marker's upstream category now shows only as the parent of its subtype in the
+            category tree.
+          - Categories were given new ids, names and colours (upstream monolithMaterial is
+            "Empyrean Trace" here). The nested subtypes became parentId links; order,
+            canComplete, hideTooltip and iconScale were dropped; icon values were replaced
+            (empty, except on Empyrean Trace); visible was added, plus iconWidth and iconHeight
+            on Empyrean Trace.
+          - mapName and backgroundImage keys were added at the top level.
+          - The icon and backgroundImage paths point to files this repository does not contain.
+
+
+assets/maps/altgard/reference.webp
+assets/maps/altgard/detail.webp
+assets/maps/verteron/reference.webp
+assets/maps/verteron/detail.webp
+-------------------------------------------------------------------------------------------------
+
+Source    The map layer images of the aion2-interactive-map project by tc-imba:
+          https://github.com/aion2-interactive-map/aion2-interactive-map
+          altgard/ holds the World_D_A layer (Asmodae) and verteron/ the World_L_A layer
+          (Elysea). Each reference.webp is the 4096 x 4096 overview the project serves,
+          retrieved on 2026-09-23. altgard/detail.webp is the same World_D_A layer at
+          8192 x 8192, retrieved on 2026-09-19. verteron/detail.webp is the World_L_A layer at
+          8192 x 8192, joined from the 64 tiles under public/UI/Map/WorldMap/World_L_A/Res/ in
+          the project's repository at commit 89ce398 (2026-04-22), retrieved on 2026-09-24. The
+          manifest.json beside each pair of images repeats this.
+
+Licence   Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0),
+          https://creativecommons.org/licenses/by-nc/4.0/
+          on the same terms, and with the same links, as the object sets above.
+
+Changes   The reference.webp files and altgard/detail.webp are used byte for byte as retrieved.
+          verteron/detail.webp was made by placing the 64 tiles of 1024 x 1024 in their 8 x 8
+          grid (file names give column, then row) and saving the result as one WebP at quality
+          90. The app cuts each detail.webp into a tile pyramid, and each reference.webp into a
+          thumbnail, at run time in the user's data directory; nothing derived from them is in
+          this repository.

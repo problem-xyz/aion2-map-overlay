@@ -1,0 +1,17 @@
+{
+  "id": "altgard",
+  "label": "Altgard",
+  "size": [4096, 4096],
+  "detail": [8192, 8192],
+  "source": {
+    "project": "aion2-interactive-map",
+    "url": "https://github.com/aion2-interactive-map/aion2-interactive-map",
+    "file": "World_D_A.webp",
+    "retrieved": "2026-09-23",
+    "detail": {
+      "file": "World_D_A.webp, 8192 x 8192",
+      "retrieved": "2026-09-19"
+    }
+  },
+  "licence": "CC BY-NC 4.0"
+}

@@ -1,0 +1,478 @@
+/*
+ * Document-level rules shared by all three pages: the panel, the editor and the steps plaque.
+ *
+ * Text selection is the notable one. It used to be off for the whole document, which also made
+ * the panel's own text unselectable -- a user could not copy an error message or a route name.
+ * It is switched off only where a drag would otherwise smear a selection across the UI: the
+ * always-on-top plaque, the map canvas, and the controls people click repeatedly.
+ */
+
+@import "./tokens.css";
+@import "./controls.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: var(--text-md) / var(--leading-normal) var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+  transition: scale var(--duration-fast) var(--ease-out);
+}
+
+/* Every button gives a little under the press. `scale` rather than `transform`, so it composes
+   with any transform a button already has instead of replacing it. */
+button:not(:disabled):active {
+  scale: 0.97;
+}
+
+/* One switch for all of it: under reduced motion nothing slides, scales, sweeps or fades, and
+   every change of state lands at once. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dragging these is a gesture, not a selection. */
+.ui-seg,
+.ui-switch,
+.ui-switch-row {
+  user-select: none;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* A text field shows its focus with its own border instead (each field sets it): the ring drew a
+   second box inside the one the field already has. */
+input:not([type="checkbox"], [type="radio"], [type="range"]):focus-visible,
+textarea:focus-visible {
+  box-shadow: none;
+}
+
+/* ---------- thin scrollbar ---------- */
+::-webkit-scrollbar {
+  width: var(--space-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/*
+ * Bahnschrift sits a digit above the optical centre, so a number in a circle looks high.
+ * Centring by flex and adding a top nudge fixes it. Shared, because the editor and the steps
+ * plaque both draw numbered badges and each had its own copy.
+ */
+.ui-badge-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.16em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The icon set (shared/ui/Icon.tsx): sized by the box, coloured by the text around it. */
+.ui-icon {
+  display: block;
+  flex: none;
+}
+
+/* A button with an icon before its label. */
+.ui-with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ---------- the client's panel language, shared by every window ---------- */
+
+/* A framed card: warm hairline, dark gradient. `ui-orn` adds the diamond the client sets into
+   the top rule of its character card. */
+.ui-frame {
+  position: relative;
+  border: 1px solid var(--color-frame);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel);
+}
+.ui-orn::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-frame-strong);
+}
+
+/* A panel title, centred, over a rule that fades out at both ends. */
+.ui-title {
+  margin: 0;
+  padding: var(--space-3) var(--space-4) 0;
+  text-align: center;
+  font: 500 var(--text-lg) / var(--leading-tight) var(--font-display);
+  letter-spacing: 0.01em;
+}
+.ui-title::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: var(--space-3) var(--space-4) 0;
+  background: var(--line-rule);
+}
+
+/* A section label: a small star, the name, and a rule running out to the right. */
+.ui-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font: 500 var(--text-sm) / 1 var(--font-display);
+  color: var(--color-text-secondary);
+}
+.ui-section::before {
+  content: "\2726";
+  font-size: var(--text-2xs);
+  color: var(--color-frame-strong);
+}
+.ui-section::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-frame), transparent);
+}
+
+/* The selected row, as the client draws it: a steel gradient between two lines of glow. */
+.ui-shine {
+  position: relative;
+  background: var(--fill-selected);
+}
+.ui-shine::before,
+.ui-shine::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line-shine);
+  pointer-events: none;
+}
+.ui-shine::before {
+  top: 0;
+}
+/* The glow lines draw out from the middle when a row is picked, as the client's selection does */
+.ui-shine::before,
+.ui-shine::after {
+  animation: ui-shine-in var(--duration-shine) var(--ease-out-strong);
+}
+@keyframes ui-shine-in {
+  from {
+    opacity: 0;
+    scale: 0.3 1;
+  }
+}
+.ui-shine::after {
+  bottom: 0;
+}
+
+/* A keycap, the client's small grey chip. */
+.ui-kbd {
+  display: inline-block;
+  padding: 1px 4px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-key);
+  color: var(--color-on-key);
+  font: 500 var(--text-2xs) / 1.2 var(--font-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Text for assistive technology only: read out, never painted. */
+.ui-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- confirmation dialog (ConfirmDialog.tsx) ---------- */
+/* A framed card over a dimmed page, in place of the system's grey box. */
+.ui-modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgb(from var(--color-bg-sunken) r g b / 64%);
+  transition: opacity var(--duration-enter) var(--ease-out);
+}
+.ui-modal {
+  /* Wide enough for two answers on one line, in Russian too */
+  width: min(540px, 100%);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  box-shadow: var(--shadow-floating);
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    scale var(--duration-enter) var(--ease-out);
+}
+@starting-style {
+  .ui-modal-scrim {
+    opacity: 0;
+  }
+  .ui-modal {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+.ui-modal-text {
+  margin: 0;
+  /* Clear of the cross in the corner, on both sides so the centre stays the centre */
+  padding-inline: var(--space-6);
+  text-align: center;
+  text-wrap: balance;
+  color: var(--color-text);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+.ui-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+/* The cross as the client draws its own: no plate behind it, only the blade and its glow, which
+   brightens under the pointer. */
+.ui-modal-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-icon-glint);
+  transition:
+    color var(--duration-fast) ease,
+    filter var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+  filter: var(--filter-glint);
+}
+.ui-modal-close > span {
+  display: grid;
+}
+.ui-modal-close .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+.ui-modal-close:hover {
+  color: var(--color-text);
+  filter: var(--filter-glint-hover);
+}
+/* An answer that is not the gold one is a dark tile in the warm frame, as the panel's menu tiles
+   and its Stop button are. A destructive answer says so in its words, and under the pointer its
+   frame and text turn red, with a faint red glow inside. */
+.ui-modal-btn {
+  /* The size of the editor's Save */
+  min-width: 148px;
+  height: 36px;
+  padding: 0 var(--space-6);
+  border: 1px solid var(--color-frame-strong);
+  border-radius: var(--radius-md);
+  background: var(--fill-tile);
+  color: var(--color-text);
+  font: 600 var(--text-md) / 1 var(--font-display);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition:
+    filter var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+/* The gold answer brightens by its own glow, as Start does */
+.ui-modal-btn:not(.btn-start):hover {
+  filter: brightness(1.12);
+}
+.ui-modal-btn.danger:hover {
+  filter: none;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  box-shadow: inset 0 0 12px rgb(from var(--color-danger) r g b / 18%);
+}
+
+/* ---------- a living surface, under a control's content: shared/ui/Sheen.tsx ---------- */
+/* Silk ribbons of light drift across it and a few motes come and go; on the ice tone a glint
+   runs along its top and bottom glow lines every few seconds, as along the client's selected
+   tab. Transform and opacity only: the compositor runs it with no repaint. */
+.ui-sheen {
+  --sheen-mote: rgb(from var(--color-info) r g b / 55%);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.ui-sheen-gold {
+  --sheen-mote: rgb(from var(--cream-100) r g b / 95%);
+}
+/* Two copies of the ribbons side by side, moved by one copy's width: the loop has no seam */
+.ui-sheen-silk {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 200%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='b'%3E%3CfeGaussianBlur stdDeviation='1.2'/%3E%3C/filter%3E%3C/defs%3E%3Cg fill='none' stroke='white' filter='url(%23b)'%3E%3Cpath d='M20 64C70 58 110 40 150 18S205 -2 230 -6' stroke-width='9' stroke-opacity='.14'/%3E%3Cpath d='M40 66C90 56 120 36 160 20S210 2 236 -4' stroke-width='2' stroke-opacity='.4'/%3E%3Cpath d='M4 62C50 60 96 48 132 28S188 4 214 -6' stroke-width='1.2' stroke-opacity='.3'/%3E%3C/g%3E%3C/svg%3E")
+    0 0 / 50% 100% repeat-x;
+  /* faint: a light in the fill, not a stripe across it (owner: the first pass shone too much) */
+  opacity: 0.18;
+  animation: ui-sheen-drift 13s linear infinite;
+}
+.ui-sheen-gold .ui-sheen-silk {
+  opacity: 0.32;
+  animation-duration: 10s;
+}
+@keyframes ui-sheen-drift {
+  from {
+    translate: -50% 0;
+  }
+}
+.ui-sheen-motes {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 14% 72%, var(--sheen-mote) 0 0.4px, transparent 0.9px),
+    radial-gradient(circle at 37% 28%, var(--sheen-mote) 0 0.3px, transparent 0.8px),
+    radial-gradient(circle at 61% 64%, var(--sheen-mote) 0 0.5px, transparent 1px),
+    radial-gradient(circle at 83% 36%, var(--sheen-mote) 0 0.3px, transparent 0.8px);
+  opacity: 0;
+  animation: ui-sheen-motes 3.8s ease-in-out infinite;
+}
+.ui-sheen-late {
+  background:
+    radial-gradient(circle at 24% 38%, var(--sheen-mote) 0 0.3px, transparent 0.8px),
+    radial-gradient(circle at 48% 78%, var(--sheen-mote) 0 0.4px, transparent 0.9px),
+    radial-gradient(circle at 72% 22%, var(--sheen-mote) 0 0.4px, transparent 0.9px),
+    radial-gradient(circle at 92% 70%, var(--sheen-mote) 0 0.3px, transparent 0.8px);
+  animation-delay: -1.9s;
+}
+@keyframes ui-sheen-motes {
+  0% {
+    opacity: 0;
+    translate: 0 3px;
+  }
+  45% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    translate: 2px -4px;
+  }
+}
+/* The glow lines along the top and the foot, and the glint that runs along each */
+.ui-sheen-ice::before,
+.ui-sheen-ice::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line-shine);
+  animation: ui-shine-in var(--duration-shine) var(--ease-out-strong);
+}
+.ui-sheen-ice::before {
+  top: 0;
+}
+.ui-sheen-ice::after {
+  bottom: 0;
+}
+.ui-sheen-glint {
+  position: absolute;
+  left: 0;
+  width: 45%;
+  height: 6px;
+  background: radial-gradient(
+    closest-side,
+    rgb(255 255 255 / 45%),
+    rgb(from var(--color-info) r g b / 22%) 45%,
+    transparent
+  );
+  opacity: 0;
+}
+.ui-sheen-top {
+  top: -3px;
+  animation: ui-glint-leftward 2.4s var(--ease-in-out) infinite;
+}
+.ui-sheen-bottom {
+  bottom: -3px;
+  animation: ui-glint-rightward 2.4s var(--ease-in-out) 0.35s infinite;
+}
+@keyframes ui-glint-leftward {
+  0% {
+    opacity: 0;
+    translate: 125% 0;
+  }
+  4%,
+  21% {
+    opacity: 1;
+  }
+  27%,
+  100% {
+    opacity: 0;
+    translate: -5% 0;
+  }
+}
+@keyframes ui-glint-rightward {
+  0% {
+    opacity: 0;
+    translate: -5% 0;
+  }
+  4%,
+  21% {
+    opacity: 1;
+  }
+  27%,
+  100% {
+    opacity: 0;
+    translate: 125% 0;
+  }
+}

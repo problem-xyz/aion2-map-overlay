@@ -1,0 +1,411 @@
+/*
+ * The form controls, drawn once for every window: a switch, a check box, a slider, a segmented
+ * choice, a small button, and the label-and-readout head a field sits under.
+ *
+ * Each keeps its native element or its ARIA role -- a real range input, a real checkbox, a button
+ * with role="switch" -- and only its paint is the client's: a dark well the control sits in, a
+ * teal fill for what is on or how far, and a bright knob that moves across.
+ */
+
+/* ---------- switch: shared/ui/Switch.tsx ---------- */
+.ui-switch {
+  flex: none;
+  display: inline-grid;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+}
+.ui-switch-track {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-sunken);
+  box-shadow: var(--shadow-inset);
+  transition:
+    border-color var(--duration-base) ease,
+    box-shadow var(--duration-base) ease;
+}
+/* The on fill fades in over the well rather than replacing it, since a gradient cannot run */
+.ui-switch-track::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--fill-switch-on);
+  opacity: 0;
+  transition: opacity var(--duration-base) ease;
+}
+.ui-switch-track::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-knob-off);
+  box-shadow: var(--shadow-knob);
+  transition:
+    translate var(--duration-enter) var(--ease-out-strong),
+    background-color var(--duration-base) ease;
+}
+[aria-checked="true"] > .ui-switch-track {
+  border-color: var(--teal-700);
+  box-shadow: 0 0 10px rgb(from var(--color-range-glow) r g b / 30%);
+}
+[aria-checked="true"] > .ui-switch-track::before {
+  opacity: 1;
+}
+[aria-checked="true"] > .ui-switch-track::after {
+  translate: 16px 0;
+  background: var(--color-knob);
+}
+.ui-switch:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* A switch with its label: the whole row is the control, as a label is to its box. */
+.ui-switch-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  text-align: start;
+}
+.ui-switch-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ui-switch-label {
+  line-height: var(--leading-snug);
+}
+.ui-switch-hint {
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--color-text-muted);
+}
+.ui-switch-row:disabled,
+.ui-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-switch-row:hover:not(:disabled) .ui-switch-track,
+  .ui-switch:hover:not(:disabled) .ui-switch-track {
+    border-color: var(--color-frame-strong);
+  }
+}
+
+/* ---------- check box: the native one, repainted as the client's ---------- */
+/* A dark well with a steel edge. Ticked, the well stays as it is and a brush-stroke tick is laid
+   over it, its long stroke breaking out past the top right corner. */
+input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  box-shadow: var(--shadow-inset);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) ease;
+}
+/* The tick: a filled stroke, thick where the brush lands and fine at its tip, cut out of the
+   cream-to-gold fill by a mask. It draws on from its foot when the box is ticked. */
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -8px;
+  width: 24px;
+  height: 24px;
+  background: var(--fill-check);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3.2 14.6C4.6 13.4 6.2 14.2 7.4 16L9.2 18.6C12.4 11.8 17 5.6 23.6 0.8C18.4 5.8 13.6 12.6 10.4 21.2C10 22.4 8.6 22.6 8 21.6C6.6 19.2 5.2 16.6 3.2 14.6Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--duration-enter) var(--ease-out);
+}
+input[type="checkbox"]:checked::after {
+  clip-path: inset(0 -2px 0 0);
+}
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+@media (hover: hover) and (pointer: fine) {
+  input[type="checkbox"]:hover:not(:disabled) {
+    border-color: var(--color-frame-strong);
+  }
+}
+
+/* ---------- slider: shared/ui/Slider.tsx sets --fill, the share left of the knob ---------- */
+/* The client's: a flat dark track, the run up to the knob in teal with a sheen across it, and a
+   diamond for the knob with a star of light at its heart. */
+input[type="range"] {
+  --fill: 0%;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background:
+    var(--fill-range-sheen) 0 0 / var(--fill) 100% no-repeat,
+    var(--fill-range-run) 0 0 / var(--fill) 100% no-repeat,
+    var(--color-range-track);
+  box-shadow: var(--shadow-inset);
+}
+/* A square turned on its corner; the two diagonal lines of light turn with it and stand upright
+   as the star's rays. */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -4px;
+  border: 1.5px solid var(--color-range-rim);
+  border-radius: var(--radius-xs);
+  background:
+    linear-gradient(45deg, transparent 44%, rgb(255 255 255 / 85%) 50%, transparent 56%),
+    linear-gradient(-45deg, transparent 44%, rgb(255 255 255 / 85%) 50%, transparent 56%),
+    radial-gradient(circle, #fff 0 1px, var(--teal-300) 2.5px, var(--teal-700) 7px);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 55%),
+    0 0 7px rgb(from var(--color-range-glow) r g b / 65%);
+  rotate: 45deg;
+  transition:
+    box-shadow var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+input[type="range"]:active::-webkit-slider-thumb {
+  scale: 1.15;
+}
+/* The ring goes on the knob, where the eye already is, not round the whole row */
+input[type="range"]:focus-visible {
+  box-shadow: none;
+}
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--focus-ring);
+}
+@media (hover: hover) and (pointer: fine) {
+  input[type="range"]:hover::-webkit-slider-thumb {
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 55%),
+      0 0 12px rgb(from var(--color-range-glow) r g b / 90%);
+  }
+}
+
+/* ---------- a field: its label, the value read out, and a hint under it ---------- */
+.ui-field {
+  display: block;
+}
+.ui-field-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+  line-height: var(--leading-snug);
+}
+/* The label, after the client's: pale ice, behind a small four-pointed star. */
+.ui-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font: 500 var(--text-md) / 1.2 var(--font-display);
+  color: var(--color-label);
+}
+.ui-field-label::before {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0Q13 11 24 12Q13 13 12 24Q11 13 0 12Q11 11 12 0Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  opacity: 0.8;
+}
+.ui-field-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* ---------- the "i" beside a label, and the explanation it opens: shared/ui/InfoTip.tsx ---------- */
+.ui-tip-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: help;
+  transition: color var(--duration-fast) ease;
+}
+.ui-tip-btn .ui-icon {
+  width: 14px;
+  height: 14px;
+}
+.ui-tip-btn:hover,
+.ui-tip-btn:focus-visible {
+  color: var(--color-text);
+}
+/* A manual popover in the top layer; InfoTip writes its left, top and width */
+.ui-tip {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-floating);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  white-space: pre-line;
+  opacity: 0;
+  translate: 0 -2px;
+  transition:
+    opacity var(--duration-base) ease,
+    translate var(--duration-base) var(--ease-out),
+    display var(--duration-base) allow-discrete,
+    overlay var(--duration-base) allow-discrete;
+}
+.ui-tip:popover-open {
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .ui-tip:popover-open {
+    opacity: 0;
+    translate: 0 -2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-tip {
+    transition: none;
+  }
+}
+
+.ui-field-value {
+  flex: none;
+  font: 500 var(--text-md) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+.ui-hint {
+  margin-top: 6px;
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--color-text-muted);
+}
+
+/* ---------- segmented choice: shared/ui/Segmented.tsx ---------- */
+.ui-seg {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-sunken);
+  box-shadow: var(--shadow-inset);
+}
+.ui-seg button {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 28px;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+/* The chosen segment is a selected row in small: the steel fill, a line of glow at its foot */
+.ui-seg button[aria-checked="true"] {
+  border-color: var(--color-selected-border);
+  background: var(--fill-selected);
+  color: var(--color-text);
+  box-shadow: inset 0 -1px 0 rgb(from var(--color-info) r g b / 55%);
+}
+.ui-seg button:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ui-seg button:hover:not([aria-checked="true"]) {
+    background: rgb(255 255 255 / 5%);
+    color: var(--color-text);
+  }
+}
+
+/* ---------- small button: every secondary action, in every window ---------- */
+.btn-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, var(--color-surface-raised), var(--color-surface));
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    scale var(--duration-fast) var(--ease-out);
+}
+.btn-small.ghost {
+  background: transparent;
+}
+.btn-small:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-small:hover:not(:disabled) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+
+/* Secondary text, in every window. */
+.muted {
+  color: var(--color-text-muted);
+}

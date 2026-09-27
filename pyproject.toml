@@ -1,0 +1,89 @@
+[project]
+name = "map-overlay"
+dynamic = ["version"]
+description = "Route overlay for game maps (screen capture + feature matching)"
+readme = "README.md"
+requires-python = ">=3.14"
+license = "LicenseRef-Proprietary"
+dependencies = [
+  "PySide6==6.11.2",
+  # headless: the app uses only the algorithms. The full wheel ships its own Qt for highgui,
+  # which is ~60 MB of nothing and a second set of Qt DLLs beside PySide6's.
+  "opencv-python-headless==5.0.0.93",
+  "numpy==2.5.3",
+  "mss==10.2.0",
+  "dxcam==0.3.0",
+  "velopack==1.2.158",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14",
+    "pytest>=8",
+    "pytest-qt>=4.4",
+    "pyinstaller>=6.22",
+    "pillow>=12.3.0",
+    "pyright[nodejs]==1.1.414",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/map_overlay/__init__.py"
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["src", "tests", "scripts"]
+exclude = [
+  # ruff 0.16 also formats Python blocks inside Markdown. Those snippets are
+  # illustrative text for readers, not code we ship, and must stay exactly as written.
+  "*.md",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C4", "UP", "N", "SIM", "RUF", "PL", "ARG", "PTH", "T20", "BLE"]
+ignore = [
+  "PLR0913",  # a Qt slot's argument list is set by the contract, not by us
+  "PLR2004",  # a magic value in a comparison is usually clearer named at the call site
+  "RUF012",   # ClassVar on a plain constant dict adds noise without adding safety
+  # RUF001/2/3 flag Cyrillic as "ambiguous unicode", a homoglyph-attack rule. Our concern is a
+  # language policy, and the right tool for it is scripts/check_no_cyrillic.py, which knows about
+  # *.ru.md and locales/ru.json.
+  "RUF001",
+  "RUF002",
+  "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004", "ARG"]
+# A script in scripts/ is a command-line tool: what it writes to stdout is its output, not
+# debugging left behind. The no-print rule is about the app, which has a logger.
+"scripts/**" = ["T201"]
+# Qt signals are camelCase by convention, and Backend's slots and signals are the frozen JS
+# contract: the UI is built against those exact names. Renaming them would break Qt idiom in
+# one case and the interface in the other. N806/N803 cover the 3x3 transform matrices, which
+# are M and A by universal convention in this kind of code.
+"src/map_overlay/bridge/*.py" = ["N802", "N815"]
+"src/map_overlay/qt/*.py" = ["N802", "N815"]
+# Engine is a QThread; its signals follow the same Qt convention as the rest.
+"src/map_overlay/vision/*.py" = ["N803", "N806", "N815"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+pythonVersion = "3.14"
+pythonPlatform = "Windows"
+typeCheckingMode = "standard"
+# A suppression names the rule it silences: a bare "# type: ignore" hides everything on its
+# line, including the next real error. Stale ones fail the check so they get removed.
+enableTypeIgnoreComments = false
+reportUnnecessaryTypeIgnoreComment = "error"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "builds_tiles: the test is about the tile build itself, so its maps start without a pyramid",
+]

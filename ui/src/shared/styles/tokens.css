@@ -1,0 +1,274 @@
+/*
+ * Design tokens: primitives first, then the semantic names everything else should use.
+ *
+ * The values are read off the Aion 2 client: near-black cool slate surfaces, thin warm hairlines
+ * round the panels, steel blue for what is selected, ice blue for what is live, gold for the one
+ * main action. Every text pair below was measured.
+ *
+ * Rule for using these: components reference the semantic layer. A primitive appearing outside
+ * this file is a sign that a semantic name is missing.
+ *
+ * A translucent shade of a token is written at the point of use as
+ * `rgb(from var(--color-accent) r g b / 18%)`, not as a fourth copy of the hex. The alpha is the
+ * only part that belongs to the component, and a retheme then carries the ring with it. Relative
+ * colour syntax needs Chromium 119+; QtWebEngine 6.11 ships 140, and Vite passes it through
+ * untouched.
+ */
+
+:root {
+  /* --- primitives ------------------------------------------------------ */
+  /* Cool slate, OKLCH hue 258: even steps in perceived lightness, chroma 0.02 at the dark end
+     falling to 0.006 at the light one. The client's dialogs sit at hue 245-270, chroma 0.02. */
+  --slate-950: #070b12;
+  --slate-900: #0d1219;
+  --slate-850: #131820;
+  --slate-800: #1b212a;
+  --slate-700: #252c36;
+  --slate-600: #363e49;
+  --slate-550: #656c78;
+  --slate-400: #858d99;
+  --slate-300: #a3aab4;
+  --slate-200: #c2c8d0;
+  --slate-100: #f1f4f8;
+
+  /* Steel blue, hue 245: the client's selected rows and active tabs. */
+  --steel-700: #253c4f;
+  --steel-600: #344a5d;
+
+  /* Warm hairline, hue 72: the thin frame round the client's panels and cards, gold, brown and
+     grey at once. The first pass at chroma 0.025-0.045 read as plain gold (owner); this one keeps
+     the lightness and about 60% of the chroma. */
+  --bronze-500: #514a42;
+  --bronze-300: #857a6b;
+
+  /* Gold, the main-action fill. The client's gradient drifts from hue 78 at the dark end to 100
+     at the bright one, which is what makes it read as metal rather than paint. */
+  --gold-700: #b4821b;
+  --gold-500: #e3ae28;
+  --gold-300: #f9da49;
+  --gold-ink: #261b08;
+
+  /* Ice blue, hue 238: the client's selection glow, pale enough to sit beside the gold without
+     competing with it. Replaced a cyan the owner found too loud against the rest. */
+  --ice-300: #9acbed;
+  --ice-600: #5e8cac;
+  --ice-700: #3d6682;
+  --ice-100: #d3e8f7;
+  /* Teal, hue 195: the client's slider run, and nothing else. */
+  --teal-300: #54c8c4;
+  --teal-500: #2a9ea3;
+  --teal-700: #176b70;
+  /* Cream to old gold: the client's brush-stroke tick. */
+  --cream-100: #fff8e8;
+  --cream-300: #f0dca8;
+  --gold-600: #c99a45;
+  --silver-200: #d7d2c2;
+  /* Parchment gold, hue 80: the client's menu icons, drawn as lines. */
+  --parchment-300: #d8c9a6;
+  /* Stone, hue 75 at a third of the bronze's chroma: a warm grey for a hairline over the game. */
+  --stone-400: #8b8781;
+  --ice-ink: #081822;
+  --red-400: #fc5855;
+  --orange-400: #f59740;
+  --glow-400: #88cef6;
+  /* The route's own default colour (routeDoc.ts): data, not interface, so it stays as it was. */
+  --amber-400: #f2b544;
+
+  /* --- semantic colour -------------------------------------------------- */
+  --color-bg: var(--slate-900);
+  --color-bg-sunken: var(--slate-950);
+  --color-surface: var(--slate-850);
+  --color-surface-raised: var(--slate-800);
+  --color-surface-hover: var(--slate-700);
+  --color-border: var(--slate-600);
+  /* The edge that tells a control apart from the surface it sits on: 3.4:1 against
+     --color-surface, where --color-border is only a divider at 1.7:1. */
+  --color-border-control: var(--slate-550);
+  /* The warm hairline round a panel or a card, as the client draws it. Decorative: a control
+     never relies on it to be found. A little of what is behind shows through it, the panel's
+     own slate or the map, which keeps it from reading as a painted line. */
+  --color-frame: rgb(from var(--bronze-500) r g b / 80%);
+  --color-frame-strong: var(--bronze-300);
+  --color-text: var(--slate-100);
+  --color-text-secondary: var(--slate-200);
+  --color-text-muted: var(--slate-400);
+  /* On a selected row the muted grey falls to 3.4:1; this one keeps 4.9:1 there. */
+  --color-text-muted-on-selected: var(--slate-300);
+  --color-text-placeholder: var(--slate-400);
+
+  /* Live, found, next, on: ice blue. Also the fill of a switch that is on. 10.3:1 on the
+     surface, 6.6:1 on a selected fill. */
+  --color-accent: var(--ice-300);
+  --color-accent-dim: var(--ice-600);
+  --color-on-accent: var(--ice-ink);
+  /* A switch that is on: the slider's teal, so the two read as one family of controls. Deeper
+     at the foot, where it meets the knob's middle: the white knob holds 4:1 there. */
+  --fill-switch-on: linear-gradient(180deg, var(--teal-500), var(--teal-700));
+  /* The knob of a switch: bright when it is on, grey when it is off. */
+  --color-knob: var(--slate-100);
+  --color-knob-off: var(--slate-400);
+  /* An icon on a menu tile, a rail or the plaque, as the client draws them: a line in
+     parchment gold. 10.7-11.6:1 on the tiles, 11.3:1 on the plaque. */
+  --color-icon-warm: var(--parchment-300);
+  /* The client's close cross: a pale ice blade in a blue glow, brighter under the pointer. Used
+     by the dialog's cancel and the steps plaque's close. */
+  --color-icon-glint: var(--ice-100);
+  --filter-glint: drop-shadow(0 0 2px rgb(from var(--glow-400) r g b / 55%))
+    drop-shadow(0 0 5px rgb(from var(--glow-400) r g b / 25%));
+  --filter-glint-hover: drop-shadow(0 0 2px rgb(from var(--glow-400) r g b / 90%))
+    drop-shadow(0 0 7px rgb(from var(--glow-400) r g b / 50%));
+  /* A field's label, as the client sets it beside a small star: pale ice, 13.7:1 on a card. */
+  --color-label: var(--ice-100);
+  /* The tick of a check box: a brush stroke from cream at its tip to old gold at its foot. */
+  --fill-check: linear-gradient(225deg, var(--cream-100), var(--cream-300) 40%, var(--gold-600));
+  /* A slider: the run up to the knob in teal with a sheen across it, and the diamond knob. */
+  --fill-range-run: linear-gradient(180deg, var(--teal-300), var(--teal-500) 55%, var(--teal-700));
+  --fill-range-sheen: repeating-linear-gradient(
+    100deg,
+    rgb(255 255 255 / 0%) 0,
+    rgb(255 255 255 / 11%) 6px,
+    rgb(255 255 255 / 0%) 12px 19px
+  );
+  --color-range-track: var(--slate-800);
+  --color-range-rim: var(--silver-200);
+  --color-range-glow: var(--teal-300);
+  /* What is selected: a row, a tab, a segment. */
+  --color-selected: var(--steel-700);
+  --color-selected-border: var(--steel-600);
+  /* The one main action on a screen: Start, Save. Gold, as the client's Connect and Enhance. */
+  --color-primary: var(--gold-500);
+  /* White on the gold, held off it by a dark one-pixel outline (owner). White alone is about
+     2:1 on the bright end of the gold; the outline is what carries the letters there. */
+  --color-on-primary: var(--slate-100);
+  --shadow-on-primary:
+    0 1px 1.5px rgb(from var(--gold-ink) r g b / 85%), 0 0 1px rgb(from var(--gold-ink) r g b / 70%);
+  /* The same outline for an icon beside that text: text-shadow does not reach an svg. */
+  --filter-on-primary: drop-shadow(0 1px 1px rgb(from var(--gold-ink) r g b / 85%));
+  --fill-primary: linear-gradient(100deg, var(--gold-700), var(--gold-500) 45%, var(--gold-300));
+
+  --color-route-default: var(--amber-400);
+  --color-warning: var(--orange-400);
+  --color-danger: var(--red-400);
+  --color-info: var(--glow-400);
+  --color-focus: var(--glow-400);
+  --color-scrim: rgb(7 11 18 / 92%);
+  --shadow-raised: 0 6px 20px rgb(0 0 0 / 45%);
+
+  /* A keycap: the client's small grey chip with a white letter. */
+  --color-key: #3c3d3f;
+  --color-on-key: var(--slate-100);
+
+  /* Ink for a number drawn inside a coloured badge, in the list and on the map alike. */
+  --color-on-badge: #14161c;
+  --color-on-marker: #14161c;
+
+  /* The hairline that lifts a coloured badge off whatever is behind it: map tiles, or the game
+     itself. --color-outline-soft does the same job on the small category dots. */
+  --color-outline: #0b0e13;
+  --color-outline-soft: rgb(0 0 0 / 60%);
+
+  /* A white veil: a divider or a hover fill on a surface whose colour is not known in advance. */
+  --color-veil-line: rgb(255 255 255 / 10%);
+  --color-veil-hover: rgb(255 255 255 / 12%);
+
+  /* The steps plaque floats over the game rather than over the app's own background, so it
+     carries its own surface and slightly brighter ink: anything dimmer is lost on a light map.
+     The two gradients are opaque here; the plaque dilutes the pinned one by --so-alpha, but never
+     below 0.85 of it: under that the ink fell below 4.5:1 over a bright scene (steps.css). */
+  --color-overlay-ink: #f1f4f8;
+  --color-overlay-ink-list: #eef2f8;
+  --color-overlay-ink-dim: #cdd5e2;
+  --color-overlay-ink-muted: #a3aab4;
+  --color-overlay-top: #10141b;
+  --color-overlay-bottom: #080a0e;
+  /* The plaque's hairline: the panels' warm frame all but drained of its gold, and thin enough
+     that the game shows through it; a loose plaque's is stronger, as it is the one to grab. */
+  --color-overlay-frame: rgb(from var(--stone-400) r g b / 30%);
+  --color-overlay-frame-loose: rgb(from var(--stone-400) r g b / 50%);
+  --color-overlay-loose-top: rgb(16 20 27 / 95%);
+  --color-overlay-loose-bottom: rgb(8 10 14 / 96%);
+
+  /* The client's panels: a dark vertical gradient behind the warm frame, and the deeper one of
+     its character card. The selected row shines: a steel gradient between two glow lines. */
+  --fill-panel: linear-gradient(180deg, #151b24, #0f141b);
+  --fill-panel-deep: linear-gradient(180deg, #0a0d12, #10151c);
+  --fill-selected: linear-gradient(90deg, #1e3346, #253e53 60%, #1b2c3b);
+  /* A tile of the client's main menu, and anything that stands beside one: the panel's section
+     tiles, its quick slots, a route's picture tile. */
+  --fill-tile: linear-gradient(180deg, #161a20, #0e1116);
+  --fill-tile-on: linear-gradient(180deg, #243a4d, #1b2c3b);
+  /* Stop while the overlay runs: the tile's darkness warmed to an ember. */
+  --fill-stop: linear-gradient(180deg, #2b1517, #170c0e);
+  --color-tile-border: #22272f;
+  --line-shine: linear-gradient(90deg, transparent, var(--color-info), transparent);
+  /* Under a panel's title: ice blue, fading out at both ends. */
+  --line-rule: linear-gradient(90deg, transparent, var(--color-accent-dim), transparent);
+
+  --shadow-floating: 0 8px 26px rgb(0 0 0 / 55%);
+  /* A well a control sits in: a track, a box, a group of segments. */
+  --shadow-inset: inset 0 1px 2px rgb(0 0 0 / 55%);
+  --shadow-knob: 0 0 0 1px rgb(0 0 0 / 30%), 0 1px 3px rgb(0 0 0 / 60%);
+  --shadow-text: 0 1px 2px rgb(0 0 0 / 85%);
+
+  /* --- space ------------------------------------------------------------ */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* --- radius ----------------------------------------------------------- */
+  /* Tighter than before: the client's tiles and buttons are all but square. */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-full: 999px;
+
+  /* --- type ------------------------------------------------------------- */
+  --font-display:
+    "Bahnschrift", "DIN Alternate", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  /* An address or a code, where 0 and O, l and 1 must not be taken for each other. */
+  --font-mono: "Cascadia Mono", Consolas, ui-monospace, monospace;
+
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-2xl: 22px;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.32;
+  --leading-normal: 1.45;
+
+  /* --- layers ----------------------------------------------------------- */
+  /* Leaflet owns 200-700 for its own panes, so map tips sit just above them. */
+  --z-raised: 1;
+  --z-sticky: 10;
+  --z-popover: 20;
+  --z-map-tip: 900;
+  --z-toast: 1000;
+  /* A question the user has to answer: over everything, the toasts included. */
+  --z-modal: 1100;
+
+  /* --- interaction ------------------------------------------------------- */
+  --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-focus);
+
+  /* --- motion ------------------------------------------------------------ */
+  /* Hover and press are fast; what enters -- a menu, a toast, a drawer -- takes --duration-enter,
+     and nothing anyone waits on is slower. --duration-shine is the one exception: a glow settling on
+     a line is light, not a change of state, and runs once. */
+  --duration-fast: 120ms;
+  --duration-base: 150ms;
+  --duration-enter: 200ms;
+  --duration-shine: 650ms;
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-out-strong: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
