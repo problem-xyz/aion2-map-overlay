@@ -83,7 +83,7 @@ class RouteService:
         return routes.load_route(self.dirs, route_id)
 
     def seed_bundled(self, seeded):
-        """Copy the starter routes not in `seeded` into routes/; the ids now handled."""
+        """Copy the starter routes not in `seeded` into routes/ and update the untouched ones."""
         return routes.seed_bundled_routes(self.dirs, seeded)
 
     def route_exists(self, route_id):

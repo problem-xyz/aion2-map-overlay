@@ -56,6 +56,10 @@ you close it, so a game session is never interrupted. A banner in the panel says
 version is ready, with **Restart now** if you do not want to wait. You can turn automatic
 checks or downloads off in the panel's **Updates** block.
 
+An update never deletes or changes the routes you made. The routes that come with the app get
+the new version only if you never edited them. If you edited one, it stays as you left it, and
+one you deleted does not come back.
+
 ## Uninstall
 
 Open Windows **Settings → Apps**, find **Aion 2 - Map Overlay** and choose **Uninstall**. Your

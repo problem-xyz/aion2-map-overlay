@@ -1,0 +1,7 @@
+# Every version of the starter routes a release has shipped, as sha256sum writes it.
+# A route in a user's routes/ with one of these digests was never changed by them, and the app
+# replaces it with the version bundled now. scripts/bump_version.py adds the current versions on
+# every release; never remove a line.
+4880a7c1ec8da6d311c7a73da8748aef8bbca5a9867eb04367ea3cc11eb37009  Asmodians_-_Level_10-17.json
+9486078079f93951e86b9027db73af967200fd7d50c2480ed273f1d5e07e9e66  Asmodians_-_Level_17-20.json
+feb8857210d45af3547d70ae57f0e1ba7fcd857e637d2ddc3b411b85ef8c8b48  Asmodians_-_Level_20-22_Krao_Cave.json

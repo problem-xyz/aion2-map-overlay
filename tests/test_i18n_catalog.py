@@ -127,6 +127,7 @@ DATA_SAFETY_CODES = [
     ("map.manifest_invalid", {"id": "altgard", "reason": "reference.webp is missing"}),
     ("map.unknown", {"id": "custom"}),
     ("legacy.routes_moved", {"names": "Old route, gold"}),
+    ("route.starters_updated", {"names": "Asmodians - Level 10-17"}),
 ]
 
 
