@@ -83,7 +83,9 @@ class EngineController(QObject):
     def _set_phase(self, phase) -> None:
         if phase is not self._phase:
             self._phase = phase
-            log.debug("engine phase -> %s", phase.value)
+            # INFO: a handful per session, and a user's log otherwise cannot tell a Stop/Start
+            # from the capture reopening on its own.
+            log.info("engine phase -> %s", phase.value)
             self.phaseChanged.emit(phase)
 
     # ------------------------------------------------------------------ control

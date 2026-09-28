@@ -187,6 +187,9 @@ class Tracker:
         gray = cv2.cvtColor(small, cv2.COLOR_BGRA2GRAY)
 
         kp, des = self.frame_detector.detectAndCompute(gray, None)
+        # Near zero on a black or blank frame, which tells a capture problem from a map that
+        # simply does not match.
+        info["keypoints"] = len(kp)
         if des is None or len(kp) < s.min_inliers:
             self._roi = None
             return None, info
