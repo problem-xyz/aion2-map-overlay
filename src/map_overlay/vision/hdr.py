@@ -13,6 +13,8 @@ picture is the one the player sees; a game that renders in HDR keeps its highlig
 fixed SDR white level would clip them.
 """
 
+from concurrent.futures import ThreadPoolExecutor
+
 import numpy as np
 
 # The share of pixels allowed to clip. A few specular glints or a white icon should not darken
@@ -28,6 +30,10 @@ MIN_EXPOSURE = 1.0
 # A steady exposure keeps consecutive frames alike, which is what optical flow relies on.
 RAISE_ABOVE = 1.05
 LOWER_BELOW = 0.7
+# The lookups run on this many threads, each over a band of rows; numpy releases the GIL while
+# it indexes. Four take a 1200x900 frame from about 7 ms to about 2 ms. This cuts the delay
+# before a frame is tracked, not the CPU time it costs.
+CONVERT_THREADS = 4
 
 _HALF_VALUES = np.arange(1 << 16, dtype=np.uint16).view(np.float16).astype(np.float32)
 
@@ -45,12 +51,13 @@ class ScrgbToBgra:
     """Converts RGBA half-float scRGB frames to BGRA uint8, carrying the exposure between frames.
 
     Stateful for the exposure's hysteresis, so one instance serves one frame sequence, from one
-    thread.
+    thread. It owns a small thread pool; `close` stops it.
     """
 
     def __init__(self) -> None:
         self.exposure: float | None = None
         self._lut = np.zeros(1 << 16, np.uint8)
+        self._pool = ThreadPoolExecutor(CONVERT_THREADS, thread_name_prefix="hdr-convert")
 
     def _bright_end(self, rgba: np.ndarray) -> float:
         sample = rgba[::EXPOSURE_STRIDE, ::EXPOSURE_STRIDE, :3].astype(np.float32).max(axis=2)
@@ -73,10 +80,20 @@ class ScrgbToBgra:
         h, w = rgba.shape[:2]
         out = np.empty((h, w, 4), np.uint8)
         lut = self._lut
-        # Indexing by the bit pattern is the whole conversion -- scale, clip and sRGB encoding --
-        # in one table lookup per channel.
-        out[..., 0] = lut[bits[..., 2]]
-        out[..., 1] = lut[bits[..., 1]]
-        out[..., 2] = lut[bits[..., 0]]
-        out[..., 3] = 255
+
+        def band(top: int) -> None:
+            src, dst = bits[top : top + step], out[top : top + step]
+            # Indexing by the bit pattern is the whole conversion -- scale, clip and sRGB
+            # encoding -- in one table lookup per channel.
+            dst[..., 0] = lut[src[..., 2]]
+            dst[..., 1] = lut[src[..., 1]]
+            dst[..., 2] = lut[src[..., 0]]
+            dst[..., 3] = 255
+
+        step = max(1, -(-h // CONVERT_THREADS))
+        # list() waits for every band and re-raises the first failure here, on the caller.
+        list(self._pool.map(band, range(0, h, step)))
         return out
+
+    def close(self) -> None:
+        self._pool.shutdown(wait=False)
