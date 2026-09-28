@@ -175,6 +175,8 @@ def stub_start(monkeypatch: pytest.MonkeyPatch, dirs: DataDirs) -> list[Any]:
     monkeypatch.setattr(app_module, "migrate_dev_layout", migrate)
     monkeypatch.setattr(app_module, "QApplication", _FakeQApplication)
     monkeypatch.setattr(app_module, "Backend", backend)
+    # The real one would turn automatic collection off for the rest of the session.
+    monkeypatch.setattr(app_module, "GuiCollector", lambda app: None)
     # The real choice is made once per process and sticks: this one serves the whole session
     monkeypatch.setattr(app_module, "choose_graphics_api", lambda **_: "stub")
     monkeypatch.setattr("map_overlay.qt.win32.allow_set_foreground", grant, raising=False)

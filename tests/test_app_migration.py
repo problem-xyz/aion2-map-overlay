@@ -100,6 +100,7 @@ app.Backend = Backend
 app.ControlWindow = Window
 app.log_screens = lambda: None
 app.choose_graphics_api = lambda **_: "stub"  # it needs the real QApplication replaced above
+app.GuiCollector = lambda app: None  # a QObject, and its parent is not one here
 app.app_root = lambda: root
 if mode == "bug":
     app.migrate_dev_layout = migration_bug
