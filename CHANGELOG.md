@@ -19,6 +19,7 @@ changes are left out unless they change how the app is installed, run or updated
 
 - With HDR turned on in Windows, the overlay finds the map again. The app used to see a
   washed-out picture of the game and could not recognise the map in it.
+- The app no longer crashes now and then after a few hours with the overlay on.
 
 ## [1.0.1] - 2026-09-28
 

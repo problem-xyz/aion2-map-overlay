@@ -67,6 +67,7 @@ from map_overlay.core.paths import (  # noqa: E402
 )
 from map_overlay.core.single_instance import Answer, SingleInstance  # noqa: E402
 from map_overlay.qt import win32  # noqa: E402
+from map_overlay.qt.collector import GuiCollector  # noqa: E402
 from map_overlay.qt.control_window import ControlWindow  # noqa: E402
 from map_overlay.qt.graphics import choose_graphics_api  # noqa: E402
 from map_overlay.vision.capture import Capture  # noqa: E402
@@ -142,6 +143,8 @@ def main():
         QApplication.setAttribute(Qt.ApplicationAttribute.AA_DisableShaderDiskCache, True)
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
+    # Before Backend: its threads must never be the ones a garbage collection runs on.
+    collector = GuiCollector(app)  # noqa: F841 -- kept alive by this frame until exec() returns
     log_screens()
     choose_graphics_api(allow_opengl=not fallbacks.direct3d)
 
