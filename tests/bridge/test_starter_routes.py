@@ -75,7 +75,7 @@ def listed(dirs: DataDirs) -> list[str]:
 
 def test_the_shipped_routes_are_valid_routes_on_a_bundled_map() -> None:
     files = sorted(SHIPPED.glob("*.json"))
-    assert len(files) == 3
+    assert len(files) == 5
     for path in files:
         doc = read_route_file(path)
         assert doc["map"] in BUNDLED_MAP_IDS

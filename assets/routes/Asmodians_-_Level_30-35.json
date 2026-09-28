@@ -1,0 +1,741 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Asmodians - Level 30-35 (Main story + Side quests)",
+  "map": "altgard",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 2574.52,
+      "y": 1429.5,
+      "text": "Start",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2536.65,
+      "y": 1302.12,
+      "text": "Open Teleport (38)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2417.87,
+      "y": 1921.02,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2494.55,
+      "y": 1895.0,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2494.55,
+      "y": 1895.0,
+      "text": "Use Wings",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2480.0,
+      "y": 1915.25,
+      "text": "Jump up",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2348.25,
+      "y": 1932.5,
+      "text": "Side quest - Hadala",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1835.42,
+      "y": 1293.11,
+      "text": "Use Teleport (2)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1731.7,
+      "y": 1329.01,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2417.87,
+      "y": 1921.02,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2401.33,
+      "y": 1938.89,
+      "text": "Side quest - Ulrd",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2416.28,
+      "y": 1895.88,
+      "text": "Take wind",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2310.62,
+      "y": 1819.88,
+      "text": "Side quest - Dungeon (fly and take lights)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2417.87,
+      "y": 1921.02,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2505.8,
+      "y": 1914.25,
+      "text": "Side quest - Derk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2040.63,
+      "y": 2022.2,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2030.12,
+      "y": 2033.75,
+      "text": "Side quest - Harald",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2107.39,
+      "y": 1823.13,
+      "text": "Use Teleport (27)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2118.28,
+      "y": 1813.63,
+      "text": "Fly up - take head",
+      "color": "#22c55e"
+    },
+    {
+      "x": 2117.4,
+      "y": 1825.0,
+      "text": "Go to rift - Dungeon (kill boss)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2040.63,
+      "y": 2022.2,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2030.12,
+      "y": 2033.75,
+      "text": "Side quest - Harald",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2005.81,
+      "y": 1970.59,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1994.5,
+      "y": 1966.75,
+      "text": "Side quest - Dungeon",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2040.63,
+      "y": 2022.2,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2030.12,
+      "y": 2033.75,
+      "text": "Side quest - Harald",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2274.92,
+      "y": 1454.9,
+      "text": "Use Teleport (35)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2247.18,
+      "y": 1443.2,
+      "text": "Main quest - Menrik + Petra",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2234.46,
+      "y": 1471.49,
+      "text": "Main quest - Bjorik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2247.18,
+      "y": 1443.2,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2294.58,
+      "y": 1385.68,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2300.25,
+      "y": 1339.25,
+      "text": "Kill 5 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2282.0,
+      "y": 1281.75,
+      "text": "Open + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2289.75,
+      "y": 1190.75,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2334.31,
+      "y": 1191.94,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2346.19,
+      "y": 1212.42,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2359.5,
+      "y": 1194.25,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2324.07,
+      "y": 1121.08,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2321.2,
+      "y": 1082.16,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2332.88,
+      "y": 1072.38,
+      "text": "Go down",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2353.15,
+      "y": 1056.36,
+      "text": "Open Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2536.65,
+      "y": 1302.12,
+      "text": "Use Teleport (38)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2399.5,
+      "y": 1291.25,
+      "text": "Main quest - Go incide",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2416.07,
+      "y": 1314.25,
+      "text": "Kill mobs and boss",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2274.92,
+      "y": 1454.9,
+      "text": "Use Teleport (35)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2247.18,
+      "y": 1443.2,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.15,
+      "y": 1056.36,
+      "text": "Open Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2279.5,
+      "y": 1091.0,
+      "text": "Kill 3 mobs + take 2 chests",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2242.97,
+      "y": 1055.95,
+      "text": "Sealed Dungeons (run and open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2353.15,
+      "y": 1056.36,
+      "text": "Open Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2364.37,
+      "y": 1056.0,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2398.78,
+      "y": 1123.88,
+      "text": "Main quest - Search + kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.15,
+      "y": 1056.36,
+      "text": "Open Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2364.37,
+      "y": 1056.0,
+      "text": "Main quest - Menrik",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2419.1,
+      "y": 1128.45,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2466.5,
+      "y": 1141.25,
+      "text": "Main quest - Dungeon (Feruk + Santras)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2473.57,
+      "y": 1126.4,
+      "text": "Sealed Dungeons (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2274.92,
+      "y": 1454.9,
+      "text": "Use Teleport (35)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2281.4,
+      "y": 1451.75,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2259.25,
+      "y": 1441.5,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2259.25,
+      "y": 1441.5,
+      "text": "3nd Ascension",
+      "color": "#f07178",
+      "icon": "main"
+    },
+    {
+      "x": 2220.76,
+      "y": 1477.88,
+      "text": "Side quest - Hadala",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1835.42,
+      "y": 1293.11,
+      "text": "Use Teleport (2)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1731.7,
+      "y": 1329.01,
+      "text": "Side quest - Memorial",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1559.25,
+      "y": 1550.88,
+      "text": "Side quest - Galorik",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1538.62,
+      "y": 1474.0,
+      "text": "Side quest - take 3 items",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1394.25,
+      "y": 1574.5,
+      "text": "Side quest - Dungeon (kill mobs)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1538.62,
+      "y": 1474.0,
+      "text": "Side quest - open chest",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1568.36,
+      "y": 1542.96,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1559.25,
+      "y": 1550.88,
+      "text": "Side quest - Galorik",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1835.42,
+      "y": 1293.11,
+      "text": "Use Teleport (2)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1731.7,
+      "y": 1329.01,
+      "text": "Side quest - Memorial",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2732.85,
+      "y": 1380.35,
+      "text": "Use Teleport (39)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2729.3,
+      "y": 1396.17,
+      "text": "Main quest - Talk with all NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2752.1,
+      "y": 1570.82,
+      "text": "Use Teleport (40)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2758.1,
+      "y": 1532.2,
+      "text": "Kill mobs and open chest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2736.36,
+      "y": 1560.63,
+      "text": "Main quest - Talk with all NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2699.77,
+      "y": 1534.01,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2736.36,
+      "y": 1560.63,
+      "text": "Main quest - Talk with all NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2741.43,
+      "y": 1577.48,
+      "text": "Side quest - Hebid",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2770.05,
+      "y": 1619.32,
+      "text": "Kill mobs",
+      "color": "#f2b544"
+    },
+    {
+      "x": 2721.69,
+      "y": 1513.0,
+      "text": "Side quest - open 2 chests",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2752.1,
+      "y": 1570.82,
+      "text": "Use Teleport (40)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2736.36,
+      "y": 1560.63,
+      "text": "Main quest - Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2741.43,
+      "y": 1577.48,
+      "text": "Side quest - Hebid",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2689.45,
+      "y": 1642.14,
+      "text": "Main quest - Nemon + Ulgorn",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2752.1,
+      "y": 1570.82,
+      "text": "Use Teleport (40)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2736.36,
+      "y": 1571.68,
+      "text": "Main quest - Dixie",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2745.5,
+      "y": 1555.88,
+      "text": "Side quest - Shirakiki",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2847.52,
+      "y": 1523.11,
+      "text": "Kill mobs",
+      "color": "#f2b544"
+    },
+    {
+      "x": 2800.14,
+      "y": 1490.23,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2921.77,
+      "y": 1467.6,
+      "text": "Kill tower",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 3041.27,
+      "y": 1411.39,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2970.42,
+      "y": 1376.67,
+      "text": "Sealed Dungeons (run open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2991.31,
+      "y": 1583.1,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 3004.63,
+      "y": 1586.25,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 3005.64,
+      "y": 1575.32,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2995.81,
+      "y": 1603.99,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2912.0,
+      "y": 1608.0,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2970.42,
+      "y": 1646.59,
+      "text": "Sealed Dungeons (run find tomb)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2949.12,
+      "y": 1670.35,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2752.1,
+      "y": 1570.82,
+      "text": "Use Teleport (40)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2745.5,
+      "y": 1555.88,
+      "text": "Side quest - Shirakiki",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2702.54,
+      "y": 1731.38,
+      "text": "Use Teleport (42)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2688.13,
+      "y": 1741.88,
+      "text": "Main quest - Purakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2815.7,
+      "y": 1732.41,
+      "text": "Kill mobs + take bombs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2702.54,
+      "y": 1731.38,
+      "text": "Use Teleport (42)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2688.13,
+      "y": 1741.88,
+      "text": "Main quest - Purakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2991.31,
+      "y": 1583.1,
+      "text": "Use Teleport (41)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2994.88,
+      "y": 1657.0,
+      "text": "Main quest - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}
