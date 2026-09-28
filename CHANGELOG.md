@@ -15,6 +15,11 @@ changes are left out unless they change how the app is installed, run or updated
 - The routes that come with the app now get their new version with an update, as long as you
   never edited them. Routes you made, edited or deleted are left as they are.
 
+### Fixed
+
+- With HDR turned on in Windows, the overlay finds the map again. The app used to see a
+  washed-out picture of the game and could not recognise the map in it.
+
 ## [1.0.1] - 2026-09-28
 
 ### Added
