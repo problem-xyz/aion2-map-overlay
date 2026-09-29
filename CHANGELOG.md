@@ -10,6 +10,10 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- A new route for Asmodians: levels 35-45 through Kromede and Zikel.
+
 ## [1.1.0] - 2026-09-29
 
 ### Added

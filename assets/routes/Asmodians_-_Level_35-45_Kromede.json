@@ -1,0 +1,939 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Asmodians - Level 35-45 (Kromede + Zikel)",
+  "map": "altgard",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 2993.39,
+      "y": 1655.18,
+      "text": "Main quest - Nemon"
+    },
+    {
+      "x": 2702.54,
+      "y": 1731.38,
+      "text": "Use Teleport (42)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2715.63,
+      "y": 1731.88,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2743.5,
+      "y": 1959.63,
+      "text": "Main quest - Sculkhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2861.0,
+      "y": 2056.25,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2870.5,
+      "y": 2070.5,
+      "text": "Main quest - Brokhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2875.0,
+      "y": 2046.0,
+      "text": "Main quest - Seikhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2861.0,
+      "y": 2056.25,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2891.5,
+      "y": 2112.0,
+      "text": "Main quest - Crobakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2730.39,
+      "y": 2120.09,
+      "text": "Open Teleport (47)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2732.26,
+      "y": 2206.53,
+      "text": "Kill mobs + take carts",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2652.75,
+      "y": 2305.75,
+      "text": "Main quest - Mannikiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2594.73,
+      "y": 2275.82,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2546.5,
+      "y": 2353.13,
+      "text": "Open door and do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2652.75,
+      "y": 2305.75,
+      "text": "Main quest - Mannikiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2715.65,
+      "y": 2297.45,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2765.14,
+      "y": 2318.96,
+      "text": "Main quest - Quakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2789.18,
+      "y": 2376.59,
+      "text": "Main quest - Parukhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2765.85,
+      "y": 2383.3,
+      "text": "Talk with Worker + take bags + kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2668.27,
+      "y": 2305.88,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2877.03,
+      "y": 2075.44,
+      "text": "Use Teleport (46)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2891.5,
+      "y": 2112.0,
+      "text": "Main quest - Crobakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2730.39,
+      "y": 2120.09,
+      "text": "Use Teleport (47)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2690.66,
+      "y": 2169.65,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2683.82,
+      "y": 2184.61,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2707.51,
+      "y": 2190.97,
+      "text": "Main quest - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2652.75,
+      "y": 2305.75,
+      "text": "Main quest - Mannikiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2616.5,
+      "y": 2348.5,
+      "text": "Kill mobs + take carts",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2652.75,
+      "y": 2305.75,
+      "text": "Main quest - Mannikiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2660.0,
+      "y": 2292.88,
+      "text": "Main quest - Snotra",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2546.5,
+      "y": 2353.13,
+      "text": "Open door and do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2652.75,
+      "y": 2305.75,
+      "text": "Main quest - Mannikiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2621.25,
+      "y": 2348.0,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2580.0,
+      "y": 2372.25,
+      "text": "Main quest - Corpse 1",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2564.75,
+      "y": 2341.25,
+      "text": "Main quest - Corpse 2",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2575.25,
+      "y": 2331.75,
+      "text": "Main quest - Corpse 3",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2677.15,
+      "y": 2279.42,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2651.88,
+      "y": 2302.88,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2690.13,
+      "y": 2381.0,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2684.75,
+      "y": 2409.0,
+      "text": "Main quest - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2580.13,
+      "y": 2426.75,
+      "text": "Main quest - Pordhet",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2549.35,
+      "y": 2458.42,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2516.88,
+      "y": 2435.88,
+      "text": "Kill mobs + tale report",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2580.89,
+      "y": 2430.57,
+      "text": "Use Teleport (49)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2586.5,
+      "y": 2432.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2631.38,
+      "y": 2499.63,
+      "text": "Kill mobs + take documents",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2598.13,
+      "y": 2524.75,
+      "text": "Main quest - take documents",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2615.5,
+      "y": 2536.13,
+      "text": "Kill mobs"
+    },
+    {
+      "x": 2639.38,
+      "y": 2554.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2750.46,
+      "y": 2537.88,
+      "text": "Open Teleport (54)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2580.89,
+      "y": 2430.57,
+      "text": "Use Teleport (49)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2580.13,
+      "y": 2426.75,
+      "text": "Main quest - Pordhet",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2750.46,
+      "y": 2537.88,
+      "text": "Use Teleport (54)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2760.5,
+      "y": 2535.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2826.5,
+      "y": 2543.88,
+      "text": "Fly here",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2858.19,
+      "y": 2603.01,
+      "text": "Open Teleport (51)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2859.88,
+      "y": 2561.63,
+      "text": "Dive in, enter Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2760.5,
+      "y": 2535.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2879.63,
+      "y": 2369.38,
+      "text": "Fire Temple - Kromede",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2877.03,
+      "y": 2075.44,
+      "text": "Use Teleport (46)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2891.5,
+      "y": 2112.0,
+      "text": "Main quest - Crobakhi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2904.45,
+      "y": 2094.1,
+      "text": "Main quest - Popokiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2907.27,
+      "y": 2334.16,
+      "text": "Main quest - Popokiki",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2913.0,
+      "y": 2354.75,
+      "text": "Do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2925.5,
+      "y": 2309.5,
+      "text": "Take wheel",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2920.0,
+      "y": 2259.0,
+      "text": "Take rock",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2957.63,
+      "y": 2262.88,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2900.55,
+      "y": 2188.5,
+      "text": "Main quest - Umbaba",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2902.32,
+      "y": 2240.11,
+      "text": "Main quest - Traska",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2857.06,
+      "y": 2253.55,
+      "text": "Main quest - Arita",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2912.5,
+      "y": 2361.13,
+      "text": "Main quest - Umbaba",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 3039.5,
+      "y": 2323.75,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2953.0,
+      "y": 2434.25,
+      "text": "Main quest - "
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2912.5,
+      "y": 2361.13,
+      "text": "Main quest - Amunta",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2958.5,
+      "y": 2384.25,
+      "text": "Kill mobs + open chests",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2913.0,
+      "y": 2354.75,
+      "text": "Main quest - Talks with NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2958.5,
+      "y": 2384.25,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 3002.0,
+      "y": 2462.38,
+      "text": "Kill totems",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2918.4,
+      "y": 2359.3,
+      "text": "Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2912.5,
+      "y": 2361.13,
+      "text": "Main quest - Amunta",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2858.19,
+      "y": 2603.01,
+      "text": "Open Teleport (51)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2879.88,
+      "y": 2605.25,
+      "text": "Main quest - Amunta",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2701.38,
+      "y": 2632.5,
+      "text": "Main quest - Amunta",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2607.1,
+      "y": 2727.13,
+      "text": "Main quest - Scout",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2559.55,
+      "y": 2721.83,
+      "text": "Main quest - Watcher + take 2 documents",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2585.18,
+      "y": 2762.49,
+      "text": "Main quest - Shaman + take box",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2527.55,
+      "y": 2752.06,
+      "text": "Main quest - Apothecary + box",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2494.67,
+      "y": 2778.22,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2456.37,
+      "y": 2813.54,
+      "text": "Open Teleport (57)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2431.03,
+      "y": 2869.44,
+      "text": "Kill mobs + totems",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2487.5,
+      "y": 2929.87,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2494.75,
+      "y": 2928.75,
+      "text": "Do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2491.63,
+      "y": 2948.75,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2539.52,
+      "y": 2992.13,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2596.04,
+      "y": 3011.38,
+      "text": "Open Teleport (60)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2456.37,
+      "y": 2813.54,
+      "text": "Use Teleport (57)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2457.5,
+      "y": 2808.5,
+      "text": "Main quest - Kumrica",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2457.5,
+      "y": 2808.5,
+      "text": "Main quest - Kunpata",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2437.5,
+      "y": 2882.0,
+      "text": "Side quest - kill mobs",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2407.75,
+      "y": 2882.88,
+      "text": "Main quest - open chest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2396.5,
+      "y": 2841.5,
+      "text": "Main quest - open chest + kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2456.37,
+      "y": 2813.54,
+      "text": "Open Teleport (57)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2457.5,
+      "y": 2808.5,
+      "text": "Main quest - Kumrica",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2457.5,
+      "y": 2808.5,
+      "text": "Main quest - Kunpata",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2402.88,
+      "y": 2770.75,
+      "text": "Open door and help Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2456.37,
+      "y": 2813.54,
+      "text": "Open Teleport (57)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2457.5,
+      "y": 2808.5,
+      "text": "Main quest - Kumrica + Kunpata",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2185.67,
+      "y": 2858.48,
+      "text": "Main quest - Sentinel",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1977.07,
+      "y": 2941.92,
+      "text": "Main quest - Wathcer",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1966.11,
+      "y": 2997.78,
+      "text": "Do quest, kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2185.67,
+      "y": 2858.48,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2695.58,
+      "y": 2648.47,
+      "text": "Use Teleport (55)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2701.38,
+      "y": 2632.5,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2417.87,
+      "y": 1921.02,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2348.0,
+      "y": 1931.5,
+      "text": "Fly up - Main quest - Urd",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2509.75,
+      "y": 1885.63,
+      "text": "Do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2483.88,
+      "y": 1907.63,
+      "text": "Main quest - Sandre",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2411.63,
+      "y": 1932.75,
+      "text": "Main quest - Oldan",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2509.75,
+      "y": 1885.63,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2596.04,
+      "y": 3011.38,
+      "text": "Use Teleport (60)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2683.25,
+      "y": 2941.5,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2738.88,
+      "y": 2874.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2791.5,
+      "y": 2861.0,
+      "text": "Kill mobs + take remnants",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2738.88,
+      "y": 2874.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2807.0,
+      "y": 2926.75,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2738.88,
+      "y": 2874.38,
+      "text": "Main quest - Nemon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2863.25,
+      "y": 2985.0,
+      "text": "Kill Zikel",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}
