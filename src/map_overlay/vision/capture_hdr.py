@@ -236,3 +236,4 @@ class HdrGrabber:
     def close(self) -> None:
         self._release_stage()
         self._release_dup()
+        self._convert.close()

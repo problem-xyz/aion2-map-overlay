@@ -114,3 +114,16 @@ def test_a_padded_mapped_surface_reads_the_same_as_a_packed_one() -> None:
     strided = raw[:, : w * 8].view(np.float16).reshape(h, w, 4)
 
     assert np.array_equal(ScrgbToBgra()(strided), ScrgbToBgra()(rgba))
+
+
+@pytest.mark.parametrize("height", [1, 3, 5, 121])
+def test_every_row_is_converted_whatever_the_height(height: int) -> None:
+    # the rows are split into one band per thread, and the last band is the short one
+    bgr = _srgb_image(shape=(height, 50))
+    bgr[0] = 255
+
+    convert = ScrgbToBgra()
+    out = convert(_compose(bgr, 2.5))
+    convert.close()
+
+    assert np.abs(out[..., :3].astype(int) - bgr).max() <= 2
