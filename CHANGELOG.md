@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-29
+
 ### Added
 
 - Two new routes for Asmodians: levels 22-30 through Urugugu, and levels 30-35 with the main
