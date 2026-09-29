@@ -52,6 +52,19 @@ class VisionError(RuntimeError):
         self.params = params
 
 
+def _describe_detection(info: dict) -> str:
+    """One detection's numbers, for the log lines that say the map was lost or found."""
+    if "matches" not in info:
+        return "raised"  # the detector attaches no numbers to a detection that raised
+    text = (
+        f"{info.get('mode', '?')} search, {info.get('keypoints', '?')} keypoints,"
+        f" {info['matches']} matches, {info.get('inliers', '?')} inliers"
+    )
+    if info.get("reproj") is not None:
+        text += f", reprojection {info['reproj']:.2f} px"
+    return text
+
+
 @dataclass
 class _LoopState:
     """Everything the loop carries from one frame to the next."""
@@ -62,6 +75,7 @@ class _LoopState:
     flow_valid: bool = False  # whether drift_since_submit can be trusted
     misses: int = 0  # consecutive failed detections
     found: bool = False
+    found_changed: float = field(default_factory=time.perf_counter)  # when `found` last flipped
     anchored: bool = False
     info: dict = field(default_factory=dict)
     prev_small: Any = None
@@ -234,6 +248,8 @@ class Engine(QThread):
             raise VisionError("vision.reference_too_plain", path=reference) from e
         self._detector.set_tracker(self._tracker)
         st = self._state
+        if st.found:
+            self._set_found(False, "the tracker was rebuilt")
         st.current = None
         st.flow_valid = False
         self._flow.reset()
@@ -306,14 +322,34 @@ class Engine(QThread):
             target = st.drift_since_submit @ m if (use_flow and st.flow_valid) else m
             st.current = self._smooth(st.current, target, settings["smoothing"])
             st.misses = 0
-            st.anchored = st.found = True
+            st.anchored = True
+            if not st.found:
+                self._set_found(True, _describe_detection(info))
             return
         st.misses += 1
         st.anchored = False
         if st.misses > settings["hold_frames"]:
+            if st.found:
+                reason = (
+                    f"{st.misses} misses in a row, the last one {_describe_detection(info)}"
+                    f" (needs {settings['min_inliers']} inliers)"
+                )
+                self._set_found(False, reason)
             st.current = None
-            st.found = False
             self._flow.reset()
+
+    def _set_found(self, found: bool, reason: str) -> None:
+        """Flip `found` and log it: the route appears and disappears with this flag."""
+        st = self._state
+        now = time.perf_counter()
+        log.info(
+            "map %s after %.1f s: %s",
+            "found" if found else "lost",
+            now - st.found_changed,
+            reason,
+        )
+        st.found = found
+        st.found_changed = now
 
     def _maybe_submit(self, frame, settings, use_flow, t0) -> None:
         """Ask for the next detection; less often while the binding is holding."""
