@@ -294,6 +294,61 @@ def test_the_binding_survives_hold_frames_misses_and_is_cleared_by_the_next_one(
     assert flow.resets == 1
 
 
+def map_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
+    return [r.getMessage() for r in caplog.records if r.getMessage().startswith("map ")]
+
+
+def test_finding_and_losing_the_map_is_logged_once_each_with_the_numbers(
+    engine: Engine, caplog: pytest.LogCaptureFixture
+) -> None:
+    """A user's log is the only way to see why the route disappeared on their machine."""
+    caplog.set_level("INFO", logger="map_overlay.vision.engine")
+    hit = {"mode": "local", "keypoints": 900, "matches": 48, "inliers": 31, "reproj": 0.84}
+    miss = {"mode": "global", "keypoints": 3, "matches": 0, "inliers": 0, "reproj": None}
+    settings = loop_settings(hold_frames=1, min_inliers=20)
+    engine._detector = FakeDetector(
+        [(translation(1.0, 1.0), hit), (translation(1.0, 1.0), hit), (None, miss), (None, miss)]
+    )
+
+    for _ in range(4):
+        engine._absorb_detection(settings, use_flow=False)
+
+    found, lost = map_lines(caplog)
+    assert found.startswith("map found after ")
+    assert "local search, 900 keypoints, 48 matches, 31 inliers, reprojection 0.84 px" in found
+    assert lost.startswith("map lost after ")
+    assert "2 misses in a row" in lost
+    assert "global search, 3 keypoints, 0 matches, 0 inliers (needs 20 inliers)" in lost
+    assert engine._state.found is False
+
+
+def test_a_miss_after_a_raised_detection_says_so(
+    engine: Engine, caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level("INFO", logger="map_overlay.vision.engine")
+    engine._state.found = True
+    engine._detector = FakeDetector([(None, {"detectMs": 9.0})])
+
+    engine._absorb_detection(loop_settings(hold_frames=0), use_flow=False)
+
+    assert "the last one raised" in map_lines(caplog)[0]
+
+
+def test_a_tracker_rebuild_loses_the_map_so_the_next_match_is_logged_as_found(
+    engine: Engine, caplog: pytest.LogCaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    caplog.set_level("INFO", logger="map_overlay.vision.engine")
+    monkeypatch.setattr("map_overlay.vision.engine.Tracker", lambda *_a, **_k: FakeTracker())
+    engine._state.found = True
+    engine._state.current = translation(1.0, 1.0)
+
+    engine._build_tracker("reference.png", FakeTracker().build)
+
+    assert engine._state.found is False
+    assert engine._state.current is None
+    assert map_lines(caplog)[0].endswith("the tracker was rebuilt")
+
+
 def test_the_transform_is_emitted_once_per_real_change(engine: Engine) -> None:
     sent: list[Any] = []
     engine.transformChanged.connect(sent.append)
