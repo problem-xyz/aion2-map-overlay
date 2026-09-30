@@ -1080,6 +1080,27 @@ html:has(.pn-app) {
   max-height: 160px;
   object-fit: cover;
 }
+/* The empty slot: the banner's own proportions, so the panel does not jump when one ships */
+.pn-banner-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  aspect-ratio: 1048 / 200;
+  max-height: 160px;
+  border-style: dashed;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+.pn-banner-slot-title {
+  font: 600 var(--text-sm) / 1.25 var(--font-display);
+  color: var(--color-text-secondary);
+}
+.pn-banner-slot-hint {
+  font-size: var(--text-xs);
+}
 .pn-banner-ad {
   position: absolute;
   top: 4px;

@@ -13,7 +13,7 @@ export interface SupportBlockProps {
   /** getState's links; without them (a backend before api 19) the two tiles they open are left out. */
   links: SupportLinks | undefined;
   repoUrl: string | undefined;
-  /** The advertising banner that ships with the app; null or absent, there is none. */
+  /** The advertising banner that ships with the app; without one, the slot offers itself. */
   banner?: BannerInfo | null;
   onOpenUrl: (url: string) => void;
   onCopy: (text: string) => void;
@@ -98,6 +98,16 @@ export default function SupportBlock({
         >
           <img src={banner.image} alt={banner.label} />
           <span className="pn-banner-ad">{t("panel.support.ad")}</span>
+        </button>
+      ) : links ? (
+        // No banner ships yet: the slot offers itself, and a click is the way to ask about it
+        <button
+          type="button"
+          className="pn-banner pn-banner-slot"
+          onClick={() => onOpenUrl(links.discord)}
+        >
+          <span className="pn-banner-slot-title">{t("panel.support.adSlot")}</span>
+          <span className="pn-banner-slot-hint">{t("panel.support.adSlotHint")}</span>
         </button>
       ) : null}
 

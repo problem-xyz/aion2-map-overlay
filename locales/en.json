@@ -485,6 +485,8 @@
     },
     "support": {
       "ad": "Ad",
+      "adSlot": "Your ad could be here",
+      "adSlotHint": "Write to us on Discord",
       "links": "Community",
       "title": "Support the project",
       "coffee": "Buy me a coffee",

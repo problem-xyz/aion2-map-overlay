@@ -43,7 +43,8 @@ function mount(props: Partial<SupportBlockProps> = {}) {
 }
 
 function tile(key: string) {
-  return screen.getByRole("button", { name: new RegExp(en(key)) });
+  // By the start of the name: the ad slot's hint names Discord too
+  return screen.getByRole("button", { name: new RegExp(`^${en(key)}`) });
 }
 
 afterEach(() => vi.useRealTimers());
@@ -147,8 +148,18 @@ describe("SupportBlock banner", () => {
     expect(order).toEqual(["pn-support-group", "pn-banner", "pn-support-group"]);
   });
 
-  it("is left out when the app ships none", () => {
-    mount({ banner: null });
+  it("offers the empty slot when the app ships none, and asks on Discord", () => {
+    const p = mount({ banner: null });
+
+    const slot = screen.getByRole("button", { name: new RegExp(en("panel.support.adSlot")) });
+    expect(document.querySelector(".pn-banner-slot")).toBe(slot);
+    fireEvent.click(slot);
+
+    expect(p.onOpenUrl).toHaveBeenCalledWith(LINKS.discord);
+  });
+
+  it("leaves the slot out for a backend with no links to ask on", () => {
+    mount({ banner: null, links: undefined });
     expect(document.querySelector(".pn-banner")).toBeNull();
   });
 });

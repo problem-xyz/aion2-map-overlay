@@ -239,11 +239,7 @@ export function makeState(): AppState {
       discord: "https://discord.gg/DV2SNF6PMh",
       partnerDiscord: "https://discord.gg/aion2global",
     },
-    banner: {
-      image: swatch("#3a2f1c", "Banner, 1048 × 200", 1048, 200),
-      url: "https://example.com/",
-      label: "An example banner",
-    },
+    banner: null,
   };
 }
 

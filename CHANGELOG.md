@@ -18,7 +18,8 @@ changes are left out unless they change how the app is installed, run or updated
 ### Changed
 
 - At the foot of the panel, the ways to support the project and the community links are two
-  groups, each under its own heading.
+  groups, each under its own heading. Between them is a place for an advertising banner; while
+  there is none, it says the spot is open and leads to the project's Discord.
 
 ## [1.2.0] - 2026-09-29
 
