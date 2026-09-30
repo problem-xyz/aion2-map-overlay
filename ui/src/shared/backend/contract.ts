@@ -141,10 +141,14 @@ export interface ObjectSet {
   bundled?: boolean;
 }
 
+/** Whose zone a map is. Absent before api 20. */
+export type Faction = "asmodian" | "elyos";
+
 export interface MapInfo {
   id: string;
   label: string;
   size: [number, number];
+  faction?: Faction | null;
   thumb: string;
   tiles: TilesInfo;
   objects: ObjectSetInfo[];
@@ -159,6 +163,10 @@ export interface RouteInfo {
   markers: number;
   steps: number;
   thumb: string;
+  /** The route's map's; null on a map the manifest names no side for. Absent before api 20. */
+  faction?: Faction | null;
+  /** A starter route exactly as a release shipped it: edited, it is the user's own. */
+  official?: boolean;
 }
 
 /** A route point's quest icon beside its number: a main quest (a yellow star) or a side one. */

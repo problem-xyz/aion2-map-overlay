@@ -121,7 +121,7 @@ export const MOCK_SETTINGS_SCHEMA: Record<keyof Settings, SettingSchema> = {
 export function makeState(): AppState {
   return {
     version: "1.0.0-beta.0",
-    api: 19,
+    api: 20,
     running: false,
     overlayVisible: true,
     captureVisible: false,
@@ -136,6 +136,8 @@ export function makeState(): AppState {
         markers: 5,
         steps: 3,
         thumb: swatch("#2b323f", "Altgard loop"),
+        faction: "asmodian",
+        official: true,
       },
       {
         id: "verteron-run",
@@ -145,6 +147,8 @@ export function makeState(): AppState {
         markers: 12,
         steps: 7,
         thumb: swatch("#343d4d", "Verteron run"),
+        faction: "elyos",
+        official: false,
       },
     ],
     maps: [
@@ -152,6 +156,7 @@ export function makeState(): AppState {
         id: "altgard",
         label: "Altgard",
         size: [4096, 4096],
+        faction: "asmodian",
         thumb: swatch("#242a36", "Altgard"),
         tiles: { ready: true, zMax: 4, tile: 256 },
         objects: [{ file: "bundled/altgard.json", mapName: "Altgard", nodes: 7, bundled: true }],
@@ -160,6 +165,7 @@ export function makeState(): AppState {
         id: "verteron",
         label: "Verteron",
         size: [4096, 4096],
+        faction: "elyos",
         thumb: swatch("#242a36", "Verteron"),
         tiles: { ready: false, zMax: 0, tile: 256 },
         objects: [],

@@ -19,6 +19,8 @@ export interface SegmentedProps<T extends string | number> {
   tip?: ReactNode;
   /** Read out at the end of the label's line, as a slider shows its value. */
   aside?: ReactNode;
+  /** The label is read out but not painted, where the options speak for themselves. */
+  labelHidden?: boolean;
 }
 
 /**
@@ -41,6 +43,7 @@ export default function Segmented<T extends string | number>({
   hint = null,
   tip = null,
   aside = null,
+  labelHidden = false,
 }: SegmentedProps<T>) {
   const labelId = useId();
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
@@ -72,15 +75,21 @@ export default function Segmented<T extends string | number>({
 
   return (
     <div className="ui-field">
-      <div className="ui-field-head">
-        <span className="ui-field-title">
-          <span id={labelId} className="ui-field-label">
-            {label}
-          </span>
-          {tip ? <InfoTip topic={label}>{tip}</InfoTip> : null}
+      {labelHidden ? (
+        <span id={labelId} className="ui-sr-only">
+          {label}
         </span>
-        {aside ? <span className="ui-field-value">{aside}</span> : null}
-      </div>
+      ) : (
+        <div className="ui-field-head">
+          <span className="ui-field-title">
+            <span id={labelId} className="ui-field-label">
+              {label}
+            </span>
+            {tip ? <InfoTip topic={label}>{tip}</InfoTip> : null}
+          </span>
+          {aside ? <span className="ui-field-value">{aside}</span> : null}
+        </div>
+      )}
       <div className="ui-seg" role="radiogroup" aria-labelledby={labelId}>
         {options.map((o, i) => (
           <button

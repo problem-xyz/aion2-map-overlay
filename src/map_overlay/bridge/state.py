@@ -65,6 +65,7 @@ class MapInfo(TypedDict):
     id: str
     label: str
     size: list[int]
+    faction: str | None  # "asmodian" or "elyos"; None for a map the manifest names no side for
     thumb: str
     tiles: TilesInfo
     objects: list[dict[str, Any]]
@@ -81,6 +82,8 @@ class RouteInfo(TypedDict):
     markers: int
     steps: int
     thumb: str
+    faction: str | None  # the route's map's
+    official: bool  # a starter route, exactly as a release shipped it
 
 
 class StatsPayload(TypedDict):
@@ -214,7 +217,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 18: the plaque is sized by the user, by its right and bottom edges, and its data carries
 #     "grip", how wide those strips are; setHeight is read by nothing.
 # 19: links, the donation page and the Discord invite, which openUrl() opens as well; copyText.
-API_VERSION = 19
+# 20: a map carries "faction", and a route its map's faction and "official".
+API_VERSION = 20
 
 
 def build_state(

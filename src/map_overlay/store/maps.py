@@ -27,6 +27,7 @@ from map_overlay.store.tiles import detail_octaves, tiles_info
 log = logging.getLogger(__name__)
 
 BUNDLED_MAP_IDS = ("altgard", "verteron")
+FACTIONS = ("asmodian", "elyos")
 MANIFEST = "manifest.json"
 REFERENCE = "reference.webp"
 DETAIL = "detail.webp"
@@ -60,6 +61,7 @@ class MapSpec:
     objects: tuple[BundledObjects, ...] = ()
     detail: Path | None = None
     detail_size: tuple[int, int] | None = None
+    faction: str | None = None  # one of FACTIONS: whose zone the map is, for the route filter
 
     @property
     def tiles_source(self) -> Path:
@@ -125,6 +127,9 @@ def _load_spec(folder: Path, map_id: str, objects_root: Path) -> MapSpec:
         raise invalid("the manifest has no label")
     size = _size_of(manifest, "size", invalid)
     reference = _image_of(folder / REFERENCE, size, invalid)
+    faction = manifest.get("faction")
+    if faction is not None and faction not in FACTIONS:
+        raise invalid(f"the manifest's faction {faction!r} is not one of {FACTIONS}")
     detail = detail_size = None
     if "detail" in manifest:
         detail_size = _size_of(manifest, "detail", invalid)
@@ -139,6 +144,7 @@ def _load_spec(folder: Path, map_id: str, objects_root: Path) -> MapSpec:
         objects=_bundled_objects(objects_root, map_id),
         detail=detail,
         detail_size=detail_size,
+        faction=faction,
     )
 
 
@@ -280,6 +286,7 @@ def list_maps(dirs: DataDirs, specs: Sequence[MapSpec], cache: ThumbCache) -> li
                 "id": spec.id,
                 "label": spec.label,
                 "size": list(spec.size),
+                "faction": spec.faction,
                 "thumb": data_url(thumb) if thumb is not None else "",
                 "tiles": tiles_info(mdir, spec.size, spec.detail_size),
                 "objects": [
