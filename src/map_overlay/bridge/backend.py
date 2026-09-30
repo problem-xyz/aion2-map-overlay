@@ -648,6 +648,12 @@ class Backend(QObject):
         )
         if region:
             self._store.set_state(steps_region=region)
+            if not self.state.steps_hint_shown:
+                # The list is on from the start on a new install, so no switch ever brings the
+                # hint: it comes the first time the list is on screen. Posted, since that can be
+                # at start, before the page listens.
+                self._store.set_state(steps_hint_shown=True)
+                self._notifier.post("info", "steps.drag_hint")
 
     def _setup_steps(self) -> None:
         window = self.steps
