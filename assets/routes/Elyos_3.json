@@ -11,7 +11,7 @@
     {
       "x": 1490.53,
       "y": 1511.01,
-      "text": "Use Teleport",
+      "text": "Use Teleport (1)",
       "color": "#a78bfa"
     },
     {
@@ -29,9 +29,9 @@
       "icon": "side"
     },
     {
-      "x": 1580.88,
-      "y": 1670.25,
-      "text": "Use Teleport",
+      "x": 1581.06,
+      "y": 1669.12,
+      "text": "Use Teleport (2)",
       "color": "#a78bfa"
     },
     {
@@ -44,7 +44,7 @@
     {
       "x": 1933.38,
       "y": 1699.25,
-      "text": "Use Teleport",
+      "text": "Use Teleport (9)",
       "color": "#a78bfa"
     },
     {
@@ -227,9 +227,8 @@
     {
       "x": 2000.49,
       "y": 2043.9,
-      "text": "Use Teleport + Main quest - talk + open door (level 22)",
-      "color": "#f2b544",
-      "icon": "main"
+      "text": "Use Teleport (19) + Main quest - talk + open door (level 22)",
+      "color": "#a78bfa"
     },
     {
       "x": 1930.44,
@@ -238,8 +237,8 @@
       "color": "#a78bfa"
     },
     {
-      "x": 1894.75,
-      "y": 2085.25,
+      "x": 1895.25,
+      "y": 2084.87,
       "text": "Kill mobs + Destroy rack",
       "color": "#f2b544",
       "icon": "main"
@@ -253,7 +252,7 @@
     {
       "x": 1931.88,
       "y": 2095.38,
-      "text": "Use Teleport",
+      "text": "Use Teleport (20)",
       "color": "#a78bfa"
     },
     {
