@@ -484,6 +484,8 @@
       "update": "An update is available"
     },
     "support": {
+      "ad": "Ad",
+      "links": "Community",
       "title": "Support the project",
       "coffee": "Buy me a coffee",
       "coffeeHint": "By card",

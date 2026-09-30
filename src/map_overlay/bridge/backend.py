@@ -88,9 +88,10 @@ from map_overlay.qt.overlay import primary_screen_geometry
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.screens import ScreenWatcher, primary_rect, screen_rects
 from map_overlay.qt.steps_window import WebStepsWindow, scale_region
-from map_overlay.qt.webview import system_dpi_scale, ui_url
+from map_overlay.qt.webview import local_file_url, system_dpi_scale, ui_url
 from map_overlay.qt.win32 import supports_capture_exclusion, windows_version
 from map_overlay.store import legacy
+from map_overlay.store.banner import load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import icons_under
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
@@ -146,6 +147,7 @@ class Backend(QObject):
         set_language(resolve_language(self.settings.language, QLocale.system().name()))
         # `maps` is for tests: the shipped registry means cutting two 8192 px images.
         self._routes = RouteService(dirs, dev=dev, maps=maps)
+        self._banner = load_banner()
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
         self.overlay_visible = True
@@ -423,6 +425,15 @@ class Backend(QObject):
                 "discord": DISCORD_URL,
                 "partnerDiscord": PARTNER_DISCORD_URL,
             },
+            banner=(
+                {
+                    "image": local_file_url(self._banner.image, self.dev),
+                    "url": self._banner.url,
+                    "label": self._banner.label,
+                }
+                if self._banner
+                else None
+            ),
         )
 
     def _emit_state(self) -> None:
@@ -813,12 +824,12 @@ class Backend(QObject):
 
     @Slot(str)
     def openUrl(self, url: str) -> None:
-        """Open one of the project's own GitHub pages (release notes) in the browser.
+        """Open one of the project's own GitHub pages (release notes), or the banner's page.
 
         Anything else is refused and logged: the check lives here, not in the page, so a page
         that was talked into asking for another address still cannot open it.
         """
-        if not is_project_url(url):
+        if not is_project_url(url) and not (self._banner and url == self._banner.url):
             log.warning("openUrl refused a link outside the project: %r", url)
             return
         self._dialogs.open_url(url)

@@ -4,6 +4,7 @@ import ctypes
 import functools
 import logging
 import sys
+from pathlib import Path
 
 from PySide6.QtCore import QFile, QIODevice, QUrl
 from PySide6.QtGui import QColor
@@ -26,6 +27,14 @@ BACKGROUND = QColor("#1c2029")
 
 def ui_dist():
     return resource_path("ui/dist/index.html")
+
+
+def local_file_url(path: Path, dev: bool) -> str:
+    """The address the page loads a file on this disk from: in dev the page is on localhost and
+    Vite serves the file, in a build it is a file URL."""
+    if dev:
+        return f"{DEV_URL}/@fs/{path.as_posix()}"
+    return QUrl.fromLocalFile(str(path)).toString()
 
 
 def ui_url(dev, fragment=""):

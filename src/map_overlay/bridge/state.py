@@ -215,7 +215,8 @@ def steps_state(settings, state) -> StepsPayload:
 #     "grip", how wide those strips are; setHeight is read by nothing.
 # 19: links, the donation page and the Discord invite, which openUrl() opens as well; copyText.
 # 20: links has partnerDiscord, the invite to Aion 2 Global's server, which openUrl() opens.
-API_VERSION = 20
+# 21: banner, the advertising banner that ships with the app, whose url openUrl() opens.
+API_VERSION = 21
 
 
 def build_state(
@@ -238,6 +239,7 @@ def build_state(
     capture_exclusion: bool,
     repo_url: str,
     links: dict[str, str],
+    banner: dict[str, str] | None,
 ) -> dict[str, Any]:
     """The getState() payload.
 
@@ -246,6 +248,8 @@ def build_state(
     hide a window from capture, where the overlay is always visible to recorders and the engine.
     `repoUrl` is the project's GitHub repository, the only site openUrl() opens pages of, and
     `links` the exact addresses it opens beside it: `donate`, `discord` and `partnerDiscord`.
+    `banner` is the bundled advertising banner, {"image", "url", "label"}, or None; openUrl()
+    opens its `url` as well.
     """
     return {
         "version": version,
@@ -271,4 +275,5 @@ def build_state(
         "update": update,
         "repoUrl": repo_url,
         "links": links,
+        "banner": banner,
     }

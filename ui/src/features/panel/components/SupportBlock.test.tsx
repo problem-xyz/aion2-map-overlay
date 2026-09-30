@@ -126,3 +126,29 @@ describe("WALLETS", () => {
     expect(a).toMatch(SHAPE[id]!);
   });
 });
+
+describe("SupportBlock banner", () => {
+  const BANNER = { image: "file:///banner.webp", url: "https://example.com/ad", label: "Guild" };
+
+  it("opens the banner's page, and names it by what it advertises", () => {
+    const p = mount({ banner: BANNER });
+
+    const banner = screen.getByRole("button", { name: /Guild/ });
+    expect(banner.textContent).toContain(en("panel.support.ad"));
+    fireEvent.click(banner);
+
+    expect(p.onOpenUrl).toHaveBeenCalledWith(BANNER.url);
+  });
+
+  it("sits between the donations and the links", () => {
+    mount({ banner: BANNER });
+
+    const order = [...document.querySelectorAll(".pn-support > *")].map((el) => el.className);
+    expect(order).toEqual(["pn-support-group", "pn-banner", "pn-support-group"]);
+  });
+
+  it("is left out when the app ships none", () => {
+    mount({ banner: null });
+    expect(document.querySelector(".pn-banner")).toBeNull();
+  });
+});

@@ -251,6 +251,17 @@ export interface AppState {
   repoUrl?: string;
   /** The exact addresses openUrl() opens beside the repository. Api 19. */
   links?: SupportLinks;
+  /** The advertising banner that ships with the app, or null for none. Api 21. */
+  banner?: BannerInfo | null;
+}
+
+export interface BannerInfo {
+  /** The image's address, a file the app ships. */
+  image: string;
+  /** The page a click opens; openUrl() opens this exact address. */
+  url: string;
+  /** What the banner advertises: the image's alt text and tooltip. */
+  label: string;
 }
 
 export interface SupportLinks {

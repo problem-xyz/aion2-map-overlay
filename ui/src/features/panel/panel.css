@@ -1051,8 +1051,53 @@ html:has(.pn-app) {
 .pn-support {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-3);
   margin-top: var(--space-2);
+}
+.pn-support-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* The image is the whole banner: no frame of its own beyond the tile's edge, and its own
+   proportions, so a banner of any height is drawn as it was made. */
+.pn-banner {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--fill-tile);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) ease;
+}
+/* A banner made too tall is cut to the middle rather than pushing the links off the panel */
+.pn-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: cover;
+}
+.pn-banner-ad {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 55%);
+  color: var(--color-text-secondary);
+  font: 500 var(--text-2xs) / 15px var(--font-body);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-banner:hover {
+    border-color: var(--color-frame-strong);
+  }
+}
+.pn-banner:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .pn-support-row {
   display: grid;

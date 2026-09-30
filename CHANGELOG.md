@@ -15,6 +15,11 @@ changes are left out unless they change how the app is installed, run or updated
 - A link to the Discord server of Aion 2 Global, a community the project works with, beside the
   project's own Discord in the panel.
 
+### Changed
+
+- At the foot of the panel, the ways to support the project and the community links are two
+  groups, each under its own heading.
+
 ## [1.2.0] - 2026-09-29
 
 ### Added
