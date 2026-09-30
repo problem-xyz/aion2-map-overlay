@@ -10,6 +10,15 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- Five routes for Elyos in Verteron, from the start village to level 45.
+
+### Changed
+
+- The Asmodian routes are numbered in the order you play them, like the Elyos ones. Your progress
+  on them is kept. A route you edited keeps its old name.
+
 ## [1.2.0] - 2026-09-29
 
 ### Added

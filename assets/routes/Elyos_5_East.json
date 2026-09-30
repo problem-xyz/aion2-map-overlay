@@ -1,0 +1,1011 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Elyos 5/5 - East, to level 45 (LipBalm, Krix route)",
+  "map": "verteron",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2348.65,
+      "y": 2181.12,
+      "text": "Main quest - Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2348.75,
+      "y": 2118.12,
+      "text": "Main quest - Ordan",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2303.38,
+      "y": 2072.0,
+      "text": "Main quest - Aus",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2348.88,
+      "y": 2072.37,
+      "text": "Main quest - Enter Door + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2306.88,
+      "y": 2222.13,
+      "text": "Main quest - Kill 3 Odyte",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2225.38,
+      "y": 2334.37,
+      "text": "Main quest - Rodelos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2244.25,
+      "y": 2507.75,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2222.5,
+      "y": 2559.5,
+      "text": "Main quest -  Interact with Barrier",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2172.25,
+      "y": 2565.25,
+      "text": "Main quest - Kill 5 Shura",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2156.5,
+      "y": 2538.5,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2227.4,
+      "y": 2345.37,
+      "text": "Use Teleport (37)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2225.25,
+      "y": 2334.5,
+      "text": "Main quest - Rodelos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2245.25,
+      "y": 2356.75,
+      "text": "Interact with corpse",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2224.88,
+      "y": 2334.5,
+      "text": "Main quest - Rodelos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2348.88,
+      "y": 2118.37,
+      "text": "Main quest - Talk + Do 3rd Ascension + Talk again",
+      "color": "#f07178",
+      "icon": "main"
+    },
+    {
+      "x": 2227.4,
+      "y": 2345.37,
+      "text": "Use Teleport (37)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2408.75,
+      "y": 2363.37,
+      "text": "Main quest - Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2431.75,
+      "y": 2370.25,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2433.5,
+      "y": 2379.12,
+      "text": "Main quest - Odite",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2465.75,
+      "y": 2400.0,
+      "text": "Main quest - Interact Tablet + Kill spirit stone",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2505.0,
+      "y": 2422.5,
+      "text": "Main quest -  Interact with barrier stone",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2556.13,
+      "y": 2437.5,
+      "text": "Main quest - Phernos + Interact barrier + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2397.25,
+      "y": 2104.75,
+      "text": "Main quest - Phernos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2399.13,
+      "y": 2079.12,
+      "text": "Main quest - enter + talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2292.63,
+      "y": 2075.0,
+      "text": "Main quest - Adrian",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2674.75,
+      "y": 2214.87,
+      "text": "Main quest - Lachesis",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2649.25,
+      "y": 2182.53,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2640.25,
+      "y": 2164.02,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2653.0,
+      "y": 2137.64,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2679.75,
+      "y": 2159.38,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2681.13,
+      "y": 2189.5,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2616.0,
+      "y": 2147.75,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2653.0,
+      "y": 2105.75,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2546.07,
+      "y": 2037.35,
+      "text": "Open Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2655.03,
+      "y": 2223.31,
+      "text": "Use Teleport (41)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2680.75,
+      "y": 2189.75,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2658.5,
+      "y": 2169.75,
+      "text": "Main quest - Kill Knight ",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2685.0,
+      "y": 2153.87,
+      "text": "Main quest - Retrieve Fragments",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2679.0,
+      "y": 2123.0,
+      "text": "Main quest - Kill 4 Kalgolems",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2655.03,
+      "y": 2223.31,
+      "text": "Use Teleport (41)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2681.0,
+      "y": 2190.0,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2674.63,
+      "y": 2214.75,
+      "text": "Main quest - Phernos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2668.88,
+      "y": 2176.87,
+      "text": "Main quest - Kill Device + 4 Knights",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2679.5,
+      "y": 2159.0,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2653.25,
+      "y": 2137.5,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2640.5,
+      "y": 2163.88,
+      "text": "Main quest - Examine",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2674.75,
+      "y": 2215.0,
+      "text": "Main quest - Phernos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2612.38,
+      "y": 2335.62,
+      "text": "Main quest - Nania + Interact + Talk outside",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2655.03,
+      "y": 2223.31,
+      "text": "Use Teleport (41)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2675.13,
+      "y": 2215.0,
+      "text": "Main quest - Phernos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2864.75,
+      "y": 2248.75,
+      "text": "Main quest - Gustino",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2857.38,
+      "y": 2246.38,
+      "text": "Side quest - Belorin",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2823.0,
+      "y": 2267.75,
+      "text": "Main quest - Kill 2 Bundle + 2 Skama + 3 Slime + 3 Guardite",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2768.25,
+      "y": 2259.9,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2823.25,
+      "y": 2239.75,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2855.13,
+      "y": 2307.12,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2859.42,
+      "y": 2260.58,
+      "text": "Teleports (42)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2864.88,
+      "y": 2249.0,
+      "text": "Main quest - Gustino + Belorin",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2839.38,
+      "y": 2234.12,
+      "text": "Main quest - Kill 2 Skama + 3 Scorpion",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2864.5,
+      "y": 2249.0,
+      "text": "Main quest - Gustino",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2859.88,
+      "y": 2244.62,
+      "text": "Side quest - Vidius",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2874.5,
+      "y": 2225.4,
+      "text": "Collect 2 Odyle + kill 4 Guardite",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2872.25,
+      "y": 2234.62,
+      "text": "Main quest - Interact Device",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2857.5,
+      "y": 2246.12,
+      "text": "Side quest - Vidius",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2827.75,
+      "y": 2201.88,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2791.75,
+      "y": 2165.37,
+      "text": "Main quest -  Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2859.42,
+      "y": 2260.58,
+      "text": "Use Teleport (42)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2864.63,
+      "y": 2248.87,
+      "text": "Main quest - Gustino",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2873.38,
+      "y": 2230.63,
+      "text": "Main quest -  Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2904.63,
+      "y": 2174.25,
+      "text": "Main quest - Gustino + Enter door",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2932.25,
+      "y": 2158.25,
+      "text": "Main quest - Interact + Go outside + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2447.36,
+      "y": 2371.58,
+      "text": "Use Teleport (38)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2433.88,
+      "y": 2379.12,
+      "text": "Main quest - Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2556.5,
+      "y": 2437.5,
+      "text": "Main quest - Open barrier + talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2397.38,
+      "y": 2104.87,
+      "text": "Main quest - Dymones",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2655.03,
+      "y": 2223.31,
+      "text": "Use Teleport (41)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2582.25,
+      "y": 2273.12,
+      "text": "Main quest - talk + enter Fire Temple",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2397.0,
+      "y": 2104.5,
+      "text": "Main quest - Dymones",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2546.07,
+      "y": 2037.35,
+      "text": "Use Teleport (48)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.75,
+      "y": 1806.62,
+      "text": "Main quest - Kepilla",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2473.63,
+      "y": 1765.75,
+      "text": "Main quest - Talk with all NPC's + Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2515.25,
+      "y": 1735.13,
+      "text": "Main quest - Inject all 4 poisons",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2617.34,
+      "y": 1819.44,
+      "text": "Use Teleport (52)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.5,
+      "y": 1807.0,
+      "text": "Main quest - Talk with all 3 NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2417.0,
+      "y": 1501.38,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2452.63,
+      "y": 1551.75,
+      "text": "Main quest - Check corpse",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2417.25,
+      "y": 1501.38,
+      "text": "Main quest - Sthen + Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2452.5,
+      "y": 1552.12,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2417.63,
+      "y": 1501.5,
+      "text": "Main quest - Sthen",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2411.0,
+      "y": 1566.25,
+      "text": "Main quest - Kill mobs + Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2435.07,
+      "y": 1519.62,
+      "text": "Use Teleport (55)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2417.38,
+      "y": 1501.75,
+      "text": "Main quest - Sthen + Interact + Talk again",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2567.25,
+      "y": 1477.5,
+      "text": "Main quest - Kill mobs + Pickup call",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2617.34,
+      "y": 1819.44,
+      "text": "Use Teleport (52)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.5,
+      "y": 1807.12,
+      "text": "Main quest - Kepillia + Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2575.25,
+      "y": 1656.25,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2581.5,
+      "y": 1637.54,
+      "text": "Main quest - Talk + Interact + Kill",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2617.34,
+      "y": 1819.44,
+      "text": "Use Teleport (52)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.38,
+      "y": 1807.0,
+      "text": "Main quest - Kepillia + Dala",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2666.91,
+      "y": 1730.97,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2693.0,
+      "y": 1687.0,
+      "text": "Main quest - Kill mobs for Main quest only",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2617.34,
+      "y": 1819.44,
+      "text": "Use Teleport (52)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.63,
+      "y": 1807.12,
+      "text": "Main quest - Kepillia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2576.0,
+      "y": 1656.5,
+      "text": "Kill 3 Labor Managers",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2623.0,
+      "y": 1626.25,
+      "text": "Main quest - Kill mobs for Main  and Side quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2617.34,
+      "y": 1819.44,
+      "text": "Use Teleport (52)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2623.75,
+      "y": 1806.88,
+      "text": "Main quest - Dala + Caelid + Kepillia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2467.43,
+      "y": 1774.8,
+      "text": "Use Teleport (53)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2473.63,
+      "y": 1765.88,
+      "text": "Main quest - Open chest + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2765.5,
+      "y": 1627.37,
+      "text": "Main quest - talk + go inside",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2728.5,
+      "y": 1389.99,
+      "text": "Walk",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2666.25,
+      "y": 1381.0,
+      "text": "Main quest - Caelid + Door",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2397.13,
+      "y": 2104.75,
+      "text": "Main quest - Phernos + Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2447.36,
+      "y": 2371.58,
+      "text": "Use Teleport (38)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2556.88,
+      "y": 2437.87,
+      "text": "Main quest - Go in cave",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2575.25,
+      "y": 2403.75,
+      "text": "Main quest - Finish dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2353.97,
+      "y": 2134.02,
+      "text": "Use Teleport (36)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2399.13,
+      "y": 2079.25,
+      "text": "Main quest - Enter door + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2227.4,
+      "y": 2345.37,
+      "text": "Use Teleport (37)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2281.47,
+      "y": 2636.19,
+      "text": "Walk",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 2451.63,
+      "y": 2783.87,
+      "text": "Main quest - Paitos + Dioni +",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2447.13,
+      "y": 2784.87,
+      "text": "Main quest - Nestor",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2485.13,
+      "y": 2905.5,
+      "text": "Main quest - Anteia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2522.5,
+      "y": 2879.82,
+      "text": "Main quest - Close 2 rifts + kill 3 Spirit and 4 Specter",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2485.38,
+      "y": 2905.62,
+      "text": "Main quest - Anteia ",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2446.54,
+      "y": 2791.42,
+      "text": "Use Teleport (58)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2472.88,
+      "y": 2801.75,
+      "text": "Main quest - Nestor",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2450.0,
+      "y": 2786.75,
+      "text": "Main quest - Kill mobs + Talk Paitos + Caelid + Nestor ",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2524.63,
+      "y": 2804.88,
+      "text": "Main quest - Dorian + Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2599.0,
+      "y": 2777.38,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2556.88,
+      "y": 2931.25,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2506.38,
+      "y": 2875.63,
+      "text": "Main quest - Interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2524.63,
+      "y": 2805.13,
+      "text": "Main quest - Dorian",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2446.54,
+      "y": 2791.42,
+      "text": "Use Teleport (58)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2451.5,
+      "y": 2784.12,
+      "text": "Main quest - Nestor",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2487.5,
+      "y": 2794.25,
+      "text": "Main quest - Collect 2 essences",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2451.38,
+      "y": 2784.12,
+      "text": "Main quest - Dioni",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2505.5,
+      "y": 2792.0,
+      "text": "Main quest - Kill mobs + Interact Corpse for Main quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2451.13,
+      "y": 2784.37,
+      "text": "Main quest - Dioni",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}
