@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 
 import type { BannerInfo, SupportLinks } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
@@ -7,7 +7,7 @@ import Icon from "@/shared/ui/Icon";
 import { WALLETS } from "../wallets";
 
 import BrandMark from "./BrandMark";
-import CryptoDialog from "./CryptoDialog";
+import CryptoDialog, { COPIED_MS } from "./CryptoDialog";
 
 export interface SupportBlockProps {
   /** getState's links; without them (a backend before api 19) the two tiles they open are left out. */
@@ -38,6 +38,45 @@ function Tile({ mark, label, hint, external = false, onClick }: TileProps) {
       </span>
       {external ? <Icon name="external" className="pn-support-out" /> : null}
     </button>
+  );
+}
+
+/** The banner's discount code, copied at a click, which says so for a moment as the wallets do. */
+function PromoCode({
+  code,
+  discount,
+  onCopy,
+}: {
+  code: string;
+  discount: string;
+  onCopy: (text: string) => void;
+}) {
+  const t = useT();
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), COPIED_MS);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  return (
+    <div className="pn-promo">
+      <span className="pn-promo-text">
+        {t("panel.support.promo", { discount })} <code className="pn-promo-code">{code}</code>
+      </span>
+      <button
+        type="button"
+        className="btn-small ghost ui-with-icon"
+        onClick={() => {
+          onCopy(code);
+          setCopied(true);
+        }}
+      >
+        <Icon name={copied ? "check" : "copy"} />
+        {copied ? t("panel.support.copied") : t("panel.support.copyCode")}
+      </button>
+    </div>
   );
 }
 
@@ -109,6 +148,9 @@ export default function SupportBlock({
           <span className="pn-banner-slot-title">{t("panel.support.adSlot")}</span>
           <span className="pn-banner-slot-hint">{t("panel.support.adSlotHint")}</span>
         </button>
+      ) : null}
+      {banner?.code && banner.discount ? (
+        <PromoCode code={banner.code} discount={banner.discount} onCopy={onCopy} />
       ) : null}
 
       <section className="pn-support-group" aria-labelledby={linksId}>

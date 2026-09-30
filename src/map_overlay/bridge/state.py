@@ -248,8 +248,8 @@ def build_state(
     hide a window from capture, where the overlay is always visible to recorders and the engine.
     `repoUrl` is the project's GitHub repository, the only site openUrl() opens pages of, and
     `links` the exact addresses it opens beside it: `donate`, `discord` and `partnerDiscord`.
-    `banner` is the bundled advertising banner, {"image", "url", "label"}, or None; openUrl()
-    opens its `url` as well.
+    `banner` is the bundled advertising banner, {"image", "url", "label"} and, with a discount
+    code to offer, {"code", "discount"}, or None; openUrl() opens its `url` as well.
     """
     return {
         "version": version,

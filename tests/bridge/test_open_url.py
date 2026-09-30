@@ -94,7 +94,14 @@ def test_the_banner_s_page_is_opened_and_named_in_the_state(
     root.mkdir()
     (root / "banner.webp").write_bytes(b"\0")
     (root / "banner.json").write_text(
-        json.dumps({"image": "banner.webp", "url": "https://example.com/ad", "label": "Ad"}),
+        json.dumps(
+            {
+                "image": "banner.webp",
+                "url": "https://example.com/ad",
+                "label": "Ad",
+                "promo": {"code": "Problem", "discount": "30%"},
+            }
+        ),
         encoding="utf-8",
     )
     monkeypatch.setattr(banner_store, "bundled_banner_root", lambda: root)
@@ -111,6 +118,7 @@ def test_the_banner_s_page_is_opened_and_named_in_the_state(
 
     assert banner["url"] == "https://example.com/ad"
     assert banner["label"] == "Ad"
+    assert (banner["code"], banner["discount"]) == ("Problem", "30%")
     assert banner["image"].endswith("banner.webp")
     assert calls == ["https://example.com/ad"]
 

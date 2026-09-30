@@ -64,3 +64,25 @@ def test_an_image_too_large_is_left_out(tmp_path: Path) -> None:
 def test_a_banner_json_that_is_not_json_is_left_out(tmp_path: Path) -> None:
     (tmp_path / "banner.json").write_text("{", encoding="utf-8")
     assert load_banner(tmp_path) is None
+
+
+def test_a_promo_code_loads_with_the_banner(tmp_path: Path) -> None:
+    banner = load_banner(folder(tmp_path, promo={"code": " Problem ", "discount": "30%"}))
+
+    assert banner is not None
+    assert (banner.code, banner.discount) == ("Problem", "30%")
+
+
+@pytest.mark.parametrize(
+    "promo",
+    [
+        pytest.param("Problem", id="not-an-object"),
+        pytest.param({"code": "Problem"}, id="no-discount"),
+        pytest.param({"code": " ", "discount": "30%"}, id="code-blank"),
+        pytest.param({"code": "x" * 33, "discount": "30%"}, id="code-too-long"),
+    ],
+)
+def test_a_promo_that_does_not_check_out_leaves_the_banner_out(
+    tmp_path: Path, promo: object
+) -> None:
+    assert load_banner(folder(tmp_path, promo=promo)) is None

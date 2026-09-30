@@ -91,7 +91,7 @@ from map_overlay.qt.steps_window import WebStepsWindow, scale_region
 from map_overlay.qt.webview import local_file_url, system_dpi_scale, ui_url
 from map_overlay.qt.win32 import supports_capture_exclusion, windows_version
 from map_overlay.store import legacy
-from map_overlay.store.banner import load_banner
+from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import icons_under
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
@@ -425,16 +425,18 @@ class Backend(QObject):
                 "discord": DISCORD_URL,
                 "partnerDiscord": PARTNER_DISCORD_URL,
             },
-            banner=(
-                {
-                    "image": local_file_url(self._banner.image, self.dev),
-                    "url": self._banner.url,
-                    "label": self._banner.label,
-                }
-                if self._banner
-                else None
-            ),
+            banner=(self._banner_payload(self._banner) if self._banner else None),
         )
+
+    def _banner_payload(self, banner: Banner) -> dict[str, str]:
+        out = {
+            "image": local_file_url(banner.image, self.dev),
+            "url": banner.url,
+            "label": banner.label,
+        }
+        if banner.code and banner.discount:
+            out |= {"code": banner.code, "discount": banner.discount}
+        return out
 
     def _emit_state(self) -> None:
         self.stateChanged.emit(json.dumps(self._state(), ensure_ascii=False))

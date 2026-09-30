@@ -239,7 +239,13 @@ export function makeState(): AppState {
       discord: "https://discord.gg/DV2SNF6PMh",
       partnerDiscord: "https://discord.gg/aion2global",
     },
-    banner: null,
+    banner: {
+      image: swatch("#1a1446", "Banner, 1048 × 200", 1048, 200),
+      url: "https://www.lagofast.com/en/?cid=892126",
+      label: "LagoFast",
+      code: "Problem",
+      discount: "30%",
+    },
   };
 }
 

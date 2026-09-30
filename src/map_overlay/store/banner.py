@@ -18,6 +18,7 @@ log = logging.getLogger(__name__)
 MANIFEST = "banner.json"
 IMAGE_TYPES = (".png", ".jpg", ".jpeg", ".webp")
 MAX_IMAGE_BYTES = 1024 * 1024  # it is read into the page on every panel start
+MAX_PROMO_CHARS = 32
 
 
 @dataclass(frozen=True)
@@ -25,6 +26,10 @@ class Banner:
     image: Path
     url: str  # https only; openUrl() opens this exact address
     label: str  # what a screen reader says for the image, and its tooltip
+    # A discount code the panel offers to copy under the banner, and the discount it gives
+    # ("30%"); both or neither
+    code: str | None = None
+    discount: str | None = None
 
 
 def bundled_banner_root() -> Path:
@@ -61,7 +66,22 @@ def _parse(base: Path, raw: object) -> Banner:
         raise ValueError("url is not an https address")
     if not isinstance(label, str) or not label.strip():
         raise ValueError("label is empty")
-    return Banner(image=file, url=url, label=label.strip())
+    code, discount = _promo(raw.get("promo"))
+    return Banner(image=file, url=url, label=label.strip(), code=code, discount=discount)
+
+
+def _promo(raw: object) -> tuple[str | None, str | None]:
+    if raw is None:
+        return None, None
+    if not isinstance(raw, dict):
+        raise ValueError("promo is not a JSON object")
+    fields = []
+    for key in ("code", "discount"):
+        value = raw.get(key)
+        if not isinstance(value, str) or not value.strip() or len(value) > MAX_PROMO_CHARS:
+            raise ValueError(f"promo.{key} is not a short text")
+        fields.append(value.strip())
+    return fields[0], fields[1]
 
 
 def _is_https(url: str) -> bool:

@@ -21,6 +21,10 @@ users with the next release. This README stays in the repository and is not part
 
    `url` must be https. The app opens that exact address when the banner is clicked, and no
    other address on its site.
+
+   For a discount code, add `"promo": {"code": "…", "discount": "30%"}`. The panel then shows
+   a line under the banner with the code and a Copy button. Both fields are short texts, at most
+   32 characters.
 3. Run `uv run pytest tests/store/test_banner.py`. A banner.json that does not check out is
    only logged, and the panel then shows no banner, so the test is what catches a typo.
 4. Add a `CHANGELOG.md` entry under `[Unreleased]`.

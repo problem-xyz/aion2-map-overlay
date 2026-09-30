@@ -14,6 +14,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 - A link to the Discord server of Aion 2 Global, a community the project works with, beside the
   project's own Discord in the panel.
+- A banner for LagoFast, the game booster, with a 30% discount code under it that a click
+  copies.
 
 ### Changed
 

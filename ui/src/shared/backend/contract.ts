@@ -262,6 +262,9 @@ export interface BannerInfo {
   url: string;
   /** What the banner advertises: the image's alt text and tooltip. */
   label: string;
+  /** A discount code offered to copy under the banner, and the discount it gives ("30%"). */
+  code?: string;
+  discount?: string;
 }
 
 export interface SupportLinks {

@@ -148,6 +148,21 @@ describe("SupportBlock banner", () => {
     expect(order).toEqual(["pn-support-group", "pn-banner", "pn-support-group"]);
   });
 
+  it("offers its discount code to copy, and says it was copied", () => {
+    const p = mount({ banner: { ...BANNER, code: "Problem", discount: "30%" } });
+
+    expect(document.querySelector(".pn-promo")?.textContent).toContain("30%");
+    fireEvent.click(screen.getByRole("button", { name: en("panel.support.copyCode") }));
+
+    expect(p.onCopy).toHaveBeenCalledWith("Problem");
+    expect(screen.getByRole("button", { name: en("panel.support.copied") })).toBeTruthy();
+  });
+
+  it("shows no code row for a banner without one", () => {
+    mount({ banner: BANNER });
+    expect(document.querySelector(".pn-promo")).toBeNull();
+  });
+
   it("offers the empty slot when the app ships none, and asks on Discord", () => {
     const p = mount({ banner: null });
 
