@@ -22,6 +22,12 @@ release. There are none yet.
 **"Windows protected your PC".** Windows shows this for programs that are not code-signed, and
 this free project is not. Click **More info**, then **Run anyway**. You only need to do this once.
 
+**"Smart App Control blocked an app that may be unsafe".** This is a different check, on some
+Windows 11 PCs, and it has no "run anyway" button: it only allows programs that are code-signed.
+The only way to run the overlay there is to turn Smart App Control off: **Windows Security** >
+**App & browser control** > **Smart App Control settings** > **Off**. Windows does not let you
+turn it back on later without reinstalling, so decide for yourself whether that is acceptable.
+
 ## Getting started
 
 Put the game in **borderless windowed** mode first. Overlays cannot be drawn over exclusive
