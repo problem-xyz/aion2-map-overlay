@@ -1,0 +1,285 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Elyos 3/5 - Center, to level 22 (LipBalm, Krix route)",
+  "map": "verteron",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1490.53,
+      "y": 1511.01,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1484.38,
+      "y": 1530.13,
+      "text": "Side quest - Shuron",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1445.25,
+      "y": 1544.0,
+      "text": "Side quest - Janna",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1580.88,
+      "y": 1670.25,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1593.25,
+      "y": 1662.63,
+      "text": "Side quest - Caelid",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1933.38,
+      "y": 1699.25,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1937.75,
+      "y": 1713.75,
+      "text": "Side quest - Talk + Interact",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1925.25,
+      "y": 1752.83,
+      "text": "Side quest - Kill 2 Braxs",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1955.13,
+      "y": 1824.0,
+      "text": "Main quest - Cecilia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1968.95,
+      "y": 1915.7,
+      "text": "Sealed Dungeons (kill Nagato only)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1877.2,
+      "y": 1937.0,
+      "text": "Sealed Dungeon",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1838.25,
+      "y": 1965.25,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1819.25,
+      "y": 1941.0,
+      "text": "Kill 2 Kailins",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1802.25,
+      "y": 1947.25,
+      "text": "Close rift (underwater)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1840.13,
+      "y": 1975.87,
+      "text": "Main quest - Cecelia and buy 50+ Return scrolls at Merchant",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1966.0,
+      "y": 1961.0,
+      "text": "Kill 3 Repairers + take chest and diary",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1991.13,
+      "y": 1996.87,
+      "text": "Main quest - Cecilia + Interact + Cecelia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2019.0,
+      "y": 1981.0,
+      "text": "Main quest - Talk with 4 NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2047.63,
+      "y": 1961.88,
+      "text": "Open chest + Kill",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1991.25,
+      "y": 1996.75,
+      "text": "Wait for Cecilia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2000.38,
+      "y": 2043.75,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2032.5,
+      "y": 2036.65,
+      "text": "Kill 3 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2023.42,
+      "y": 2044.31,
+      "text": "Sealed Dungeons (run and open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2011.5,
+      "y": 2077.25,
+      "text": "Kill Communicator",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1955.0,
+      "y": 2064.25,
+      "text": "Main quest - Accept Call",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1954.5,
+      "y": 2044.25,
+      "text": "Kill mobs + Open door + Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2052.92,
+      "y": 2119.68,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2116.4,
+      "y": 2063.56,
+      "text": "Sealed Dungeons (kill Queen only)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2118.63,
+      "y": 2003.5,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2108.62,
+      "y": 1997.62,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2167.6,
+      "y": 1971.4,
+      "text": "Sealed Dungeons ",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2258.53,
+      "y": 1925.53,
+      "text": "Sealed Dungeons - Skip mobs and open chest",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2346.5,
+      "y": 2137.5,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2000.49,
+      "y": 2043.9,
+      "text": "Use Teleport + Main quest - talk + open door (level 22)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1930.44,
+      "y": 2095.1,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1894.75,
+      "y": 2085.25,
+      "text": "Kill mobs + Destroy rack",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1847.3,
+      "y": 2083.64,
+      "text": "Sealed Dungeons - Skip mobs and open chest",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1931.88,
+      "y": 2095.38,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1938.63,
+      "y": 2075.75,
+      "text": "Main quest - Phernos",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1934.88,
+      "y": 2066.37,
+      "text": "Open door",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1938.5,
+      "y": 2075.75,
+      "text": "Main quest - Caelid+ 2nd Ascension",
+      "color": "#f07178",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}
