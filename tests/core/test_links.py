@@ -2,7 +2,7 @@
 
 import pytest
 
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.links import is_project_url
 
 
@@ -16,6 +16,7 @@ from map_overlay.core.links import is_project_url
         REPO_URL,
         DONATE_URL,
         DISCORD_URL,
+        PARTNER_DISCORD_URL,
     ],
 )
 def test_pages_of_the_repository_are_opened(url: str) -> None:

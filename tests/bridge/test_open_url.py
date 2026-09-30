@@ -7,7 +7,7 @@ import pytest
 from PySide6.QtWidgets import QApplication
 
 from map_overlay.bridge.backend import Backend
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.paths import DataDirs
 
 
@@ -52,10 +52,14 @@ def test_get_state_names_the_repository(backend: Backend) -> None:
 
 def test_get_state_names_the_support_links(backend: Backend) -> None:
     links = json.loads(backend.getState())["links"]
-    assert links == {"donate": DONATE_URL, "discord": DISCORD_URL}
+    assert links == {
+        "donate": DONATE_URL,
+        "discord": DISCORD_URL,
+        "partnerDiscord": PARTNER_DISCORD_URL,
+    }
 
 
-@pytest.mark.parametrize("url", [REPO_URL, DONATE_URL, DISCORD_URL])
+@pytest.mark.parametrize("url", [REPO_URL, DONATE_URL, DISCORD_URL, PARTNER_DISCORD_URL])
 def test_the_support_tiles_links_are_opened(backend: Backend, opened: list[str], url: str) -> None:
     backend.openUrl(url)
     assert opened == [url]

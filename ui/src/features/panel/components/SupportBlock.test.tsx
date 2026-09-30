@@ -17,6 +17,7 @@ const REPO = "https://github.com/problem-xyz/aion2-map-overlay";
 const LINKS: SupportLinks = {
   donate: "https://buymeacoffee.com/problem_xyz",
   discord: "https://discord.gg/DV2SNF6PMh",
+  partnerDiscord: "https://discord.gg/aion2global",
 };
 
 function en(key: string): string {
@@ -51,11 +52,19 @@ describe("SupportBlock", () => {
   it.each([
     ["panel.support.coffee", LINKS.donate],
     ["panel.support.discord", LINKS.discord],
+    ["panel.support.partner", LINKS.partnerDiscord],
     ["panel.support.github", REPO],
   ])("%s opens its page", (key, url) => {
     const p = mount();
     fireEvent.click(tile(key));
     expect(p.onOpenUrl).toHaveBeenCalledWith(url);
+  });
+
+  it("leaves out the partner tile for a backend before api 20", () => {
+    mount({ links: { donate: LINKS.donate, discord: LINKS.discord } });
+    expect(
+      screen.queryByRole("button", { name: new RegExp(en("panel.support.partner")) }),
+    ).toBeNull();
   });
 
   it("leaves out the tiles whose address the backend did not send", () => {

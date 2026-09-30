@@ -121,7 +121,7 @@ export const MOCK_SETTINGS_SCHEMA: Record<keyof Settings, SettingSchema> = {
 export function makeState(): AppState {
   return {
     version: "1.0.0-beta.0",
-    api: 19,
+    api: 20,
     running: false,
     overlayVisible: true,
     captureVisible: false,
@@ -237,6 +237,7 @@ export function makeState(): AppState {
     links: {
       donate: "https://buymeacoffee.com/problem_xyz",
       discord: "https://discord.gg/DV2SNF6PMh",
+      partnerDiscord: "https://discord.gg/aion2global",
     },
   };
 }

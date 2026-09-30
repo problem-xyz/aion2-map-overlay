@@ -214,7 +214,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 18: the plaque is sized by the user, by its right and bottom edges, and its data carries
 #     "grip", how wide those strips are; setHeight is read by nothing.
 # 19: links, the donation page and the Discord invite, which openUrl() opens as well; copyText.
-API_VERSION = 19
+# 20: links has partnerDiscord, the invite to Aion 2 Global's server, which openUrl() opens.
+API_VERSION = 20
 
 
 def build_state(
@@ -244,7 +245,7 @@ def build_state(
     offer exactly what the file accepts. `captureExclusion` is false on a Windows too old to
     hide a window from capture, where the overlay is always visible to recorders and the engine.
     `repoUrl` is the project's GitHub repository, the only site openUrl() opens pages of, and
-    `links` the two exact addresses it opens beside it: `donate` and `discord`.
+    `links` the exact addresses it opens beside it: `donate`, `discord` and `partnerDiscord`.
     """
     return {
         "version": version,

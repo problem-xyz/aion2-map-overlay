@@ -249,7 +249,7 @@ export interface AppState {
   captureExclusion?: boolean;
   /** The project's GitHub repository: the one site openUrl() opens pages of. Api 6. */
   repoUrl?: string;
-  /** The two exact addresses openUrl() opens beside the repository. Api 19. */
+  /** The exact addresses openUrl() opens beside the repository. Api 19. */
   links?: SupportLinks;
 }
 
@@ -258,6 +258,8 @@ export interface SupportLinks {
   donate: string;
   /** The invite to the players' Discord server. */
   discord: string;
+  /** The invite to Aion 2 Global's Discord server, a community the project works with. Api 20. */
+  partnerDiscord?: string;
 }
 
 export interface Stats {

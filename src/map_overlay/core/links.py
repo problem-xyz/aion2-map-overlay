@@ -4,14 +4,14 @@ The page can ask Python to open a URL in the user's browser (release notes). A p
 code that could one day be tricked into asking for something else, so the check is Python's:
 only https pages inside this project's own repository pass, and anything that could step out
 of it -- another host, credentials, a port, a dot segment, a backslash -- is refused. The
-repository itself, the donation page and the Discord invite pass as exact addresses only.
+repository itself, the donation page and the two Discord invites pass as exact addresses only.
 """
 
 from urllib.parse import unquote, urlsplit
 
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 
-_EXACT = frozenset({REPO_URL, DONATE_URL, DISCORD_URL})
+_EXACT = frozenset({REPO_URL, DONATE_URL, DISCORD_URL, PARTNER_DISCORD_URL})
 
 
 def is_project_url(url: str) -> bool:

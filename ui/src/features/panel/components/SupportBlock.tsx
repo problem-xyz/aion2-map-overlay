@@ -82,6 +82,15 @@ export default function SupportBlock({ links, repoUrl, onOpenUrl, onCopy }: Supp
             onClick={() => onOpenUrl(links.discord)}
           />
         ) : null}
+        {links?.partnerDiscord ? (
+          <Tile
+            mark={<BrandMark brand="discord" />}
+            label={t("panel.support.partner")}
+            hint={t("panel.support.partnerHint")}
+            external
+            onClick={() => onOpenUrl(links.partnerDiscord ?? "")}
+          />
+        ) : null}
         {repoUrl ? (
           <Tile
             mark={<BrandMark brand="github" />}

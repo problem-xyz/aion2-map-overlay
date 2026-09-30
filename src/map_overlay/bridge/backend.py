@@ -76,7 +76,7 @@ from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
 from map_overlay.bridge.tile_queue import TileBuildQueue
 from map_overlay.bridge.windows import WindowManager
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.errors import AppError
 from map_overlay.core.geometry import ScreenCheck, check_regions
 from map_overlay.core.links import is_project_url
@@ -418,7 +418,11 @@ class Backend(QObject):
             update=self._updates.snapshot(),
             capture_exclusion=self._capture_exclusion,
             repo_url=REPO_URL,
-            links={"donate": DONATE_URL, "discord": DISCORD_URL},
+            links={
+                "donate": DONATE_URL,
+                "discord": DISCORD_URL,
+                "partnerDiscord": PARTNER_DISCORD_URL,
+            },
         )
 
     def _emit_state(self) -> None:

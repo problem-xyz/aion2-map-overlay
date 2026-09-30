@@ -31,11 +31,12 @@ PACK_ID = "Aion2MapOverlay"
 # outside it bar the two pages below, and the release notes link is built from it.
 REPO_URL = "https://github.com/problem-xyz/aion2-map-overlay"
 
-# The two pages beside the repository that the panel's support tiles open: a donation page and
-# the players' Discord server. openUrl() opens these exact addresses and nothing else on their
-# sites.
+# The pages beside the repository that the panel's support tiles open: a donation page, the
+# players' Discord server and the Discord server of Aion 2 Global, a community the project works
+# with. openUrl() opens these exact addresses and nothing else on their sites.
 DONATE_URL = "https://buymeacoffee.com/problem_xyz"
 DISCORD_URL = "https://discord.gg/DV2SNF6PMh"
+PARTNER_DISCORD_URL = "https://discord.gg/aion2global"
 
 # The update feed: the files of the newest GitHub release, releases.win.json and the packages,
 # which GitHub serves by redirect with no API call and no rate limit. The trailing slash matters,

@@ -10,6 +10,11 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- A link to the Discord server of Aion 2 Global, a community the project works with, beside the
+  project's own Discord in the panel.
+
 ## [1.2.0] - 2026-09-29
 
 ### Added
