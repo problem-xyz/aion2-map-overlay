@@ -358,6 +358,31 @@ def read_shipped_digests(root: Path) -> dict[str, set[str]]:
         return {}
 
 
+def starter_digests(root: Path | None = None) -> dict[str, set[str]]:
+    """Every version of each starter route, by id: those a release shipped and the one bundled now.
+
+    A route in routes/ with one of these is a starter as it came, and the panel marks it official.
+    """
+    base = bundled_routes_root() if root is None else Path(root)
+    out = read_shipped_digests(base)
+    for src in base.glob("*.json"):
+        try:
+            out.setdefault(src.stem, set()).add(route_digest(starter_bytes(src)))
+        except (AppError, OSError) as e:
+            log.warning("bundled route %s is not read: %s", src.name, e)
+    return out
+
+
+def _is_official(path: Path, starters: Mapping[str, Collection[str]]) -> bool:
+    digests = starters.get(path.stem)
+    if not digests:
+        return False
+    try:
+        return route_digest(path.read_bytes()) in digests
+    except OSError:
+        return False
+
+
 def record_shipped_digests(root: Path, text: str) -> str:
     """`text`, a SHIPPED_DIGESTS file, with a line added for each route under `root` it lacks.
 
@@ -590,10 +615,13 @@ def list_routes(
     cache: ThumbCache,
     skipped: SkippedRoutes,
     order: Sequence[str] = (),
+    *,
+    starters: Mapping[str, Collection[str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Every route, in `order`. A file that is not one is left out, so that it cannot hide the rest.
 
-    A route `order` does not name comes after those it does, by file name.
+    A route `order` does not name comes after those it does, by file name. One whose bytes are
+    a version of the starter route on its id (`starters`, from starter_digests) is official.
 
     A file that is not even JSON is moved aside, as a damaged settings.json is: it is no use
     where it is, and the copy keeps it recoverable. One that is JSON but not a route this
@@ -619,6 +647,8 @@ def list_routes(
                 "markers": len(doc["markers"]),
                 "steps": sum(1 for m in doc["markers"] if m["text"].strip()),
                 "thumb": route_thumb(dirs, route_id, doc, maps_by_id, cache),
+                "faction": meta.get("faction") if meta else None,
+                "official": _is_official(path, starters or {}),
             }
         )
     return in_order(out, order)

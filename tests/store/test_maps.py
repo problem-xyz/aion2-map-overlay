@@ -32,6 +32,7 @@ def test_the_shipped_manifests_describe_the_images_beside_them() -> None:
 
     assert [s.id for s in specs] == list(BUNDLED_MAP_IDS) == ["altgard", "verteron"]
     assert [s.label for s in specs] == ["Altgard", "Verteron"]
+    assert [s.faction for s in specs] == ["asmodian", "elyos"]
     for spec in specs:
         assert spec.reference.is_file()
         assert image_size(spec.reference) == spec.size
@@ -81,6 +82,7 @@ def _sound(**changes: Any) -> dict[str, Any]:
         pytest.param([], (512, 384), "not a JSON object", id="manifest-is-a-list"),
         pytest.param(_sound(id="verteron"), (512, 384), "says id", id="id-differs-from-folder"),
         pytest.param(_sound(label="  "), (512, 384), "no label", id="label-blank"),
+        pytest.param(_sound(faction="Elyos"), (512, 384), "faction", id="faction-unknown"),
         pytest.param(_sound(size=[512, "384"]), (512, 384), "two positive", id="size-string"),
         pytest.param(_sound(size=[512.0, 384.0]), (512, 384), "two positive", id="size-float"),
         pytest.param(_sound(size=[512, 384, 3]), (512, 384), "two positive", id="size-triple"),

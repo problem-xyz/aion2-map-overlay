@@ -1,6 +1,7 @@
 {
   "id": "altgard",
   "label": "Altgard",
+  "faction": "asmodian",
   "size": [4096, 4096],
   "detail": [8192, 8192],
   "source": {

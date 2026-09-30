@@ -10,6 +10,12 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- The route list can show only Asmodian or only Elyos routes, once it has routes for both. A
+  route counts for the side whose map it is drawn on.
+- The routes that come with the app carry an Official tag. A route you edited no longer does.
+
 ## [1.2.0] - 2026-09-29
 
 ### Added
