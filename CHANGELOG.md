@@ -12,9 +12,18 @@ changes are left out unless they change how the app is installed, run or updated
 
 ### Added
 
+- Five routes for Elyos in Verteron, from the start village to level 45.
 - The route list can show only Asmodian or only Elyos routes, once it has routes for both. A
   route counts for the side whose map it is drawn on.
 - The routes that come with the app carry an Official tag. A route you edited no longer does.
+
+### Changed
+
+- The Asmodian routes are numbered in the order you play them, like the Elyos ones. Your progress
+  on them is kept. A route you edited keeps its old name.
+- The checklist over the game is on from the first start. If you turned it off, it stays off.
+- A route you copy into the routes folder, or delete from it, shows in the list at once, with no
+  need to restart the app. A route you edit there by hand is redrawn on the map.
 
 ## [1.2.0] - 2026-09-29
 

@@ -84,6 +84,7 @@ from map_overlay.core.paths import DataDirs, is_portable, run_migration
 from map_overlay.core.settings import STEPS_SIZE_SCALE, Settings, plaque_scale
 from map_overlay.i18n.catalog import format_code, resolve_language, set_language, t
 from map_overlay.qt.dialogs import DialogService
+from map_overlay.qt.folder_watcher import FolderWatcher
 from map_overlay.qt.overlay import primary_screen_geometry
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.screens import ScreenWatcher, primary_rect, screen_rects
@@ -188,6 +189,9 @@ class Backend(QObject):
         self._check_screens()
         self._screens = ScreenWatcher(self)
         self._screens.changed.connect(self._revalidate_screens)
+        # A route dropped into the folder, or deleted from it, shows in the panel without a restart.
+        self._routes_folder = FolderWatcher(dirs.routes, self)
+        self._routes_folder.changed.connect(self._on_routes_folder_changed)
         self._tiles.enqueue([m["id"] for m in self._routes.maps() if not m["tiles"]["ready"]])
         if self.route:  # the steps list must be there before the overlay is ever started
             self._apply_route(self._route_doc(self.route, quiet=True))
@@ -644,6 +648,12 @@ class Backend(QObject):
         )
         if region:
             self._store.set_state(steps_region=region)
+            if not self.state.steps_hint_shown:
+                # The list is on from the start on a new install, so no switch ever brings the
+                # hint: it comes the first time the list is on screen. Posted, since that can be
+                # at start, before the page listens.
+                self._store.set_state(steps_hint_shown=True)
+                self._notifier.post("info", "steps.drag_hint")
 
     def _setup_steps(self) -> None:
         window = self.steps
@@ -742,6 +752,27 @@ class Backend(QObject):
         self._apply_route(doc)
         if self.running and (prev is None or prev["map"] != doc["map"]):
             self._retarget_engine(doc)
+        self._emit_state()
+
+    def _on_routes_folder_changed(self) -> None:
+        """Something in routes/ changed behind the app: a file copied in, deleted or edited by hand.
+
+        The open route follows its file. One that is gone is closed, as a deleted one is, but its
+        progress is kept in case it comes back. One that is no valid route now -- a hand edit saved
+        half-way -- stays as it was.
+        """
+        if self.route and not self._routes.route_exists(self.route):
+            if self.running:
+                self.stop()
+            self._store.set_state(route=None)
+            self._apply_route(None)
+        elif self.route:
+            doc = self._route_doc(self.route, quiet=True)
+            prev = self._routes.active_doc
+            if doc is not None and doc != prev:
+                self._apply_route(doc)
+                if self.running and (prev is None or prev["map"] != doc["map"]):
+                    self._retarget_engine(doc)
         self._emit_state()
 
     @Slot()
@@ -1055,6 +1086,7 @@ class Backend(QObject):
         # Before anything else: a debounced write that never lands is a lost setting.
         self._store.flush()
         self._screens.close()
+        self._routes_folder.close()
         self._tiles.shutdown()
         self.engine.shutdown()
         # Disconnect before the overlay goes: a late transform from the dying thread would
