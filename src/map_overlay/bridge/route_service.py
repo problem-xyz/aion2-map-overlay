@@ -44,6 +44,7 @@ class RouteService:
         self.thumbs = ThumbCache()
         self.skipped = routes.SkippedRoutes()
         self.active_doc = None
+        self._starters = routes.starter_digests()  # the bundled files do not change while it runs
 
     # ------------------------------------------------------------------ maps
     def maps(self):
@@ -67,7 +68,9 @@ class RouteService:
     # ------------------------------------------------------------------ routes
     def list_routes(self, maps_by_id, order=()):
         """Every route, in the order `order` gives; one it does not name comes last."""
-        return routes.list_routes(self.dirs, maps_by_id, self.thumbs, self.skipped, order)
+        return routes.list_routes(
+            self.dirs, maps_by_id, self.thumbs, self.skipped, order, starters=self._starters
+        )
 
     def take_skipped(self):
         """RouteErrors for the files list_routes left out since the last call, each once."""

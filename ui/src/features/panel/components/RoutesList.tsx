@@ -4,8 +4,10 @@ import type { RouteInfo } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
 import Icon from "@/shared/ui/Icon";
 import IconButton from "@/shared/ui/IconButton";
+import Segmented from "@/shared/ui/Segmented";
 
 import { moved, useDragReorder } from "../hooks/useDragReorder";
+import { mergeOrder, type RouteFilter, useRouteFilter } from "../hooks/useRouteFilter";
 
 export interface RoutesListProps {
   routes: RouteInfo[];
@@ -49,17 +51,23 @@ export default function RoutesList({
       ? pending.ids.flatMap((id) => routes.find((r) => r.id === id) ?? [])
       : routes;
   const refocus = useRef<string | null>(null);
+  const { available: filterable, filter, setFilter, visible } = useRouteFilter(routes);
+  const listed = visible(shown);
 
+  // A row is dragged among the rows the filter shows, and the whole order is sent back.
   const reorder = (from: number, to: number) => {
-    const ids = moved(
+    const ids = mergeOrder(
       shown.map((r) => r.id),
-      from,
-      to,
+      moved(
+        listed.map((r) => r.id),
+        from,
+        to,
+      ),
     );
     setPending({ base: routes, ids });
     onReorder(ids);
   };
-  const drag = useDragReorder(shown.length, reorder);
+  const drag = useDragReorder(listed.length, reorder);
 
   // A row moved from the keyboard is taken out of the document and put back, which drops its
   // focus; it is handed back so that Alt+arrow can be pressed again.
@@ -76,7 +84,7 @@ export default function RoutesList({
     if (!e.altKey || (e.key !== "ArrowUp" && e.key !== "ArrowDown")) return;
     e.preventDefault();
     const to = index + (e.key === "ArrowUp" ? -1 : 1);
-    if (to < 0 || to >= shown.length) return;
+    if (to < 0 || to >= listed.length) return;
     refocus.current = id;
     reorder(index, to);
   };
@@ -125,11 +133,25 @@ export default function RoutesList({
         />
       </div>
 
+      {filterable ? (
+        <Segmented<RouteFilter>
+          label={t("panel.routes.filter")}
+          labelHidden
+          value={filter}
+          options={[
+            { value: "all", label: t("panel.routes.filterAll") },
+            { value: "asmodian", label: t("panel.routes.filterAsmodian") },
+            { value: "elyos", label: t("panel.routes.filterElyos") },
+          ]}
+          onChange={setFilter}
+        />
+      ) : null}
+
       {routes.length === 0 ? (
         <p className="muted pn-routes-empty">{t("panel.routes.empty")}</p>
       ) : (
         <ul className={`routes${drag.dragging !== null ? " is-sorting" : ""}`}>
-          {shown.map((r, i) => (
+          {listed.map((r, i) => (
             <li
               key={r.id}
               data-route-id={r.id}
@@ -155,6 +177,11 @@ export default function RoutesList({
                 <span className="route-body">
                   <span className="route-label">{r.label}</span>
                   <span className="route-name muted">
+                    {r.official ? (
+                      <span className="route-tag" title={t("panel.routes.officialTip")}>
+                        {t("panel.routes.official")}
+                      </span>
+                    ) : null}
                     {r.mapLabel || t("panel.routes.mapMissing", { map: r.map })} ·{" "}
                     {t("common.points", { count: r.markers })}
                   </span>

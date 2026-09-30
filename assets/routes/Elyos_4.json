@@ -1,0 +1,531 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Elyos 4/5 - Southwest forest (LipBalm, Krix route)",
+  "map": "verteron",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1938.75,
+      "y": 2075.73,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1954.2,
+      "y": 2156.95,
+      "text": "Sealed Dungeons (kill Captain)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1932.5,
+      "y": 2243.25,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1931.88,
+      "y": 2274.5,
+      "text": "Main quest - Do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1870.75,
+      "y": 2162.5,
+      "text": "Main quest - Talk + Enter cave",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1927.17,
+      "y": 2271.64,
+      "text": "Use Teleport (22)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1931.88,
+      "y": 2274.25,
+      "text": "Main quest - Bao + Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1922.63,
+      "y": 2259.5,
+      "text": "Main quest - Load Cargo",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1912.25,
+      "y": 2238.25,
+      "text": "Main quest - Retrieve items + Wait for Npc and Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1878.25,
+      "y": 2225.25,
+      "text": "Main quest - Retrieve all Items",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1818.0,
+      "y": 2225.75,
+      "text": "Main quest - Wait for NPC + Talk + Kill",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1744.38,
+      "y": 2256.52,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1612.63,
+      "y": 2232.25,
+      "text": "Main quest - Kochi + Bao + Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1706.75,
+      "y": 2215.81,
+      "text": "Main quest - Kill 4 Gravis",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1621.61,
+      "y": 2249.11,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1613.25,
+      "y": 2232.0,
+      "text": "Main quest - Enter door + Talk + Caelid outside",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1694.11,
+      "y": 2342.09,
+      "text": "Open Teleport (26)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1734.13,
+      "y": 2302.25,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1749.75,
+      "y": 2328.25,
+      "text": "Main quest - Take weapon remnants",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1763.25,
+      "y": 2314.75,
+      "text": "Main quest - Take weapon remnants",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1621.61,
+      "y": 2249.11,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1613.0,
+      "y": 2232.37,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1694.11,
+      "y": 2342.09,
+      "text": "Use Teleport (26)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1716.25,
+      "y": 2318.38,
+      "text": "Main quest - Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1709.13,
+      "y": 2344.0,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1713.0,
+      "y": 2331.25,
+      "text": "Main quest - Interact + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1725.5,
+      "y": 2479.38,
+      "text": "Main quest - Talk all 3 ",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1739.88,
+      "y": 2486.63,
+      "text": "Main quest - Baison",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1675.38,
+      "y": 2426.5,
+      "text": "Main quest - Go in cave + kill + interact",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1722.37,
+      "y": 2483.0,
+      "text": "Use Teleport (27)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1740.0,
+      "y": 2486.37,
+      "text": "Main quest - Baison",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1771.25,
+      "y": 2452.5,
+      "text": "Main quest - Cliff door + Interact + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1722.37,
+      "y": 2483.0,
+      "text": "Use Teleport (27)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1724.88,
+      "y": 2479.5,
+      "text": "Main quest - Jade",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1694.11,
+      "y": 2342.09,
+      "text": "Use Teleport (26)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1696.88,
+      "y": 2332.88,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1642.75,
+      "y": 2324.3,
+      "text": "Main quest - Kill 4 Mercenaries",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1696.5,
+      "y": 2333.63,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1769.38,
+      "y": 2366.88,
+      "text": "Main quest - Caelid + go in cave",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1880.75,
+      "y": 2315.75,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1863.75,
+      "y": 2390.81,
+      "text": "Main quest - Kill totem",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1934.75,
+      "y": 2420.0,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1809.38,
+      "y": 2524.62,
+      "text": "Main quest - Interact + Kill",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1930.04,
+      "y": 2417.05,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1935.13,
+      "y": 2420.25,
+      "text": "Main quest -Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1896.75,
+      "y": 2506.25,
+      "text": "Main quest - talk (NPC is on the tree)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1904.25,
+      "y": 2534.08,
+      "text": "Main quest - talk with all NPC's",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1845.25,
+      "y": 2525.58,
+      "text": "Main quest - Talk + do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1930.04,
+      "y": 2417.05,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1934.63,
+      "y": 2420.5,
+      "text": "Main quest - Bao",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1988.5,
+      "y": 2511.25,
+      "text": "Main quest - Enter cave (below cliff)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2000.25,
+      "y": 2570.25,
+      "text": "Main quest - Kochi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1825.63,
+      "y": 2637.12,
+      "text": "Main quest - Kochi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1810.0,
+      "y": 2630.62,
+      "text": "Main quest - Kill 2 Brawlers, then skip",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1709.0,
+      "y": 2652.12,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1701.75,
+      "y": 2648.5,
+      "text": "Main quest - Talk + do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1836.65,
+      "y": 2633.32,
+      "text": "Use Teleport (32)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1825.75,
+      "y": 2637.25,
+      "text": "Main quest - Kochi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1832.5,
+      "y": 2646.38,
+      "text": "Side quest - Aullaeu",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1849.88,
+      "y": 2664.87,
+      "text": "Side quest - kill 4 Sparkies",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1833.0,
+      "y": 2645.75,
+      "text": "Side quest - Aullaeu",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1895.25,
+      "y": 2639.37,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1885.75,
+      "y": 2674.5,
+      "text": "Main quest - Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1875.5,
+      "y": 2748.51,
+      "text": "Main quest - Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1896.38,
+      "y": 2860.38,
+      "text": "Main quest - Talk + enter cave (kill all mobs) + Talk out",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1733.02,
+      "y": 2754.15,
+      "text": "Open Teleport (34)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1930.04,
+      "y": 2417.05,
+      "text": "Use Teleport (29)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1934.88,
+      "y": 2420.12,
+      "text": "Main quest - Caelid + Kochi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1621.61,
+      "y": 2249.11,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1612.5,
+      "y": 2231.87,
+      "text": "Main quest - Kochi",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1657.5,
+      "y": 2170.38,
+      "text": "Main quest - Talk + Dungeon (skip mobs)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1621.61,
+      "y": 2249.11,
+      "text": "Use Teleport (25)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1635.0,
+      "y": 2253.63,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1612.88,
+      "y": 2232.25,
+      "text": "Main quest - Hiru (enter tent, wait, talk)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1733.02,
+      "y": 2754.15,
+      "text": "Use Teleport (34)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1803.63,
+      "y": 2852.37,
+      "text": "Main quest - Enter tree root",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}

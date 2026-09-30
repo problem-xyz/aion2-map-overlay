@@ -65,6 +65,7 @@ class MapInfo(TypedDict):
     id: str
     label: str
     size: list[int]
+    faction: str | None  # "asmodian" or "elyos"; None for a map the manifest names no side for
     thumb: str
     tiles: TilesInfo
     objects: list[dict[str, Any]]
@@ -81,6 +82,8 @@ class RouteInfo(TypedDict):
     markers: int
     steps: int
     thumb: str
+    faction: str | None  # the route's map's
+    official: bool  # a starter route, exactly as a release shipped it
 
 
 class StatsPayload(TypedDict):
@@ -214,9 +217,10 @@ def steps_state(settings, state) -> StepsPayload:
 # 18: the plaque is sized by the user, by its right and bottom edges, and its data carries
 #     "grip", how wide those strips are; setHeight is read by nothing.
 # 19: links, the donation page and the Discord invite, which openUrl() opens as well; copyText.
-# 20: links has partnerDiscord, the invite to Aion 2 Global's server, which openUrl() opens.
-# 21: banner, the advertising banner that ships with the app, whose url openUrl() opens.
-API_VERSION = 21
+# 20: a map carries "faction", and a route its map's faction and "official".
+# 21: links has partnerDiscord, the invite to Aion 2 Global's server, which openUrl() opens.
+# 22: banner, the advertising banner that ships with the app, whose url openUrl() opens.
+API_VERSION = 22
 
 
 def build_state(

@@ -274,3 +274,49 @@ describe("RoutesList reordering", () => {
     expect(screen.getByText(/Beluslan/).closest("button")?.textContent).not.toMatch(/text/);
   });
 });
+
+const SIDES: RouteInfo[] = [
+  { ...(THREE[0] as RouteInfo), faction: "elyos", official: true },
+  { ...(THREE[1] as RouteInfo), faction: "asmodian" },
+  { ...(THREE[2] as RouteInfo), faction: "asmodian" },
+];
+
+describe("RoutesList filter", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
+  it("is offered only when the list has routes of both sides", () => {
+    mount({ routes: SIDES.slice(1) });
+    expect(screen.queryByRole("radiogroup")).toBeNull();
+  });
+
+  it("shows one side's routes, and remembers the choice", async () => {
+    const user = userEvent.setup();
+    mount({ routes: SIDES });
+
+    await user.click(screen.getByRole("radio", { name: en("panel.routes.filterAsmodian") }));
+
+    expect(labels()).toEqual(["Beluslan", "Morheim"]);
+    expect(window.localStorage.getItem("mo.panel.routeFilter")).toBe("asmodian");
+  });
+
+  it("moves a row among the shown ones and keeps the hidden ones in place", async () => {
+    const user = userEvent.setup();
+    const handlers = mount({ routes: SIDES });
+    await user.click(screen.getByRole("radio", { name: en("panel.routes.filterAsmodian") }));
+
+    screen.getByText("Morheim").closest("button")?.focus();
+    await user.keyboard("{Alt>}{ArrowUp}{/Alt}");
+
+    expect(handlers.onReorder).toHaveBeenCalledWith(["a", "c", "b"]);
+  });
+
+  it("marks an official route", () => {
+    mount({ routes: SIDES });
+
+    const tags = document.querySelectorAll(".route-tag");
+    expect(tags).toHaveLength(1);
+    expect(tags[0]?.closest("li")?.textContent).toContain("Aslan");
+  });
+});

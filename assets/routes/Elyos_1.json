@@ -1,0 +1,344 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Elyos 1/5 - Start village (LipBalm, Krix route)",
+  "map": "verteron",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1440.13,
+      "y": 1461.88,
+      "text": "Start",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1461.04,
+      "y": 1474.56,
+      "text": "Fly up - Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1490.94,
+      "y": 1501.59,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1491.63,
+      "y": 1511.5,
+      "text": "Teleports",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1481.38,
+      "y": 1527.75,
+      "text": "Main quest - Shuron",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1525.35,
+      "y": 1516.34,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1536.5,
+      "y": 1522.13,
+      "text": "Main quest - Hart + Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1558.53,
+      "y": 1532.31,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1551.16,
+      "y": 1554.43,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1508.56,
+      "y": 1585.97,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1483.5,
+      "y": 1604.13,
+      "text": "Main quest - Etezia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1515.11,
+      "y": 1615.05,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1512.88,
+      "y": 1626.75,
+      "text": "Main quest - Kaidros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1596.5,
+      "y": 1661.5,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1514.0,
+      "y": 1743.57,
+      "text": "Kill Golem + Collect Odyle",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1483.13,
+      "y": 1793.25,
+      "text": "Main quest - Gabru",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1501.59,
+      "y": 1837.88,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1545.0,
+      "y": 1836.5,
+      "text": "Main quest - Lebronus",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1549.5,
+      "y": 1823.27,
+      "text": "Enhance weapon +3",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1554.0,
+      "y": 1811.62,
+      "text": "Take 1 Odyle + Kill 4 mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1554.0,
+      "y": 1811.5,
+      "text": "Main quest - Lebronus",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1587.38,
+      "y": 1828.38,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1562.25,
+      "y": 1813.5,
+      "text": "Main quest - Lebronus",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1571.64,
+      "y": 1880.47,
+      "text": "Open Teleport (4)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1681.88,
+      "y": 1887.13,
+      "text": "Sealed Dungeons (run and open chest) ",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1682.13,
+      "y": 1887.0,
+      "text": "Enhance guard +5 + use glyph",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1495.04,
+      "y": 1799.37,
+      "text": "Use Teleport (3)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1496.13,
+      "y": 1806.78,
+      "text": "Jump up",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1499.25,
+      "y": 1776.53,
+      "text": "Main quest - fly to island + talk Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1571.64,
+      "y": 1880.47,
+      "text": "Use Teleport (4)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1575.0,
+      "y": 1874.81,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1516.25,
+      "y": 1920.5,
+      "text": "Main quest - Inspect",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1492.25,
+      "y": 1933.5,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1472.0,
+      "y": 1924.83,
+      "text": "Main quest - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1571.64,
+      "y": 1880.47,
+      "text": "Use Teleport (4)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1573.25,
+      "y": 1893.88,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1562.63,
+      "y": 1891.38,
+      "text": "Side quest - Dari",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1601.25,
+      "y": 1866.5,
+      "text": "Main quest - Take nests",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1597.75,
+      "y": 1862.52,
+      "text": "Side quest - Take bag",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1563.13,
+      "y": 1891.5,
+      "text": "Side quest - Dari",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1573.62,
+      "y": 1893.75,
+      "text": "Main quest - talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1490.53,
+      "y": 1511.01,
+      "text": "Use Teleport (1)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1480.7,
+      "y": 1510.2,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1465.96,
+      "y": 1501.59,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1463.25,
+      "y": 1502.75,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1469.75,
+      "y": 1513.25,
+      "text": "Main quest - Caelid",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1477.38,
+      "y": 1517.87,
+      "text": "Take wind",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1545.5,
+      "y": 1564.75,
+      "text": "Main quest - Hithanya + Garvia",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1404.0,
+      "y": 1487.5,
+      "text": "Main quest - Nania",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1439.88,
+      "y": 1462.13,
+      "text": "Main quest - enter door + talk + exit",
+      "color": "#f2b544",
+      "icon": "main"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}

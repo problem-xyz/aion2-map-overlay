@@ -953,6 +953,18 @@ html:has(.pn-app) {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.route-tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--color-accent-dim);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  font: 500 var(--text-2xs) / 15px var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
 .pn-route-new {
   width: 100%;
   min-height: 48px;

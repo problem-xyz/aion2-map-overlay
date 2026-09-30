@@ -10,18 +10,21 @@ from PySide6.QtWidgets import QApplication
 from map_overlay.bridge.backend import Backend
 from map_overlay.core.fileio import atomic_write_json
 from map_overlay.core.paths import DataDirs
-from map_overlay.store.maps import BUNDLED_MAP_IDS
+from map_overlay.store.maps import BUNDLED_MAP_IDS, ThumbCache
 from map_overlay.store.routes import (
     ROUTE_FORMAT,
     ROUTE_VERSION,
     SHIPPED_DIGESTS,
+    SkippedRoutes,
     backup_path,
+    list_routes,
     parse_shipped_digests,
     read_route_file,
     record_shipped_digests,
     route_path,
     save_route,
     seed_bundled_routes,
+    starter_digests,
 )
 
 REPO = Path(__file__).resolve().parents[2]
@@ -75,7 +78,7 @@ def listed(dirs: DataDirs) -> list[str]:
 
 def test_the_shipped_routes_are_valid_routes_on_a_bundled_map() -> None:
     files = sorted(SHIPPED.glob("*.json"))
-    assert len(files) == 6
+    assert len(files) == 11
     for path in files:
         doc = read_route_file(path)
         assert doc["map"] in BUNDLED_MAP_IDS
@@ -218,3 +221,30 @@ def test_recording_a_release_twice_adds_nothing(shipped: Path) -> None:
 
     assert record_shipped_digests(shipped, text) == text
     assert len(text.splitlines()) == 2
+
+
+def test_a_starter_route_is_official_until_it_is_edited(
+    qapp: QApplication, dirs: DataDirs, shipped: Path
+) -> None:
+    atomic_write_json(route_path(dirs, "Mine"), starter("Mine"))
+    backend = start(dirs)
+    edited = read_route_file(route_path(dirs, "Second"))
+    edited["markers"][0]["text"] = "Moved"
+    save_route(dirs, "Second", edited)
+
+    official = {r["id"]: r["official"] for r in json.loads(backend.getState())["routes"]}
+
+    assert official == {"First": True, "Mine": False, "Second": False}
+
+
+def test_a_starter_route_of_an_older_release_is_still_official(
+    dirs: DataDirs, shipped: Path
+) -> None:
+    release(shipped)
+    seed_bundled_routes(dirs, ())
+    ship_new_version(shipped)
+    # The update that would replace it has not run yet: a copy of the old version is on disk.
+
+    listed_routes = list_routes(dirs, {}, ThumbCache(), SkippedRoutes(), starters=starter_digests())
+
+    assert [r["official"] for r in listed_routes] == [True, True]

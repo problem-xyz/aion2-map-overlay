@@ -1,0 +1,684 @@
+{
+  "format": "map-overlay-route",
+  "version": 1,
+  "name": "Elyos 2/5 - North (LipBalm, Krix route)",
+  "map": "verteron",
+  "mapSize": [
+    4096,
+    4096
+  ],
+  "markers": [
+    {
+      "x": 1581.06,
+      "y": 1669.12,
+      "text": "Use Teleport (2) ",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1652.0,
+      "y": 1597.5,
+      "text": "Fly up - Main quest - Dakian",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1665.43,
+      "y": 1599.9,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1706.8,
+      "y": 1600.31,
+      "text": "Sealed Dungeons (run and open chest)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1746.94,
+      "y": 1549.93,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1775.88,
+      "y": 1615.16,
+      "text": "Take wind",
+      "color": "#4fd1c5"
+    },
+    {
+      "x": 1771.5,
+      "y": 1578.75,
+      "text": "Open Teleport (6)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1700.75,
+      "y": 1685.38,
+      "text": "Fly down - Main quest - Rohin",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1701.0,
+      "y": 1685.5,
+      "text": "",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1758.82,
+      "y": 1691.65,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1806.83,
+      "y": 1674.6,
+      "text": "Clear Stronghold - take chests + kill boss",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1684.68,
+      "y": 1688.37,
+      "text": "Use Teleport (5)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1700.5,
+      "y": 1685.5,
+      "text": "Main quest - Rohin",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1727.87,
+      "y": 1737.13,
+      "text": "Kill mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1700.13,
+      "y": 1685.5,
+      "text": "Main quest - Rohin",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1816.58,
+      "y": 1810.84,
+      "text": "Sealed Dungeons (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1821.08,
+      "y": 1853.44,
+      "text": "Sealed Dungeons (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1833.37,
+      "y": 1857.95,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1894.62,
+      "y": 1854.5,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1898.5,
+      "y": 1786.68,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1944.37,
+      "y": 1715.81,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1934.29,
+      "y": 1703.85,
+      "text": "Main quest - Hithanya",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1961.75,
+      "y": 1716.0,
+      "text": "Inspect rift",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1977.5,
+      "y": 1694.0,
+      "text": "Inspect corpse",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2016.0,
+      "y": 1632.0,
+      "text": "Main quest - talk + open chest + talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2013.87,
+      "y": 1635.5,
+      "text": "Side quest - Zed",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2032.84,
+      "y": 1627.34,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2035.3,
+      "y": 1577.37,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2023.25,
+      "y": 1574.88,
+      "text": "Side quest - kill mobs",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1993.88,
+      "y": 1587.13,
+      "text": "Kill 1 Spirit",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2014.87,
+      "y": 1635.62,
+      "text": "Side quest - Zed",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2007.86,
+      "y": 1502.82,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2016.63,
+      "y": 1501.0,
+      "text": "Main quest - Ione",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2068.89,
+      "y": 1543.37,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2080.25,
+      "y": 1561.13,
+      "text": "Inspect rift",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2077.08,
+      "y": 1586.38,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2092.65,
+      "y": 1632.67,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2140.75,
+      "y": 1695.13,
+      "text": "Fly up - Open Teleport (50)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2145.08,
+      "y": 1669.94,
+      "text": "Sealed Dungeons (kill all mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2153.75,
+      "y": 1652.0,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 2158.18,
+      "y": 1614.64,
+      "text": "Sealed Dungeons (skip most mobs)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2140.16,
+      "y": 1495.86,
+      "text": "Sealed Dungeons",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 2022.6,
+      "y": 1513.88,
+      "text": "Use Teleport (10)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2017.25,
+      "y": 1500.5,
+      "text": "Main quest - Ione",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2082.08,
+      "y": 1536.19,
+      "text": "Kill mobs + talk Iona, then skip all mobs",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2202.28,
+      "y": 1513.56,
+      "text": "Main quest - Ione ",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2209.53,
+      "y": 1522.05,
+      "text": "Close rift - Dungeon",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 2211.25,
+      "y": 1513.5,
+      "text": "Main quest - Do quest",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1933.31,
+      "y": 1699.02,
+      "text": "Use Teleport (9)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1934.47,
+      "y": 1703.85,
+      "text": "Main quest - Hithanya",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1925.12,
+      "y": 1685.09,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1898.5,
+      "y": 1674.04,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1864.09,
+      "y": 1644.13,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1855.9,
+      "y": 1650.69,
+      "text": "Sealed Dungeons (kill 2 Deios only)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1490.53,
+      "y": 1511.01,
+      "text": "Use Teleport (1)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1440.86,
+      "y": 1465.28,
+      "text": "Main quest - enter door + talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1445.25,
+      "y": 1475.12,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1433.19,
+      "y": 1518.8,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1446.63,
+      "y": 1547.63,
+      "text": "Main quest - talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1444.66,
+      "y": 1547.88,
+      "text": "Empyrean Trace",
+      "color": "#e7eaf1"
+    },
+    {
+      "x": 1446.25,
+      "y": 1547.75,
+      "text": "Talk to Jackson and Monolith (resonate all the way)",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1445.2,
+      "y": 1475.04,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1441.04,
+      "y": 1465.28,
+      "text": "Main quest - Enter door + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1445.02,
+      "y": 1475.41,
+      "text": "Main quest - Luteros",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1424.13,
+      "y": 1471.38,
+      "text": "Main quest - Enter door + Talk",
+      "color": "#f2b544",
+      "icon": "main"
+    },
+    {
+      "x": 1506.34,
+      "y": 1468.53,
+      "text": "Side quest - Nania",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1483.88,
+      "y": 1529.75,
+      "text": "Side quest - Shuron",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1447.73,
+      "y": 1538.89,
+      "text": "Side quest -  Janna",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1515.0,
+      "y": 1626.63,
+      "text": "Side quest - Hithanya",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1419.88,
+      "y": 1512.3,
+      "text": "Side quest - Caelid",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1424.25,
+      "y": 1471.75,
+      "text": "Side quest - Enter door + Talk + Interact",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1441.0,
+      "y": 1465.25,
+      "text": "Side quest - Enter door + Interact",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1490.53,
+      "y": 1511.01,
+      "text": "Use Teleport (1)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1484.0,
+      "y": 1529.75,
+      "text": "Side quest - Shuron",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1484.63,
+      "y": 1605.38,
+      "text": "Side quest - Etezia",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1490.53,
+      "y": 1511.01,
+      "text": "Use Teleport (1)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1446.88,
+      "y": 1548.12,
+      "text": "Side quest - Caelid",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1581.06,
+      "y": 1669.12,
+      "text": "Use Teleport (2)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1594.5,
+      "y": 1663.38,
+      "text": "Side quest - Cardin",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1684.68,
+      "y": 1688.37,
+      "text": "Use Teleport (5)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1679.25,
+      "y": 1689.0,
+      "text": "Side quest - Hithanya (interact + talk) ",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1701.38,
+      "y": 1685.5,
+      "text": "Side quest - Heal + Talk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1764.0,
+      "y": 1657.5,
+      "text": "Side quest - Hithanya",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1775.0,
+      "y": 1674.38,
+      "text": "Side quest - Kill mobs",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1726.88,
+      "y": 1724.12,
+      "text": "Side quest - Cave (kill all mobs)  ",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1684.68,
+      "y": 1688.37,
+      "text": "Use Teleport (5)",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1701.25,
+      "y": 1685.37,
+      "text": "Side quest - Talk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1721.96,
+      "y": 1930.44,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1705.25,
+      "y": 1926.13,
+      "text": "Side quest - Talk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1601.95,
+      "y": 2029.98,
+      "text": "Sealed Dungeons (run, kill Lieutenant)",
+      "color": "#6ea8ff"
+    },
+    {
+      "x": 1543.63,
+      "y": 1974.88,
+      "text": "Side quest - Bandit Den",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1571.64,
+      "y": 1880.47,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1609.5,
+      "y": 1793.13,
+      "text": "Side quest - Hideout",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1721.96,
+      "y": 1930.44,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1705.13,
+      "y": 1926.0,
+      "text": "Side quest - Talk + Interact",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1714.0,
+      "y": 1918.5,
+      "text": "Side quest -  Interact + Talk ",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 2140.57,
+      "y": 1695.33,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 2154.5,
+      "y": 1738.05,
+      "text": "Side quest - Go inside (kill spiders)",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1771.52,
+      "y": 1578.6,
+      "text": "Use Teleport",
+      "color": "#a78bfa"
+    },
+    {
+      "x": 1776.0,
+      "y": 1628.25,
+      "text": "Side quest - Talk",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1802.25,
+      "y": 1718.32,
+      "text": "Side quest - Talk + Interact",
+      "color": "#22c55e",
+      "icon": "side"
+    },
+    {
+      "x": 1803.25,
+      "y": 1746.25,
+      "text": "Open Teleport",
+      "color": "#a78bfa"
+    }
+  ],
+  "style": {
+    "color": "#f2b544",
+    "width": 3
+  }
+}
