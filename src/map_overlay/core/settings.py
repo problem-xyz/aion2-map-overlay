@@ -138,7 +138,9 @@ class State:
 
     region: Region | None = None
     steps_region: Region | None = None
-    steps_visible: bool = False
+    # On for a new install: the checklist is the part of the overlay a new player looks for.
+    # state.json keeps whatever was chosen, so a player who turned it off keeps it off.
+    steps_visible: bool = True
     steps_hint_shown: bool = False
     route: str | None = None
     progress: dict[str, int] = field(default_factory=dict)

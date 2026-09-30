@@ -18,6 +18,7 @@ changes are left out unless they change how the app is installed, run or updated
 
 - The Asmodian routes are numbered in the order you play them, like the Elyos ones. Your progress
   on them is kept. A route you edited keeps its old name.
+- The checklist over the game is on from the first start. If you turned it off, it stays off.
 
 ## [1.2.0] - 2026-09-29
 
