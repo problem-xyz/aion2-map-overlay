@@ -16,6 +16,10 @@ changes are left out unless they change how the app is installed, run or updated
 - The route list can show only Asmodian or only Elyos routes, once it has routes for both. A
   route counts for the side whose map it is drawn on.
 - The routes that come with the app carry an Official tag. A route you edited no longer does.
+- A link to the Discord server of Aion 2 Global, a community the project works with, beside the
+  project's own Discord in the panel.
+- A banner for LagoFast, the game booster, with a 30% discount code under it that a click
+  copies.
 
 ### Changed
 
@@ -24,6 +28,8 @@ changes are left out unless they change how the app is installed, run or updated
 - The checklist over the game is on from the first start. If you turned it off, it stays off.
 - A route you copy into the routes folder, or delete from it, shows in the list at once, with no
   need to restart the app. A route you edit there by hand is redrawn on the map.
+- At the foot of the panel, the ways to support the project and the community links are two
+  groups, each under its own heading. Between them is a place for an advertising banner.
 
 ## [1.2.0] - 2026-09-29
 

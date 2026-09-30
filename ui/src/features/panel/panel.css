@@ -1063,8 +1063,99 @@ html:has(.pn-app) {
 .pn-support {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-3);
   margin-top: var(--space-2);
+}
+.pn-support-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* The image is the whole banner: no frame of its own beyond the tile's edge, and its own
+   proportions, so a banner of any height is drawn as it was made. */
+.pn-banner {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--fill-tile);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) ease;
+}
+/* A banner made too tall is cut to the middle rather than pushing the links off the panel */
+.pn-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: cover;
+}
+/* The empty slot: the banner's own proportions, so the panel does not jump when one ships */
+.pn-banner-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  aspect-ratio: 1048 / 200;
+  max-height: 160px;
+  border-style: dashed;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+.pn-banner-slot-title {
+  font: 600 var(--text-sm) / 1.25 var(--font-display);
+  color: var(--color-text-secondary);
+}
+.pn-banner-slot-hint {
+  font-size: var(--text-xs);
+}
+/* Tucked under the banner it belongs to, closer than the groups around them */
+.pn-promo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: calc(var(--space-2) - var(--space-3));
+  padding: 6px 6px 6px 12px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  background: var(--fill-tile);
+}
+.pn-promo-text {
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.pn-promo-code {
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  color: var(--color-text);
+  font: 600 var(--text-sm) / 1.3 var(--font-body);
+  letter-spacing: 0.02em;
+}
+.pn-banner-ad {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 0 4px;
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 55%);
+  color: var(--color-text-secondary);
+  font: 500 var(--text-2xs) / 15px var(--font-body);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-banner:hover {
+    border-color: var(--color-frame-strong);
+  }
+}
+.pn-banner:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 .pn-support-row {
   display: grid;

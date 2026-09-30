@@ -257,8 +257,22 @@ export interface AppState {
   captureExclusion?: boolean;
   /** The project's GitHub repository: the one site openUrl() opens pages of. Api 6. */
   repoUrl?: string;
-  /** The two exact addresses openUrl() opens beside the repository. Api 19. */
+  /** The exact addresses openUrl() opens beside the repository. Api 19. */
   links?: SupportLinks;
+  /** The advertising banner that ships with the app, or null for none. Api 22. */
+  banner?: BannerInfo | null;
+}
+
+export interface BannerInfo {
+  /** The image's address, a file the app ships. */
+  image: string;
+  /** The page a click opens; openUrl() opens this exact address. */
+  url: string;
+  /** What the banner advertises: the image's alt text and tooltip. */
+  label: string;
+  /** A discount code offered to copy under the banner, and the discount it gives ("30%"). */
+  code?: string;
+  discount?: string;
 }
 
 export interface SupportLinks {
@@ -266,6 +280,8 @@ export interface SupportLinks {
   donate: string;
   /** The invite to the players' Discord server. */
   discord: string;
+  /** The invite to Aion 2 Global's Discord server, a community the project works with. Api 21. */
+  partnerDiscord?: string;
 }
 
 export interface Stats {

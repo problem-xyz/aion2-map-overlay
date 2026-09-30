@@ -16,12 +16,12 @@ import type {
 } from "@/shared/backend/contract";
 import type { ObjectIconName } from "@/shared/ui/markIcons";
 
-function swatch(color: string, label: string): string {
+function swatch(color: string, label: string, width = 320, height = 180): string {
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180">` +
-    `<rect width="320" height="180" fill="${color}"/>` +
-    `<text x="160" y="96" font-family="sans-serif" font-size="20" fill="#e7eaf1" ` +
-    `text-anchor="middle">${label}</text></svg>`;
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+    `<rect width="${width}" height="${height}" fill="${color}"/>` +
+    `<text x="${width / 2}" y="${height / 2 + 6}" font-family="sans-serif" font-size="20" ` +
+    `fill="#e7eaf1" text-anchor="middle">${label}</text></svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
@@ -121,7 +121,7 @@ export const MOCK_SETTINGS_SCHEMA: Record<keyof Settings, SettingSchema> = {
 export function makeState(): AppState {
   return {
     version: "1.0.0-beta.0",
-    api: 20,
+    api: 22,
     running: false,
     overlayVisible: true,
     captureVisible: false,
@@ -243,6 +243,14 @@ export function makeState(): AppState {
     links: {
       donate: "https://buymeacoffee.com/problem_xyz",
       discord: "https://discord.gg/DV2SNF6PMh",
+      partnerDiscord: "https://discord.gg/aion2global",
+    },
+    banner: {
+      image: swatch("#1a1446", "Banner, 1048 × 200", 1048, 200),
+      url: "https://www.lagofast.com/en/?cid=892126",
+      label: "LagoFast",
+      code: "Problem",
+      discount: "30%",
     },
   };
 }

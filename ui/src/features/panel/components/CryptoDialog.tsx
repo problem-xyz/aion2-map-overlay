@@ -9,7 +9,7 @@ import { WALLETS, type CoinId } from "../wallets";
 import BrandMark from "./BrandMark";
 import QrCode from "./QrCode";
 
-const COPIED_MS = 1600;
+export const COPIED_MS = 1600;
 // The characters a person compares after pasting, set brighter at both ends of the address
 const EDGE = 6;
 // What each address takes, spelt out so the catalogue check can see every key has a caller

@@ -2,13 +2,15 @@
 
 import json
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from PySide6.QtWidgets import QApplication
 
 from map_overlay.bridge.backend import Backend
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.paths import DataDirs
+from map_overlay.store import banner as banner_store
 
 
 @pytest.fixture
@@ -52,10 +54,14 @@ def test_get_state_names_the_repository(backend: Backend) -> None:
 
 def test_get_state_names_the_support_links(backend: Backend) -> None:
     links = json.loads(backend.getState())["links"]
-    assert links == {"donate": DONATE_URL, "discord": DISCORD_URL}
+    assert links == {
+        "donate": DONATE_URL,
+        "discord": DISCORD_URL,
+        "partnerDiscord": PARTNER_DISCORD_URL,
+    }
 
 
-@pytest.mark.parametrize("url", [REPO_URL, DONATE_URL, DISCORD_URL])
+@pytest.mark.parametrize("url", [REPO_URL, DONATE_URL, DISCORD_URL, PARTNER_DISCORD_URL])
 def test_the_support_tiles_links_are_opened(backend: Backend, opened: list[str], url: str) -> None:
     backend.openUrl(url)
     assert opened == [url]
@@ -79,3 +85,50 @@ def test_copy_text_refuses_what_is_not_a_line(
 ) -> None:
     backend.copyText(text)
     assert copied == []
+
+
+def test_the_banner_s_page_is_opened_and_named_in_the_state(
+    qapp: QApplication, dirs: DataDirs, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "banner"
+    root.mkdir()
+    (root / "banner.webp").write_bytes(b"\0")
+    (root / "banner.json").write_text(
+        json.dumps(
+            {
+                "image": "banner.webp",
+                "url": "https://example.com/ad",
+                "label": "Ad",
+                "promo": {"code": "Problem", "discount": "30%"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(banner_store, "bundled_banner_root", lambda: root)
+    made = Backend(dirs)
+    try:
+        calls: list[str] = []
+        monkeypatch.setattr(made._dialogs, "open_url", lambda url: calls.append(url) or True)
+
+        banner = json.loads(made.getState())["banner"]
+        made.openUrl("https://example.com/ad")
+        made.openUrl("https://example.com/other")
+    finally:
+        made.shutdown()
+
+    assert banner["url"] == "https://example.com/ad"
+    assert banner["label"] == "Ad"
+    assert (banner["code"], banner["discount"]) == ("Problem", "30%")
+    assert banner["image"].endswith("banner.webp")
+    assert calls == ["https://example.com/ad"]
+
+
+def test_with_no_banner_the_state_says_none(
+    qapp: QApplication, dirs: DataDirs, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(banner_store, "bundled_banner_root", lambda: tmp_path)
+    made = Backend(dirs)
+    try:
+        assert json.loads(made.getState())["banner"] is None
+    finally:
+        made.shutdown()

@@ -12,11 +12,9 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QUrl
-
 from map_overlay.core.errors import AppError, MapError, RouteError
 from map_overlay.i18n.catalog import t
-from map_overlay.qt.webview import DEV_URL
+from map_overlay.qt.webview import local_file_url
 from map_overlay.store import maps as maps_store
 from map_overlay.store import naming, objects, routes, share
 from map_overlay.store.maps import MapSpec, ThumbCache, load_bundled_maps
@@ -60,10 +58,7 @@ class RouteService:
 
     def tiles_url(self, map_id):
         """Tile base address. In dev the page is on localhost and Vite serves the files."""
-        tiles = maps_store.map_dir(self.dirs, map_id) / "tiles"
-        if self.dev:
-            return f"{DEV_URL}/@fs/{tiles.as_posix()}"
-        return QUrl.fromLocalFile(str(tiles)).toString()
+        return local_file_url(maps_store.map_dir(self.dirs, map_id) / "tiles", self.dev)
 
     def map_meta(self, map_id):
         """{"label", "size"} of a bundled map, or None for an id the registry does not have."""

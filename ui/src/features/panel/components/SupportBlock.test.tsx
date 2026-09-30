@@ -17,6 +17,7 @@ const REPO = "https://github.com/problem-xyz/aion2-map-overlay";
 const LINKS: SupportLinks = {
   donate: "https://buymeacoffee.com/problem_xyz",
   discord: "https://discord.gg/DV2SNF6PMh",
+  partnerDiscord: "https://discord.gg/aion2global",
 };
 
 function en(key: string): string {
@@ -42,7 +43,8 @@ function mount(props: Partial<SupportBlockProps> = {}) {
 }
 
 function tile(key: string) {
-  return screen.getByRole("button", { name: new RegExp(en(key)) });
+  // By the start of the name: the ad slot's hint names Discord too
+  return screen.getByRole("button", { name: new RegExp(`^${en(key)}`) });
 }
 
 afterEach(() => vi.useRealTimers());
@@ -51,11 +53,19 @@ describe("SupportBlock", () => {
   it.each([
     ["panel.support.coffee", LINKS.donate],
     ["panel.support.discord", LINKS.discord],
+    ["panel.support.partner", LINKS.partnerDiscord],
     ["panel.support.github", REPO],
   ])("%s opens its page", (key, url) => {
     const p = mount();
     fireEvent.click(tile(key));
     expect(p.onOpenUrl).toHaveBeenCalledWith(url);
+  });
+
+  it("leaves out the partner tile for a backend before api 20", () => {
+    mount({ links: { donate: LINKS.donate, discord: LINKS.discord } });
+    expect(
+      screen.queryByRole("button", { name: new RegExp(en("panel.support.partner")) }),
+    ).toBeNull();
   });
 
   it("leaves out the tiles whose address the backend did not send", () => {
@@ -115,5 +125,56 @@ describe("WALLETS", () => {
 
   it.each(WALLETS.map((w) => [w.id, w.address]))("%s has the shape of its network", (id, a) => {
     expect(a).toMatch(SHAPE[id]!);
+  });
+});
+
+describe("SupportBlock banner", () => {
+  const BANNER = { image: "file:///banner.webp", url: "https://example.com/ad", label: "Guild" };
+
+  it("opens the banner's page, and names it by what it advertises", () => {
+    const p = mount({ banner: BANNER });
+
+    const banner = screen.getByRole("button", { name: /Guild/ });
+    expect(banner.textContent).toContain(en("panel.support.ad"));
+    fireEvent.click(banner);
+
+    expect(p.onOpenUrl).toHaveBeenCalledWith(BANNER.url);
+  });
+
+  it("sits between the donations and the links", () => {
+    mount({ banner: BANNER });
+
+    const order = [...document.querySelectorAll(".pn-support > *")].map((el) => el.className);
+    expect(order).toEqual(["pn-support-group", "pn-banner", "pn-support-group"]);
+  });
+
+  it("offers its discount code to copy, and says it was copied", () => {
+    const p = mount({ banner: { ...BANNER, code: "Problem", discount: "30%" } });
+
+    expect(document.querySelector(".pn-promo")?.textContent).toContain("30%");
+    fireEvent.click(screen.getByRole("button", { name: en("panel.support.copyCode") }));
+
+    expect(p.onCopy).toHaveBeenCalledWith("Problem");
+    expect(screen.getByRole("button", { name: en("panel.support.copied") })).toBeTruthy();
+  });
+
+  it("shows no code row for a banner without one", () => {
+    mount({ banner: BANNER });
+    expect(document.querySelector(".pn-promo")).toBeNull();
+  });
+
+  it("offers the empty slot when the app ships none, and asks on Discord", () => {
+    const p = mount({ banner: null });
+
+    const slot = screen.getByRole("button", { name: new RegExp(en("panel.support.adSlot")) });
+    expect(document.querySelector(".pn-banner-slot")).toBe(slot);
+    fireEvent.click(slot);
+
+    expect(p.onOpenUrl).toHaveBeenCalledWith(LINKS.discord);
+  });
+
+  it("leaves the slot out for a backend with no links to ask on", () => {
+    mount({ banner: null, links: undefined });
+    expect(document.querySelector(".pn-banner")).toBeNull();
   });
 });

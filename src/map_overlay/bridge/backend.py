@@ -76,7 +76,7 @@ from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
 from map_overlay.bridge.tile_queue import TileBuildQueue
 from map_overlay.bridge.windows import WindowManager
-from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, REPO_URL
+from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.errors import AppError
 from map_overlay.core.geometry import ScreenCheck, check_regions
 from map_overlay.core.links import is_project_url
@@ -89,9 +89,10 @@ from map_overlay.qt.overlay import primary_screen_geometry
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.screens import ScreenWatcher, primary_rect, screen_rects
 from map_overlay.qt.steps_window import WebStepsWindow, scale_region
-from map_overlay.qt.webview import system_dpi_scale, ui_url
+from map_overlay.qt.webview import local_file_url, system_dpi_scale, ui_url
 from map_overlay.qt.win32 import supports_capture_exclusion, windows_version
 from map_overlay.store import legacy
+from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import icons_under
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
@@ -147,6 +148,7 @@ class Backend(QObject):
         set_language(resolve_language(self.settings.language, QLocale.system().name()))
         # `maps` is for tests: the shipped registry means cutting two 8192 px images.
         self._routes = RouteService(dirs, dev=dev, maps=maps)
+        self._banner = load_banner()
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
         self.overlay_visible = True
@@ -422,8 +424,23 @@ class Backend(QObject):
             update=self._updates.snapshot(),
             capture_exclusion=self._capture_exclusion,
             repo_url=REPO_URL,
-            links={"donate": DONATE_URL, "discord": DISCORD_URL},
+            links={
+                "donate": DONATE_URL,
+                "discord": DISCORD_URL,
+                "partnerDiscord": PARTNER_DISCORD_URL,
+            },
+            banner=(self._banner_payload(self._banner) if self._banner else None),
         )
+
+    def _banner_payload(self, banner: Banner) -> dict[str, str]:
+        out = {
+            "image": local_file_url(banner.image, self.dev),
+            "url": banner.url,
+            "label": banner.label,
+        }
+        if banner.code and banner.discount:
+            out |= {"code": banner.code, "discount": banner.discount}
+        return out
 
     def _emit_state(self) -> None:
         self.stateChanged.emit(json.dumps(self._state(), ensure_ascii=False))
@@ -840,12 +857,12 @@ class Backend(QObject):
 
     @Slot(str)
     def openUrl(self, url: str) -> None:
-        """Open one of the project's own GitHub pages (release notes) in the browser.
+        """Open one of the project's own GitHub pages (release notes), or the banner's page.
 
         Anything else is refused and logged: the check lives here, not in the page, so a page
         that was talked into asking for another address still cannot open it.
         """
-        if not is_project_url(url):
+        if not is_project_url(url) and not (self._banner and url == self._banner.url):
             log.warning("openUrl refused a link outside the project: %r", url)
             return
         self._dialogs.open_url(url)

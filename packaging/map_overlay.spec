@@ -40,6 +40,12 @@ a = Analysis(  # noqa: F821
         # their earlier versions, by which an untouched copy is brought up to date
         *((str(p), "assets/routes") for p in (ROOT / "assets" / "routes").glob("*.json")),
         (str(ROOT / "assets" / "routes" / "shipped.sha256"), "assets/routes"),
+        # the advertising banner, when there is one: banner.json and its image, not the README
+        *(
+            (str(p), "assets/banner")
+            for p in (ROOT / "assets" / "banner").glob("*")
+            if p.name != "README.md"
+        ),
     ],
     # Reached only through a runtime import or a platform backend, so the analyser cannot see
     # them: dxcam pulls comtypes, and mss picks its backend by platform.

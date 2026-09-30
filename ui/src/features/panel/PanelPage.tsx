@@ -251,6 +251,7 @@ export default function PanelPage() {
       <SupportBlock
         links={state.links}
         repoUrl={state.repoUrl}
+        banner={state.banner}
         onOpenUrl={(url) => api.openUrl(url)}
         onCopy={(text) => api.copyText(text)}
       />
