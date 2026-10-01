@@ -138,6 +138,9 @@ class Backend(QObject):
     # (index of the next point, the way to it) while the player is far off the route, else None.
     # A class default for the same reason.
     _off_route: tuple[int, str] | None = None
+    # The open route as the player is shown it, which _shown_part builds; the same object as the
+    # route's own document while nothing is left out of it.
+    _view_doc: Any = None  # a RouteDoc or None, untyped as RouteService.active_doc is
 
     def __init__(
         self,
@@ -347,7 +350,7 @@ class Backend(QObject):
         # every point passed
         map_id = doc["map"] if doc else self._free_map
         sets = self._routes.load_objects(map_id) if map_id else []
-        self._step_objects = self._objects_under(doc, sets)
+        doc, self._step_objects = self._shown_part(doc, self._objects_under(doc, sets))
         meta = self._map_meta(map_id) if map_id else None
         self._cubes = cube_points(sets, meta["size"]) if meta else []
         # The ring shows where a point ticks itself off. With auto marking off nothing does, so
@@ -364,6 +367,21 @@ class Backend(QObject):
         self._set_off_route(None)
         self._apply_cubes()
         self._sync_steps()
+
+    def _shown_part(self, doc, objects):
+        """The route as the player is shown it: without the feathers when they are turned off.
+
+        Every window, the count and the panel's progress get this one; the file and the editor
+        keep the whole route.
+        """
+        self._view_doc = doc
+        if doc is None or self.settings.route_traces or "trace" not in objects:
+            self._progress.set_view(None, 0)
+            return doc, objects
+        kept = [i for i, o in enumerate(objects) if o != "trace"]
+        self._progress.set_view(kept, len(doc["markers"]))
+        self._view_doc = {**doc, "markers": [doc["markers"][i] for i in kept]}
+        return self._view_doc, [objects[i] for i in kept]
 
     def _apply_cubes(self) -> None:
         """The hidden cubes over the game while the Cubes switch is on, and the window for them."""
@@ -390,11 +408,11 @@ class Backend(QObject):
         return icons_under(sets, doc["mapSize"], [(m["x"], m["y"]) for m in doc["markers"]])
 
     def _set_done(self, done) -> None:
-        self._progress.set_done(done, self._routes.active_doc)
+        self._progress.set_done(done, self._view_doc)
 
     def _on_progress_changed(self, done, total) -> None:
         self._set_off_route(None)  # the next point moved: the next position says where it is
-        doc = self._routes.active_doc
+        doc = self._view_doc
         self._windows.apply_progress(
             steps_of(doc, self._step_objects),
             self._progress.done_count(doc),
@@ -405,7 +423,7 @@ class Backend(QObject):
 
     def _on_player(self, x, y) -> None:
         """Player position arrived in reference pixels: is the next point reached?"""
-        doc = self._routes.active_doc
+        doc = self._view_doc
         meta = self._map_meta(doc["map"]) if doc else None
         size = meta["size"] if meta else None
         reached = self._progress.on_player(x, y, doc, size)
@@ -451,7 +469,7 @@ class Backend(QObject):
 
     def _state(self):
         maps = self._routes.maps()
-        doc = self._routes.active_doc
+        doc = self._view_doc
         routes = self._routes.list_routes({m["id"]: m for m in maps}, self.state.route_order)
         # A state rebuild can run before the page has connected -- a map finishing its tiles
         # at start-up -- and each of these notices comes up only once.
@@ -710,9 +728,10 @@ class Backend(QObject):
             self.steps.set_pinned(after.steps_pinned)
         if before.steps_scale != after.steps_scale:
             self._resize_steps(before.steps_scale)
-        if (before.auto_progress, before.arrive_radius) != (
+        if (before.auto_progress, before.arrive_radius, before.route_traces) != (
             after.auto_progress,
             after.arrive_radius,
+            after.route_traces,
         ):
             self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
         elif (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
@@ -803,7 +822,7 @@ class Backend(QObject):
     def _step_progress(self, delta: int) -> None:
         """Tick the next point off by hand, or take the last one back. The panel hears of it
         through progressChanged, as it does of a point reached on foot."""
-        doc = self._routes.active_doc
+        doc = self._view_doc
         self._set_done(self._progress.done_count(doc) + delta)
 
     def _route_ids(self) -> list[str]:

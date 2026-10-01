@@ -98,6 +98,9 @@ class Settings:
     # The map's hidden cubes over the game, all of them and whatever the route's progress, each
     # in a ring cube_radius screen pixels across its middle; 0 draws the cube alone.
     show_cubes: bool = False
+    # The route's points on Empyrean Traces, the feathers. Off leaves them out of the overlay, the
+    # checklist and the count, as if the route had none; the progress kept is the whole route's.
+    route_traces: bool = True
     cube_radius: int = field(default=20, metadata=rng(0, 100))
     # The same in the route editor, which always draws every point: "dim" fades the route away
     # from the selected point and the steps after it, "all" draws it all in full.

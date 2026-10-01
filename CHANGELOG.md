@@ -20,6 +20,8 @@ changes are left out unless they change how the app is installed, run or updated
   what to try when it cannot find it, and why it stopped when it stops with an error.
 - Far off the route, the overlay says so, with the number of the next point and which way it
   lies.
+- A Feathers button beside Cubes leaves the route's points on Empyrean Traces out of the map,
+  the checklist and the step count. Turned back on, they return with your progress kept.
 
 ### Fixed
 

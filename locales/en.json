@@ -386,7 +386,9 @@
       "checklist": "Show the checklist over the game: the next points of the route",
       "checklistShort": "Checklist",
       "cubes": "Show the map's hidden cubes over the game, all of them, each in a ring",
-      "cubesShort": "Cubes"
+      "cubesShort": "Cubes",
+      "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
+      "tracesShort": "Feathers"
     },
     "settings": {
       "advanced": "Advanced",

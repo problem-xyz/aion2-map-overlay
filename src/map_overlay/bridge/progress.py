@@ -5,6 +5,7 @@ worth testing, and it is pure arithmetic over the route document once the caller
 the player's position into route coordinates.
 """
 
+import bisect
 import logging
 import math
 
@@ -74,6 +75,16 @@ class ProgressTracker(QObject):
     def __init__(self, store, parent=None) -> None:
         super().__init__(parent)
         self._store = store
+        # The points of the whole route the player is shown, by index, when some are left out;
+        # None when all are. The count is kept over the whole route either way, so that turning
+        # the feathers back on finds the progress where it was.
+        self._kept: list[int] | None = None
+        self._whole = 0
+
+    def set_view(self, kept, whole) -> None:
+        """Count over the `kept` points of a route `whole` points long, or over all with None."""
+        self._kept = None if kept is None else list(kept)
+        self._whole = int(whole)
 
     @property
     def _progress(self):
@@ -83,6 +94,8 @@ class ProgressTracker(QObject):
         """How many points of the open route are done, within its length when doc is given."""
         route = self._store.state.route
         done = int(self._progress.get(route, 0)) if route else 0
+        if self._kept is not None:
+            done = bisect.bisect_left(self._kept, done)  # the points shown before the next one
         if doc:
             done = min(done, len(doc["markers"]))
         return max(0, done)
@@ -92,9 +105,12 @@ class ProgressTracker(QObject):
         route = self._store.state.route
         total = len(doc["markers"]) if doc else 0
         done = max(0, min(int(done), total))
-        if not route or self._progress.get(route, 0) == done:
+        # The points left out before the next one shown count as passed with the one before it.
+        kept = self._kept
+        whole = done if kept is None else (kept[done] if done < len(kept) else self._whole)
+        if not route or self._progress.get(route, 0) == whole:
             return False
-        self._store.set_state(progress={**self._progress, route: done})
+        self._store.set_state(progress={**self._progress, route: whole})
         self.changed.emit(done, total)
         return True
 

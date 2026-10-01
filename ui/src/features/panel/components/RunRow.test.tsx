@@ -36,6 +36,7 @@ function mount(props: Partial<RunRowProps> = {}) {
     checklistVisible: false,
     overlayVisible: true,
     cubesVisible: false,
+    tracesVisible: true,
     captureVisible: false,
     captureExclusion: true,
     onStart: vi.fn(),
@@ -43,6 +44,7 @@ function mount(props: Partial<RunRowProps> = {}) {
     onChecklistVisible: vi.fn(),
     onOverlayVisible: vi.fn(),
     onCubesVisible: vi.fn(),
+    onTracesVisible: vi.fn(),
     onCaptureVisible: vi.fn(),
     ...props,
   };

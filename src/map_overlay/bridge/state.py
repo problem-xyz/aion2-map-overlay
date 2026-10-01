@@ -222,7 +222,9 @@ def steps_state(settings, state) -> StepsPayload:
 # 22: banner, the advertising banner that ships with the app, whose url openUrl() opens.
 # 23: settings has show_cubes and cube_radius: the map's hidden cubes over the game, each in a
 #     ring; overlayVisible governs the route alone, and the overlay is up while either is drawn.
-API_VERSION = 23
+# 24: settings has route_traces; off, the route's feather points are left out of the overlay, the
+#     plaque and the progress, whose done, total and markers count only the points shown.
+API_VERSION = 24
 
 
 def build_state(
