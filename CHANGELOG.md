@@ -19,7 +19,9 @@ changes are left out unless they change how the app is installed, run or updated
 - The overlay says what it is doing over the map itself: that it is looking for the map, and
   what to try when it cannot find it, and why it stopped when it stops with an error.
 - Far off the route, the overlay says so, with the number of the next point and which way it
-  lies.
+  lies. It draws the whole route, faded, so you can see where it runs, and a next point off the
+  map gets its number on the edge, pointing its way. Standing at a later point of the route, you
+  are asked whether to go on from there, with a Yes and a No to click.
 - A Feathers button leaves the route's points on Empyrean Traces out of the map, the checklist
   and the step count, and a Dungeons button does the same for sealed dungeons. Turned back on,
   they return with your progress kept. Both sit with Cubes in a row of their own under Start.

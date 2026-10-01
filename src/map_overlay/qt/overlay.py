@@ -32,6 +32,8 @@ MARKER_R = 11  # radius of the numbered circle, screen pixels
 ARROW_L = 14  # arrow length along the segment
 ARROW_W = 12  # arrow width across it
 MIN_SEGMENT = 2 * ARROW_L  # no arrow is drawn on a very short segment
+POINTER_L = 12  # the pointer to a next point off the map area: how far it reaches past the circle
+POINTER_W = 14  # and how wide it is at the circle
 # Faded is how the part of the route away from the next steps is drawn, where it is drawn at
 # all: without arrows, at this share of the overlay's opacity. Drawn whole and alike, a route
 # that loops about a village was a tangle nobody could read the way on from.
@@ -186,6 +188,9 @@ class OverlayWindow(ClickThroughWindow):
         self._lost_at = time.monotonic()  # since when there is no transform
         self._error = None  # (title, detail) the run ended with, shown until cleared
         self._far = None  # (title, detail) while the player is far off the route
+        self._covered = (
+            0  # how much of the bottom a question window takes, which no strip sits under
+        )
         self._marquee = None  # (title, detail) the running line is of, and since when it runs
         self._marquee_since = 0.0
         self._ui_scale = system_dpi_scale()
@@ -209,6 +214,16 @@ class OverlayWindow(ClickThroughWindow):
         notice = None if notice is None else (str(notice[0]), str(notice[1]))
         if notice != self._far:
             self._far = notice
+            self.update()
+
+    def set_covered(self, height) -> None:
+        """A question window over the bottom `height` px of the map area; 0 once it is gone.
+
+        The strip it covers is not drawn, nor the pointer under it.
+        """
+        height = max(0, int(height))
+        if height != self._covered:
+            self._covered = height
             self.update()
 
     def has_error(self) -> bool:
@@ -322,16 +337,63 @@ class OverlayWindow(ClickThroughWindow):
             self._paint_cubes(p)
             if self._route_on:
                 self._paint_route(p)
+                # clear of the strip, which would otherwise sit over a pointer at the bottom
+                strip = 48 * self._ui_scale if notice is not None else 0
+                self._paint_pointer(p, max(strip, self._covered))
         if notice is not None:
             self._draw_notice(p, *notice)
         p.end()
+
+    def _paint_pointer(self, p, bottom) -> None:
+        """The next point's number on the edge of the map area, pointing at it, when it is off it.
+
+        Someone lost does not know which way the route is: this says, and how far it turns as
+        they walk says how near they are getting. `bottom` is the room the strip takes.
+        """
+        if self._M is None or self._pts is None or self._done >= len(self._pts):
+            return
+        target = cv2.perspectiveTransform(
+            self._pts[self._done : self._done + 1], self._M.astype(np.float32)
+        ).reshape(2)
+        w, h = self.width(), self.height() - bottom
+        if not np.all(np.isfinite(target)):
+            return
+        if MARKER_R <= target[0] <= w - MARKER_R and MARKER_R <= target[1] <= h - MARKER_R:
+            return  # on the map area: the route itself shows it
+        inset = MARKER_R + POINTER_L + 4
+        if w <= 2 * inset or h <= 2 * inset:
+            return
+        centre = np.array([w / 2, h / 2])
+        d = target - centre
+        # how far along d the inset edge is, the nearer of the two sides it is headed for
+        k = min(
+            (w / 2 - inset) / abs(d[0]) if d[0] else np.inf,
+            (h / 2 - inset) / abs(d[1]) if d[1] else np.inf,
+        )
+        at = centre + d * k
+        u = d / float(np.hypot(*d))
+        n = np.array([-u[1], u[0]])
+        color = self._color_at(self._done)
+        tip = at + u * (MARKER_R + POINTER_L)
+        base = at + u * (MARKER_R + 1)
+        head = QPainterPath(QPointF(*tip))
+        head.lineTo(QPointF(*(base + n * POINTER_W / 2)))
+        head.lineTo(QPointF(*(base - n * POINTER_W / 2)))
+        head.closeSubpath()
+        p.setOpacity(self._opacity)
+        p.setPen(QPen(LINE_DARK, 2))
+        p.setBrush(color)
+        p.drawPath(head)
+        self._draw_markers(p, at.reshape(1, 2), self._done)
 
     def _notice(self):
         """(title, detail, accent) for the strip over the map, or None for no strip."""
         if self._error is not None:
             return (*self._error, ERROR_COLOR)
         if self._T is not None:
-            return None if self._far is None else (*self._far, FAR_COLOR)
+            if self._far is None or self._covered:
+                return None
+            return (*self._far, FAR_COLOR)
         lost = time.monotonic() - self._lost_at
         if lost < NOTICE_DELAY_S:
             return None
@@ -483,6 +545,10 @@ class OverlayWindow(ClickThroughWindow):
         if done >= total:
             return
         mode, ahead, past = self._view
+        if self._far is not None and mode == "steps":
+            # Far off the route, the next steps alone do not say where it is: the whole of it,
+            # faded, does, and which part of it is nearest.
+            mode = "dim"
         bright = total if mode == "all" else min(total, done + ahead)  # past the last bright one
         first, last = (max(0, done - past), bright) if mode == "steps" else (0, total)
         window = self._pts[first:last]

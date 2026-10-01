@@ -18,6 +18,7 @@ from PySide6.QtCore import QObject, Signal
 
 from map_overlay.qt.editor_window import EditorWindow
 from map_overlay.qt.overlay import OverlayWindow, primary_screen_geometry
+from map_overlay.qt.prompt import PromptWindow
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.steps_window import WebStepsWindow
 
@@ -48,6 +49,7 @@ class WindowManager(QObject):
         self.dev = bool(dev)
         self.overlay = OverlayWindow()
         self.steps = WebStepsWindow(dev)
+        self.prompt = PromptWindow()
         self._selector = None
         self._editor = None
 
@@ -60,6 +62,7 @@ class WindowManager(QObject):
         """
         self.overlay.retitle()
         self.steps.retitle()
+        self.prompt.retitle()
         if self._editor is not None:
             self._editor.retitle()
         if self._selector is not None:
@@ -82,6 +85,7 @@ class WindowManager(QObject):
         was_steps = self.steps.isVisible()
         self.overlay.hide()
         self.steps.hide()
+        self.prompt.hide()  # about where the map area was; the next position asks again
 
         selector = RegionSelector(primary_screen_geometry(), prompt)
         self._selector = selector
@@ -180,6 +184,7 @@ class WindowManager(QObject):
         self.close_editor()
         self.steps.hide()
         self.overlay.hide()
+        self.prompt.hide()
 
     def shutdown(self) -> None:
         if self._selector is not None:
@@ -199,3 +204,5 @@ class WindowManager(QObject):
         self.steps.deleteLater()
         self.overlay.close()
         self.overlay.deleteLater()
+        self.prompt.close()
+        self.prompt.deleteLater()

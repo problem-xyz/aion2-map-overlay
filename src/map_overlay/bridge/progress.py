@@ -38,6 +38,37 @@ def compass(dx, dy) -> str:
     return COMPASS[round(angle / 45) % 8]
 
 
+def _in_route_pixels(x, y, doc, ref_size):
+    """The player's position in the route's coordinates, and the map's width there; or None."""
+    if not (doc and doc["markers"] and ref_size):
+        return None
+    mw, mh = doc["mapSize"]
+    rw, rh = ref_size
+    if min(mw, mh, rw, rh) <= 0:
+        return None
+    return x * mw / rw, y * mh / rh, mw
+
+
+def rejoin_at(x, y, doc, done, ref_size, *, radius):
+    """The first point past the next one the player stands at, by index, or None.
+
+    For a player who lost the route: they may have walked on to a later point, and the route
+    can go on from there. The first such point, not the furthest: a route that comes back to a
+    spot -- a teleport -- would otherwise skip the whole loop between. `radius` is the arrival
+    radius as a share of the map's width.
+    """
+    where = _in_route_pixels(x, y, doc, ref_size)
+    if where is None:
+        return None
+    px, py, mw = where
+    reach = float(radius) * mw
+    for i in range(done + 1, len(doc["markers"])):
+        m = doc["markers"][i]
+        if math.hypot(m["x"] - px, m["y"] - py) <= reach:
+            return i
+    return None
+
+
 def off_route(x, y, doc, done, ref_size, *, was_off=False):
     """(index of the next point, the way to it) when the player is far off the route, else None.
 
@@ -45,13 +76,10 @@ def off_route(x, y, doc, done, ref_size, *, was_off=False):
     or from the first point before any is passed: walking that leg is on the route however long
     it is. Player position in reference pixels, as on_player takes it.
     """
-    if not (doc and doc["markers"] and ref_size) or done >= len(doc["markers"]):
+    where = _in_route_pixels(x, y, doc, ref_size)
+    if where is None or done >= len(doc["markers"]):
         return None
-    mw, mh = doc["mapSize"]
-    rw, rh = ref_size
-    if min(mw, mh, rw, rh) <= 0:
-        return None
-    px, py = x * mw / rw, y * mh / rh
+    px, py, mw = where
     markers = doc["markers"]
     target = markers[done]
     start = markers[done - 1] if done > 0 else target

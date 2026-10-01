@@ -190,6 +190,13 @@
         "nw": "to the north-west"
       }
     },
+    "prompt": {
+      "yes": "Yes",
+      "no": "No",
+      "rejoinTitle": "You are at point {n}",
+      "rejoinOne": "Go on from here? Point {first} will be ticked off as skipped.",
+      "rejoinMany": "Go on from here? Points {first}–{last} will be ticked off as skipped."
+    },
     "selector": {
       "prompt": "Drag out the area where the game shows the map.   Esc cancels",
       "promptStart": "Drag out the area where the game shows the map: the overlay starts as soon as it is drawn.   Esc cancels"
@@ -204,7 +211,8 @@
       "editor": "Route editor",
       "overlay": "Route overlay",
       "selector": "Select area",
-      "steps": "Checklist"
+      "steps": "Checklist",
+      "prompt": "Route question"
     }
   },
   "notify": {

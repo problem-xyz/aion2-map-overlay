@@ -70,7 +70,7 @@ from PySide6.QtCore import QLocale, QObject, QTimer, Signal, Slot
 from map_overlay import __version__
 from map_overlay.bridge.engine_controller import EngineController, Phase
 from map_overlay.bridge.notifier import Notifier
-from map_overlay.bridge.progress import ProgressTracker, off_route
+from map_overlay.bridge.progress import ProgressTracker, off_route, rejoin_at
 from map_overlay.bridge.route_service import RouteService
 from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
@@ -141,6 +141,10 @@ class Backend(QObject):
     # The open route as the player is shown it, which _shown_part builds; the same object as the
     # route's own document while nothing is left out of it.
     _view_doc: Any = None  # a RouteDoc or None, untyped as RouteService.active_doc is
+    # The later point the player was asked to go on from, and the one they said no to, by index
+    # in the route as shown; class defaults for the same reason.
+    _rejoin: int | None = None
+    _rejoin_declined: int | None = None
 
     def __init__(
         self,
@@ -190,8 +194,7 @@ class Backend(QObject):
         self._capture_exclusion = self._probe_capture_exclusion()
 
         self._windows = WindowManager(dev, self)
-        self.overlay.set_recordable(self._recordable)
-        self._setup_steps()
+        self._setup_windows()
 
         self.engine = EngineController(self, cache_dir=dirs.cache)
         self.engine.transformChanged.connect(self.overlay.set_transform)
@@ -441,6 +444,36 @@ class Backend(QObject):
             return
         done = self._progress.done_count(doc)
         self._set_off_route(off_route(x, y, doc, done, size, was_off=self._off_route is not None))
+        if self._off_route is not None and self.state.region:
+            ahead = rejoin_at(x, y, doc, done, size, radius=self.settings.arrive_radius)
+            asked = ahead == self._rejoin and self._windows.prompt.asking()
+            if ahead is not None and ahead != self._rejoin_declined and not asked:
+                self._ask_rejoin(ahead, done)
+
+    def _ask_rejoin(self, ahead, done) -> None:
+        """Off the route and at a later point of it: ask whether to go on from there."""
+        self._rejoin = ahead
+        skipped = (done + 1, ahead) if ahead > done + 1 else None
+        detail = (
+            t("native.prompt.rejoinMany", n=ahead + 1, first=done + 1, last=ahead)
+            if skipped
+            else t("native.prompt.rejoinOne", n=ahead + 1, first=done + 1)
+        )
+        title = t("native.prompt.rejoinTitle", n=ahead + 1)
+        self._windows.prompt.ask(self.state.region, title, detail)
+        self.overlay.set_covered(self._windows.prompt.height())
+
+    def _on_rejoin_answer(self, yes) -> None:
+        self.overlay.set_covered(0)
+        ahead, self._rejoin = self._rejoin, None
+        if ahead is None:
+            return
+        if yes:
+            # The progress change takes the strip and the question with it.
+            self._progress.set_done(ahead + 1, self._view_doc)
+            self._emit_state()
+        else:
+            self._rejoin_declined = ahead  # not asked about this point again until it moves on
 
     def _set_off_route(self, off) -> None:
         """Tell the overlay the player is far off the route, which point is next and which way."""
@@ -449,6 +482,10 @@ class Backend(QObject):
         self._off_route = off
         if off is None:
             self.overlay.set_far(None)
+            # back on the route, or the route or its progress changed: the question is over
+            self._rejoin = self._rejoin_declined = None
+            self._windows.prompt.hide()
+            self.overlay.set_covered(0)
             return
         index, way = off
         detail = t("native.overlay.far", n=index + 1, way=t(f"native.overlay.way.{way}"))
@@ -653,6 +690,8 @@ class Backend(QObject):
         STARTING is where the overlay is shown, both for a Start and for a Start that was
         parked while the previous run stopped and is replayed only after its IDLE.
         """
+        if phase is Phase.IDLE:
+            self._set_off_route(None)  # the run is over, and with it any question about it
         if phase is Phase.IDLE and not self.overlay.has_error():
             self.overlay.hide()  # an error stays up a while, saying why; see _on_engine_failed
         if phase is Phase.STARTING:
@@ -680,8 +719,7 @@ class Backend(QObject):
     def setCaptureVisible(self, visible: bool) -> None:
         """Whether screen recorders (OBS, Discord, Game Bar) see the overlay."""
         self._store.update_settings({"capture_visible": bool(visible)})
-        self.overlay.set_recordable(self._recordable)
-        self.steps.set_recordable(self._recordable)
+        self._apply_recordable()
         if self.settings.capture_visible:
             self._notify("info", "overlay.capture_visible_on")
         self._emit_state()
@@ -733,8 +771,7 @@ class Backend(QObject):
         self.steps.set_opacity(after.opacity)
         self._apply_route_view(after)
         if before.capture_visible != after.capture_visible:
-            self.overlay.set_recordable(self._recordable)
-            self.steps.set_recordable(self._recordable)
+            self._apply_recordable()
         if before.steps_pinned != after.steps_pinned:
             self.steps.set_pinned(after.steps_pinned)
         if before.steps_scale != after.steps_scale:
@@ -806,9 +843,18 @@ class Backend(QObject):
                 self._store.set_state(steps_hint_shown=True)
                 self._notifier.post("info", "steps.drag_hint")
 
+    def _setup_windows(self) -> None:
+        """The windows over the game told whether recorders see them; the plaque laid out."""
+        self._apply_recordable()
+        self._windows.prompt.answered.connect(self._on_rejoin_answer)
+        self._setup_steps()
+
+    def _apply_recordable(self) -> None:
+        for window in (self.overlay, self.steps, self._windows.prompt):
+            window.set_recordable(self._recordable)
+
     def _setup_steps(self) -> None:
         window = self.steps
-        window.set_recordable(self._recordable)
         window.set_scale(self.settings.steps_scale)
         window.set_past(self.settings.route_past)
         window.set_pinned(self.settings.steps_pinned)
