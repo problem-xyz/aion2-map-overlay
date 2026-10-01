@@ -1,4 +1,4 @@
-"""The card at the top of the map area that says what the overlay is doing when it shows no route.
+"""The card amid the map area that says what the overlay is doing when it shows no route.
 
 While the map is not found it says the overlay is looking for it -- not at once, since detection
 drops the map for a frame or two all the time, and later with what to do about it. When a run
@@ -22,7 +22,7 @@ from map_overlay.qt import overlay as overlay_module
 from map_overlay.qt.overlay import HINT_DELAY_S, NOTICE_DELAY_S, OverlayWindow
 
 WIDTH, HEIGHT = 400, 300
-CARD = (WIDTH // 2, 14)  # in the card's top padding, above its text
+CARD = (13, HEIGHT // 2)  # in the card's left padding, before its dot
 
 
 @pytest.fixture

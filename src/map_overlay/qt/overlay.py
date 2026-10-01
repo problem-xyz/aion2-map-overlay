@@ -43,7 +43,7 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 8
 CUBE_RING = QColor("#ff7a5c")
-# The card at the top of the map area that tells the player what the overlay is doing when it has
+# The card in the middle of the map area that tells the player what the overlay is doing when it has
 # no route to show. A map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it
 # for a frame or two all the time, and a card blinking over the map is worse than none. Past
 # HINT_DELAY_S the card says what to do about it.
@@ -306,7 +306,7 @@ class OverlayWindow(ClickThroughWindow):
         return t("native.overlay.searching"), hint, SEARCH_COLOR
 
     def _draw_notice(self, p, title, detail, accent) -> None:
-        """A dark card at the top of the map area: a coloured dot, a bold line, a hint under it."""
+        """A dark card amid the map area: a coloured dot, a bold line, a hint under it."""
         margin, pad, dot, gap = 10, 10, 8, 8
         width = min(self.width() - 2 * margin, 380)
         text_w = width - 2 * pad - dot - gap
@@ -325,7 +325,7 @@ class OverlayWindow(ClickThroughWindow):
             else QRect()
         )
         height = 2 * pad + title_box.height() + (4 + detail_box.height() if detail else 0)
-        card = QRectF((self.width() - width) / 2, margin, width, height)
+        card = QRectF((self.width() - width) / 2, (self.height() - height) / 2, width, height)
 
         p.setOpacity(max(self._opacity, 0.85))  # a card nobody can read says nothing
         p.setPen(QPen(NOTICE_BORDER, 1))
