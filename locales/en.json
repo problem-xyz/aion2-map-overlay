@@ -176,7 +176,19 @@
       "searching": "Looking for the map…",
       "searchingHint": "Open the map in the game. If it is open, select the map area again in the panel.",
       "stopped": "The overlay stopped",
-      "crashedHint": "Press Start overlay again. If it keeps stopping, tell us on Discord."
+      "crashedHint": "Press Start overlay again. If it keeps stopping, tell us on Discord.",
+      "farTitle": "You are off the route",
+      "far": "Point {n} is {way}. If you have been there, tick it off on the checklist.",
+      "way": {
+        "n": "to the north",
+        "ne": "to the north-east",
+        "e": "to the east",
+        "se": "to the south-east",
+        "s": "to the south",
+        "sw": "to the south-west",
+        "w": "to the west",
+        "nw": "to the north-west"
+      }
     },
     "selector": {
       "prompt": "Drag out the area where the game shows the map.   Esc cancels",

@@ -18,6 +18,8 @@ changes are left out unless they change how the app is installed, run or updated
 - With Cubes on, the overlay starts without a route: it asks which map to show the cubes on.
 - The overlay says what it is doing over the map itself: that it is looking for the map, and
   what to try when it cannot find it, and why it stopped when it stops with an error.
+- Far off the route, the overlay says so, with the number of the next point and which way it
+  lies.
 
 ### Fixed
 

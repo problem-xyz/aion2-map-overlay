@@ -70,7 +70,7 @@ from PySide6.QtCore import QLocale, QObject, QTimer, Signal, Slot
 from map_overlay import __version__
 from map_overlay.bridge.engine_controller import EngineController, Phase
 from map_overlay.bridge.notifier import Notifier
-from map_overlay.bridge.progress import ProgressTracker
+from map_overlay.bridge.progress import ProgressTracker, off_route
 from map_overlay.bridge.route_service import RouteService
 from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
@@ -135,6 +135,9 @@ class Backend(QObject):
     # Counts the errors the overlay was given to show, so that the timer of one already cleared
     # does not clear the next. A class default: Backend.__init__ is at its statement limit.
     _overlay_error_shown = 0
+    # (index of the next point, the way to it) while the player is far off the route, else None.
+    # A class default for the same reason.
+    _off_route: tuple[int, str] | None = None
 
     def __init__(
         self,
@@ -358,6 +361,7 @@ class Backend(QObject):
             done=self._progress.done_count(doc),
             name=doc["name"] if doc else "",
         )
+        self._set_off_route(None)
         self._apply_cubes()
         self._sync_steps()
 
@@ -389,6 +393,7 @@ class Backend(QObject):
         self._progress.set_done(done, self._routes.active_doc)
 
     def _on_progress_changed(self, done, total) -> None:
+        self._set_off_route(None)  # the next point moved: the next position says where it is
         doc = self._routes.active_doc
         self._windows.apply_progress(
             steps_of(doc, self._step_objects),
@@ -402,9 +407,25 @@ class Backend(QObject):
         """Player position arrived in reference pixels: is the next point reached?"""
         doc = self._routes.active_doc
         meta = self._map_meta(doc["map"]) if doc else None
-        reached = self._progress.on_player(x, y, doc, meta["size"] if meta else None)
+        size = meta["size"] if meta else None
+        reached = self._progress.on_player(x, y, doc, size)
         if reached is not None:
             self._progress.set_done(reached, doc)
+            return
+        done = self._progress.done_count(doc)
+        self._set_off_route(off_route(x, y, doc, done, size, was_off=self._off_route is not None))
+
+    def _set_off_route(self, off) -> None:
+        """Tell the overlay the player is far off the route, which point is next and which way."""
+        if off == self._off_route:
+            return
+        self._off_route = off
+        if off is None:
+            self.overlay.set_far(None)
+            return
+        index, way = off
+        detail = t("native.overlay.far", n=index + 1, way=t(f"native.overlay.way.{way}"))
+        self.overlay.set_far((t("native.overlay.farTitle"), detail))
 
     @Slot(int)
     def setProgress(self, done: int) -> None:
@@ -562,6 +583,7 @@ class Backend(QObject):
             return
         self.overlay.set_transform(None)
         self._clear_overlay_error()
+        self._set_off_route(None)
         self.overlay.hide()
         self._emit_state()
 

@@ -64,13 +64,13 @@ def test_a_map_just_lost_is_not_announced(overlay: OverlayWindow) -> None:
 def test_a_map_not_found_for_a_while_puts_the_card_up(overlay: OverlayWindow) -> None:
     lost_for(overlay, NOTICE_DELAY_S + 0.1)
 
-    title, hint, _accent = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
+    title, hint, _accent, _top = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
     assert title
     assert hint == ""  # not yet
     assert card(frame(overlay))
 
     lost_for(overlay, HINT_DELAY_S)
-    _title, hint, _accent = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
+    _title, hint, _accent, _top = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
     assert hint
 
 
@@ -86,11 +86,34 @@ def test_an_error_is_shown_at_once_and_stays_until_cleared(overlay: OverlayWindo
     overlay.set_transform(np.eye(3))
     overlay.show_error("Stopped", "Press Start again.")
 
-    assert overlay._notice() == ("Stopped", "Press Start again.", overlay_module.ERROR_COLOR)
+    assert overlay._notice() == ("Stopped", "Press Start again.", overlay_module.ERROR_COLOR, False)
     assert card(frame(overlay))
 
     overlay.clear_error()
     assert overlay._notice() is None
+
+
+def test_off_the_route_the_card_goes_on_top_beside_the_route(overlay: OverlayWindow) -> None:
+    overlay.set_transform(np.eye(3))
+    overlay.set_far(("Off the route", "Point 2 is to the north."))
+
+    assert overlay._notice() == (
+        "Off the route",
+        "Point 2 is to the north.",
+        overlay_module.FAR_COLOR,
+        True,
+    )
+    assert overlay._T is not None  # the route is still drawn under it
+
+
+def test_a_lost_map_says_so_rather_than_off_the_route(overlay: OverlayWindow) -> None:
+    overlay.set_transform(np.eye(3))
+    overlay.set_far(("Off the route", "Point 2 is to the north."))
+    overlay.set_transform(None)
+    lost_for(overlay, NOTICE_DELAY_S + 0.1)
+
+    _title, _hint, accent, top = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
+    assert (accent, top) == (overlay_module.SEARCH_COLOR, False)
 
 
 # ------------------------------------------------------------------ the backend's part
@@ -108,7 +131,7 @@ def backend(qapp: QApplication, dirs: DataDirs) -> Iterator[Backend]:
 def test_a_crash_says_what_to_do_not_what_opencv_said(backend: Backend) -> None:
     backend._on_engine_failed("OpenCV(5.0.0) lkpyramid.cpp:1185: error: (-215:Assertion failed)")
 
-    title, detail, _accent = backend.overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
+    title, detail, _accent, _top = backend.overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
     en = json.loads(Path("locales/en.json").read_text(encoding="utf-8"))["native"]["overlay"]
     assert (title, detail) == (en["stopped"], en["crashedHint"])
 
@@ -116,7 +139,7 @@ def test_a_crash_says_what_to_do_not_what_opencv_said(backend: Backend) -> None:
 def test_a_known_error_is_told_in_its_own_words(backend: Backend) -> None:
     backend._on_engine_failed("vision.detector_broken")
 
-    _title, detail, _accent = backend.overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
+    _title, detail, _accent, _top = backend.overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
     assert "did not recover" in detail
 
 

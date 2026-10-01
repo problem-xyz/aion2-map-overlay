@@ -55,6 +55,7 @@ NOTICE_TITLE = QColor("#f2f4f8")
 NOTICE_TEXT = QColor("#aeb6c4")
 SEARCH_COLOR = QColor("#f2b544")
 ERROR_COLOR = QColor("#ef5b5b")
+FAR_COLOR = QColor("#6ea8ff")
 
 
 def marker_color(marker, route_color, index, total):
@@ -173,6 +174,7 @@ class OverlayWindow(ClickThroughWindow):
         self._view = ("steps", 3, 3)  # Settings.route_view, route_ahead, route_past
         self._lost_at = time.monotonic()  # since when there is no transform
         self._error = None  # (title, detail) the run ended with, shown until cleared
+        self._far = None  # (title, detail) while the player is far off the route
 
     def show_error(self, title, detail) -> None:
         """Say why the run ended, in place of the route, until clear_error()."""
@@ -182,6 +184,13 @@ class OverlayWindow(ClickThroughWindow):
     def clear_error(self) -> None:
         if self._error is not None:
             self._error = None
+            self.update()
+
+    def set_far(self, notice) -> None:
+        """(title, detail) to say the player is far off the route, or None once they are not."""
+        notice = None if notice is None else (str(notice[0]), str(notice[1]))
+        if notice != self._far:
+            self._far = notice
             self.update()
 
     def has_error(self) -> bool:
@@ -294,19 +303,24 @@ class OverlayWindow(ClickThroughWindow):
         p.end()
 
     def _notice(self):
-        """(title, detail, accent) for the card over the map, or None for no card."""
+        """(title, detail, accent, on top) for the card over the map, or None for no card.
+
+        A card in place of the route goes in the middle, where the player looks. The one beside
+        the route, saying it is far, goes on top: the player walks on with it, and in the middle
+        it would sit over them.
+        """
         if self._error is not None:
-            return (*self._error, ERROR_COLOR)
+            return (*self._error, ERROR_COLOR, False)
         if self._T is not None:
-            return None
+            return None if self._far is None else (*self._far, FAR_COLOR, True)
         lost = time.monotonic() - self._lost_at
         if lost < NOTICE_DELAY_S:
             return None
         hint = t("native.overlay.searchingHint") if lost >= HINT_DELAY_S else ""
-        return t("native.overlay.searching"), hint, SEARCH_COLOR
+        return t("native.overlay.searching"), hint, SEARCH_COLOR, False
 
-    def _draw_notice(self, p, title, detail, accent) -> None:
-        """A dark card amid the map area: a coloured dot, a bold line, a hint under it."""
+    def _draw_notice(self, p, title, detail, accent, top) -> None:
+        """A dark card over the map area: a coloured dot, a bold line, a hint under it."""
         margin, pad, dot, gap = 10, 10, 8, 8
         width = min(self.width() - 2 * margin, 380)
         text_w = width - 2 * pad - dot - gap
@@ -325,7 +339,8 @@ class OverlayWindow(ClickThroughWindow):
             else QRect()
         )
         height = 2 * pad + title_box.height() + (4 + detail_box.height() if detail else 0)
-        card = QRectF((self.width() - width) / 2, (self.height() - height) / 2, width, height)
+        y = margin if top else (self.height() - height) / 2
+        card = QRectF((self.width() - width) / 2, y, width, height)
 
         p.setOpacity(max(self._opacity, 0.85))  # a card nobody can read says nothing
         p.setPen(QPen(NOTICE_BORDER, 1))
