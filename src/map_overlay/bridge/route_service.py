@@ -178,12 +178,17 @@ class RouteService:
             doc = self.route_doc(route_id)
         except AppError, OSError:
             return None, None, RouteError("route.required")
-        ref = self.reference_for_map(doc["map"])
+        _none, ref, error = self.runnable_map(doc["map"])
+        return (None, None, error) if error else (doc, ref, None)
+
+    def runnable_map(self, map_id):
+        """(None, reference_path, error) for starting the engine on a map with no route."""
+        ref = self.reference_for_map(map_id)
         if ref is None:
-            return None, None, MapError("map.unknown", id=doc["map"])
+            return None, None, MapError("map.unknown", id=map_id)
         if not ref.exists():
             return None, None, MapError("map.reference_missing", path=str(ref))
-        return doc, ref, None
+        return None, ref, None
 
     def parse_save_payload(self, payload):
         """(route_id, doc, error) for the editor's save call."""

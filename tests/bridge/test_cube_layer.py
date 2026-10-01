@@ -7,6 +7,7 @@ overlay is handed none while the switch is off, and the ring's radius follows th
 import json
 from collections.abc import Callable, Iterator
 from pathlib import Path
+from typing import Any
 
 import pytest
 from PySide6.QtWidgets import QApplication
@@ -89,3 +90,63 @@ def test_the_arrows_switch_leaves_the_cubes_alone(backend: Backend) -> None:
 
     assert not backend.overlay._route_on
     assert drawn(backend) == len(CUBES)
+
+
+@pytest.fixture
+def no_route(qapp: QApplication, dirs: DataDirs, shipped_set: Path) -> Iterator[Backend]:
+    made = Backend(dirs)
+    made._store.set_state(region={"left": 0, "top": 0, "width": 200, "height": 200})
+    made._revalidate_screens = lambda: False
+    try:
+        yield made
+    finally:
+        made.shutdown()
+
+
+def record_start(backend: Backend, monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
+    starts: list[dict[str, Any]] = []
+    monkeypatch.setattr(backend.engine, "start", lambda **config: starts.append(config))
+    return starts
+
+
+def test_with_the_cubes_on_a_start_with_no_route_asks_the_map_and_runs_on_it(
+    no_route: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    starts = record_start(no_route, monkeypatch)
+    asked: list[list[str]] = []
+
+    def choose(_title: str, _label: str, items: list[str], _current: int = 0) -> str:
+        asked.append(items)
+        return "Altgard"
+
+    monkeypatch.setattr(no_route._dialogs, "ask_choice", choose)
+    no_route.updateSettings(json.dumps({"show_cubes": True}))
+    no_route.start()
+
+    assert asked == [["Altgard", "Verteron"]]
+    assert len(starts) == 1
+    assert Path(starts[0]["reference"]).parent.name == "altgard"
+    assert drawn(no_route) == len(CUBES)
+
+
+def test_a_start_with_no_route_and_the_cubes_off_is_refused(
+    no_route: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    starts = record_start(no_route, monkeypatch)
+    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: pytest.fail("asked"))
+
+    no_route.start()
+
+    assert starts == []
+
+
+def test_cancelling_the_map_starts_nothing(
+    no_route: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    starts = record_start(no_route, monkeypatch)
+    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: None)
+    no_route.updateSettings(json.dumps({"show_cubes": True}))
+
+    no_route.start()
+
+    assert starts == []

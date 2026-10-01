@@ -152,6 +152,8 @@ class Backend(QObject):
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
         self._cubes: list[tuple[float, float]] = []  # the route's map's hidden cubes, reference px
+        # The map a Start with no route was run on, for its cubes alone; a route's map wins.
+        self._free_map: str | None = None
         self.overlay_visible = True
 
         self._editor_req = {"seq": 0, "id": None, "doc": None}
@@ -333,16 +335,17 @@ class Backend(QObject):
         self._routes.active_doc = doc
         # What each point sits on, for the plaque's icons: worked out once per route, not on
         # every point passed
-        sets = self._routes.load_objects(doc["map"]) if doc else []
+        map_id = doc["map"] if doc else self._free_map
+        sets = self._routes.load_objects(map_id) if map_id else []
         self._step_objects = self._objects_under(doc, sets)
-        meta = self._map_meta(doc["map"]) if doc else None
+        meta = self._map_meta(map_id) if map_id else None
         self._cubes = cube_points(sets, meta["size"]) if meta else []
         # The ring shows where a point ticks itself off. With auto marking off nothing does, so
         # it is left out, like the crosshair in the preview; updateSettings redraws on the switch.
         radius = self.settings.arrive_radius if self.settings.auto_progress else 0.0
         self._windows.apply_route(
             doc,
-            ref_size=meta["size"] if meta else None,
+            ref_size=meta["size"] if doc and meta else None,
             arrive_radius=radius,
             steps=steps_of(doc, self._step_objects),
             done=self._progress.done_count(doc),
@@ -494,7 +497,10 @@ class Backend(QObject):
         # The layout may have changed less than a settle interval ago, before the watcher fired.
         if self._revalidate_screens():
             return
-        doc, ref, error = self._routes.runnable_route(self.route)
+        # With the Cubes switch on there is something to draw without a route: the map's cubes.
+        # The map is then asked for, after the map area, so that a first Start asks it once.
+        free = not self.route and self.settings.show_cubes
+        doc, ref, error = (None, None, None) if free else self._routes.runnable_route(self.route)
         if error:
             self._notifier.from_error(error)
             return
@@ -504,6 +510,10 @@ class Backend(QObject):
             # leaves things as they were, and nothing starts.
             self._pick_region(RegionSelector.START_PROMPT, self._start_in)
             return
+        if free:
+            ref = self._ask_free_map()
+            if ref is None:
+                return
 
         self._apply_route(doc)
         scr = primary_screen_geometry()
@@ -516,6 +526,27 @@ class Backend(QObject):
         # The overlay comes up with STARTING, in _on_engine_phase: a Start pressed while the
         # last run is still stopping is parked, and the IDLE that ends that run hides it.
         self._emit_state()
+
+    def _ask_free_map(self):
+        """Which map a Start with no route runs on: its reference, or None if cancelled."""
+        maps = self._routes.maps()
+        if not maps:
+            return None
+        labels = [m["label"] for m in maps]
+        ids = [m["id"] for m in maps]
+        current = ids.index(self._free_map) if self._free_map in ids else 0
+        choice = self._dialogs.ask_choice(
+            t("native.dialog.cubesMap"), t("native.dialog.cubesMapPrompt"), labels, current
+        )
+        if choice is None:
+            return None
+        map_id = ids[labels.index(choice)]
+        _doc, ref, error = self._routes.runnable_map(map_id)
+        if error:
+            self._notifier.from_error(error)
+            return None
+        self._free_map = map_id
+        return ref
 
     @Slot()
     def stop(self) -> None:

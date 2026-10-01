@@ -216,7 +216,7 @@ export default function PanelPage() {
 
       <RunRow
         running={state.running}
-        canStart={Boolean(route)}
+        canStart={Boolean(route) || state.settings.show_cubes}
         checklistVisible={state.steps.visible}
         overlayVisible={state.overlayVisible}
         cubesVisible={state.settings.show_cubes}

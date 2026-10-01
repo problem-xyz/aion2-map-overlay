@@ -15,6 +15,7 @@ changes are left out unless they change how the app is installed, run or updated
 - A Cubes button beside Arrows shows every hidden cube of the map over the game, each in a ring.
   The cubes stay on whatever the route does, finished or not, and with the arrows off. The
   ring's size is a slider under Route over the game, 20 pixels to start with.
+- With Cubes on, the overlay starts without a route: it asks which map to show the cubes on.
 
 ## [1.3.0] - 2026-09-30
 
