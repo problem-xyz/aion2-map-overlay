@@ -157,3 +157,15 @@ def test_a_dropout_is_reseeded_from_the_previous_frame(
     assert abs(matrix[0, 2] - SHIFT_X) < TOLERANCE_PX
     assert abs(matrix[1, 2] - SHIFT_Y) < TOLERANCE_PX
     assert tracker.points > 0
+
+
+def test_a_frame_of_another_size_starts_over_instead_of_failing(
+    gradient: Callable[..., np.ndarray],
+) -> None:
+    prev, later = _pair(gradient)
+    tracker = FlowTracker()
+    tracker.step(prev)
+
+    # the map area was drawn again while running: the capture now hands frames of a new size
+    assert tracker.step(later[: HEIGHT // 2, : WIDTH // 2].copy()) is None
+    assert tracker.points > 0  # seeded on the new frame, ready for the next one

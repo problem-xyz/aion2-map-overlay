@@ -17,6 +17,10 @@ changes are left out unless they change how the app is installed, run or updated
   ring's size is a slider under Route over the game, 20 pixels to start with.
 - With Cubes on, the overlay starts without a route: it asks which map to show the cubes on.
 
+### Fixed
+
+- Selecting the map area again while the overlay runs no longer stops it with an error.
+
 ## [1.3.0] - 2026-09-30
 
 ### Added
