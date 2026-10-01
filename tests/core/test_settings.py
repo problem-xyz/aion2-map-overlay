@@ -64,6 +64,7 @@ RANGED = {
     "steps_scale": (0.5, 1.5),
     "route_ahead": (1, 10),
     "route_past": (0, 10),
+    "cube_radius": (0, 100),
     "editor_route_ahead": (1, 10),
     "editor_opacity": (0.1, 1.0),
 }

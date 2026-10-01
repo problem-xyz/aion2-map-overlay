@@ -117,13 +117,14 @@ class Engine(QThread):
     warned = Signal(str)  # non-fatal: the overlay keeps going
     started_ok = Signal(str)  # capture backend name
 
-    def __init__(self) -> None:
+    def __init__(self, cache_dir=None) -> None:
         super().__init__()
         self._lock = threading.Lock()
         self._settings = asdict(Settings())
         self._region = None
         self._screen_size = None
-        self._reference = None
+        self._reference = None  # (image to match against, the size matrices are given in)
+        self._cache_dir = cache_dir
         self._gen = 0  # bumped by any configuration change
         self._stop = threading.Event()
         self._preview = False
@@ -137,7 +138,11 @@ class Engine(QThread):
         self._state = _LoopState()
 
     # ------------------------------------------------------------------ configuration (GUI thread)
-    def configure(self, settings=None, region=None, reference=None, screen_size=None) -> None:
+    def configure(
+        self, settings=None, region=None, reference=None, screen_size=None, reference_size=None
+    ) -> None:
+        """`reference_size` is the map's own size when `reference` is an image of another, its
+        finer detail: the matrices and the player's position are then still in the map's pixels."""
         with self._lock:
             if settings:
                 self._settings.update(settings)
@@ -146,7 +151,10 @@ class Engine(QThread):
             if screen_size is not None:
                 self._screen_size = tuple(screen_size)
             if reference is not None:
-                self._reference = reference
+                self._reference = (
+                    reference,
+                    None if reference_size is None else tuple(reference_size),
+                )
             self._gen += 1
 
     def set_preview(self, enabled) -> None:
@@ -229,23 +237,36 @@ class Engine(QThread):
             st.prev_small = None
 
         build = TrackerBuildParams.from_mapping(settings)
-        if self._tracker is None or self._tracker.path != reference or self._tracker.build != build:
-            self._build_tracker(reference, build)
+        path, size = reference
+        tracker = self._tracker
+        if (
+            tracker is None
+            or tracker.path != path
+            or tracker.coords_size != size
+            or tracker.build != build
+        ):
+            self._build_tracker(path, build, size=size)
 
         self._flow.max_points = max(40, int(settings["flow_points"]))
         self._flow.min_points = max(12, self._flow.max_points // 5)
 
-    def _build_tracker(self, reference, build) -> None:
+    def _build_tracker(self, path, build, *, size=None) -> None:
         try:
             # Feature detection over a large reference takes seconds; let it be abandoned so
             # that closing the app does not have to wait for it.
-            self._tracker = Tracker(reference, build, should_stop=self._stop.is_set)
+            self._tracker = Tracker(
+                path,
+                build,
+                should_stop=self._stop.is_set,
+                coords_size=size,
+                cache_dir=self._cache_dir,
+            )
         except CancelledError:
             return
         except FileNotFoundError as e:
-            raise VisionError("vision.reference_unreadable", path=reference) from e
+            raise VisionError("vision.reference_unreadable", path=path) from e
         except ValueError as e:
-            raise VisionError("vision.reference_too_plain", path=reference) from e
+            raise VisionError("vision.reference_too_plain", path=path) from e
         self._detector.set_tracker(self._tracker)
         st = self._state
         if st.found:
@@ -306,7 +327,8 @@ class Engine(QThread):
 
         if st.detect_failures == REBUILD_AFTER_FAILURES and self._tracker is not None:
             log.warning("rebuilding the tracker after %d failures", st.detect_failures)
-            self._build_tracker(self._tracker.path, self._tracker.build)
+            tracker = self._tracker
+            self._build_tracker(tracker.path, tracker.build, size=tracker.coords_size)
             self.warned.emit("vision.tracker_rebuilt")
 
     def _absorb_detection(self, settings, use_flow) -> None:

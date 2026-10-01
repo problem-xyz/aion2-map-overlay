@@ -52,7 +52,10 @@ class StandIn:
         self.state.region = region
 
     def _runnable_route(self, _route: str) -> tuple[dict[str, Any], str, str | None]:
-        return {"markers": []}, "reference.webp", self._error
+        return {"map": "altgard", "markers": []}, "reference.webp", self._error
+
+    def _map_meta(self, _map_id: str) -> dict[str, Any]:
+        return {"size": [4096, 4096]}
 
     def _engine_start(self, **config: Any) -> None:
         self.engine_starts.append(config)

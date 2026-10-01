@@ -12,6 +12,7 @@ import Toasts from "@/shared/ui/Toasts";
 import AutoMarkBlock from "./components/AutoMarkBlock";
 import FirstRun from "./components/FirstRun";
 import HeroCard from "./components/HeroCard";
+import OverlayFilters from "./components/OverlayFilters";
 import PanelMenu, { type PanelSection, sectionPanelId } from "./components/PanelMenu";
 import PreviewBlock from "./components/PreviewBlock";
 import ProgressBlock from "./components/ProgressBlock";
@@ -216,7 +217,7 @@ export default function PanelPage() {
 
       <RunRow
         running={state.running}
-        canStart={Boolean(route)}
+        canStart={Boolean(route) || state.settings.show_cubes}
         checklistVisible={state.steps.visible}
         overlayVisible={state.overlayVisible}
         captureVisible={state.captureVisible}
@@ -226,6 +227,14 @@ export default function PanelPage() {
         onChecklistVisible={(visible) => api.setStepsVisible(visible)}
         onOverlayVisible={(visible) => api.setOverlayVisible(visible)}
         onCaptureVisible={(visible) => api.setCaptureVisible(visible)}
+      />
+      <OverlayFilters
+        cubes={state.settings.show_cubes}
+        traces={state.settings.route_traces}
+        seals={state.settings.route_seals}
+        onCubes={(on) => changeSetting("show_cubes", on)}
+        onTraces={(on) => changeSetting("route_traces", on)}
+        onSeals={(on) => changeSetting("route_seals", on)}
       />
       <SearchHint running={state.running} />
 

@@ -10,6 +10,29 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- A Cubes button beside Arrows shows every hidden cube of the map over the game, each in a ring.
+  The cubes stay on whatever the route does, finished or not, and with the arrows off. The
+  ring's size is a slider under Route over the game, 20 pixels to start with.
+- With Cubes on, the overlay starts without a route: it asks which map to show the cubes on.
+- The overlay says what it is doing over the map itself: that it is looking for the map, and
+  what to try when it cannot find it, and why it stopped when it stops with an error.
+- Far off the route, the overlay says so, with the number of the next point and which way it
+  lies. It draws the whole route, faded, so you can see where it runs, and a next point off the
+  map gets its number on the edge, pointing its way. Standing at a later point of the route, you
+  are asked whether to go on from there, with a Yes and a No to click.
+- A Feathers button leaves the route's points on Empyrean Traces out of the map, the checklist
+  and the step count, and a Dungeons button does the same for sealed dungeons. Turned back on,
+  they return with your progress kept. Both sit with Cubes in a row of their own under Start.
+
+### Fixed
+
+- Selecting the map area again while the overlay runs no longer stops it with an error.
+- The map is found at closer zoom levels than before, where it used to be lost every few
+  seconds. The first start on each map takes a few seconds longer, once; every start after it
+  is faster than before.
+
 ## [1.3.0] - 2026-09-30
 
 ### Added

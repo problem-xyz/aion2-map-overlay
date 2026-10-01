@@ -80,6 +80,7 @@ class FakeTracker(Tracker):
 
     def __init__(self) -> None:
         self.path = "reference.png"
+        self.coords_size = None
         self.build = TrackerBuildParams.from_mapping(asdict(Settings()))
 
 
@@ -93,8 +94,8 @@ class RebuildRecorder:
     def __init__(self) -> None:
         self.calls: list[tuple[Any, Any]] = []
 
-    def __call__(self, reference: Any, build: Any) -> None:
-        self.calls.append((reference, build))
+    def __call__(self, path: Any, build: Any, *, size: Any = None) -> None:
+        self.calls.append((path, build))
 
 
 @pytest.fixture

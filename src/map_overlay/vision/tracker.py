@@ -1,7 +1,10 @@
 """Matching the captured frame against the map reference."""
 
+import hashlib
+import logging
 from collections.abc import Mapping
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import cv2
@@ -9,6 +12,8 @@ import numpy as np
 
 from map_overlay.store.images import imread
 from map_overlay.vision.features import detect_tiled, make_detector
+
+log = logging.getLogger(__name__)
 
 # A reference with fewer keypoints than this cannot be matched at any setting.
 MIN_REFERENCE_POINTS = 8
@@ -68,20 +73,37 @@ class Tracker:
     nothing the tracker reads is mutated from outside while it runs.
     """
 
-    def __init__(self, reference_path, build: TrackerBuildParams, should_stop=None) -> None:
+    def __init__(
+        self,
+        reference_path,
+        build: TrackerBuildParams,
+        should_stop=None,
+        *,
+        coords_size=None,
+        cache_dir=None,
+    ) -> None:
+        """`coords_size` (w, h) is the size the matrices are given in, when the image matched
+        against is another: the map's 8192 px detail, whose points are brought down onto its 4096
+        px reference, which the routes and everything else are drawn on. `cache_dir` keeps the
+        image's points between runs, so that only the first start pays for finding them."""
         self.build = build
         self.path = reference_path
-        # store.images.imread, not cv2.imread: OpenCV puts the path through the ANSI
-        # codepage, so a map whose name cp1252 cannot spell never opens here.
-        ref = imread(reference_path, cv2.IMREAD_GRAYSCALE)
-        if ref is None:
-            raise FileNotFoundError(reference_path)
-        self.ref_shape = ref.shape[:2]  # (h, w)
+        self.coords_size = (
+            None if coords_size is None else (int(coords_size[0]), int(coords_size[1]))
+        )
         name = build.detector
         self.frame_detector, self.norm = make_detector(name, build.frame_features)
-        ref_pts, des_ref = detect_tiled(name, ref, build.ref_features, should_stop=should_stop)
+        found = _load_points(cache_dir, reference_path, build, self.coords_size)
+        if found is None:
+            found = self._detect(reference_path, build, should_stop, self.coords_size)
+            _save_points(cache_dir, reference_path, build, self.coords_size, found)
+        ref_pts, des_ref, image_size = found
         if des_ref is None or len(ref_pts) < 2 * MIN_REFERENCE_POINTS:
             raise ValueError("too few keypoints on the reference")
+        w, h = self.coords_size or image_size
+        self.ref_shape = (h, w)
+        if (w, h) != image_size:
+            ref_pts = ref_pts * np.array([w / image_size[0], h / image_size[1]], np.float32)
         self.ref_pts, self.des_ref = ref_pts, des_ref
         if self.norm == cv2.NORM_L2:
             # SIFT: kd-tree FLANN is several times faster than brute force at the same accuracy
@@ -94,6 +116,22 @@ class Tracker:
             self.global_matcher = cv2.BFMatcher(self.norm, crossCheck=False)
         self.local_matcher = cv2.BFMatcher(self.norm, crossCheck=False)
         self._roi = None  # (x0, y0, x1, y1) in reference coordinates: where the map was last time
+
+    @staticmethod
+    def _detect(reference_path, build, should_stop, coords_size):
+        # store.images.imread, not cv2.imread: OpenCV puts the path through the ANSI
+        # codepage, so a map whose name cp1252 cannot spell never opens here.
+        ref = imread(reference_path, cv2.IMREAD_GRAYSCALE)
+        if ref is None:
+            raise FileNotFoundError(reference_path)
+        h, w = ref.shape[:2]
+        # ref_features is for the map at its own size: a finer image of it gets as many points
+        # to each patch of ground, or a close zoom would find as few on it as on the map.
+        budget = build.ref_features
+        if coords_size and budget > 0:
+            budget = round(budget * (w * h) / (coords_size[0] * coords_size[1]))
+        pts, des = detect_tiled(build.detector, ref, budget, should_stop=should_stop)
+        return pts, des, (w, h)
 
     def _knn(self, des, subset):
         if subset is None:
@@ -211,3 +249,78 @@ class Tracker:
         else:
             self._roi = None
         return M, info
+
+
+# ------------------------------------------------------------------ the points, kept between runs
+
+
+def _cache_file(cache_dir, reference_path, build, coords_size) -> Path | None:
+    """Where the image's points are kept: named by what they were found with and in."""
+    if cache_dir is None:
+        return None
+    image = Path(reference_path)
+    try:
+        st = image.stat()
+    except OSError:
+        return None
+    key = "|".join(
+        map(
+            str,
+            (
+                image.resolve(),
+                st.st_size,
+                st.st_mtime_ns,
+                build.detector,
+                build.ref_features,
+                coords_size,
+            ),
+        )
+    )
+    digest = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
+    return Path(cache_dir) / f"points-{_image_name(reference_path)}-{digest}.npz"
+
+
+def _image_name(reference_path) -> str:
+    """The map's folder and the file: both maps call their detail detail.webp."""
+    path = Path(reference_path)
+    return f"{path.parent.name}-{path.stem}"
+
+
+def _load_points(cache_dir, reference_path, build, coords_size):
+    path = _cache_file(cache_dir, reference_path, build, coords_size)
+    if path is None or not path.exists():
+        return None
+    try:
+        with np.load(path) as data:
+            pts = data["pts"].astype(np.float32)
+            # SIFT's descriptors are whole numbers within a byte; ORB's are bytes already
+            des = data["des"].astype(np.float32 if build.detector == "sift" else np.uint8)
+            size = (int(data["size"][0]), int(data["size"][1]))
+    except (OSError, KeyError, ValueError) as e:
+        log.warning(
+            "reference points in %s could not be read, finding them again: %s", path.name, e
+        )
+        return None
+    return pts, des, size
+
+
+def _save_points(cache_dir, reference_path, build, coords_size, found) -> None:
+    pts, des, size = found
+    path = _cache_file(cache_dir, reference_path, build, coords_size)
+    if path is None or des is None:
+        return
+    small = des.astype(np.uint8)
+    if not np.array_equal(small.astype(des.dtype), des):
+        return  # not whole bytes after all: kept in memory only rather than stored changed
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        # Written aside and renamed, so a run ended half-way leaves no torn file to read next time.
+        part = path.with_name(path.name + ".part")
+        with part.open("wb") as f:
+            np.savez(f, pts=pts, des=small, size=np.array(size))
+        part.replace(path)
+        for old in path.parent.glob(f"points-{_image_name(reference_path)}-*.npz"):
+            if old != path:
+                old.unlink(missing_ok=True)
+    except OSError as e:
+        log.warning("reference points not kept in %s: %s", path.parent, e)

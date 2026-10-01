@@ -56,7 +56,7 @@ def test_switching_to_a_route_on_another_map_retargets_the_running_engine(
 
     backend.setRoute(second_route)
 
-    assert pushed == [{"reference": str(verteron.reference)}]
+    assert pushed == [{"reference": str(verteron.reference), "reference_size": list(verteron.size)}]
     assert backend.route == second_route
     assert states, "the UI must be told the active route changed"
 

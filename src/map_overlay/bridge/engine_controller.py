@@ -54,9 +54,9 @@ class EngineController(QObject):
     failed = Signal(str)
     warned = Signal(str)
 
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent=None, cache_dir=None) -> None:
         super().__init__(parent)
-        self._engine = Engine()
+        self._engine = Engine(cache_dir)
         self._phase = Phase.IDLE
         self._restart_pending = None
         self.capture_backend_name = None
@@ -89,12 +89,13 @@ class EngineController(QObject):
             self.phaseChanged.emit(phase)
 
     # ------------------------------------------------------------------ control
-    def start(self, settings, region, reference, screen_size):
+    def start(self, settings, region, reference, screen_size, reference_size=None):
         config = {
             "settings": settings,
             "region": region,
             "reference": reference,
             "screen_size": screen_size,
+            "reference_size": reference_size,
         }
         if self._phase is Phase.STOPPING:
             # The previous run has not finished. Remember the request instead of dropping it.

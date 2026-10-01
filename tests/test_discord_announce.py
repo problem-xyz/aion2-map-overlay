@@ -121,10 +121,14 @@ class FakeDiscord:
     def __init__(self, pinned: list[dict[str, Any]], fail: dict[str, int] | None = None) -> None:
         self.pinned = pinned
         self.fail = fail or {}
-        self.calls: list[tuple[str, str, dict[str, Any] | None, dict[str, str]]] = []
+        self.calls: list[tuple[str, str, dict[str, Any] | bytes | None, dict[str, str]]] = []
 
     def __call__(
-        self, method: str, url: str, body: dict[str, Any] | None, headers: dict[str, str]
+        self,
+        method: str,
+        url: str,
+        body: dict[str, Any] | bytes | None,
+        headers: dict[str, str],
     ) -> Any:
         self.calls.append((method, url, body, headers))
         code = self.fail.get(f"{method} {url}")
@@ -262,3 +266,68 @@ def test_every_translation_in_the_repository_is_one_the_script_can_post() -> Non
         assert text is not None and text.startswith("### "), path.name
         head = f"## {APP_NAME} {version}"
         assert len(announce.content(head, text, version, lang)) <= announce.CONTENT_LIMIT
+
+
+# ------------------------------------------------------------------ pictures
+
+
+def test_the_pictures_are_the_channel_s_own_in_name_order_else_the_english(
+    tmp_path: Path,
+) -> None:
+    en = tmp_path / "1.0.0" / "en"
+    en.mkdir(parents=True)
+    for name in ("2-b.jpg", "1-a.png", "notes.txt"):
+        (en / name).write_bytes(b"x")
+
+    assert [p.name for p in announce.images("1.0.0", "en", tmp_path)] == ["1-a.png", "2-b.jpg"]
+    assert [p.name for p in announce.images("1.0.0", "ru", tmp_path)] == ["1-a.png", "2-b.jpg"]
+    ru = tmp_path / "1.0.0" / "ru"
+    ru.mkdir()
+    (ru / "1-a.png").write_bytes(b"x")
+    assert [p.name for p in announce.images("1.0.0", "ru", tmp_path)] == ["1-a.png"]
+    assert announce.images("2.0.0", "en", tmp_path) == []
+
+
+def test_pictures_go_in_one_multipart_message_with_the_text_and_the_buttons(
+    tmp_path: Path,
+) -> None:
+    picture = tmp_path / "1-cubes.jpg"
+    picture.write_bytes(b"\xff\xd8jpeg")
+    discord = FakeDiscord([])
+    message = {"content": "x", "components": [{"type": 1}]}
+
+    announce.post(message, WEBHOOK, None, send=discord, files=[picture])
+
+    _method, _url, body, headers = discord.calls[0]
+    assert isinstance(body, bytes)
+    boundary = headers["Content-Type"].split("boundary=")[1]
+    parts = body.split(f"--{boundary}".encode())
+    payload = json.loads(parts[1].split(b"\r\n\r\n", 1)[1])
+    assert payload["content"] == "x"
+    assert payload["components"] == [{"type": 1}]
+    assert payload["attachments"] == [{"id": 0, "filename": "1-cubes.jpg"}]
+    assert b'name="files[0]"; filename="1-cubes.jpg"' in parts[2]
+    assert b"Content-Type: image/jpeg" in parts[2]
+    assert parts[2].endswith(b"\xff\xd8jpeg\r\n")
+
+
+def test_refused_buttons_still_take_the_pictures(tmp_path: Path) -> None:
+    picture = tmp_path / "1-cubes.jpg"
+    picture.write_bytes(b"jpeg")
+    discord = FakeDiscord([], {f"POST {WEBHOOK}?wait=true&with_components=true": 400})
+    message = {"content": "x", "components": []}
+
+    announce.post(message, WEBHOOK, None, send=discord, files=[picture])
+
+    _method, _url, body, _headers = discord.calls[1]
+    assert isinstance(body, bytes)
+    assert b'filename="1-cubes.jpg"' in body
+    assert b'"components"' not in body
+
+
+def test_every_picture_in_the_repository_is_one_discord_shows() -> None:
+    for folder in sorted((REPO / ".github" / "discord").glob("*/*/")):
+        found = announce.images(folder.parent.name, folder.name)
+        assert 0 < len(found) <= announce.MAX_IMAGES, folder
+        # Discord takes 10 MB a message from a webhook on a server without boosts.
+        assert sum(p.stat().st_size for p in found) < 8_000_000, folder

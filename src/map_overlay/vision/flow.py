@@ -48,11 +48,13 @@ class FlowTracker:
     def step(self, gray):
         """3x3 "previous frame -> this one", or None when the shift could not be measured.
 
-        The first frame after a reset always returns None: it only seeds the point set.
+        The first frame after a reset always returns None: it only seeds the point set. So does
+        the first frame of another size: the map area was drawn again while running, and the
+        capture reopened on it. The last frame is no use then, and OpenCV raises on the pair.
         """
         prev = self._prev
         self._prev = gray
-        if prev is None:
+        if prev is None or prev.shape != gray.shape:
             self._seed(gray)
             return None
         if self._pts is None:

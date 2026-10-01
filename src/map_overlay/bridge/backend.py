@@ -65,12 +65,12 @@ from functools import partial
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QLocale, QObject, Signal, Slot
+from PySide6.QtCore import QLocale, QObject, QTimer, Signal, Slot
 
 from map_overlay import __version__
 from map_overlay.bridge.engine_controller import EngineController, Phase
 from map_overlay.bridge.notifier import Notifier
-from map_overlay.bridge.progress import ProgressTracker
+from map_overlay.bridge.progress import ProgressTracker, off_route, rejoin_at
 from map_overlay.bridge.route_service import RouteService
 from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
@@ -94,7 +94,7 @@ from map_overlay.qt.win32 import supports_capture_exclusion, windows_version
 from map_overlay.store import legacy
 from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
-from map_overlay.store.objects import icons_under
+from map_overlay.store.objects import cube_points, icons_under
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
 from map_overlay.updater.service import UpdatePayload, UpdaterService
 
@@ -102,6 +102,9 @@ log = logging.getLogger(__name__)
 
 # copyText() carries a line of the page's own text, an address or a code; nothing longer
 _COPY_TEXT_MAX = 256
+
+# How long the overlay goes on saying why a run ended, over the map, before it goes.
+OVERLAY_ERROR_MS = 8000
 
 
 class Backend(QObject):
@@ -129,6 +132,20 @@ class Backend(QObject):
     updateChanged = Signal(str)  # JSON: UpdatePayload, as getState()["update"] carries it. On
     # every change, download progress included; stateChanged follows only a change of phase
 
+    # Counts the errors the overlay was given to show, so that the timer of one already cleared
+    # does not clear the next. A class default: Backend.__init__ is at its statement limit.
+    _overlay_error_shown = 0
+    # (index of the next point, the way to it) while the player is far off the route, else None.
+    # A class default for the same reason.
+    _off_route: tuple[int, str] | None = None
+    # The open route as the player is shown it, which _shown_part builds; the same object as the
+    # route's own document while nothing is left out of it.
+    _view_doc: Any = None  # a RouteDoc or None, untyped as RouteService.active_doc is
+    # The later point the player was asked to go on from, and the one they said no to, by index
+    # in the route as shown; class defaults for the same reason.
+    _rejoin: int | None = None
+    _rejoin_declined: int | None = None
+
     def __init__(
         self,
         dirs: DataDirs,
@@ -151,6 +168,9 @@ class Backend(QObject):
         self._banner = load_banner()
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
+        self._cubes: list[tuple[float, float]] = []  # the route's map's hidden cubes, reference px
+        # The map a Start with no route was run on, for its cubes alone; a route's map wins.
+        self._free_map: str | None = None
         self.overlay_visible = True
 
         self._editor_req = {"seq": 0, "id": None, "doc": None}
@@ -174,10 +194,9 @@ class Backend(QObject):
         self._capture_exclusion = self._probe_capture_exclusion()
 
         self._windows = WindowManager(dev, self)
-        self.overlay.set_recordable(self._recordable)
-        self._setup_steps()
+        self._setup_windows()
 
-        self.engine = EngineController(self)
+        self.engine = EngineController(self, cache_dir=dirs.cache)
         self.engine.transformChanged.connect(self.overlay.set_transform)
         self.engine.playerMoved.connect(self._on_player)
         self.engine.stats.connect(self._on_stats)
@@ -332,32 +351,80 @@ class Backend(QObject):
         self._routes.active_doc = doc
         # What each point sits on, for the plaque's icons: worked out once per route, not on
         # every point passed
-        self._step_objects = self._objects_under(doc)
-        meta = self._map_meta(doc["map"]) if doc else None
+        map_id = doc["map"] if doc else self._free_map
+        sets = self._routes.load_objects(map_id) if map_id else []
+        doc, self._step_objects = self._shown_part(doc, self._objects_under(doc, sets))
+        meta = self._map_meta(map_id) if map_id else None
+        self._cubes = cube_points(sets, meta["size"]) if meta else []
         # The ring shows where a point ticks itself off. With auto marking off nothing does, so
         # it is left out, like the crosshair in the preview; updateSettings redraws on the switch.
         radius = self.settings.arrive_radius if self.settings.auto_progress else 0.0
         self._windows.apply_route(
             doc,
-            ref_size=meta["size"] if meta else None,
+            ref_size=meta["size"] if doc and meta else None,
             arrive_radius=radius,
             steps=steps_of(doc, self._step_objects),
             done=self._progress.done_count(doc),
             name=doc["name"] if doc else "",
         )
+        self._set_off_route(None)
+        self._apply_cubes()
         self._sync_steps()
 
-    def _objects_under(self, doc) -> list[str]:
+    def _shown_part(self, doc, objects):
+        """The route as the player is shown it: without the feathers or the sealed dungeons
+        when they are turned off.
+
+        Every window, the count and the panel's progress get this one; the file and the editor
+        keep the whole route.
+        """
+        self._view_doc = doc
+        left_out = {
+            icon
+            for icon, shown in (
+                ("trace", self.settings.route_traces),
+                ("seal", self.settings.route_seals),
+            )
+            if not shown
+        }
+        if doc is None or not left_out.intersection(objects):
+            self._progress.set_view(None, 0)
+            return doc, objects
+        kept = [i for i, o in enumerate(objects) if o not in left_out]
+        self._progress.set_view(kept, len(doc["markers"]))
+        self._view_doc = {**doc, "markers": [doc["markers"][i] for i in kept]}
+        return self._view_doc, [objects[i] for i in kept]
+
+    def _apply_cubes(self) -> None:
+        """The hidden cubes over the game while the Cubes switch is on, and the window for them."""
+        cubes = self._cubes if self.settings.show_cubes else []
+        self.overlay.set_cubes(cubes, self.settings.cube_radius)
+        self._sync_overlay()
+
+    def _overlay_wanted(self) -> bool:
+        """The route and the cubes share the one window: it is up while either is drawn."""
+        return self.overlay_visible or (self.settings.show_cubes and bool(self._cubes))
+
+    def _sync_overlay(self) -> None:
+        if not self.running:
+            return
+        if self._overlay_wanted():
+            if not self.overlay.isVisible() and self.state.region:
+                self._windows.show_overlay(self.state.region, self.settings.opacity)
+        else:
+            self.overlay.hide()
+
+    def _objects_under(self, doc, sets) -> list[str]:
         if not doc:
             return []
-        sets = self._routes.load_objects(doc["map"])
         return icons_under(sets, doc["mapSize"], [(m["x"], m["y"]) for m in doc["markers"]])
 
     def _set_done(self, done) -> None:
-        self._progress.set_done(done, self._routes.active_doc)
+        self._progress.set_done(done, self._view_doc)
 
     def _on_progress_changed(self, done, total) -> None:
-        doc = self._routes.active_doc
+        self._set_off_route(None)  # the next point moved: the next position says where it is
+        doc = self._view_doc
         self._windows.apply_progress(
             steps_of(doc, self._step_objects),
             self._progress.done_count(doc),
@@ -368,11 +435,61 @@ class Backend(QObject):
 
     def _on_player(self, x, y) -> None:
         """Player position arrived in reference pixels: is the next point reached?"""
-        doc = self._routes.active_doc
+        doc = self._view_doc
         meta = self._map_meta(doc["map"]) if doc else None
-        reached = self._progress.on_player(x, y, doc, meta["size"] if meta else None)
+        size = meta["size"] if meta else None
+        reached = self._progress.on_player(x, y, doc, size)
         if reached is not None:
             self._progress.set_done(reached, doc)
+            return
+        done = self._progress.done_count(doc)
+        self._set_off_route(off_route(x, y, doc, done, size, was_off=self._off_route is not None))
+        if self._off_route is not None and self.state.region:
+            ahead = rejoin_at(x, y, doc, done, size, radius=self.settings.arrive_radius)
+            asked = ahead == self._rejoin and self._windows.prompt.asking()
+            if ahead is not None and ahead != self._rejoin_declined and not asked:
+                self._ask_rejoin(ahead, done)
+
+    def _ask_rejoin(self, ahead, done) -> None:
+        """Off the route and at a later point of it: ask whether to go on from there."""
+        self._rejoin = ahead
+        skipped = (done + 1, ahead) if ahead > done + 1 else None
+        detail = (
+            t("native.prompt.rejoinMany", n=ahead + 1, first=done + 1, last=ahead)
+            if skipped
+            else t("native.prompt.rejoinOne", n=ahead + 1, first=done + 1)
+        )
+        title = t("native.prompt.rejoinTitle", n=ahead + 1)
+        self._windows.prompt.ask(self.state.region, title, detail)
+        self.overlay.set_covered(self._windows.prompt.height())
+
+    def _on_rejoin_answer(self, yes) -> None:
+        self.overlay.set_covered(0)
+        ahead, self._rejoin = self._rejoin, None
+        if ahead is None:
+            return
+        if yes:
+            # The progress change takes the strip and the question with it.
+            self._progress.set_done(ahead + 1, self._view_doc)
+            self._emit_state()
+        else:
+            self._rejoin_declined = ahead  # not asked about this point again until it moves on
+
+    def _set_off_route(self, off) -> None:
+        """Tell the overlay the player is far off the route, which point is next and which way."""
+        if off == self._off_route:
+            return
+        self._off_route = off
+        if off is None:
+            self.overlay.set_far(None)
+            # back on the route, or the route or its progress changed: the question is over
+            self._rejoin = self._rejoin_declined = None
+            self._windows.prompt.hide()
+            self.overlay.set_covered(0)
+            return
+        index, way = off
+        detail = t("native.overlay.far", n=index + 1, way=t(f"native.overlay.way.{way}"))
+        self.overlay.set_far((t("native.overlay.farTitle"), detail))
 
     @Slot(int)
     def setProgress(self, done: int) -> None:
@@ -398,7 +515,7 @@ class Backend(QObject):
 
     def _state(self):
         maps = self._routes.maps()
-        doc = self._routes.active_doc
+        doc = self._view_doc
         routes = self._routes.list_routes({m["id"]: m for m in maps}, self.state.route_order)
         # A state rebuild can run before the page has connected -- a map finishing its tiles
         # at start-up -- and each of these notices comes up only once.
@@ -472,7 +589,10 @@ class Backend(QObject):
         # The layout may have changed less than a settle interval ago, before the watcher fired.
         if self._revalidate_screens():
             return
-        doc, ref, error = self._routes.runnable_route(self.route)
+        # With the Cubes switch on there is something to draw without a route: the map's cubes.
+        # The map is then asked for, after the map area, so that a first Start asks it once.
+        free = not self.route and self.settings.show_cubes
+        doc, ref, error = (None, None, None) if free else self._routes.runnable_route(self.route)
         if error:
             self._notifier.from_error(error)
             return
@@ -482,18 +602,45 @@ class Backend(QObject):
             # leaves things as they were, and nothing starts.
             self._pick_region(RegionSelector.START_PROMPT, self._start_in)
             return
+        if free:
+            ref = self._ask_free_map()
+            if ref is None:
+                return
 
         self._apply_route(doc)
         scr = primary_screen_geometry()
+        meta = self._map_meta(doc["map"] if doc else self._free_map)
         self.engine.start(
             settings=asdict(self.settings),
             region=self.state.region,
             reference=str(ref),
             screen_size=(scr.width(), scr.height()),
+            reference_size=meta["size"] if meta else None,
         )
         # The overlay comes up with STARTING, in _on_engine_phase: a Start pressed while the
         # last run is still stopping is parked, and the IDLE that ends that run hides it.
         self._emit_state()
+
+    def _ask_free_map(self):
+        """Which map a Start with no route runs on: its reference, or None if cancelled."""
+        maps = self._routes.maps()
+        if not maps:
+            return None
+        labels = [m["label"] for m in maps]
+        ids = [m["id"] for m in maps]
+        current = ids.index(self._free_map) if self._free_map in ids else 0
+        choice = self._dialogs.ask_choice(
+            t("native.dialog.cubesMap"), t("native.dialog.cubesMapPrompt"), labels, current
+        )
+        if choice is None:
+            return None
+        map_id = ids[labels.index(choice)]
+        _doc, ref, error = self._routes.runnable_map(map_id)
+        if error:
+            self._notifier.from_error(error)
+            return None
+        self._free_map = map_id
+        return ref
 
     @Slot()
     def stop(self) -> None:
@@ -501,13 +648,35 @@ class Backend(QObject):
         if not self.engine.stop():
             return
         self.overlay.set_transform(None)
+        self._clear_overlay_error()
+        self._set_off_route(None)
         self.overlay.hide()
         self._emit_state()
 
     def _on_engine_failed(self, text) -> None:
-        self._notify(
-            "error", text if text.startswith("vision.") else "vision.crashed", reason=text, path=""
+        code = text if text.startswith("vision.") else "vision.crashed"
+        self._notify("error", code, reason=text, path="")
+        # Over the map as well, where the player is looking, and in their words: a crash says
+        # what to do rather than what OpenCV said, which the panel's notice still carries.
+        detail = (
+            t("native.overlay.crashedHint")
+            if code == "vision.crashed"
+            else t(f"notify.{code}", reason=text, path="")
         )
+        self.overlay.show_error(t("native.overlay.stopped"), detail)
+        self._overlay_error_shown += 1
+        shown = self._overlay_error_shown
+        QTimer.singleShot(OVERLAY_ERROR_MS, self, lambda: self._overlay_error_expired(shown))
+
+    def _overlay_error_expired(self, shown: int) -> None:
+        if shown == self._overlay_error_shown:  # not cleared, nor replaced by a later one
+            self._clear_overlay_error()
+
+    def _clear_overlay_error(self) -> None:
+        self._overlay_error_shown += 1
+        self.overlay.clear_error()
+        if not self.running:
+            self.overlay.hide()
 
     def _on_engine_warned(self, text) -> None:
         """Detection hiccuped; the overlay carries on by optical flow."""
@@ -522,8 +691,12 @@ class Backend(QObject):
         parked while the previous run stopped and is replayed only after its IDLE.
         """
         if phase is Phase.IDLE:
-            self.overlay.hide()
-        if phase is Phase.STARTING and self.overlay_visible and self.state.region:
+            self._set_off_route(None)  # the run is over, and with it any question about it
+        if phase is Phase.IDLE and not self.overlay.has_error():
+            self.overlay.hide()  # an error stays up a while, saying why; see _on_engine_failed
+        if phase is Phase.STARTING:
+            self._clear_overlay_error()
+        if phase is Phase.STARTING and self._overlay_wanted() and self.state.region:
             self._windows.show_overlay(self.state.region, self.settings.opacity)
             self._apply_route_view(self.settings)
         if phase is Phase.RUNNING and self.engine.capture_backend_name == "mss":
@@ -538,20 +711,15 @@ class Backend(QObject):
     @Slot(bool)
     def setOverlayVisible(self, visible: bool) -> None:
         self.overlay_visible = bool(visible)
-        if self.running:
-            if visible:
-                self.overlay.show()
-                self.overlay.apply_capture_mode()
-            else:
-                self.overlay.hide()
+        self.overlay.set_route_visible(self.overlay_visible)
+        self._sync_overlay()
         self._emit_state()
 
     @Slot(bool)
     def setCaptureVisible(self, visible: bool) -> None:
         """Whether screen recorders (OBS, Discord, Game Bar) see the overlay."""
         self._store.update_settings({"capture_visible": bool(visible)})
-        self.overlay.set_recordable(self._recordable)
-        self.steps.set_recordable(self._recordable)
+        self._apply_recordable()
         if self.settings.capture_visible:
             self._notify("info", "overlay.capture_visible_on")
         self._emit_state()
@@ -603,17 +771,20 @@ class Backend(QObject):
         self.steps.set_opacity(after.opacity)
         self._apply_route_view(after)
         if before.capture_visible != after.capture_visible:
-            self.overlay.set_recordable(self._recordable)
-            self.steps.set_recordable(self._recordable)
+            self._apply_recordable()
         if before.steps_pinned != after.steps_pinned:
             self.steps.set_pinned(after.steps_pinned)
         if before.steps_scale != after.steps_scale:
             self._resize_steps(before.steps_scale)
-        if (before.auto_progress, before.arrive_radius) != (
-            after.auto_progress,
-            after.arrive_radius,
-        ):
+        if (
+            before.auto_progress,
+            before.arrive_radius,
+            before.route_traces,
+            before.route_seals,
+        ) != (after.auto_progress, after.arrive_radius, after.route_traces, after.route_seals):
             self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
+        elif (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
+            self._apply_cubes()
         if before.language != after.language:
             self.apply_language()
         if before.updates_auto_check != after.updates_auto_check:
@@ -672,9 +843,18 @@ class Backend(QObject):
                 self._store.set_state(steps_hint_shown=True)
                 self._notifier.post("info", "steps.drag_hint")
 
+    def _setup_windows(self) -> None:
+        """The windows over the game told whether recorders see them; the plaque laid out."""
+        self._apply_recordable()
+        self._windows.prompt.answered.connect(self._on_rejoin_answer)
+        self._setup_steps()
+
+    def _apply_recordable(self) -> None:
+        for window in (self.overlay, self.steps, self._windows.prompt):
+            window.set_recordable(self._recordable)
+
     def _setup_steps(self) -> None:
         window = self.steps
-        window.set_recordable(self._recordable)
         window.set_scale(self.settings.steps_scale)
         window.set_past(self.settings.route_past)
         window.set_pinned(self.settings.steps_pinned)
@@ -700,7 +880,7 @@ class Backend(QObject):
     def _step_progress(self, delta: int) -> None:
         """Tick the next point off by hand, or take the last one back. The panel hears of it
         through progressChanged, as it does of a point reached on foot."""
-        doc = self._routes.active_doc
+        doc = self._view_doc
         self._set_done(self._progress.done_count(doc) + delta)
 
     def _route_ids(self) -> list[str]:
@@ -934,9 +1114,12 @@ class Backend(QObject):
 
     def _retarget_engine(self, doc) -> None:
         """Point a running engine at this route's map."""
-        ref = self._routes.reference_for_map(doc["map"])
+        ref = self._routes.tracking_image_for_map(doc["map"])
+        meta = self._map_meta(doc["map"])
         if ref is not None and ref.exists():
-            self.engine.reconfigure(reference=str(ref))
+            self.engine.reconfigure(
+                reference=str(ref), reference_size=meta["size"] if meta else None
+            )
 
     @Slot(str, result=str)
     def getObjects(self, map_id: str) -> str:
@@ -1106,6 +1289,7 @@ class Backend(QObject):
         self._routes_folder.close()
         self._tiles.shutdown()
         self.engine.shutdown()
+        self._overlay_error_shown += 1  # an error's timer still running must not reach the window
         # Disconnect before the overlay goes: a late transform from the dying thread would
         # otherwise arrive at a widget that is already being destroyed.
         with contextlib.suppress(RuntimeError, TypeError):

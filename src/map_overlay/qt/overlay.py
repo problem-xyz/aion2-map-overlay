@@ -8,14 +8,16 @@ import contextlib  # noqa: F401
 import ctypes
 import itertools
 import sys
+import time
 
 import cv2
 import numpy as np
-from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QColor, QFont, QImage, QPainter, QPainterPath, QPen
+from PySide6.QtCore import QPointF, QRectF, Qt, QTimer
+from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter, QPainterPath, QPen
 from PySide6.QtWidgets import QApplication, QWidget
 
 from map_overlay.i18n.catalog import t
+from map_overlay.qt.webview import system_dpi_scale
 from map_overlay.qt.win32 import (
     GWL_EXSTYLE,
     WS_EX_NOACTIVATE,
@@ -30,10 +32,43 @@ MARKER_R = 11  # radius of the numbered circle, screen pixels
 ARROW_L = 14  # arrow length along the segment
 ARROW_W = 12  # arrow width across it
 MIN_SEGMENT = 2 * ARROW_L  # no arrow is drawn on a very short segment
+POINTER_L = 12  # the pointer to a next point off the map area: how far it reaches past the circle
+POINTER_W = 14  # and how wide it is at the circle
 # Faded is how the part of the route away from the next steps is drawn, where it is drawn at
 # all: without arrows, at this share of the overlay's opacity. Drawn whole and alike, a route
 # that loops about a village was a tangle nobody could read the way on from.
 FADED_OPACITY = 0.3
+# The hidden cube as the panel draws it (markIcons.ts): a coral cube from above a corner, the lit
+# top palest. CUBE_HALF is half its height in screen pixels.
+CUBE_TOP = QColor("#f4a08c")
+CUBE_LEFT = QColor("#d9624f")
+CUBE_RIGHT = QColor("#a83a2f")
+CUBE_INK = QColor("#3a0c08")
+CUBE_HALF = 8
+CUBE_RING = QColor("#ff7a5c")
+# The strip along the bottom of the map area that tells the player what the overlay is doing. A
+# map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all
+# the time, and a strip blinking over the map is worse than none. Past HINT_DELAY_S it says what to
+# do about it.
+NOTICE_DELAY_S = 1.5
+HINT_DELAY_S = 6.0
+# A line too long for the strip runs along it: it stands MARQUEE_PAUSE_S first, so its start can be
+# read, then moves at MARQUEE_SPEED px a second, round and round with MARQUEE_GAP px between runs.
+MARQUEE_PAUSE_S = 1.5
+MARQUEE_SPEED = 50.0
+MARQUEE_GAP = 60
+MARQUEE_FRAME_MS = 33
+# The strip's type, in pixels at 100% Windows scale; system_dpi_scale() multiplies them, since Qt's
+# own scaling is off and nothing else would. At 150% on a 4K screen 13 px could not be read.
+NOTICE_TITLE_PX = 15
+NOTICE_TEXT_PX = 14
+NOTICE_BG = QColor(15, 17, 22, 225)
+NOTICE_BORDER = QColor(255, 255, 255, 36)
+NOTICE_TITLE = QColor("#f2f4f8")
+NOTICE_TEXT = QColor("#aeb6c4")
+SEARCH_COLOR = QColor("#f2b544")
+ERROR_COLOR = QColor("#ef5b5b")
+FAR_COLOR = QColor("#6ea8ff")
 
 
 def marker_color(marker, route_color, index, total):
@@ -140,11 +175,70 @@ class OverlayWindow(ClickThroughWindow):
         self._colors = []  # one colour per marker, indexed over the whole route
         self._width = 3
         self._doc_scale = np.eye(3)
-        self._M = None  # reference map -> capture region
+        self._T = None  # reference map -> capture region, as the engine sent it
+        self._M = None  # route coordinates -> capture region: _T after _doc_scale
+        self._route_on = True  # the panel's Arrows switch; the cubes have their own
+        self._cubes = None  # hidden cubes in reference-map pixels, (N, 1, 2) float32
+        self._cube_radius = 0
+        self._cube_sprite = None  # QImage of one cube, drawn once per device pixel ratio
         self._done = 0  # markers already passed, counted from the start of the route
         self._radius = 0.0  # arrival radius in route coordinates; 0 draws no ring
         self._faded = None  # QImage the faded part is drawn into, kept between frames
         self._view = ("steps", 3, 3)  # Settings.route_view, route_ahead, route_past
+        self._lost_at = time.monotonic()  # since when there is no transform
+        self._error = None  # (title, detail) the run ended with, shown until cleared
+        self._far = None  # (title, detail) while the player is far off the route
+        self._covered = (
+            0  # how much of the bottom a question window takes, which no strip sits under
+        )
+        self._marquee = None  # (title, detail) the running line is of, and since when it runs
+        self._marquee_since = 0.0
+        self._ui_scale = system_dpi_scale()
+        # Repaints the running line. Only while one runs: an idle overlay draws nothing at all.
+        self._marquee_timer = QTimer(self)
+        self._marquee_timer.setInterval(MARQUEE_FRAME_MS)
+        self._marquee_timer.timeout.connect(self.update)
+
+    def show_error(self, title, detail) -> None:
+        """Say why the run ended, in place of the route, until clear_error()."""
+        self._error = (str(title), str(detail))
+        self.update()
+
+    def clear_error(self) -> None:
+        if self._error is not None:
+            self._error = None
+            self.update()
+
+    def set_far(self, notice) -> None:
+        """(title, detail) to say the player is far off the route, or None once they are not."""
+        notice = None if notice is None else (str(notice[0]), str(notice[1]))
+        if notice != self._far:
+            self._far = notice
+            self.update()
+
+    def set_covered(self, height) -> None:
+        """A question window over the bottom `height` px of the map area; 0 once it is gone.
+
+        The strip it covers is not drawn, nor the pointer under it.
+        """
+        height = max(0, int(height))
+        if height != self._covered:
+            self._covered = height
+            self.update()
+
+    def has_error(self) -> bool:
+        return self._error is not None
+
+    def _map_lost(self) -> None:
+        self._lost_at = time.monotonic()
+        # The strip is due later: wake up to draw it then, and its hint after it.
+        for delay in (NOTICE_DELAY_S, HINT_DELAY_S):
+            QTimer.singleShot(int(delay * 1000) + 50, self, self.update)
+
+    def showEvent(self, event) -> None:
+        if self._T is None:
+            self._map_lost()
+        super().showEvent(event)
 
     def set_progress(self, done) -> None:
         done = max(0, int(done))
@@ -158,6 +252,28 @@ class OverlayWindow(ClickThroughWindow):
         if view != self._view:
             self._view = view
             self.update()
+
+    def set_route_visible(self, visible) -> None:
+        """Whether the route is drawn. The cubes are not: they go by set_cubes alone."""
+        visible = bool(visible)
+        if visible != self._route_on:
+            self._route_on = visible
+            self.update()
+
+    def set_cubes(self, points, radius=0) -> None:
+        """The hidden cubes to draw, in reference-map pixels; empty or None draws none.
+
+        They stay on whatever the route does -- finished, off screen, its view cut to the next
+        steps -- because they are the map's, not the route's. `radius` is the ring around each
+        in screen pixels, constant at any zoom like the route's circles.
+        """
+        self._cubes = (
+            np.array(points, dtype=np.float32).reshape(-1, 1, 2)
+            if points is not None and len(points)
+            else None
+        )
+        self._cube_radius = max(0, int(radius))
+        self.update()
 
     def set_route(self, doc, ref_size=None, arrive_radius=0.0) -> None:
         """Replace the drawn route.
@@ -195,13 +311,233 @@ class OverlayWindow(ClickThroughWindow):
 
     def set_transform(self, transform) -> None:
         """transform: reference -> region matrix (numpy 3x3), or None."""
-        new = None if transform is None else np.asarray(transform, dtype=float) @ self._doc_scale
-        if new is None and self._M is None:
+        raw = None if transform is None else np.asarray(transform, dtype=float)
+        if raw is None and self._T is None:
             return
-        self._M = new
+        if raw is None:
+            self._map_lost()
+        self._T = raw
+        self._M = None if raw is None else raw @ self._doc_scale
         self.update()
 
+    def hideEvent(self, event) -> None:
+        self._marquee_timer.stop()
+        super().hideEvent(event)
+
     def paintEvent(self, _event) -> None:
+        notice = self._notice()
+        if notice is None:
+            self._marquee_timer.stop()
+        if self._T is None and notice is None:
+            return
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        if self._T is not None:
+            # Under the route: where a step stands on a cube, its number stays readable.
+            self._paint_cubes(p)
+            if self._route_on:
+                self._paint_route(p)
+                # clear of the strip, which would otherwise sit over a pointer at the bottom
+                strip = 48 * self._ui_scale if notice is not None else 0
+                self._paint_pointer(p, max(strip, self._covered))
+        if notice is not None:
+            self._draw_notice(p, *notice)
+        p.end()
+
+    def _paint_pointer(self, p, bottom) -> None:
+        """The next point's number on the edge of the map area, pointing at it, when it is off it.
+
+        Someone lost does not know which way the route is: this says, and how far it turns as
+        they walk says how near they are getting. `bottom` is the room the strip takes.
+        """
+        if self._M is None or self._pts is None or self._done >= len(self._pts):
+            return
+        target = cv2.perspectiveTransform(
+            self._pts[self._done : self._done + 1], self._M.astype(np.float32)
+        ).reshape(2)
+        w, h = self.width(), self.height() - bottom
+        if not np.all(np.isfinite(target)):
+            return
+        if MARKER_R <= target[0] <= w - MARKER_R and MARKER_R <= target[1] <= h - MARKER_R:
+            return  # on the map area: the route itself shows it
+        inset = MARKER_R + POINTER_L + 4
+        if w <= 2 * inset or h <= 2 * inset:
+            return
+        centre = np.array([w / 2, h / 2])
+        d = target - centre
+        # how far along d the inset edge is, the nearer of the two sides it is headed for
+        k = min(
+            (w / 2 - inset) / abs(d[0]) if d[0] else np.inf,
+            (h / 2 - inset) / abs(d[1]) if d[1] else np.inf,
+        )
+        at = centre + d * k
+        u = d / float(np.hypot(*d))
+        n = np.array([-u[1], u[0]])
+        color = self._color_at(self._done)
+        tip = at + u * (MARKER_R + POINTER_L)
+        base = at + u * (MARKER_R + 1)
+        head = QPainterPath(QPointF(*tip))
+        head.lineTo(QPointF(*(base + n * POINTER_W / 2)))
+        head.lineTo(QPointF(*(base - n * POINTER_W / 2)))
+        head.closeSubpath()
+        p.setOpacity(self._opacity)
+        p.setPen(QPen(LINE_DARK, 2))
+        p.setBrush(color)
+        p.drawPath(head)
+        self._draw_markers(p, at.reshape(1, 2), self._done)
+
+    def _notice(self):
+        """(title, detail, accent) for the strip over the map, or None for no strip."""
+        if self._error is not None:
+            return (*self._error, ERROR_COLOR)
+        if self._T is not None:
+            if self._far is None or self._covered:
+                return None
+            return (*self._far, FAR_COLOR)
+        lost = time.monotonic() - self._lost_at
+        if lost < NOTICE_DELAY_S:
+            return None
+        hint = t("native.overlay.searchingHint") if lost >= HINT_DELAY_S else ""
+        return t("native.overlay.searching"), hint, SEARCH_COLOR
+
+    def _draw_notice(self, p, title, detail, accent) -> None:
+        """A dark strip across the bottom of the map area: a coloured dot, a bold line, a hint.
+
+        At the bottom rather than in the middle: in another instance the map shown there is not
+        the one being looked for, and a card in its middle covered it. One line, the hint after
+        the title; where the two are longer than the strip they run along it.
+        """
+        k = self._ui_scale
+        pad_x, pad_y, dot, gap = 12 * k, 8 * k, 9 * k, 9 * k
+        width = self.width()
+        x0 = pad_x + dot + gap
+        text_w = width - x0 - pad_x
+        if text_w < 40:
+            return
+        bold = QFont(p.font())
+        bold.setBold(True)
+        bold.setPixelSize(round(NOTICE_TITLE_PX * k))
+        plain = QFont(p.font())
+        plain.setPixelSize(round(NOTICE_TEXT_PX * k))
+        fb, fp = QFontMetrics(bold), QFontMetrics(plain)
+        line_h = max(fb.height(), fp.height())
+        height = 2 * pad_y + line_h
+        strip = QRectF(0, self.height() - height, width, height)
+
+        p.setOpacity(max(self._opacity, 0.85))  # a strip nobody can read says nothing
+        p.fillRect(strip, NOTICE_BG)
+        p.setPen(QPen(NOTICE_BORDER, 1))
+        p.drawLine(strip.topLeft(), strip.topRight())
+        p.setPen(Qt.PenStyle.NoPen)
+        p.setBrush(accent)
+        middle = strip.top() + pad_y + line_h / 2
+        p.drawEllipse(QPointF(pad_x + dot / 2, middle), dot / 2, dot / 2)
+
+        title_w = fb.horizontalAdvance(title)
+        run_w = title_w + (2 * gap + fp.horizontalAdvance(detail) if detail else 0)
+        offset = self._marquee_offset((title, detail), run_w, text_w)
+        starts = [x0 - offset]
+        if offset or run_w > text_w:
+            starts.append(x0 - offset + run_w + MARQUEE_GAP)
+        p.save()
+        p.setClipRect(QRectF(x0, strip.top(), text_w, height))
+        for start in starts:
+            p.setFont(bold)
+            p.setPen(NOTICE_TITLE)
+            p.drawText(QPointF(start, middle + (fb.ascent() - fb.descent()) / 2), title)
+            if detail:
+                p.setFont(plain)
+                p.setPen(NOTICE_TEXT)
+                baseline = middle + (fp.ascent() - fp.descent()) / 2
+                p.drawText(QPointF(start + title_w + 2 * gap, baseline), detail)
+        p.restore()
+        p.setOpacity(self._opacity)
+
+    def _marquee_offset(self, key, run_w, text_w) -> float:
+        """How far the running line has moved; 0 for a line that fits, which stands still."""
+        if run_w <= text_w:
+            self._marquee = None
+            self._marquee_timer.stop()
+            return 0.0
+        now = time.monotonic()
+        if key != self._marquee:
+            self._marquee, self._marquee_since = key, now
+        if not self._marquee_timer.isActive():
+            self._marquee_timer.start()
+        moved = max(0.0, now - self._marquee_since - MARQUEE_PAUSE_S) * MARQUEE_SPEED
+        return moved % (run_w + MARQUEE_GAP)
+
+    def _paint_cubes(self, p) -> None:
+        if self._cubes is None:
+            return
+        pts = cv2.perspectiveTransform(self._cubes, self._T.astype(np.float32)).reshape(-1, 2)  # pyright: ignore[reportOptionalMemberAccess]
+        margin = self._cube_radius + CUBE_HALF
+        keep = (
+            np.isfinite(pts).all(axis=1)
+            & (pts[:, 0] > -margin)
+            & (pts[:, 0] < self.width() + margin)
+            & (pts[:, 1] > -margin)
+            & (pts[:, 1] < self.height() + margin)
+        )
+        pts = pts[keep]
+        if not len(pts):
+            return
+        p.setOpacity(self._opacity)
+        r = self._cube_radius
+        if r > 0:
+            fill = QColor(CUBE_RING)
+            fill.setAlpha(40)
+            for pen_color, width in ((LINE_DARK, 3.5), (CUBE_RING, 1.5)):
+                p.setPen(QPen(pen_color, width))
+                p.setBrush(fill if pen_color is CUBE_RING else Qt.BrushStyle.NoBrush)
+                for x, y in pts:
+                    p.drawEllipse(QPointF(x, y), r, r)
+        sprite = self._cube_image()
+        for x, y in pts:
+            p.drawImage(QPointF(x - CUBE_HALF, y - CUBE_HALF), sprite)
+
+    def _cube_image(self):
+        """One cube, drawn once: a hundred of them a frame are then a hundred blits."""
+        ratio = self.devicePixelRatioF()
+        if self._cube_sprite is not None and self._cube_sprite.devicePixelRatio() == ratio:
+            return self._cube_sprite
+        side = CUBE_HALF * 2
+        image = QImage(
+            int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
+        )
+        image.setDevicePixelRatio(ratio)
+        image.fill(Qt.GlobalColor.transparent)
+        # the panel's 24px drawing, scaled onto `side`
+        k = side / 24
+        top, left, right, mid, bottom = (12, 2.5), (3.5, 7.2), (20.5, 7.2), (12, 11.9), (12, 21.5)
+        faces = (
+            ((top, right, mid, left), CUBE_TOP),
+            ((left, mid, bottom, (3.5, 16.8)), CUBE_LEFT),
+            ((right, (20.5, 16.8), bottom, mid), CUBE_RIGHT),
+        )
+        q = QPainter(image)
+        q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        q.setPen(
+            QPen(
+                CUBE_INK,
+                1.2,
+                Qt.PenStyle.SolidLine,
+                Qt.PenCapStyle.RoundCap,
+                Qt.PenJoinStyle.RoundJoin,
+            )
+        )
+        for corners, color in faces:
+            path = QPainterPath(QPointF(corners[0][0] * k, corners[0][1] * k))
+            for x, y in corners[1:]:
+                path.lineTo(x * k, y * k)
+            path.closeSubpath()
+            q.setBrush(color)
+            q.drawPath(path)
+        q.end()
+        self._cube_sprite = image
+        return image
+
+    def _paint_route(self, p) -> None:
         if self._M is None or self._pts is None:
             return
         done = self._done
@@ -209,6 +545,10 @@ class OverlayWindow(ClickThroughWindow):
         if done >= total:
             return
         mode, ahead, past = self._view
+        if self._far is not None and mode == "steps":
+            # Far off the route, the next steps alone do not say where it is: the whole of it,
+            # faded, does, and which part of it is nearest.
+            mode = "dim"
         bright = total if mode == "all" else min(total, done + ahead)  # past the last bright one
         first, last = (max(0, done - past), bright) if mode == "steps" else (0, total)
         window = self._pts[first:last]
@@ -236,8 +576,6 @@ class OverlayWindow(ClickThroughWindow):
             faded.append((pts[b - 1 :], bright - 1, 1))
         if k > 0:
             faded.append((pts[:k], first, 0))  # after, so the steps passed lie on top
-        p = QPainter(self)
-        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         if faded:
             p.setOpacity(self._opacity * FADED_OPACITY)
             p.drawImage(0, 0, self._draw_faded(faded))
@@ -254,7 +592,6 @@ class OverlayWindow(ClickThroughWindow):
                 way[0] += d / length * MARKER_R
         self._draw_legs(p, way, first + ahead - done)
         self._draw_markers(p, pts[k:b], done)
-        p.end()
 
     def _draw_faded(self, parts):
         """The faded runs of the route, drawn in full into a layer of their own, without arrows.

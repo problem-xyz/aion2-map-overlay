@@ -6,7 +6,10 @@ import Sheen from "@/shared/ui/Sheen";
 
 export interface RunRowProps {
   running: boolean;
-  /** A route is chosen. The map area is not needed: a Start without one asks for it first. */
+  /**
+   * A route is chosen, or the cubes are on and a Start asks for the map. The map area is not
+   * needed: a Start without one asks for it first.
+   */
   canStart: boolean;
   /** The checklist over the game: state.steps.visible. */
   checklistVisible: boolean;

@@ -11,8 +11,12 @@ download channel. The CHANGELOG is English; `--lang ru` takes the section from
 as a CHANGELOG section, and falls back to the English one with a warning when there is none.
 The buttons are file names, so the message has no other words. The section is the one
 scripts/release_notes.py takes, without the install notes the release page carries: the GitHub
-button leads there. The files themselves are not
-attached: the installer is far past the size Discord takes from a webhook.
+button leads there. The downloads themselves are not attached: the installer is far past the
+size Discord takes from a webhook.
+
+Pictures of what is new go with the text: `.github/discord/<version>/<lang>/`, in the order of
+their names, the English ones for a channel whose language has none. They are attached to the
+one message, under the text and above the buttons, at most ten, as Discord allows.
 
 Discord does not reflow text: a CHANGELOG entry wrapped at 100 columns would arrive as broken
 lines, so each entry is joined back into one. A message holds at most 2000 characters; a longer
@@ -30,11 +34,13 @@ that ended up in the CHANGELOG pings nobody. Exit status 1 when release_notes.py
 import argparse
 import importlib.util
 import json
+import mimetypes
 import os
 import re
 import sys
 import urllib.error
 import urllib.request
+import uuid
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from types import ModuleType
@@ -58,11 +64,15 @@ FULL_NOTES = {"en": "the full notes", "ru": "полные заметки"}  # al
 SUPPRESS_EMBEDS = 1 << 2
 ACTION_ROW, BUTTON, LINK_STYLE = 1, 2, 5
 
+# What a webhook takes in one message, and the pictures it shows as pictures.
+MAX_IMAGES = 10
+IMAGE_SUFFIXES = (".png", ".jpg", ".jpeg", ".webp", ".gif")
+
 HEADING = re.compile(r"^#{1,6}\s+(.*)$")
 ENTRY = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 ROLE_ID = re.compile(r"^[0-9]{17,20}$")
 
-type Send = Callable[[str, str, dict[str, Any] | None, dict[str, str]], Any]
+type Send = Callable[[str, str, dict[str, Any] | bytes | None, dict[str, str]], Any]
 
 
 def _load_release_notes() -> ModuleType:
@@ -140,6 +150,42 @@ def translated_section(version: str, lang: str, root: Path | None = None) -> str
     return text.strip("\n") or None
 
 
+def images(version: str, lang: str, root: Path | None = None) -> list[Path]:
+    """The pictures for the `lang` channel, in name order: its own, or else the English ones."""
+    base = (root or TRANSLATIONS) / version
+    for folder in (base / lang, base / "en"):
+        if folder.is_dir():
+            found = sorted(p for p in folder.iterdir() if p.suffix.lower() in IMAGE_SUFFIXES)
+            if found:
+                return found[:MAX_IMAGES]
+    return []
+
+
+def form(message: dict[str, Any], files: Sequence[Path]) -> tuple[bytes, str]:
+    """The message and its pictures as one multipart body, and the Content-Type that says so."""
+    boundary = uuid.uuid4().hex
+    payload = {
+        **message,
+        "attachments": [{"id": i, "filename": f.name} for i, f in enumerate(files)],
+    }
+    parts = [
+        f'--{boundary}\r\nContent-Disposition: form-data; name="payload_json"\r\n'
+        "Content-Type: application/json\r\n\r\n".encode()
+        + json.dumps(payload).encode("utf-8")
+        + b"\r\n"
+    ]
+    for i, f in enumerate(files):
+        kind = mimetypes.guess_type(f.name)[0] or "application/octet-stream"
+        parts.append(
+            f'--{boundary}\r\nContent-Disposition: form-data; name="files[{i}]"; '
+            f'filename="{f.name}"\r\nContent-Type: {kind}\r\n\r\n'.encode()
+            + f.read_bytes()
+            + b"\r\n"
+        )
+    parts.append(f"--{boundary}--\r\n".encode())
+    return b"".join(parts), f"multipart/form-data; boundary={boundary}"
+
+
 def announcement(
     changelog: str,
     version: str,
@@ -183,11 +229,17 @@ def announcement(
     }
 
 
-def _send(method: str, url: str, body: dict[str, Any] | None, headers: dict[str, str]) -> Any:
-    data = None if body is None else json.dumps(body).encode("utf-8")
+def _send(
+    method: str, url: str, body: dict[str, Any] | bytes | None, headers: dict[str, str]
+) -> Any:
+    """A dict goes as JSON; bytes go as they are, with the Content-Type in `headers`."""
+    if isinstance(body, bytes):
+        data = body
+    else:
+        data = None if body is None else json.dumps(body).encode("utf-8")
     request = urllib.request.Request(url, data=data, method=method)
     request.add_header("User-Agent", USER_AGENT)
-    if data is not None:
+    if data is not None and "Content-Type" not in headers:
         request.add_header("Content-Type", "application/json")
     for name, value in headers.items():
         request.add_header(name, value)
@@ -197,18 +249,29 @@ def _send(method: str, url: str, body: dict[str, Any] | None, headers: dict[str,
 
 
 def post(
-    message: dict[str, Any], webhook: str, bot_token: str | None = None, send: Send = _send
+    message: dict[str, Any],
+    webhook: str,
+    bot_token: str | None = None,
+    send: Send = _send,
+    files: Sequence[Path] = (),
 ) -> str:
-    """Post through the webhook and pin the post in place of the webhook's earlier ones."""
+    """Post through the webhook, `files` attached, and pin it in place of the earlier ones."""
+
+    def body(msg: dict[str, Any]) -> tuple[dict[str, Any] | bytes, dict[str, str]]:
+        if not files:
+            return msg, {}
+        data, kind = form(msg, files)
+        return data, {"Content-Type": kind}
+
     try:
         # Without with_components a webhook no application owns drops the buttons.
-        sent = send("POST", f"{webhook}?wait=true&with_components=true", message, {})
+        sent = send("POST", f"{webhook}?wait=true&with_components=true", *body(message))
     except urllib.error.HTTPError as error:
         if error.code != 400:
             raise
         print("warning: the webhook refused the buttons (HTTP 400); text alone", file=sys.stderr)
         bare = {key: value for key, value in message.items() if key != "components"}
-        sent = send("POST", f"{webhook}?wait=true", bare, {})
+        sent = send("POST", f"{webhook}?wait=true", *body(bare))
     if not bot_token:
         print("note: DISCORD_BOT_TOKEN is not set, so the post is not pinned", file=sys.stderr)
         return sent["id"]
@@ -278,9 +341,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     except release_notes.NotesError as error:
         print(f"refused: {error}", file=sys.stderr)
         return 1
+    pictures = images(args.version, args.lang)
     if args.post:
-        print(f"posted {post(message, webhook, os.environ.get('DISCORD_BOT_TOKEN') or None)}")
+        token = os.environ.get("DISCORD_BOT_TOKEN") or None
+        print(f"posted {post(message, webhook, token, files=pictures)}")
         return 0
+    for picture in pictures:  # on stderr: stdout is the JSON alone
+        print(f"attached: {picture.relative_to(ROOT)}", file=sys.stderr)
     # Escaped to ASCII: a Windows console cannot print the arrow on the button.
     text = json.dumps(message, indent=2) + "\n"
     if args.output is None:

@@ -27,6 +27,7 @@ const STEPS: Partial<Record<NumericSetting, number>> = {
   min_inliers: 1,
   arrive_radius: 1 / 4096, // one map pixel on either map, both 4096 wide
   steps_scale: 0.05,
+  cube_radius: 1,
 };
 
 /**
