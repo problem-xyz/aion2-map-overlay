@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-01
+
 ### Added
 
 - A Cubes button beside Arrows shows every hidden cube of the map over the game, each in a ring.
