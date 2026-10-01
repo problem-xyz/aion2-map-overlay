@@ -393,6 +393,18 @@ html:has(.pn-app) {
 .pn-run.compact .pn-chip-label {
   display: none;
 }
+/* The filters under the run row: the same slots, sharing the width between them. */
+.pn-filters {
+  display: flex;
+  gap: 6px;
+}
+.pn-filters .pn-chip {
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: row;
+  gap: 8px;
+  height: 40px;
+}
 /* The checkbox stays in the tree for the keyboard and the screen reader, and paints nothing. */
 .pn-chip input {
   position: absolute;

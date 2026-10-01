@@ -369,16 +369,25 @@ class Backend(QObject):
         self._sync_steps()
 
     def _shown_part(self, doc, objects):
-        """The route as the player is shown it: without the feathers when they are turned off.
+        """The route as the player is shown it: without the feathers or the sealed dungeons
+        when they are turned off.
 
         Every window, the count and the panel's progress get this one; the file and the editor
         keep the whole route.
         """
         self._view_doc = doc
-        if doc is None or self.settings.route_traces or "trace" not in objects:
+        left_out = {
+            icon
+            for icon, shown in (
+                ("trace", self.settings.route_traces),
+                ("seal", self.settings.route_seals),
+            )
+            if not shown
+        }
+        if doc is None or not left_out.intersection(objects):
             self._progress.set_view(None, 0)
             return doc, objects
-        kept = [i for i, o in enumerate(objects) if o != "trace"]
+        kept = [i for i, o in enumerate(objects) if o not in left_out]
         self._progress.set_view(kept, len(doc["markers"]))
         self._view_doc = {**doc, "markers": [doc["markers"][i] for i in kept]}
         return self._view_doc, [objects[i] for i in kept]
@@ -730,11 +739,12 @@ class Backend(QObject):
             self.steps.set_pinned(after.steps_pinned)
         if before.steps_scale != after.steps_scale:
             self._resize_steps(before.steps_scale)
-        if (before.auto_progress, before.arrive_radius, before.route_traces) != (
-            after.auto_progress,
-            after.arrive_radius,
-            after.route_traces,
-        ):
+        if (
+            before.auto_progress,
+            before.arrive_radius,
+            before.route_traces,
+            before.route_seals,
+        ) != (after.auto_progress, after.arrive_radius, after.route_traces, after.route_seals):
             self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
         elif (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
             self._apply_cubes()

@@ -101,6 +101,8 @@ class Settings:
     # The route's points on Empyrean Traces, the feathers. Off leaves them out of the overlay, the
     # checklist and the count, as if the route had none; the progress kept is the whole route's.
     route_traces: bool = True
+    # The same for the route's points on sealed dungeons.
+    route_seals: bool = True
     cube_radius: int = field(default=20, metadata=rng(0, 100))
     # The same in the route editor, which always draws every point: "dim" fades the route away
     # from the selected point and the steps after it, "all" draws it all in full.

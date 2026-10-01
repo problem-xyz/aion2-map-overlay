@@ -384,11 +384,16 @@
       "arrowsShort": "Arrows",
       "recordingShort": "In recordings",
       "checklist": "Show the checklist over the game: the next points of the route",
-      "checklistShort": "Checklist",
+      "checklistShort": "Checklist"
+    },
+    "filters": {
+      "label": "What the overlay shows",
       "cubes": "Show the map's hidden cubes over the game, all of them, each in a ring",
       "cubesShort": "Cubes",
       "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
-      "tracesShort": "Feathers"
+      "tracesShort": "Feathers",
+      "seals": "Sealed dungeon points in the route. Turn off to leave them out of the map, the checklist and the step count",
+      "sealsShort": "Dungeons"
     },
     "settings": {
       "advanced": "Advanced",

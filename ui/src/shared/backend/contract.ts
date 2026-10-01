@@ -53,6 +53,8 @@ export interface Settings {
    * overlay, the checklist and `progress`, which then counts and lists only the points shown.
    */
   route_traces: boolean;
+  /** Since api 25: the same for the route's points on sealed dungeons. */
+  route_seals: boolean;
   /**
    * Since api 13: the same in the route editor, which always draws every point. "dim" fades the
    * route away from the selected point and `editor_route_ahead` steps from it; "all" draws it

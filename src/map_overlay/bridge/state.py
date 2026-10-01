@@ -224,7 +224,8 @@ def steps_state(settings, state) -> StepsPayload:
 #     ring; overlayVisible governs the route alone, and the overlay is up while either is drawn.
 # 24: settings has route_traces; off, the route's feather points are left out of the overlay, the
 #     plaque and the progress, whose done, total and markers count only the points shown.
-API_VERSION = 24
+# 25: settings has route_seals, which does the same for the route's points on sealed dungeons.
+API_VERSION = 25
 
 
 def build_state(

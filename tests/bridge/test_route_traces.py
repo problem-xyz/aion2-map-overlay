@@ -119,3 +119,33 @@ def test_progress_made_without_them_is_kept_when_they_come_back(backend: Backend
 
     feathers(backend, True)
     assert backend._state()["progress"]["done"] == 4  # the feather after point 3 as well
+
+
+SEAL = 2  # the third point stands on a sealed dungeon
+
+
+@pytest.fixture
+def with_a_seal(shipped_set: Path) -> Iterator[None]:
+    doc = json.loads(shipped_set.read_text(encoding="utf-8"))
+    doc["categories"].append({"id": "seals", "name": "Sealed Dungeons", "color": "#22c55e"})
+    doc["nodes"].append({"categoryId": "seals", "x": POINTS[SEAL][0] / SIZE * 100, "y": 1.0})
+    atomic_write_json(shipped_set, doc)
+    yield
+
+
+def test_sealed_dungeons_go_by_their_own_switch(
+    qapp: QApplication, dirs: DataDirs, with_a_seal: None
+) -> None:
+    doc = routes.new_route_doc("Feathers", "altgard", [SIZE, SIZE])
+    doc["markers"] = [{"x": x, "y": y} for x, y in POINTS]
+    routes.save_route(dirs, ROUTE, doc)
+    made = Backend(dirs)
+    try:
+        made.setRoute(ROUTE)
+        made.updateSettings(json.dumps({"route_seals": False}))
+        assert drawn(made) == [x for i, (x, _y) in enumerate(POINTS) if i != SEAL]
+
+        made.updateSettings(json.dumps({"route_traces": False}))
+        assert drawn(made) == [POINTS[i][0] for i in KEPT if i != SEAL]
+    finally:
+        made.shutdown()
