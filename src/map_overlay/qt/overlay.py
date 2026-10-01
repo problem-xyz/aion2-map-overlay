@@ -12,7 +12,7 @@ import time
 
 import cv2
 import numpy as np
-from PySide6.QtCore import QPointF, QRect, QRectF, Qt, QTimer
+from PySide6.QtCore import QPointF, QRectF, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter, QPainterPath, QPen
 from PySide6.QtWidgets import QApplication, QWidget
 
@@ -46,10 +46,15 @@ CUBE_RING = QColor("#ff7a5c")
 # The strip along the bottom of the map area that tells the player what the overlay is doing. A
 # map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all
 # the time, and a strip blinking over the map is worse than none. Past HINT_DELAY_S it says what to
-# do about it. NOTICE_MAX_W keeps it off the corners, where the game puts its clock and buttons.
+# do about it.
 NOTICE_DELAY_S = 1.5
 HINT_DELAY_S = 6.0
-NOTICE_MAX_W = 520
+# A line too long for the strip runs along it: it stands MARQUEE_PAUSE_S first, so its start can be
+# read, then moves at MARQUEE_SPEED px a second, round and round with MARQUEE_GAP px between runs.
+MARQUEE_PAUSE_S = 1.5
+MARQUEE_SPEED = 50.0
+MARQUEE_GAP = 60
+MARQUEE_FRAME_MS = 33
 NOTICE_BG = QColor(15, 17, 22, 225)
 NOTICE_BORDER = QColor(255, 255, 255, 36)
 NOTICE_TITLE = QColor("#f2f4f8")
@@ -176,6 +181,12 @@ class OverlayWindow(ClickThroughWindow):
         self._lost_at = time.monotonic()  # since when there is no transform
         self._error = None  # (title, detail) the run ended with, shown until cleared
         self._far = None  # (title, detail) while the player is far off the route
+        self._marquee = None  # (title, detail) the running line is of, and since when it runs
+        self._marquee_since = 0.0
+        # Repaints the running line. Only while one runs: an idle overlay draws nothing at all.
+        self._marquee_timer = QTimer(self)
+        self._marquee_timer.setInterval(MARQUEE_FRAME_MS)
+        self._marquee_timer.timeout.connect(self.update)
 
     def show_error(self, title, detail) -> None:
         """Say why the run ended, in place of the route, until clear_error()."""
@@ -288,8 +299,14 @@ class OverlayWindow(ClickThroughWindow):
         self._M = None if raw is None else raw @ self._doc_scale
         self.update()
 
+    def hideEvent(self, event) -> None:
+        self._marquee_timer.stop()
+        super().hideEvent(event)
+
     def paintEvent(self, _event) -> None:
         notice = self._notice()
+        if notice is None:
+            self._marquee_timer.stop()
         if self._T is None and notice is None:
             return
         p = QPainter(self)
@@ -316,65 +333,70 @@ class OverlayWindow(ClickThroughWindow):
         return t("native.overlay.searching"), hint, SEARCH_COLOR
 
     def _draw_notice(self, p, title, detail, accent) -> None:
-        """A dark strip along the bottom of the map area: a coloured dot, a bold line, a hint.
+        """A dark strip across the bottom of the map area: a coloured dot, a bold line, a hint.
 
         At the bottom rather than in the middle: in another instance the map shown there is not
-        the one being looked for, and a card in its middle covered it. The hint follows the
-        title on its line where the two fit, and wraps under it where they do not.
+        the one being looked for, and a card in its middle covered it. One line, the hint after
+        the title; where the two are longer than the strip they run along it.
         """
-        margin, pad_x, pad_y, dot, gap = 8, 12, 7, 8, 8
-        width = min(self.width() - 2 * margin, NOTICE_MAX_W)
-        text_w = width - 2 * pad_x - dot - gap
-        if text_w < 60:
+        pad_x, pad_y, dot, gap = 12, 7, 8, 8
+        width = self.width()
+        x0 = pad_x + dot + gap
+        text_w = width - x0 - pad_x
+        if text_w < 40:
             return
         bold = QFont(p.font())
         bold.setBold(True)
         bold.setPixelSize(13)
         plain = QFont(p.font())
         plain.setPixelSize(12)
-        flags = int(Qt.TextFlag.TextWordWrap)
-        title_box = QFontMetrics(bold).boundingRect(QRect(0, 0, text_w, 1000), flags, title)
-        inline_w = text_w - title_box.width() - gap
-        detail_w = QFontMetrics(plain).horizontalAdvance(detail) if detail else 0
-        inline = not detail or (
-            title_box.height() < 2 * QFontMetrics(bold).height() and detail_w <= inline_w
-        )
-        if inline:
-            detail_box = QRect(0, 0, detail_w, QFontMetrics(plain).height())
-            height = 2 * pad_y + max(title_box.height(), detail_box.height())
-        else:
-            detail_box = QFontMetrics(plain).boundingRect(QRect(0, 0, text_w, 1000), flags, detail)
-            height = 2 * pad_y + title_box.height() + 2 + detail_box.height()
-        strip = QRectF((self.width() - width) / 2, self.height() - margin - height, width, height)
+        fb, fp = QFontMetrics(bold), QFontMetrics(plain)
+        line_h = max(fb.height(), fp.height())
+        height = 2 * pad_y + line_h
+        strip = QRectF(0, self.height() - height, width, height)
 
         p.setOpacity(max(self._opacity, 0.85))  # a strip nobody can read says nothing
+        p.fillRect(strip, NOTICE_BG)
         p.setPen(QPen(NOTICE_BORDER, 1))
-        p.setBrush(NOTICE_BG)
-        p.drawRoundedRect(strip, 6, 6)
+        p.drawLine(strip.topLeft(), strip.topRight())
         p.setPen(Qt.PenStyle.NoPen)
         p.setBrush(accent)
-        line_h = max(title_box.height(), detail_box.height()) if inline else title_box.height()
-        top = strip.top() + pad_y
-        p.drawEllipse(QPointF(strip.left() + pad_x + dot / 2, top + line_h / 2), dot / 2, dot / 2)
+        middle = strip.top() + pad_y + line_h / 2
+        p.drawEllipse(QPointF(pad_x + dot / 2, middle), dot / 2, dot / 2)
 
-        x = strip.left() + pad_x + dot + gap
-        p.setFont(bold)
-        p.setPen(NOTICE_TITLE)
-        p.drawText(
-            QRectF(x, top, text_w, line_h if inline else title_box.height()),
-            flags | int(Qt.AlignmentFlag.AlignVCenter),
-            title,
-        )
-        if detail:
-            p.setFont(plain)
-            p.setPen(NOTICE_TEXT)
-            if inline:
-                box = QRectF(x + title_box.width() + gap, top, inline_w, line_h)
-                p.drawText(box, int(Qt.AlignmentFlag.AlignVCenter), detail)
-            else:
-                box = QRectF(x, top + title_box.height() + 2, text_w, detail_box.height())
-                p.drawText(box, flags, detail)
+        title_w = fb.horizontalAdvance(title)
+        run_w = title_w + (2 * gap + fp.horizontalAdvance(detail) if detail else 0)
+        offset = self._marquee_offset((title, detail), run_w, text_w)
+        starts = [x0 - offset]
+        if offset or run_w > text_w:
+            starts.append(x0 - offset + run_w + MARQUEE_GAP)
+        p.save()
+        p.setClipRect(QRectF(x0, strip.top(), text_w, height))
+        for start in starts:
+            p.setFont(bold)
+            p.setPen(NOTICE_TITLE)
+            p.drawText(QPointF(start, middle + (fb.ascent() - fb.descent()) / 2), title)
+            if detail:
+                p.setFont(plain)
+                p.setPen(NOTICE_TEXT)
+                baseline = middle + (fp.ascent() - fp.descent()) / 2
+                p.drawText(QPointF(start + title_w + 2 * gap, baseline), detail)
+        p.restore()
         p.setOpacity(self._opacity)
+
+    def _marquee_offset(self, key, run_w, text_w) -> float:
+        """How far the running line has moved; 0 for a line that fits, which stands still."""
+        if run_w <= text_w:
+            self._marquee = None
+            self._marquee_timer.stop()
+            return 0.0
+        now = time.monotonic()
+        if key != self._marquee:
+            self._marquee, self._marquee_since = key, now
+        if not self._marquee_timer.isActive():
+            self._marquee_timer.start()
+        moved = max(0.0, now - self._marquee_since - MARQUEE_PAUSE_S) * MARQUEE_SPEED
+        return moved % (run_w + MARQUEE_GAP)
 
     def _paint_cubes(self, p) -> None:
         if self._cubes is None:

@@ -22,7 +22,7 @@ from map_overlay.qt import overlay as overlay_module
 from map_overlay.qt.overlay import HINT_DELAY_S, NOTICE_DELAY_S, OverlayWindow
 
 WIDTH, HEIGHT = 400, 300
-STRIP = (WIDTH // 2, HEIGHT - 11)  # in the strip's bottom padding, under its text
+STRIP = (WIDTH // 2, HEIGHT - 3)  # in the strip's bottom padding, under its text
 
 
 @pytest.fixture
@@ -113,6 +113,30 @@ def test_a_lost_map_says_so_rather_than_off_the_route(overlay: OverlayWindow) ->
 
     _title, _hint, accent = overlay._notice()  # pyright: ignore[reportGeneralTypeIssues]
     assert accent == overlay_module.SEARCH_COLOR
+
+
+def test_a_line_that_fits_stands_still(overlay: OverlayWindow) -> None:
+    overlay.show_error("Stopped", "Again.")
+    frame(overlay)
+
+    assert not overlay._marquee_timer.isActive()
+
+
+def test_a_line_too_long_runs_along_the_strip_after_a_pause(overlay: OverlayWindow) -> None:
+    overlay.show_error("Stopped", "Press Start overlay again. " * 6)
+    first = frame(overlay)
+
+    assert overlay._marquee_timer.isActive()
+    overlay._marquee_since -= overlay_module.MARQUEE_PAUSE_S + 1  # a second past the pause
+    moved = frame(overlay)
+    row = HEIGHT - 15
+    assert [first.pixelColor(x, row) for x in range(40, WIDTH)] != [
+        moved.pixelColor(x, row) for x in range(40, WIDTH)
+    ]
+
+    overlay.clear_error()
+    frame(overlay)
+    assert not overlay._marquee_timer.isActive()
 
 
 # ------------------------------------------------------------------ the backend's part
