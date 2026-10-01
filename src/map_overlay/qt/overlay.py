@@ -8,11 +8,12 @@ import contextlib  # noqa: F401
 import ctypes
 import itertools
 import sys
+import time
 
 import cv2
 import numpy as np
-from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QColor, QFont, QImage, QPainter, QPainterPath, QPen
+from PySide6.QtCore import QPointF, QRect, QRectF, Qt, QTimer
+from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter, QPainterPath, QPen
 from PySide6.QtWidgets import QApplication, QWidget
 
 from map_overlay.i18n.catalog import t
@@ -42,6 +43,18 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 8
 CUBE_RING = QColor("#ff7a5c")
+# The card at the top of the map area that tells the player what the overlay is doing when it has
+# no route to show. A map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it
+# for a frame or two all the time, and a card blinking over the map is worse than none. Past
+# HINT_DELAY_S the card says what to do about it.
+NOTICE_DELAY_S = 1.5
+HINT_DELAY_S = 6.0
+NOTICE_BG = QColor(15, 17, 22, 225)
+NOTICE_BORDER = QColor(255, 255, 255, 36)
+NOTICE_TITLE = QColor("#f2f4f8")
+NOTICE_TEXT = QColor("#aeb6c4")
+SEARCH_COLOR = QColor("#f2b544")
+ERROR_COLOR = QColor("#ef5b5b")
 
 
 def marker_color(marker, route_color, index, total):
@@ -158,6 +171,32 @@ class OverlayWindow(ClickThroughWindow):
         self._radius = 0.0  # arrival radius in route coordinates; 0 draws no ring
         self._faded = None  # QImage the faded part is drawn into, kept between frames
         self._view = ("steps", 3, 3)  # Settings.route_view, route_ahead, route_past
+        self._lost_at = time.monotonic()  # since when there is no transform
+        self._error = None  # (title, detail) the run ended with, shown until cleared
+
+    def show_error(self, title, detail) -> None:
+        """Say why the run ended, in place of the route, until clear_error()."""
+        self._error = (str(title), str(detail))
+        self.update()
+
+    def clear_error(self) -> None:
+        if self._error is not None:
+            self._error = None
+            self.update()
+
+    def has_error(self) -> bool:
+        return self._error is not None
+
+    def _map_lost(self) -> None:
+        self._lost_at = time.monotonic()
+        # The card is due later: wake up to draw it then, and its hint after it.
+        for delay in (NOTICE_DELAY_S, HINT_DELAY_S):
+            QTimer.singleShot(int(delay * 1000) + 50, self, self.update)
+
+    def showEvent(self, event) -> None:
+        if self._T is None:
+            self._map_lost()
+        super().showEvent(event)
 
     def set_progress(self, done) -> None:
         done = max(0, int(done))
@@ -233,20 +272,81 @@ class OverlayWindow(ClickThroughWindow):
         raw = None if transform is None else np.asarray(transform, dtype=float)
         if raw is None and self._T is None:
             return
+        if raw is None:
+            self._map_lost()
         self._T = raw
         self._M = None if raw is None else raw @ self._doc_scale
         self.update()
 
     def paintEvent(self, _event) -> None:
-        if self._T is None:
+        notice = self._notice()
+        if self._T is None and notice is None:
             return
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        # Under the route: where a step stands on a cube, its number stays readable.
-        self._paint_cubes(p)
-        if self._route_on:
-            self._paint_route(p)
+        if self._T is not None:
+            # Under the route: where a step stands on a cube, its number stays readable.
+            self._paint_cubes(p)
+            if self._route_on:
+                self._paint_route(p)
+        if notice is not None:
+            self._draw_notice(p, *notice)
         p.end()
+
+    def _notice(self):
+        """(title, detail, accent) for the card over the map, or None for no card."""
+        if self._error is not None:
+            return (*self._error, ERROR_COLOR)
+        if self._T is not None:
+            return None
+        lost = time.monotonic() - self._lost_at
+        if lost < NOTICE_DELAY_S:
+            return None
+        hint = t("native.overlay.searchingHint") if lost >= HINT_DELAY_S else ""
+        return t("native.overlay.searching"), hint, SEARCH_COLOR
+
+    def _draw_notice(self, p, title, detail, accent) -> None:
+        """A dark card at the top of the map area: a coloured dot, a bold line, a hint under it."""
+        margin, pad, dot, gap = 10, 10, 8, 8
+        width = min(self.width() - 2 * margin, 380)
+        text_w = width - 2 * pad - dot - gap
+        if text_w < 60:
+            return
+        bold = QFont(p.font())
+        bold.setBold(True)
+        bold.setPixelSize(13)
+        plain = QFont(p.font())
+        plain.setPixelSize(12)
+        flags = int(Qt.TextFlag.TextWordWrap)
+        title_box = QFontMetrics(bold).boundingRect(QRect(0, 0, text_w, 1000), flags, title)
+        detail_box = (
+            QFontMetrics(plain).boundingRect(QRect(0, 0, text_w, 1000), flags, detail)
+            if detail
+            else QRect()
+        )
+        height = 2 * pad + title_box.height() + (4 + detail_box.height() if detail else 0)
+        card = QRectF((self.width() - width) / 2, margin, width, height)
+
+        p.setOpacity(max(self._opacity, 0.85))  # a card nobody can read says nothing
+        p.setPen(QPen(NOTICE_BORDER, 1))
+        p.setBrush(NOTICE_BG)
+        p.drawRoundedRect(card, 8, 8)
+        p.setPen(Qt.PenStyle.NoPen)
+        p.setBrush(accent)
+        cy = card.top() + pad + title_box.height() / 2
+        p.drawEllipse(QPointF(card.left() + pad + dot / 2, cy), dot / 2, dot / 2)
+
+        x = card.left() + pad + dot + gap
+        y = card.top() + pad
+        p.setFont(bold)
+        p.setPen(NOTICE_TITLE)
+        p.drawText(QRectF(x, y, text_w, title_box.height()), flags, title)
+        if detail:
+            p.setFont(plain)
+            p.setPen(NOTICE_TEXT)
+            y += title_box.height() + 4
+            p.drawText(QRectF(x, y, text_w, detail_box.height()), flags, detail)
+        p.setOpacity(self._opacity)
 
     def _paint_cubes(self, p) -> None:
         if self._cubes is None:

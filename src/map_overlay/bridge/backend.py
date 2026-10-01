@@ -65,7 +65,7 @@ from functools import partial
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QLocale, QObject, Signal, Slot
+from PySide6.QtCore import QLocale, QObject, QTimer, Signal, Slot
 
 from map_overlay import __version__
 from map_overlay.bridge.engine_controller import EngineController, Phase
@@ -103,6 +103,9 @@ log = logging.getLogger(__name__)
 # copyText() carries a line of the page's own text, an address or a code; nothing longer
 _COPY_TEXT_MAX = 256
 
+# How long the overlay goes on saying why a run ended, over the map, before it goes.
+OVERLAY_ERROR_MS = 8000
+
 
 class Backend(QObject):
     """The one QWebChannel object every React page is built against.
@@ -128,6 +131,10 @@ class Backend(QObject):
     # reason: the plaque is dragged by mouse, and the whole state reads every route and map
     updateChanged = Signal(str)  # JSON: UpdatePayload, as getState()["update"] carries it. On
     # every change, download progress included; stateChanged follows only a change of phase
+
+    # Counts the errors the overlay was given to show, so that the timer of one already cleared
+    # does not clear the next. A class default: Backend.__init__ is at its statement limit.
+    _overlay_error_shown = 0
 
     def __init__(
         self,
@@ -554,13 +561,34 @@ class Backend(QObject):
         if not self.engine.stop():
             return
         self.overlay.set_transform(None)
+        self._clear_overlay_error()
         self.overlay.hide()
         self._emit_state()
 
     def _on_engine_failed(self, text) -> None:
-        self._notify(
-            "error", text if text.startswith("vision.") else "vision.crashed", reason=text, path=""
+        code = text if text.startswith("vision.") else "vision.crashed"
+        self._notify("error", code, reason=text, path="")
+        # Over the map as well, where the player is looking, and in their words: a crash says
+        # what to do rather than what OpenCV said, which the panel's notice still carries.
+        detail = (
+            t("native.overlay.crashedHint")
+            if code == "vision.crashed"
+            else t(f"notify.{code}", reason=text, path="")
         )
+        self.overlay.show_error(t("native.overlay.stopped"), detail)
+        self._overlay_error_shown += 1
+        shown = self._overlay_error_shown
+        QTimer.singleShot(OVERLAY_ERROR_MS, self, lambda: self._overlay_error_expired(shown))
+
+    def _overlay_error_expired(self, shown: int) -> None:
+        if shown == self._overlay_error_shown:  # not cleared, nor replaced by a later one
+            self._clear_overlay_error()
+
+    def _clear_overlay_error(self) -> None:
+        self._overlay_error_shown += 1
+        self.overlay.clear_error()
+        if not self.running:
+            self.overlay.hide()
 
     def _on_engine_warned(self, text) -> None:
         """Detection hiccuped; the overlay carries on by optical flow."""
@@ -574,8 +602,10 @@ class Backend(QObject):
         STARTING is where the overlay is shown, both for a Start and for a Start that was
         parked while the previous run stopped and is replayed only after its IDLE.
         """
-        if phase is Phase.IDLE:
-            self.overlay.hide()
+        if phase is Phase.IDLE and not self.overlay.has_error():
+            self.overlay.hide()  # an error stays up a while, saying why; see _on_engine_failed
+        if phase is Phase.STARTING:
+            self._clear_overlay_error()
         if phase is Phase.STARTING and self._overlay_wanted() and self.state.region:
             self._windows.show_overlay(self.state.region, self.settings.opacity)
             self._apply_route_view(self.settings)
@@ -1157,6 +1187,7 @@ class Backend(QObject):
         self._routes_folder.close()
         self._tiles.shutdown()
         self.engine.shutdown()
+        self._overlay_error_shown += 1  # an error's timer still running must not reach the window
         # Disconnect before the overlay goes: a late transform from the dying thread would
         # otherwise arrive at a widget that is already being destroyed.
         with contextlib.suppress(RuntimeError, TypeError):

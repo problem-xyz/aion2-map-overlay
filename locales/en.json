@@ -172,6 +172,12 @@
       "routeMapPrompt": "Map “{id}” was not found. Choose one of yours:",
       "saveRoute": "Save route"
     },
+    "overlay": {
+      "searching": "Looking for the map…",
+      "searchingHint": "Open the map in the game. If it is open, select the map area again in the panel.",
+      "stopped": "The overlay stopped",
+      "crashedHint": "Press Start overlay again. If it keeps stopping, tell us on Discord."
+    },
     "selector": {
       "prompt": "Drag out the area where the game shows the map.   Esc cancels",
       "promptStart": "Drag out the area where the game shows the map: the overlay starts as soon as it is drawn.   Esc cancels"

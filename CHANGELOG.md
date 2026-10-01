@@ -16,6 +16,8 @@ changes are left out unless they change how the app is installed, run or updated
   The cubes stay on whatever the route does, finished or not, and with the arrows off. The
   ring's size is a slider under Route over the game, 20 pixels to start with.
 - With Cubes on, the overlay starts without a route: it asks which map to show the cubes on.
+- The overlay says what it is doing over the map itself: that it is looking for the map, and
+  what to try when it cannot find it, and why it stopped when it stops with an error.
 
 ### Fixed
 
