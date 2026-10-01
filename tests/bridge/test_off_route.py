@@ -2,7 +2,7 @@
 
 Far off is measured from the leg being walked -- the last point passed to the next one -- so a
 long leg walked end to end is never off the route. The overlay stops saying it a little nearer
-than it started, so a player on the edge does not make the card blink.
+than it started, so a player on the edge does not make the strip blink.
 """
 
 import json
@@ -102,14 +102,14 @@ def test_far_off_the_overlay_says_which_point_and_which_way(backend: Backend) ->
     assert detail == en["far"].format(n=2, way=en["way"]["ne"])
 
 
-def test_back_on_the_route_the_card_goes(backend: Backend) -> None:
+def test_back_on_the_route_the_strip_goes(backend: Backend) -> None:
     at(backend, 1900, 1000 + FAR + 50)
     at(backend, 1500, 1000)
 
     assert backend.overlay._far is None
 
 
-def test_a_point_ticked_off_by_hand_takes_the_card_with_it(backend: Backend) -> None:
+def test_a_point_ticked_off_by_hand_takes_the_strip_with_it(backend: Backend) -> None:
     at(backend, 1900, 1000 + FAR + 50)
     backend.setProgress(2)
 

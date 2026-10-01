@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 # How far off the leg being walked the player has to be before the overlay says so, as a share of
 # the map's width, and how near to come back for it to stop saying it. Both maps are 4096 wide:
 # 160 and 120 map pixels, several arrival rings away. Two numbers, so that a player on the edge
-# does not make the card blink.
+# does not make the strip blink.
 FAR_FROM_ROUTE = 160 / 4096
 BACK_ON_ROUTE = 120 / 4096
 

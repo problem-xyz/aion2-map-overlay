@@ -43,12 +43,13 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 8
 CUBE_RING = QColor("#ff7a5c")
-# The card in the middle of the map area that tells the player what the overlay is doing when it has
-# no route to show. A map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it
-# for a frame or two all the time, and a card blinking over the map is worse than none. Past
-# HINT_DELAY_S the card says what to do about it.
+# The strip along the bottom of the map area that tells the player what the overlay is doing. A
+# map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all
+# the time, and a strip blinking over the map is worse than none. Past HINT_DELAY_S it says what to
+# do about it. NOTICE_MAX_W keeps it off the corners, where the game puts its clock and buttons.
 NOTICE_DELAY_S = 1.5
 HINT_DELAY_S = 6.0
+NOTICE_MAX_W = 520
 NOTICE_BG = QColor(15, 17, 22, 225)
 NOTICE_BORDER = QColor(255, 255, 255, 36)
 NOTICE_TITLE = QColor("#f2f4f8")
@@ -198,7 +199,7 @@ class OverlayWindow(ClickThroughWindow):
 
     def _map_lost(self) -> None:
         self._lost_at = time.monotonic()
-        # The card is due later: wake up to draw it then, and its hint after it.
+        # The strip is due later: wake up to draw it then, and its hint after it.
         for delay in (NOTICE_DELAY_S, HINT_DELAY_S):
             QTimer.singleShot(int(delay * 1000) + 50, self, self.update)
 
@@ -303,27 +304,27 @@ class OverlayWindow(ClickThroughWindow):
         p.end()
 
     def _notice(self):
-        """(title, detail, accent, on top) for the card over the map, or None for no card.
-
-        A card in place of the route goes in the middle, where the player looks. The one beside
-        the route, saying it is far, goes on top: the player walks on with it, and in the middle
-        it would sit over them.
-        """
+        """(title, detail, accent) for the strip over the map, or None for no strip."""
         if self._error is not None:
-            return (*self._error, ERROR_COLOR, False)
+            return (*self._error, ERROR_COLOR)
         if self._T is not None:
-            return None if self._far is None else (*self._far, FAR_COLOR, True)
+            return None if self._far is None else (*self._far, FAR_COLOR)
         lost = time.monotonic() - self._lost_at
         if lost < NOTICE_DELAY_S:
             return None
         hint = t("native.overlay.searchingHint") if lost >= HINT_DELAY_S else ""
-        return t("native.overlay.searching"), hint, SEARCH_COLOR, False
+        return t("native.overlay.searching"), hint, SEARCH_COLOR
 
-    def _draw_notice(self, p, title, detail, accent, top) -> None:
-        """A dark card over the map area: a coloured dot, a bold line, a hint under it."""
-        margin, pad, dot, gap = 10, 10, 8, 8
-        width = min(self.width() - 2 * margin, 380)
-        text_w = width - 2 * pad - dot - gap
+    def _draw_notice(self, p, title, detail, accent) -> None:
+        """A dark strip along the bottom of the map area: a coloured dot, a bold line, a hint.
+
+        At the bottom rather than in the middle: in another instance the map shown there is not
+        the one being looked for, and a card in its middle covered it. The hint follows the
+        title on its line where the two fit, and wraps under it where they do not.
+        """
+        margin, pad_x, pad_y, dot, gap = 8, 12, 7, 8, 8
+        width = min(self.width() - 2 * margin, NOTICE_MAX_W)
+        text_w = width - 2 * pad_x - dot - gap
         if text_w < 60:
             return
         bold = QFont(p.font())
@@ -333,34 +334,46 @@ class OverlayWindow(ClickThroughWindow):
         plain.setPixelSize(12)
         flags = int(Qt.TextFlag.TextWordWrap)
         title_box = QFontMetrics(bold).boundingRect(QRect(0, 0, text_w, 1000), flags, title)
-        detail_box = (
-            QFontMetrics(plain).boundingRect(QRect(0, 0, text_w, 1000), flags, detail)
-            if detail
-            else QRect()
+        inline_w = text_w - title_box.width() - gap
+        detail_w = QFontMetrics(plain).horizontalAdvance(detail) if detail else 0
+        inline = not detail or (
+            title_box.height() < 2 * QFontMetrics(bold).height() and detail_w <= inline_w
         )
-        height = 2 * pad + title_box.height() + (4 + detail_box.height() if detail else 0)
-        y = margin if top else (self.height() - height) / 2
-        card = QRectF((self.width() - width) / 2, y, width, height)
+        if inline:
+            detail_box = QRect(0, 0, detail_w, QFontMetrics(plain).height())
+            height = 2 * pad_y + max(title_box.height(), detail_box.height())
+        else:
+            detail_box = QFontMetrics(plain).boundingRect(QRect(0, 0, text_w, 1000), flags, detail)
+            height = 2 * pad_y + title_box.height() + 2 + detail_box.height()
+        strip = QRectF((self.width() - width) / 2, self.height() - margin - height, width, height)
 
-        p.setOpacity(max(self._opacity, 0.85))  # a card nobody can read says nothing
+        p.setOpacity(max(self._opacity, 0.85))  # a strip nobody can read says nothing
         p.setPen(QPen(NOTICE_BORDER, 1))
         p.setBrush(NOTICE_BG)
-        p.drawRoundedRect(card, 8, 8)
+        p.drawRoundedRect(strip, 6, 6)
         p.setPen(Qt.PenStyle.NoPen)
         p.setBrush(accent)
-        cy = card.top() + pad + title_box.height() / 2
-        p.drawEllipse(QPointF(card.left() + pad + dot / 2, cy), dot / 2, dot / 2)
+        line_h = max(title_box.height(), detail_box.height()) if inline else title_box.height()
+        top = strip.top() + pad_y
+        p.drawEllipse(QPointF(strip.left() + pad_x + dot / 2, top + line_h / 2), dot / 2, dot / 2)
 
-        x = card.left() + pad + dot + gap
-        y = card.top() + pad
+        x = strip.left() + pad_x + dot + gap
         p.setFont(bold)
         p.setPen(NOTICE_TITLE)
-        p.drawText(QRectF(x, y, text_w, title_box.height()), flags, title)
+        p.drawText(
+            QRectF(x, top, text_w, line_h if inline else title_box.height()),
+            flags | int(Qt.AlignmentFlag.AlignVCenter),
+            title,
+        )
         if detail:
             p.setFont(plain)
             p.setPen(NOTICE_TEXT)
-            y += title_box.height() + 4
-            p.drawText(QRectF(x, y, text_w, detail_box.height()), flags, detail)
+            if inline:
+                box = QRectF(x + title_box.width() + gap, top, inline_w, line_h)
+                p.drawText(box, int(Qt.AlignmentFlag.AlignVCenter), detail)
+            else:
+                box = QRectF(x, top + title_box.height() + 2, text_w, detail_box.height())
+                p.drawText(box, flags, detail)
         p.setOpacity(self._opacity)
 
     def _paint_cubes(self, p) -> None:
