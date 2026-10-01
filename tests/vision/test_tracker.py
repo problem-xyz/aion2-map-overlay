@@ -210,3 +210,57 @@ def test_a_map_named_in_a_non_ascii_alphabet_can_be_tracked(tmp_path: Path) -> N
     tracker = Tracker(str(reference), BUILD)
 
     assert tracker.ref_shape == (REFERENCE_SIZE, REFERENCE_SIZE)
+
+
+def test_a_finer_image_is_matched_and_answered_in_the_maps_own_pixels(
+    scene: Scene, tmp_path: Path
+) -> None:
+    """The 8192 px detail is what a close zoom is found on; the routes are on the 4096 px map.
+
+    So the matrix the tracker hands back is reference -> frame, whatever image it matched.
+    """
+    detail = cv2.resize(_reference_image(), None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    path = tmp_path / "detail.png"
+    imwrite(path, detail)
+
+    tracker = Tracker(str(path), BUILD, coords_size=(REFERENCE_SIZE, REFERENCE_SIZE))
+    found, _info = tracker.find(scene.frame_bgra, PARAMS)
+
+    assert tracker.ref_shape == (REFERENCE_SIZE, REFERENCE_SIZE)
+    assert found is not None
+    assert _corner_errors(found, scene.expected).max() < MAX_CORNER_ERROR_PX
+
+
+def test_the_points_are_kept_and_the_next_build_reads_them_back(
+    scene: Scene, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache = tmp_path / "cache"
+    first = Tracker(str(scene.reference_path), BUILD, cache_dir=cache)
+    assert len(list(cache.glob("points-*.npz"))) == 1
+
+    def no_detection(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("the points were found again instead of read back")
+
+    monkeypatch.setattr("map_overlay.vision.tracker.detect_tiled", no_detection)
+    second = Tracker(str(scene.reference_path), BUILD, cache_dir=cache)
+
+    assert np.array_equal(second.ref_pts, first.ref_pts)
+    assert np.array_equal(second.des_ref, first.des_ref)
+    found, _info = second.find(scene.frame_bgra, PARAMS)
+    assert found is not None
+
+
+def test_points_kept_for_another_version_of_the_image_are_not_used(
+    scene: Scene, tmp_path: Path
+) -> None:
+    cache = tmp_path / "cache"
+    Tracker(str(scene.reference_path), BUILD, cache_dir=cache)
+    before = {p.name for p in cache.glob("points-*.npz")}
+
+    # the map was updated: the same file, other pixels
+    imwrite(scene.reference_path, cv2.flip(_reference_image(), 1))
+    Tracker(str(scene.reference_path), BUILD, cache_dir=cache)
+    after = {p.name for p in cache.glob("points-*.npz")}
+
+    assert len(after) == 1
+    assert after != before  # found again and kept under the new name, the old one gone

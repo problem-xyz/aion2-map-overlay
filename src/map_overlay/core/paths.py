@@ -121,6 +121,11 @@ class DataDirs:
     def state(self) -> Path:
         return self.root / "state.json"
 
+    @property
+    def cache(self) -> Path:
+        """What the app works out once and keeps: the maps' points for detection. Safe to delete."""
+        return self.root / "cache"
+
     def ensure(self) -> None:
         for path in (self.root, self.maps, self.routes, self.logs):
             path.mkdir(parents=True, exist_ok=True)

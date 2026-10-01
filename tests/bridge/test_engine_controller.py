@@ -60,8 +60,9 @@ class StubEngine(QThread):
     started_ok = Signal(str)
     # `finished` is QThread's own signal; the real Engine does not declare one either.
 
-    def __init__(self) -> None:
+    def __init__(self, cache_dir: object = None) -> None:
         super().__init__()
+        self.cache_dir = cache_dir
         self.configs: list[dict[str, Any]] = []
         self.previews: list[bool] = []
         self.start_calls = 0
@@ -217,6 +218,7 @@ def test_start_hands_the_engine_everything_the_loop_needs(
             "region": REGION,
             "reference": "map-a.png",
             "screen_size": SCREEN,
+            "reference_size": None,  # the image is the map itself: nothing to bring it onto
         }
     ]
     assert engine.start_calls == 1

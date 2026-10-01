@@ -26,6 +26,9 @@ changes are left out unless they change how the app is installed, run or updated
 ### Fixed
 
 - Selecting the map area again while the overlay runs no longer stops it with an error.
+- The map is found at the game's closest zoom levels too, where it used to be lost every few
+  seconds. The first start on each map takes a few seconds longer, once; every start after it
+  is faster than before.
 
 ## [1.3.0] - 2026-09-30
 

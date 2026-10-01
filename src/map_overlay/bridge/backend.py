@@ -193,7 +193,7 @@ class Backend(QObject):
         self.overlay.set_recordable(self._recordable)
         self._setup_steps()
 
-        self.engine = EngineController(self)
+        self.engine = EngineController(self, cache_dir=dirs.cache)
         self.engine.transformChanged.connect(self.overlay.set_transform)
         self.engine.playerMoved.connect(self._on_player)
         self.engine.stats.connect(self._on_stats)
@@ -563,11 +563,13 @@ class Backend(QObject):
 
         self._apply_route(doc)
         scr = primary_screen_geometry()
+        meta = self._map_meta(doc["map"] if doc else self._free_map)
         self.engine.start(
             settings=asdict(self.settings),
             region=self.state.region,
             reference=str(ref),
             screen_size=(scr.width(), scr.height()),
+            reference_size=meta["size"] if meta else None,
         )
         # The overlay comes up with STARTING, in _on_engine_phase: a Start pressed while the
         # last run is still stopping is parked, and the IDLE that ends that run hides it.
@@ -1056,9 +1058,12 @@ class Backend(QObject):
 
     def _retarget_engine(self, doc) -> None:
         """Point a running engine at this route's map."""
-        ref = self._routes.reference_for_map(doc["map"])
+        ref = self._routes.tracking_image_for_map(doc["map"])
+        meta = self._map_meta(doc["map"])
         if ref is not None and ref.exists():
-            self.engine.reconfigure(reference=str(ref))
+            self.engine.reconfigure(
+                reference=str(ref), reference_size=meta["size"] if meta else None
+            )
 
     @Slot(str, result=str)
     def getObjects(self, map_id: str) -> str:

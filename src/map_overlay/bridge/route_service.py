@@ -104,6 +104,17 @@ class RouteService:
         spec = self.spec_for(map_id)
         return spec.reference if spec else None
 
+    def tracking_image_for_map(self, map_id) -> Path | None:
+        """The image the map is found on the screen by: its detail, where it has one.
+
+        At the game's closest zoom the screen shows a hundred-odd pixels of the 4096 px
+        reference, too few points to place it by; the 8192 px detail has twice as many each way.
+        """
+        spec = self.spec_for(map_id)
+        if spec is None:
+            return None
+        return spec.detail if spec.detail is not None and spec.detail.exists() else spec.reference
+
     def tiles_source_for_map(self, map_id) -> Path | None:
         """The image a map's tiles are cut from, or None for an id the registry does not have."""
         spec = self.spec_for(map_id)
@@ -183,7 +194,7 @@ class RouteService:
 
     def runnable_map(self, map_id):
         """(None, reference_path, error) for starting the engine on a map with no route."""
-        ref = self.reference_for_map(map_id)
+        ref = self.tracking_image_for_map(map_id)
         if ref is None:
             return None, None, MapError("map.unknown", id=map_id)
         if not ref.exists():
