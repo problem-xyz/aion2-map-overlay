@@ -35,12 +35,14 @@ function mount(props: Partial<RunRowProps> = {}) {
     canStart: true,
     checklistVisible: false,
     overlayVisible: true,
+    cubesVisible: false,
     captureVisible: false,
     captureExclusion: true,
     onStart: vi.fn(),
     onStop: vi.fn(),
     onChecklistVisible: vi.fn(),
     onOverlayVisible: vi.fn(),
+    onCubesVisible: vi.fn(),
     onCaptureVisible: vi.fn(),
     ...props,
   };
@@ -57,6 +59,16 @@ function recordingBox(): HTMLInputElement {
 }
 
 describe("RunRow", () => {
+  it("switches the cubes on their own, beside the arrows", () => {
+    const props = mount({ cubesVisible: false });
+    const box = screen.getByRole<HTMLInputElement>("checkbox", { name: en("panel.run.cubes") });
+
+    expect(box.checked).toBe(false);
+    fireEvent.click(box);
+    expect(props.onCubesVisible).toHaveBeenCalledWith(true);
+    expect(props.onOverlayVisible).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
   });

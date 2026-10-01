@@ -219,12 +219,14 @@ export default function PanelPage() {
         canStart={Boolean(route)}
         checklistVisible={state.steps.visible}
         overlayVisible={state.overlayVisible}
+        cubesVisible={state.settings.show_cubes}
         captureVisible={state.captureVisible}
         captureExclusion={state.captureExclusion}
         onStart={() => api.start()}
         onStop={() => api.stop()}
         onChecklistVisible={(visible) => api.setStepsVisible(visible)}
         onOverlayVisible={(visible) => api.setOverlayVisible(visible)}
+        onCubesVisible={(visible) => changeSetting("show_cubes", visible)}
         onCaptureVisible={(visible) => api.setCaptureVisible(visible)}
       />
       <SearchHint running={state.running} />

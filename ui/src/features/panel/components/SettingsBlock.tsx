@@ -121,6 +121,19 @@ export default function SettingsBlock({
           tip={t("panel.settings.routePastTip")}
           onChange={(v) => onChange("route_past", v)}
         />
+        <SettingSlider
+          name="cube_radius"
+          schema={schema}
+          label={t("panel.settings.cubeRadius")}
+          value={s.cube_radius}
+          format={(v) =>
+            v === 0
+              ? t("panel.settings.cubeRadiusNone")
+              : t("panel.settings.cubeRadiusValue", { value: format.number(v) })
+          }
+          tip={t("panel.settings.cubeRadiusTip")}
+          onChange={(v) => onChange("cube_radius", v)}
+        />
       </Card>
 
       {checklist}

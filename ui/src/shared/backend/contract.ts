@@ -42,6 +42,13 @@ export interface Settings {
   route_ahead: number;
   route_past: number;
   /**
+   * Since api 23: the map's hidden cubes over the game, every one whatever the route's progress,
+   * each in a ring `cube_radius` screen pixels across its middle (0 draws the cube alone).
+   * `overlayVisible` no longer takes them away: it is the route's switch alone.
+   */
+  show_cubes: boolean;
+  cube_radius: number;
+  /**
    * Since api 13: the same in the route editor, which always draws every point. "dim" fades the
    * route away from the selected point and `editor_route_ahead` steps from it; "all" draws it
    * all in full. `editor_opacity` is the lines' and arrows' opacity there.

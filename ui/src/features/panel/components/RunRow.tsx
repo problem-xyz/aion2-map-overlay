@@ -2,6 +2,7 @@ import { useId, useLayoutEffect, useRef } from "react";
 
 import { useI18n } from "@/shared/i18n";
 import Icon from "@/shared/ui/Icon";
+import MarkIcon from "@/shared/ui/MarkIcon";
 import Sheen from "@/shared/ui/Sheen";
 
 export interface RunRowProps {
@@ -11,6 +12,8 @@ export interface RunRowProps {
   /** The checklist over the game: state.steps.visible. */
   checklistVisible: boolean;
   overlayVisible: boolean;
+  /** The map's hidden cubes over the game: settings.show_cubes. */
+  cubesVisible: boolean;
   captureVisible: boolean;
   /**
    * getState's captureExclusion: false on a Windows too old to hide a window from capture.
@@ -21,12 +24,13 @@ export interface RunRowProps {
   onStop: () => void;
   onChecklistVisible: (visible: boolean) => void;
   onOverlayVisible: (visible: boolean) => void;
+  onCubesVisible: (visible: boolean) => void;
   onCaptureVisible: (visible: boolean) => void;
 }
 
 /**
  * Start or Stop, and beside it the toggles for what is drawn over the game and who can see it --
- * the checklist, the arrows, the recordings -- in one row like the client's action bar: the main
+ * the checklist, the arrows, the cubes, the recordings -- in one row like the client's action bar: the main
  * button and its quick slots.
  */
 export default function RunRow({
@@ -34,12 +38,14 @@ export default function RunRow({
   canStart,
   checklistVisible,
   overlayVisible,
+  cubesVisible,
   captureVisible,
   captureExclusion,
   onStart,
   onStop,
   onChecklistVisible,
   onOverlayVisible,
+  onCubesVisible,
   onCaptureVisible,
 }: RunRowProps) {
   const { t, locale } = useI18n();
@@ -47,7 +53,7 @@ export default function RunRow({
   const row = useRef<HTMLDivElement>(null);
   const canHide = captureExclusion !== false;
 
-  // Three quick slots with their names leave Start too little room in a narrow panel, and in
+  // Four quick slots with their names leave Start too little room in a narrow panel, and in
   // Russian at the default width. Then the slots show their icons alone, the name staying their
   // tooltip and their accessible name. Measured with the names shown, every time, so the answer
   // never depends on the last one; the class is set here rather than through state, so a
@@ -110,6 +116,18 @@ export default function RunRow({
           <Icon name={overlayVisible ? "eye" : "eyeOff"} className="pn-chip-icon" />
           <span className="pn-chip-label" aria-hidden="true">
             {t("panel.run.arrowsShort")}
+          </span>
+        </label>
+        <label className="pn-chip" title={t("panel.run.cubes")}>
+          <input
+            type="checkbox"
+            checked={cubesVisible}
+            onChange={(e) => onCubesVisible(e.target.checked)}
+            aria-label={t("panel.run.cubes")}
+          />
+          <MarkIcon name="cube" className="pn-chip-icon" />
+          <span className="pn-chip-label" aria-hidden="true">
+            {t("panel.run.cubesShort")}
           </span>
         </label>
         {/* Where Windows cannot hide it, the overlay is visible whatever this says, so the box

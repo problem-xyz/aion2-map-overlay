@@ -34,6 +34,14 @@ MIN_SEGMENT = 2 * ARROW_L  # no arrow is drawn on a very short segment
 # all: without arrows, at this share of the overlay's opacity. Drawn whole and alike, a route
 # that loops about a village was a tangle nobody could read the way on from.
 FADED_OPACITY = 0.3
+# The hidden cube as the panel draws it (markIcons.ts): a coral cube from above a corner, the lit
+# top palest. CUBE_HALF is half its height in screen pixels.
+CUBE_TOP = QColor("#f4a08c")
+CUBE_LEFT = QColor("#d9624f")
+CUBE_RIGHT = QColor("#a83a2f")
+CUBE_INK = QColor("#3a0c08")
+CUBE_HALF = 8
+CUBE_RING = QColor("#ff7a5c")
 
 
 def marker_color(marker, route_color, index, total):
@@ -140,7 +148,12 @@ class OverlayWindow(ClickThroughWindow):
         self._colors = []  # one colour per marker, indexed over the whole route
         self._width = 3
         self._doc_scale = np.eye(3)
-        self._M = None  # reference map -> capture region
+        self._T = None  # reference map -> capture region, as the engine sent it
+        self._M = None  # route coordinates -> capture region: _T after _doc_scale
+        self._route_on = True  # the panel's Arrows switch; the cubes have their own
+        self._cubes = None  # hidden cubes in reference-map pixels, (N, 1, 2) float32
+        self._cube_radius = 0
+        self._cube_sprite = None  # QImage of one cube, drawn once per device pixel ratio
         self._done = 0  # markers already passed, counted from the start of the route
         self._radius = 0.0  # arrival radius in route coordinates; 0 draws no ring
         self._faded = None  # QImage the faded part is drawn into, kept between frames
@@ -158,6 +171,28 @@ class OverlayWindow(ClickThroughWindow):
         if view != self._view:
             self._view = view
             self.update()
+
+    def set_route_visible(self, visible) -> None:
+        """Whether the route is drawn. The cubes are not: they go by set_cubes alone."""
+        visible = bool(visible)
+        if visible != self._route_on:
+            self._route_on = visible
+            self.update()
+
+    def set_cubes(self, points, radius=0) -> None:
+        """The hidden cubes to draw, in reference-map pixels; empty or None draws none.
+
+        They stay on whatever the route does -- finished, off screen, its view cut to the next
+        steps -- because they are the map's, not the route's. `radius` is the ring around each
+        in screen pixels, constant at any zoom like the route's circles.
+        """
+        self._cubes = (
+            np.array(points, dtype=np.float32).reshape(-1, 1, 2)
+            if points is not None and len(points)
+            else None
+        )
+        self._cube_radius = max(0, int(radius))
+        self.update()
 
     def set_route(self, doc, ref_size=None, arrive_radius=0.0) -> None:
         """Replace the drawn route.
@@ -195,13 +230,95 @@ class OverlayWindow(ClickThroughWindow):
 
     def set_transform(self, transform) -> None:
         """transform: reference -> region matrix (numpy 3x3), or None."""
-        new = None if transform is None else np.asarray(transform, dtype=float) @ self._doc_scale
-        if new is None and self._M is None:
+        raw = None if transform is None else np.asarray(transform, dtype=float)
+        if raw is None and self._T is None:
             return
-        self._M = new
+        self._T = raw
+        self._M = None if raw is None else raw @ self._doc_scale
         self.update()
 
     def paintEvent(self, _event) -> None:
+        if self._T is None:
+            return
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        # Under the route: where a step stands on a cube, its number stays readable.
+        self._paint_cubes(p)
+        if self._route_on:
+            self._paint_route(p)
+        p.end()
+
+    def _paint_cubes(self, p) -> None:
+        if self._cubes is None:
+            return
+        pts = cv2.perspectiveTransform(self._cubes, self._T.astype(np.float32)).reshape(-1, 2)  # pyright: ignore[reportOptionalMemberAccess]
+        margin = self._cube_radius + CUBE_HALF
+        keep = (
+            np.isfinite(pts).all(axis=1)
+            & (pts[:, 0] > -margin)
+            & (pts[:, 0] < self.width() + margin)
+            & (pts[:, 1] > -margin)
+            & (pts[:, 1] < self.height() + margin)
+        )
+        pts = pts[keep]
+        if not len(pts):
+            return
+        p.setOpacity(self._opacity)
+        r = self._cube_radius
+        if r > 0:
+            fill = QColor(CUBE_RING)
+            fill.setAlpha(40)
+            for pen_color, width in ((LINE_DARK, 3.5), (CUBE_RING, 1.5)):
+                p.setPen(QPen(pen_color, width))
+                p.setBrush(fill if pen_color is CUBE_RING else Qt.BrushStyle.NoBrush)
+                for x, y in pts:
+                    p.drawEllipse(QPointF(x, y), r, r)
+        sprite = self._cube_image()
+        for x, y in pts:
+            p.drawImage(QPointF(x - CUBE_HALF, y - CUBE_HALF), sprite)
+
+    def _cube_image(self):
+        """One cube, drawn once: a hundred of them a frame are then a hundred blits."""
+        ratio = self.devicePixelRatioF()
+        if self._cube_sprite is not None and self._cube_sprite.devicePixelRatio() == ratio:
+            return self._cube_sprite
+        side = CUBE_HALF * 2
+        image = QImage(
+            int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
+        )
+        image.setDevicePixelRatio(ratio)
+        image.fill(Qt.GlobalColor.transparent)
+        # the panel's 24px drawing, scaled onto `side`
+        k = side / 24
+        top, left, right, mid, bottom = (12, 2.5), (3.5, 7.2), (20.5, 7.2), (12, 11.9), (12, 21.5)
+        faces = (
+            ((top, right, mid, left), CUBE_TOP),
+            ((left, mid, bottom, (3.5, 16.8)), CUBE_LEFT),
+            ((right, (20.5, 16.8), bottom, mid), CUBE_RIGHT),
+        )
+        q = QPainter(image)
+        q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        q.setPen(
+            QPen(
+                CUBE_INK,
+                1.2,
+                Qt.PenStyle.SolidLine,
+                Qt.PenCapStyle.RoundCap,
+                Qt.PenJoinStyle.RoundJoin,
+            )
+        )
+        for corners, color in faces:
+            path = QPainterPath(QPointF(corners[0][0] * k, corners[0][1] * k))
+            for x, y in corners[1:]:
+                path.lineTo(x * k, y * k)
+            path.closeSubpath()
+            q.setBrush(color)
+            q.drawPath(path)
+        q.end()
+        self._cube_sprite = image
+        return image
+
+    def _paint_route(self, p) -> None:
         if self._M is None or self._pts is None:
             return
         done = self._done
@@ -236,8 +353,6 @@ class OverlayWindow(ClickThroughWindow):
             faded.append((pts[b - 1 :], bright - 1, 1))
         if k > 0:
             faded.append((pts[:k], first, 0))  # after, so the steps passed lie on top
-        p = QPainter(self)
-        p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         if faded:
             p.setOpacity(self._opacity * FADED_OPACITY)
             p.drawImage(0, 0, self._draw_faded(faded))
@@ -254,7 +369,6 @@ class OverlayWindow(ClickThroughWindow):
                 way[0] += d / length * MARKER_R
         self._draw_legs(p, way, first + ahead - done)
         self._draw_markers(p, pts[k:b], done)
-        p.end()
 
     def _draw_faded(self, parts):
         """The faded runs of the route, drawn in full into a layer of their own, without arrows.

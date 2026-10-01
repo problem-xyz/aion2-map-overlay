@@ -364,7 +364,9 @@
       "arrowsShort": "Arrows",
       "recordingShort": "In recordings",
       "checklist": "Show the checklist over the game: the next points of the route",
-      "checklistShort": "Checklist"
+      "checklistShort": "Checklist",
+      "cubes": "Show the map's hidden cubes over the game, all of them, each in a ring",
+      "cubesShort": "Cubes"
     },
     "settings": {
       "advanced": "Advanced",
@@ -408,6 +410,10 @@
       "routeViewTip": "Steps: only the route around you. The next steps bright, the last ones passed faded, nothing else. The easiest to follow when a route loops about.\nAll, faded: the whole route, bright only for the next steps and faded everywhere else.\nAll: the whole route ahead bright, what was passed faded.",
       "routeAheadTip": "How many steps ahead are drawn bright, with their arrows. The leg you are walking now is the first of them.",
       "routePastTip": "How many steps already passed stay on the checklist, and on the map in the Steps view, faded, so you can see where you came from. None leaves them out.",
+      "cubeRadius": "Ring around cubes",
+      "cubeRadiusValue": "{value} px",
+      "cubeRadiusNone": "none",
+      "cubeRadiusTip": "How far the ring around each hidden cube reaches, in screen pixels. It stays the same size however far the map is zoomed. None draws the cubes alone.",
       "trackingTip": "By motion: the overlay follows how the picture moves from one frame to the next, and full detection only corrects it now and then. Smooth and light.\nDetection only: every frame is matched against the map from scratch. Heavier, and it can jitter, but it never drifts.",
       "detectIntervalTip": "With tracking by motion: how often full detection checks where the map is and corrects the drift. More often corrects sooner and costs more.",
       "smoothingTip": "How gently the overlay is pulled toward each new result of detection. More takes the shake out but trails behind a quick pan. Off follows every result at once.",

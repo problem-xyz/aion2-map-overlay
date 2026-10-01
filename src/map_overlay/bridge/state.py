@@ -220,7 +220,9 @@ def steps_state(settings, state) -> StepsPayload:
 # 20: a map carries "faction", and a route its map's faction and "official".
 # 21: links has partnerDiscord, the invite to Aion 2 Global's server, which openUrl() opens.
 # 22: banner, the advertising banner that ships with the app, whose url openUrl() opens.
-API_VERSION = 22
+# 23: settings has show_cubes and cube_radius: the map's hidden cubes over the game, each in a
+#     ring; overlayVisible governs the route alone, and the overlay is up while either is drawn.
+API_VERSION = 23
 
 
 def build_state(

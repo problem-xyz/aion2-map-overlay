@@ -107,6 +107,17 @@ def icon_for(category_id: str, map_name: str = "") -> str:
     return ""
 
 
+def cube_points(sets: Iterable[dict[str, Any]], size: Sequence[float]) -> list[tuple[float, float]]:
+    """Every hidden cube in the sets, in map pixels of `size`; the nodes are in percent of it."""
+    w, h = float(size[0]), float(size[1])
+    return [
+        (n["x"] / 100 * w, n["y"] / 100 * h)
+        for doc in sets
+        for n in doc["nodes"]
+        if icon_for(n["c"], doc.get("mapName", "")) == "cube"
+    ]
+
+
 def icons_under(
     sets: Iterable[dict[str, Any]],
     size: Sequence[float],

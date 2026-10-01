@@ -95,6 +95,10 @@ class Settings:
     route_view: str = field(default="steps", metadata=choices("steps", "dim", "all"))
     route_ahead: int = field(default=3, metadata=rng(1, 10))
     route_past: int = field(default=3, metadata=rng(0, 10))
+    # The map's hidden cubes over the game, all of them and whatever the route's progress, each
+    # in a ring cube_radius screen pixels across its middle; 0 draws the cube alone.
+    show_cubes: bool = False
+    cube_radius: int = field(default=20, metadata=rng(0, 100))
     # The same in the route editor, which always draws every point: "dim" fades the route away
     # from the selected point and the steps after it, "all" draws it all in full.
     editor_route_view: str = field(default="dim", metadata=choices("dim", "all"))

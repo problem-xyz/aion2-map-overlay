@@ -94,7 +94,7 @@ from map_overlay.qt.win32 import supports_capture_exclusion, windows_version
 from map_overlay.store import legacy
 from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
-from map_overlay.store.objects import icons_under
+from map_overlay.store.objects import cube_points, icons_under
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
 from map_overlay.updater.service import UpdatePayload, UpdaterService
 
@@ -151,6 +151,7 @@ class Backend(QObject):
         self._banner = load_banner()
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
+        self._cubes: list[tuple[float, float]] = []  # the route's map's hidden cubes, reference px
         self.overlay_visible = True
 
         self._editor_req = {"seq": 0, "id": None, "doc": None}
@@ -332,8 +333,10 @@ class Backend(QObject):
         self._routes.active_doc = doc
         # What each point sits on, for the plaque's icons: worked out once per route, not on
         # every point passed
-        self._step_objects = self._objects_under(doc)
+        sets = self._routes.load_objects(doc["map"]) if doc else []
+        self._step_objects = self._objects_under(doc, sets)
         meta = self._map_meta(doc["map"]) if doc else None
+        self._cubes = cube_points(sets, meta["size"]) if meta else []
         # The ring shows where a point ticks itself off. With auto marking off nothing does, so
         # it is left out, like the crosshair in the preview; updateSettings redraws on the switch.
         radius = self.settings.arrive_radius if self.settings.auto_progress else 0.0
@@ -345,12 +348,31 @@ class Backend(QObject):
             done=self._progress.done_count(doc),
             name=doc["name"] if doc else "",
         )
+        self._apply_cubes()
         self._sync_steps()
 
-    def _objects_under(self, doc) -> list[str]:
+    def _apply_cubes(self) -> None:
+        """The hidden cubes over the game while the Cubes switch is on, and the window for them."""
+        cubes = self._cubes if self.settings.show_cubes else []
+        self.overlay.set_cubes(cubes, self.settings.cube_radius)
+        self._sync_overlay()
+
+    def _overlay_wanted(self) -> bool:
+        """The route and the cubes share the one window: it is up while either is drawn."""
+        return self.overlay_visible or (self.settings.show_cubes and bool(self._cubes))
+
+    def _sync_overlay(self) -> None:
+        if not self.running:
+            return
+        if self._overlay_wanted():
+            if not self.overlay.isVisible() and self.state.region:
+                self._windows.show_overlay(self.state.region, self.settings.opacity)
+        else:
+            self.overlay.hide()
+
+    def _objects_under(self, doc, sets) -> list[str]:
         if not doc:
             return []
-        sets = self._routes.load_objects(doc["map"])
         return icons_under(sets, doc["mapSize"], [(m["x"], m["y"]) for m in doc["markers"]])
 
     def _set_done(self, done) -> None:
@@ -523,7 +545,7 @@ class Backend(QObject):
         """
         if phase is Phase.IDLE:
             self.overlay.hide()
-        if phase is Phase.STARTING and self.overlay_visible and self.state.region:
+        if phase is Phase.STARTING and self._overlay_wanted() and self.state.region:
             self._windows.show_overlay(self.state.region, self.settings.opacity)
             self._apply_route_view(self.settings)
         if phase is Phase.RUNNING and self.engine.capture_backend_name == "mss":
@@ -538,12 +560,8 @@ class Backend(QObject):
     @Slot(bool)
     def setOverlayVisible(self, visible: bool) -> None:
         self.overlay_visible = bool(visible)
-        if self.running:
-            if visible:
-                self.overlay.show()
-                self.overlay.apply_capture_mode()
-            else:
-                self.overlay.hide()
+        self.overlay.set_route_visible(self.overlay_visible)
+        self._sync_overlay()
         self._emit_state()
 
     @Slot(bool)
@@ -614,6 +632,8 @@ class Backend(QObject):
             after.arrive_radius,
         ):
             self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
+        elif (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
+            self._apply_cubes()
         if before.language != after.language:
             self.apply_language()
         if before.updates_auto_check != after.updates_auto_check:
