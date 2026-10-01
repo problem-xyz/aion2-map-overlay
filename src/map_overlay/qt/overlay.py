@@ -17,6 +17,7 @@ from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter, QPainte
 from PySide6.QtWidgets import QApplication, QWidget
 
 from map_overlay.i18n.catalog import t
+from map_overlay.qt.webview import system_dpi_scale
 from map_overlay.qt.win32 import (
     GWL_EXSTYLE,
     WS_EX_NOACTIVATE,
@@ -55,6 +56,10 @@ MARQUEE_PAUSE_S = 1.5
 MARQUEE_SPEED = 50.0
 MARQUEE_GAP = 60
 MARQUEE_FRAME_MS = 33
+# The strip's type, in pixels at 100% Windows scale; system_dpi_scale() multiplies them, since Qt's
+# own scaling is off and nothing else would. At 150% on a 4K screen 13 px could not be read.
+NOTICE_TITLE_PX = 15
+NOTICE_TEXT_PX = 14
 NOTICE_BG = QColor(15, 17, 22, 225)
 NOTICE_BORDER = QColor(255, 255, 255, 36)
 NOTICE_TITLE = QColor("#f2f4f8")
@@ -183,6 +188,7 @@ class OverlayWindow(ClickThroughWindow):
         self._far = None  # (title, detail) while the player is far off the route
         self._marquee = None  # (title, detail) the running line is of, and since when it runs
         self._marquee_since = 0.0
+        self._ui_scale = system_dpi_scale()
         # Repaints the running line. Only while one runs: an idle overlay draws nothing at all.
         self._marquee_timer = QTimer(self)
         self._marquee_timer.setInterval(MARQUEE_FRAME_MS)
@@ -339,7 +345,8 @@ class OverlayWindow(ClickThroughWindow):
         the one being looked for, and a card in its middle covered it. One line, the hint after
         the title; where the two are longer than the strip they run along it.
         """
-        pad_x, pad_y, dot, gap = 12, 7, 8, 8
+        k = self._ui_scale
+        pad_x, pad_y, dot, gap = 12 * k, 8 * k, 9 * k, 9 * k
         width = self.width()
         x0 = pad_x + dot + gap
         text_w = width - x0 - pad_x
@@ -347,9 +354,9 @@ class OverlayWindow(ClickThroughWindow):
             return
         bold = QFont(p.font())
         bold.setBold(True)
-        bold.setPixelSize(13)
+        bold.setPixelSize(round(NOTICE_TITLE_PX * k))
         plain = QFont(p.font())
-        plain.setPixelSize(12)
+        plain.setPixelSize(round(NOTICE_TEXT_PX * k))
         fb, fp = QFontMetrics(bold), QFontMetrics(plain)
         line_h = max(fb.height(), fp.height())
         height = 2 * pad_y + line_h
