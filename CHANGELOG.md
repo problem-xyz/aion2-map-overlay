@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-02
+
 ### Added
 
 - A Resources button beside Cubes shows the map's gathering points over the game: odyle, ore,
