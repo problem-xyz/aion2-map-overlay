@@ -14,7 +14,7 @@ changes are left out unless they change how the app is installed, run or updated
 
 - A Resources button beside Cubes shows the map's gathering points over the game: odyle, ore,
   gems, wood, herbs and the rest, each with a mark of its own. The arrow beside it opens the list
-  of the map's resources; tick up to three to show. Like the cubes, they stay on whatever the
+  of the map's resources; tick up to five to show. Like the cubes, they stay on whatever the
   route does, and with them on the overlay starts without a route.
 - A switch under Route over the game turns off the hints when you are far off the route: the
   strip over the map and the offer to go on from a later point. It is on to start with.

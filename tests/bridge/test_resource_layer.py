@@ -157,13 +157,12 @@ def test_the_switch_on_with_nothing_picked_does_not_start_without_a_route(
     assert starts == []
 
 
-def test_no_more_than_three_resources_are_drawn_at_once(backend: Backend) -> None:
-    backend._resources = {r: [(1.0, 1.0)] for r in ("odyle", "orichalcum", "ruby", "aria")}
-    backend.updateSettings(
-        json.dumps({"show_resources": True, "resources": ["odyle", "orichalcum", "ruby", "aria"]})
-    )
+def test_no_more_than_five_resources_are_drawn_at_once(backend: Backend) -> None:
+    six = ["odyle", "orichalcum", "sapphire", "diamond", "ruby", "aria"]
+    backend._resources = {r: [(1.0, 1.0)] for r in six}
+    backend.updateSettings(json.dumps({"show_resources": True, "resources": six}))
 
-    assert set(drawn(backend)) == {"odyle", "orichalcum", "ruby"}
+    assert set(drawn(backend)) == set(six[:5])
 
 
 def test_with_the_route_mode_off_a_start_looks_for_every_map_though_a_route_is_chosen(
