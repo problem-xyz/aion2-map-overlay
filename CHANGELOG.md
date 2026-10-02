@@ -18,6 +18,8 @@ changes are left out unless they change how the app is installed, run or updated
   route does, and with them on the overlay starts without a route.
 - A switch under Route over the game turns off the hints when you are far off the route: the
   strip over the map and the offer to go on from a later point. It is on to start with.
+- The route editor lists the gathering points under a Gathering category, one entry per
+  resource. They start hidden there; the eye shows them, and a point dropped on one snaps to it.
 
 ### Changed
 
@@ -27,8 +29,6 @@ changes are left out unless they change how the app is installed, run or updated
   alone: no route, no checklist and no hints, and it finds the open map by itself. The route you
   chose stays chosen for when you turn it back on.
 - The hidden cubes over the game are drawn half as large again.
-- The route editor lists the gathering points under a Gathering category, one entry per
-  resource. They start hidden there; the eye shows them, and a point dropped on one snaps to it.
 
 ## [1.4.0] - 2026-10-01
 
