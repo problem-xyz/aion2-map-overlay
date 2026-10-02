@@ -26,7 +26,7 @@ export function resourceName(t: (key: MessageKey) => string, id: string): string
  * off, and beside it the list of the map's resources to tick the ones to draw. Ticking one turns
  * the switch on; turning the switch on with none ticked opens the list. The slot wears the mark
  * of the first resource ticked. No more than MAX_PICKED of the map's are ticked at once: past that
- * the rest wait, greyed, until one is unticked.
+ * the rest wait, greyed, until one is unticked. Clear unticks them all at once.
  */
 export default function ResourcesFilter({
   on,
@@ -127,10 +127,20 @@ export default function ResourcesFilter({
               </label>
             ))
           )}
-          {full ? (
-            <p className="pn-resources-none">
-              {t("panel.filters.resourcesMax", { count: MAX_PICKED })}
-            </p>
+          {available.length > 0 ? (
+            <div className="pn-resources-foot">
+              <span className="pn-resources-note">
+                {full ? t("panel.filters.resourcesMax", { count: MAX_PICKED }) : null}
+              </span>
+              <button
+                type="button"
+                className="btn-small ghost"
+                disabled={picked.length === 0}
+                onClick={() => onPick([])}
+              >
+                {t("panel.filters.resourcesClear")}
+              </button>
+            </div>
           ) : null}
         </div>
       ) : null}

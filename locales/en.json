@@ -424,6 +424,7 @@
       "resourcesPick": "Choose the resources to show",
       "resourcesNone": "This map has no gathering points.",
       "resourcesMax": "Up to {count} at a time, so the map stays readable",
+      "resourcesClear": "Clear all",
       "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
       "tracesShort": "Feathers",
       "seals": "Sealed dungeon points in the route. Turn off to leave them out of the map, the checklist and the step count",

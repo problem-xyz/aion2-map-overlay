@@ -484,14 +484,23 @@ html:has(.pn-app) {
   }
 }
 .pn-resource {
+  transition:
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
   padding: 6px 8px;
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
   font-size: var(--text-sm);
   cursor: pointer;
+}
+.pn-resource:has(input:checked) {
+  color: var(--color-text);
 }
 .pn-resource input {
   flex: none;
@@ -500,15 +509,41 @@ html:has(.pn-app) {
 .pn-resource:has(input:focus-visible) {
   box-shadow: var(--focus-ring);
 }
-@media (hover: hover) and (pointer: fine) {
-  .pn-resource:hover {
-    background: var(--fill-selected);
-  }
+.pn-resource:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .pn-resource-icon {
   flex: none;
   width: 18px;
   height: 18px;
+  transition: scale var(--duration-fast) var(--ease-out);
+}
+/* Under the pointer the row lights up like a slot and its mark comes forward, so the eye finds
+   what a click will tick; a row that cannot be ticked stays as it is. */
+@media (hover: hover) and (pointer: fine) {
+  .pn-resource:not(:has(input:disabled)):hover {
+    border-color: var(--color-frame-strong);
+    background: var(--fill-tile-on);
+    color: var(--color-text);
+  }
+  .pn-resource:not(:has(input:disabled)):hover .pn-resource-icon {
+    scale: 1.2;
+  }
+}
+.pn-resources-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: 2px;
+  padding: 6px 4px 2px 8px;
+  border-top: 1px solid var(--color-border);
+}
+.pn-resources-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
 }
 .pn-resource-name {
   overflow: hidden;
@@ -524,6 +559,8 @@ html:has(.pn-app) {
 }
 @media (prefers-reduced-motion: reduce) {
   .pn-chip-more svg,
+  .pn-resource,
+  .pn-resource-icon,
   .pn-resources {
     transition: none;
   }

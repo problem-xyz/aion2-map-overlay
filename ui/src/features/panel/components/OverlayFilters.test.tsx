@@ -127,6 +127,25 @@ describe("the resources filter", () => {
     expect(screen.getByText(/Up to 5 at a time/)).toBeTruthy();
   });
 
+  it("Clear all unticks every resource", () => {
+    const props = mount({ resources: true, picked: ["odyle", "ruby"] });
+    openList();
+
+    fireEvent.click(screen.getByRole("button", { name: en("panel.filters.resourcesClear") }));
+
+    expect(props.onPick).toHaveBeenCalledWith([]);
+  });
+
+  it("offers nothing to clear while none is ticked", () => {
+    mount();
+    openList();
+
+    const clear = screen.getByRole<HTMLButtonElement>("button", {
+      name: en("panel.filters.resourcesClear"),
+    });
+    expect(clear.disabled).toBe(true);
+  });
+
   it("says so when the map has none", () => {
     mount({ available: [] });
     openList();
