@@ -32,7 +32,7 @@ from map_overlay.vision.detector import DetectJob, Detector
 from map_overlay.vision.features import CancelledError
 from map_overlay.vision.flow import FlowTracker
 from map_overlay.vision.preview import render_preview
-from map_overlay.vision.tracker import Tracker, TrackerBuildParams, TrackerParams
+from map_overlay.vision.tracker import MapPicker, Tracker, TrackerBuildParams, TrackerParams
 
 log = logging.getLogger(__name__)
 
@@ -88,6 +88,7 @@ class _LoopState:
     detect_failures: int = 0  # consecutive detector exceptions
     frame_times: list = field(default_factory=list)
     detect_ms: Any = None
+    map: int | None = None  # which of several maps was found last (MapPicker), by index
 
 
 class Engine(QThread):
@@ -116,6 +117,7 @@ class Engine(QThread):
     failed = Signal(str)
     warned = Signal(str)  # non-fatal: the overlay keeps going
     started_ok = Signal(str)  # capture backend name
+    mapFound = Signal(int)  # of the maps configure() was given, the one now on the screen
 
     def __init__(self, cache_dir=None) -> None:
         super().__init__()
@@ -132,17 +134,31 @@ class Engine(QThread):
         # Owned by run(); only ever touched from the engine thread. run() makes the detector
         # and the flow tracker before any loop step, so they are declared here, not set.
         self._capture: Capture | None = None
-        self._tracker: Tracker | None = None
+        self._tracker: Tracker | MapPicker | None = None
         self._detector: Detector
         self._flow: FlowTracker
         self._state = _LoopState()
 
     # ------------------------------------------------------------------ configuration (GUI thread)
     def configure(
-        self, settings=None, region=None, reference=None, screen_size=None, reference_size=None
+        self,
+        settings=None,
+        region=None,
+        reference=None,
+        screen_size=None,
+        reference_size=None,
+        *,
+        maps=None,
     ) -> None:
         """`reference_size` is the map's own size when `reference` is an image of another, its
-        finer detail: the matrices and the player's position are then still in the map's pixels."""
+        finer detail: the matrices and the player's position are then still in the map's pixels.
+
+        `maps`, in place of the two, is several (reference, reference_size) pairs when it is not
+        known which map the player has open: the engine finds out, and says so with mapFound.
+        """
+        if maps:
+            reference = tuple(str(path) for path, _size in maps)
+            reference_size = tuple(None if size is None else tuple(size) for _path, size in maps)
         with self._lock:
             if settings:
                 self._settings.update(settings)
@@ -251,16 +267,29 @@ class Engine(QThread):
         self._flow.min_points = max(12, self._flow.max_points // 5)
 
     def _build_tracker(self, path, build, *, size=None) -> None:
+        """A Tracker for one map; for several -- `path` and `size` then tuples -- a MapPicker."""
         try:
             # Feature detection over a large reference takes seconds; let it be abandoned so
             # that closing the app does not have to wait for it.
-            self._tracker = Tracker(
-                path,
-                build,
-                should_stop=self._stop.is_set,
-                coords_size=size,
-                cache_dir=self._cache_dir,
-            )
+            if isinstance(path, tuple):
+                self._tracker = MapPicker(
+                    Tracker(
+                        p,
+                        build,
+                        should_stop=self._stop.is_set,
+                        coords_size=sz,
+                        cache_dir=self._cache_dir,
+                    )
+                    for p, sz in zip(path, size or (None,) * len(path), strict=True)
+                )
+            else:
+                self._tracker = Tracker(
+                    path,
+                    build,
+                    should_stop=self._stop.is_set,
+                    coords_size=size,
+                    cache_dir=self._cache_dir,
+                )
         except CancelledError:
             return
         except FileNotFoundError as e:
@@ -273,6 +302,7 @@ class Engine(QThread):
             self._set_found(False, "the tracker was rebuilt")
         st.current = None
         st.flow_valid = False
+        st.map = None
         self._flow.reset()
 
     def _grab(self):
@@ -339,6 +369,10 @@ class Engine(QThread):
         m, info = result
         st.info = info
         st.detect_ms = info.get("detectMs", st.detect_ms)
+        if m is not None and info.get("map") is not None and info["map"] != st.map:
+            st.map = info["map"]
+            log.info("the map on the screen is map %d of those given", st.map)
+            self.mapFound.emit(st.map)
         if m is not None:
             st.detect_failures = 0
             target = st.drift_since_submit @ m if (use_flow and st.flow_valid) else m

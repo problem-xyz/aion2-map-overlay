@@ -31,6 +31,8 @@ class StandIn:
     start = Backend.start
     _start_in = Backend._start_in
     _apply_region = Backend._apply_region
+    _route_followed = Backend._route_followed
+    _map_layers_on = Backend._map_layers_on
 
     def __init__(self, region: dict[str, int] | None, error: str | None = None) -> None:
         self.running = False

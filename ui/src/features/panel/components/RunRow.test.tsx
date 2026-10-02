@@ -34,13 +34,13 @@ function mount(props: Partial<RunRowProps> = {}) {
     running: false,
     canStart: true,
     checklistVisible: false,
-    overlayVisible: true,
+    routeMode: true,
     captureVisible: false,
     captureExclusion: true,
     onStart: vi.fn(),
     onStop: vi.fn(),
     onChecklistVisible: vi.fn(),
-    onOverlayVisible: vi.fn(),
+    onRouteMode: vi.fn(),
     onCaptureVisible: vi.fn(),
     ...props,
   };
@@ -82,7 +82,7 @@ describe("RunRow", () => {
 
     expect(document.querySelector(".pn-run")?.classList.contains("compact")).toBe(true);
     // the names stay what the boxes are called
-    expect(screen.getByRole("checkbox", { name: en("panel.run.showArrows") })).toBeDefined();
+    expect(screen.getByRole("checkbox", { name: en("panel.run.route") })).toBeDefined();
   });
 
   it.each([true, undefined])(
@@ -140,5 +140,23 @@ describe("RunRow", () => {
   it("keeps a Start that cannot run still", () => {
     mount({ canStart: false });
     expect(document.querySelector(".btn-start .ui-sheen")).toBeNull();
+  });
+
+  it("the Route slot switches the route mode", () => {
+    const props = mount();
+
+    fireEvent.click(screen.getByRole("checkbox", { name: en("panel.run.route") }));
+
+    expect(props.onRouteMode).toHaveBeenCalledWith(false);
+  });
+
+  it("with the route mode off, the checklist is off and cannot be turned on", () => {
+    mount({ routeMode: false, checklistVisible: true });
+
+    const checklist = screen.getByRole<HTMLInputElement>("checkbox", {
+      name: en("panel.run.checklist"),
+    });
+    expect(checklist.checked).toBe(false);
+    expect(checklist.disabled).toBe(true);
   });
 });

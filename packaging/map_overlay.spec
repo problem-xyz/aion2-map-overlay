@@ -34,8 +34,10 @@ a = Analysis(  # noqa: F821
         (str(ROOT / "locales"), "locales"),
         (str(ROOT / "assets" / "icon.png"), "assets"),
         (str(ROOT / "assets" / "maps"), "assets/maps"),  # the two bundled maps, ~11 MB
-        # their object sets, ~360 KB; the README in that folder is for the repository only
+        # their object sets, ~1.4 MB; the README in that folder is for the repository only
         *((str(p), "assets/object-sets") for p in (ROOT / "assets" / "object-sets").glob("*.json")),
+        # the drawings of the gathering resources, which the overlay draws them by
+        (str(ROOT / "assets" / "marks" / "resources.json"), "assets/marks"),
         # the starter routes, copied into a new user's routes/ on first run, and the digests of
         # their earlier versions, by which an untouched copy is brought up to date
         *((str(p), "assets/routes") for p in (ROOT / "assets" / "routes").glob("*.json")),

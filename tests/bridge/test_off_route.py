@@ -114,3 +114,33 @@ def test_a_point_ticked_off_by_hand_takes_the_strip_with_it(backend: Backend) ->
     backend.setProgress(2)
 
     assert backend.overlay._far is None
+
+
+def test_with_the_hints_off_nothing_is_said_off_the_route(backend: Backend) -> None:
+    backend.updateSettings(json.dumps({"route_far_notice": False}))
+
+    at(backend, 1900, 1000 + FAR + 50)
+
+    assert backend.overlay._far is None
+
+
+def test_turning_the_hints_off_takes_the_strip_away_at_once(backend: Backend) -> None:
+    at(backend, 1900, 1000 + FAR + 50)
+    assert backend.overlay._far is not None
+
+    backend.updateSettings(json.dumps({"route_far_notice": False}))
+
+    assert backend.overlay._far is None
+
+
+def test_with_the_route_mode_off_there_is_no_route_to_be_off(backend: Backend) -> None:
+    backend.updateSettings(json.dumps({"route_mode": False}))
+
+    at(backend, 1900, 1000 + FAR + 50)
+
+    assert backend.overlay._far is None
+    assert backend.overlay._pts is None  # the route is not drawn
+    assert backend.route == ROUTE  # but stays chosen
+
+    backend.updateSettings(json.dumps({"route_mode": True}))
+    assert backend.overlay._pts is not None

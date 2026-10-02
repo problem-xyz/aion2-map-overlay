@@ -468,3 +468,32 @@ def test_a_stop_while_capture_opens_is_not_announced_as_a_start(
     # run() closes it on the way out, as it does any capture it holds
     assert isinstance(engine._capture, FakeCapture)
     assert started == []
+
+
+def test_the_map_found_among_several_is_announced_once_per_change(engine: Engine) -> None:
+    found: list[int] = []
+    engine.mapFound.connect(found.append)
+    hit = {"matches": 40, "inliers": 28}
+    engine._detector = FakeDetector(
+        [
+            (translation(1.0, 1.0), {**hit, "map": 1}),
+            (translation(2.0, 1.0), {**hit, "map": 1}),
+            (None, {"matches": 0, "inliers": 0, "map": 1}),
+            (translation(1.0, 1.0), {**hit, "map": 0}),
+        ]
+    )
+
+    for _ in range(4):
+        engine._absorb_detection(loop_settings(), use_flow=False)
+
+    assert found == [1, 0]
+
+
+def test_one_map_alone_announces_nothing(engine: Engine) -> None:
+    found: list[int] = []
+    engine.mapFound.connect(found.append)
+    engine._detector = FakeDetector([(translation(1.0, 1.0), {"matches": 40, "inliers": 28})])
+
+    engine._absorb_detection(loop_settings(), use_flow=False)
+
+    assert found == []

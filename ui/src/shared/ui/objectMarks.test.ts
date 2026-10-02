@@ -33,6 +33,7 @@ describe("iconFor", () => {
     expect(iconFor("empyrean-trace-altgard")).toBe("trace");
     expect(iconFor("hidden-cube-verteron")).toBe("cube");
     expect(iconFor("gathering")).toBeNull();
+    expect(iconFor("gathering-odyle")).toBe("gathering-odyle");
   });
 });
 
@@ -53,6 +54,11 @@ describe("iconsUnder", () => {
       { x: 100, y: 100 }, // the teleport, exactly
     ];
     expect(iconsUnder(sets, SIZE, points)).toEqual([null, "seal", "teleport"]);
+  });
+
+  it("finds an object across a pixel edge from the point", () => {
+    // the teleport at x = 100: a point at 99.4 is in the pixel before it, and within one
+    expect(iconsUnder(sets, SIZE, [{ x: 99.4, y: 100.2 }])).toEqual(["teleport"]);
   });
 
   it("does not count a point a few pixels off as on the object", () => {

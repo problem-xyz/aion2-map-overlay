@@ -39,6 +39,13 @@ export interface Settings {
    * faded away from the next steps; "all" the whole route ahead in full, what was passed faded.
    */
   route_view: RouteView;
+  /**
+   * Since api 27: whether the overlay follows the route. Off, it draws the cubes and resources of
+   * whichever map is open, found by itself, and no route, checklist or off-route hint.
+   */
+  route_mode: boolean;
+  /** Since api 27: far off the route, the hint over the map and the offer to go on from later. */
+  route_far_notice: boolean;
   route_ahead: number;
   route_past: number;
   /**
@@ -55,6 +62,12 @@ export interface Settings {
   route_traces: boolean;
   /** Since api 25: the same for the route's points on sealed dungeons. */
   route_seals: boolean;
+  /**
+   * Since api 26: the map's gathering points over the game, of the resources `resources` lists
+   * (ids from assets/marks/resources.json). The list is kept while the switch is off.
+   */
+  show_resources: boolean;
+  resources: string[];
   /**
    * Since api 13: the same in the route editor, which always draws every point. "dim" fades the
    * route away from the selected point and `editor_route_ahead` steps from it; "all" draws it
@@ -95,8 +108,9 @@ export interface Settings {
  * field, and `choices` only on one with a fixed list.
  */
 export interface SettingSchema {
-  type: "bool" | "int" | "float" | "str";
-  default: boolean | number | string;
+  /** "list" since api 26: a list of strings, `resources`. */
+  type: "bool" | "int" | "float" | "str" | "list";
+  default: boolean | number | string | string[];
   min?: number;
   max?: number;
   choices?: string[];
@@ -166,6 +180,8 @@ export interface MapInfo {
   thumb: string;
   tiles: TilesInfo;
   objects: ObjectSetInfo[];
+  /** Since api 26: the gathering resources its sets have points of, in the order to list them. */
+  resources?: string[];
   tilesUrl?: string;
 }
 

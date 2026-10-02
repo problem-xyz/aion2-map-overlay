@@ -1,9 +1,10 @@
 # Object sets
 
 Ready-made sets of points of interest for two Aion 2 maps: teleports, villages, sealed dungeons,
-battlefields, occupation points, Empyrean Traces and hidden cubes. The route editor draws them
-on top of the map, so that a click on an object snaps the new route point to its coordinates
-and copies its title.
+battlefields, occupation points, Empyrean Traces, hidden cubes and gathering points. The route
+editor draws them on top of the map, so that a click on an object snaps the new route point to
+its coordinates and copies its title; the overlay draws the cubes and the gathering points over
+the game.
 
 These files ship with the app and are the only object sets it knows: each map has its own set
 and nothing else. There is no importing or removing a set; a set a user imported into
@@ -11,8 +12,14 @@ and nothing else. There is no importing or removing a set; a set a user imported
 
 | File            | Map      | Nodes | Upstream file                        |
 | --------------- | -------- | ----- | ------------------------------------ |
-| `verteron.json` | Verteron | 841   | `public/data/markers/World_L_A.yaml` |
-| `altgard.json`  | Altgard  | 832   | `public/data/markers/World_D_A.yaml` |
+| `verteron.json` | Verteron | 3574  | `public/data/markers/World_L_A.yaml` |
+| `altgard.json`  | Altgard  | 3524  | `public/data/markers/World_D_A.yaml` |
+
+The gathering points -- 2733 on Verteron, 2692 on Altgard -- are not in the upstream repository.
+They come from the marker data the project's site serves, and `scripts/import_gathering.py`
+fetches them and writes them into both files as a `gathering` category with a child category
+`gathering-<resource>` per resource. Run it again to bring them up to date; `--check` says
+whether they are. A resource is taken only if `assets/marks/resources.json` has its drawing.
 
 ## Source and licence
 

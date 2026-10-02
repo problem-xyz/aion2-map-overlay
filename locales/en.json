@@ -17,7 +17,30 @@
       "one": "{count} point",
       "other": "{count} points"
     },
-    "about": "About: {topic}"
+    "about": "About: {topic}",
+    "resources": {
+      "odyle": "Odyle",
+      "orichalcum": "Orichalcum",
+      "sapphire": "Sapphire",
+      "diamond": "Diamond",
+      "ruby": "Ruby",
+      "yggdrasil": "Yggdrasil",
+      "asvata": "Asvata",
+      "aria": "Aria",
+      "azpha": "Azpha",
+      "targena": "Targena",
+      "calendula": "Calendula",
+      "coriolus": "Coriolus",
+      "morfa": "Morfa",
+      "kukuru": "Kukuru",
+      "ohkra": "Ohkra",
+      "mela": "Mela",
+      "raydam": "Raydam",
+      "inina": "Inina",
+      "conide": "Conide",
+      "cypri": "Cypri",
+      "pujery": "Pujery"
+    }
   },
   "editor": {
     "actions": {
@@ -164,8 +187,6 @@
   },
   "native": {
     "dialog": {
-      "cubesMap": "Map for the cubes",
-      "cubesMapPrompt": "No route is chosen. Which map should the cubes be shown on?",
       "jsonFilter": "JSON (*.json)",
       "openRoute": "Open route",
       "routeMap": "Map for the route",
@@ -383,21 +404,27 @@
     },
     "run": {
       "captureExclusionOff": "This version of Windows cannot hide the overlay from capture, so it always shows in recordings and in what detection sees. Hiding it needs Windows 10 version 2004 or later.",
-      "showArrows": "Show arrows",
       "start": "Start overlay",
-      "startDisabledTip": "Choose a route below, draw one in the editor, or turn on Cubes",
+      "startDisabledTip": "Choose a route below, draw a new one in the editor, or turn on Cubes or Resources",
       "stop": "Stop",
       "visibleInRecording": "Visible in screen recordings",
       "visibleInRecordingTip": "The overlay is normally hidden from OBS, Discord and Game Bar, so the engine does not see its own route. Turn this on while you record a video.",
-      "arrowsShort": "Arrows",
       "recordingShort": "In recordings",
       "checklist": "Show the checklist over the game: the next points of the route",
-      "checklistShort": "Checklist"
+      "checklistShort": "Checklist",
+      "route": "Lead along the route: its arrows, the checklist and the hints when you stray. Off, the overlay is a map of the cubes and resources alone, and finds the open map by itself",
+      "routeShort": "Route"
     },
     "filters": {
       "label": "What the overlay shows",
       "cubes": "Show the map's hidden cubes over the game, all of them, each in a ring",
       "cubesShort": "Cubes",
+      "resources": "Show the map's gathering points over the game, of the resources ticked in the list beside it",
+      "resourcesShort": "Resources",
+      "resourcesPick": "Choose the resources to show",
+      "resourcesNone": "This map has no gathering points.",
+      "resourcesMax": "Up to {count} at a time, so the map stays readable",
+      "resourcesClear": "Clear all",
       "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
       "tracesShort": "Feathers",
       "seals": "Sealed dungeon points in the route. Turn off to leave them out of the map, the checklist and the step count",
@@ -449,6 +476,8 @@
       "cubeRadiusValue": "{value} px",
       "cubeRadiusNone": "none",
       "cubeRadiusTip": "How far the ring around each hidden cube reaches, in screen pixels. It stays the same size however far the map is zoomed. None draws the cubes alone.",
+      "farNotice": "Hints off the route",
+      "farNoticeHint": "Far from the route, the overlay says which way the next point lies and offers to go on from a later one",
       "trackingTip": "By motion: the overlay follows how the picture moves from one frame to the next, and full detection only corrects it now and then. Smooth and light.\nDetection only: every frame is matched against the map from scratch. Heavier, and it can jitter, but it never drifts.",
       "detectIntervalTip": "With tracking by motion: how often full detection checks where the map is and corrects the drift. More often corrects sooner and costs more.",
       "smoothingTip": "How gently the overlay is pulled toward each new result of detection. More takes the shake out but trails behind a quick pan. Off follows every result at once.",

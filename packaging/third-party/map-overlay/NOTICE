@@ -23,6 +23,11 @@ Source    The marker data of the aion2-interactive-map project by tc-imba:
           altgard.json from public/data/markers/World_D_A.yaml; the category tree follows
           public/data/types.yaml. Both files match the upstream markers as of upstream commit
           d5a1863 (2025-12-03).
+          Their gathering points (the "gathering" category and its children) are adapted from
+          the same project's marker data as its site serves it, which carries markers the
+          repository does not: https://data-aion2.tc-imba.com/markers/World_L_A.json and
+          World_D_A.json, with the resource names from locales/en-US/types.json there,
+          retrieved on 2026-10-02 by scripts/import_gathering.py.
 
 Licence   Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0),
           https://creativecommons.org/licenses/by-nc/4.0/
@@ -57,6 +62,14 @@ Changes   Established by comparing these files with the upstream data. The tool 
             on Empyrean Trace.
           - mapName and backgroundImage keys were added at the top level.
           - The icon and backgroundImage paths point to files this repository does not contain.
+          For the gathering points, made by scripts/import_gathering.py:
+          - Converted from upstream JSON to the same object-set format. Positions converted from
+            pixels on the 8192 x 8192 map layer, from its top-left corner, to percentages:
+            x = x_px / 8192 * 100 and y = y_px / 8192 * 100, rounded to three decimals.
+          - Each upstream gathering subtype became a category gathering-<name> under a new
+            "gathering" category, named and titled by its English name; its colour was added.
+          - Marker ids gained an "oss-" prefix; z, images, contributors, indexInSubtype and tier
+            were dropped, and the description left empty.
 
 
 assets/maps/altgard/reference.webp

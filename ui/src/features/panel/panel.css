@@ -402,8 +402,168 @@ html:has(.pn-app) {
   flex: 1 1 0;
   min-width: 0;
   flex-direction: row;
-  gap: 8px;
+  gap: 7px;
   height: 40px;
+  padding: 0 8px;
+}
+/* Four to a row: the name gives way before the mark does. */
+.pn-filters .pn-chip-icon {
+  flex: none;
+}
+.pn-filters .pn-chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Resources: the slot and, joined to it, the button that opens their list. The list hangs under
+   the whole row, across its width, over what follows. */
+.pn-filters {
+  position: relative;
+}
+.pn-chip-group {
+  flex: 1.2 1 0;
+  min-width: 0;
+  display: flex;
+}
+.pn-chip-group > .pn-chip {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.pn-chip-more {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-inline-start: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--fill-tile);
+  color: var(--color-text-muted);
+}
+.pn-chip-more svg {
+  width: 14px;
+  height: 14px;
+  transition: rotate var(--duration-fast) var(--ease-out);
+}
+.pn-chip-more[aria-expanded="true"] svg {
+  rotate: 180deg;
+}
+.pn-chip-group:has(> .pn-chip input:checked) .pn-chip-more {
+  border-color: var(--color-selected-border);
+  background: var(--fill-tile-on);
+}
+.pn-chip-more:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pn-chip-more:hover {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+.pn-resources {
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    translate var(--duration-enter) var(--ease-out);
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline: 0;
+  z-index: var(--z-popover);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+  padding: var(--space-1);
+  box-shadow: var(--shadow-floating);
+}
+@starting-style {
+  .pn-resources {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+.pn-resource {
+  transition:
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.pn-resource:has(input:checked) {
+  color: var(--color-text);
+}
+.pn-resource input {
+  flex: none;
+  margin: 0;
+}
+.pn-resource:has(input:focus-visible) {
+  box-shadow: var(--focus-ring);
+}
+.pn-resource:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.pn-resource-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  transition: scale var(--duration-fast) var(--ease-out);
+}
+/* Under the pointer the row lights up like a slot and its mark comes forward, so the eye finds
+   what a click will tick; a row that cannot be ticked stays as it is. */
+@media (hover: hover) and (pointer: fine) {
+  .pn-resource:not(:has(input:disabled)):hover {
+    border-color: var(--color-frame-strong);
+    background: var(--fill-tile-on);
+    color: var(--color-text);
+  }
+  .pn-resource:not(:has(input:disabled)):hover .pn-resource-icon {
+    scale: 1.2;
+  }
+}
+.pn-resources-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: 2px;
+  padding: 6px 4px 2px 8px;
+  border-top: 1px solid var(--color-border);
+}
+.pn-resources-note {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+.pn-resource-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pn-resources-none {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 6px 8px;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pn-chip-more svg,
+  .pn-resource,
+  .pn-resource-icon,
+  .pn-resources {
+    transition: none;
+  }
 }
 /* The checkbox stays in the tree for the keyboard and the screen reader, and paints nothing. */
 .pn-chip input {

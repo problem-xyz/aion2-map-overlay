@@ -13,7 +13,8 @@ export interface RunRowProps {
   canStart: boolean;
   /** The checklist over the game: state.steps.visible. */
   checklistVisible: boolean;
-  overlayVisible: boolean;
+  /** The overlay follows the route: settings.route_mode. Off, it is a map of objects alone. */
+  routeMode: boolean;
   captureVisible: boolean;
   /**
    * getState's captureExclusion: false on a Windows too old to hide a window from capture.
@@ -23,26 +24,26 @@ export interface RunRowProps {
   onStart: () => void;
   onStop: () => void;
   onChecklistVisible: (visible: boolean) => void;
-  onOverlayVisible: (visible: boolean) => void;
+  onRouteMode: (on: boolean) => void;
   onCaptureVisible: (visible: boolean) => void;
 }
 
 /**
  * Start or Stop, and beside it the toggles for what is drawn over the game and who can see it --
- * the checklist, the arrows, the recordings -- in one row like the client's action bar: the main
+ * the checklist, the route, the recordings -- in one row like the client's action bar: the main
  * button and its quick slots.
  */
 export default function RunRow({
   running,
   canStart,
   checklistVisible,
-  overlayVisible,
+  routeMode,
   captureVisible,
   captureExclusion,
   onStart,
   onStop,
   onChecklistVisible,
-  onOverlayVisible,
+  onRouteMode,
   onCaptureVisible,
 }: RunRowProps) {
   const { t, locale } = useI18n();
@@ -94,7 +95,8 @@ export default function RunRow({
         <label className="pn-chip" title={t("panel.run.checklist")}>
           <input
             type="checkbox"
-            checked={checklistVisible}
+            checked={checklistVisible && routeMode}
+            disabled={!routeMode}
             onChange={(e) => onChecklistVisible(e.target.checked)}
             aria-label={t("panel.run.checklist")}
           />
@@ -103,16 +105,18 @@ export default function RunRow({
             {t("panel.run.checklistShort")}
           </span>
         </label>
-        <label className="pn-chip" title={t("panel.run.showArrows")}>
+        {/* The route, where the arrows were: off, the overlay is a map of the cubes and the
+            resources, and the checklist, which lists the route's points, goes with it. */}
+        <label className="pn-chip" title={t("panel.run.route")}>
           <input
             type="checkbox"
-            checked={overlayVisible}
-            onChange={(e) => onOverlayVisible(e.target.checked)}
-            aria-label={t("panel.run.showArrows")}
+            checked={routeMode}
+            onChange={(e) => onRouteMode(e.target.checked)}
+            aria-label={t("panel.run.route")}
           />
-          <Icon name={overlayVisible ? "eye" : "eyeOff"} className="pn-chip-icon" />
+          <Icon name="route" className="pn-chip-icon" />
           <span className="pn-chip-label" aria-hidden="true">
-            {t("panel.run.arrowsShort")}
+            {t("panel.run.routeShort")}
           </span>
         </label>
         {/* Where Windows cannot hide it, the overlay is visible whatever this says, so the box

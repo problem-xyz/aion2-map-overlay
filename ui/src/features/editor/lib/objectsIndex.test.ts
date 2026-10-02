@@ -318,8 +318,14 @@ describe("defaultVisibility", () => {
         { id: "edge", name: "Edge", parentId: null, color: "#ff0044" },
         { id: "over", name: "Over", parentId: null, color: "#ff0044" },
         { id: "none", name: "None", parentId: null, color: "#ff0044" },
+        { id: "gathering-odyle", name: "Odyle", parentId: null, color: "#ff0044" },
       ],
-      nodes: [...repeat("small", 5), ...repeat("edge", 200), ...repeat("over", 201)],
+      nodes: [
+        ...repeat("small", 5),
+        ...repeat("edge", 200),
+        ...repeat("over", 201),
+        ...repeat("gathering-odyle", 3),
+      ],
     },
   ];
   const visible = defaultVisibility(buildIndex(sets, SIZE));
@@ -335,6 +341,10 @@ describe("defaultVisibility", () => {
 
   it("hides a category with no points at all", () => {
     expect(visible["big.json::none"]).toBe(false);
+  });
+
+  it("hides the gathering resources, which would bury the rest", () => {
+    expect(visible["big.json::gathering-odyle"]).toBe(false);
   });
 });
 

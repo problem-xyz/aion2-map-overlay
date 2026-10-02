@@ -22,6 +22,7 @@ from map_overlay.core.fileio import read_json_or_none
 from map_overlay.core.paths import DataDirs, resource_path
 from map_overlay.store.images import data_url, image_size, imread, imwrite
 from map_overlay.store.objects import BUNDLED_PREFIX, validate_objects
+from map_overlay.store.resources import resources_in
 from map_overlay.store.tiles import detail_octaves, tiles_info
 
 log = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ class BundledObjects:
     path: Path
     map_name: str
     nodes: int
+    resources: tuple[str, ...] = ()  # the gathering resources it has points of, in list order
 
 
 @dataclass(frozen=True)
@@ -110,7 +112,15 @@ def _bundled_objects(objects_root: Path, map_id: str) -> tuple[BundledObjects, .
         log.warning("bundled object set %s is not usable, left out: %s", path, e)
         return ()
     name = doc["mapName"] or path.stem
-    return (BundledObjects(BUNDLED_PREFIX + path.name, path, name, len(doc["nodes"])),)
+    return (
+        BundledObjects(
+            BUNDLED_PREFIX + path.name,
+            path,
+            name,
+            len(doc["nodes"]),
+            tuple(resources_in([doc])),
+        ),
+    )
 
 
 def _load_spec(folder: Path, map_id: str, objects_root: Path) -> MapSpec:
@@ -293,6 +303,8 @@ def list_maps(dirs: DataDirs, specs: Sequence[MapSpec], cache: ThumbCache) -> li
                     {"file": b.file, "mapName": b.map_name, "nodes": b.nodes, "bundled": True}
                     for b in spec.objects
                 ],
+                # what the panel's resource list offers on this map
+                "resources": list(dict.fromkeys(r for b in spec.objects for r in b.resources)),
             }
         )
     return out
