@@ -189,8 +189,6 @@
   },
   "native": {
     "dialog": {
-      "freeMap": "Карта",
-      "freeMapPrompt": "Маршрут не выбран. На какой карте показать кубы и ресурсы?",
       "jsonFilter": "JSON (*.json)",
       "openRoute": "Открыть маршрут",
       "routeMap": "Карта для маршрута",

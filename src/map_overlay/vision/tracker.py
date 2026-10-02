@@ -214,25 +214,20 @@ class Tracker:
 
     def find(self, frame_bgra, params: TrackerParams):
         """(M or None, info). params comes with the frame, so nothing here is shared state."""
+        return self.match(frame_features(self.frame_detector, frame_bgra, params), params)
+
+    def match(self, features, params: TrackerParams):
+        """find() on a frame whose keypoints frame_features() already found."""
         s = params
-        scale = s.detect_scale
+        kp, des, scale, (fh, fw), keypoints = features
         info = {"matches": 0, "inliers": 0, "reproj": None, "mode": "global"}
-
-        if scale != 1.0:
-            small = cv2.resize(frame_bgra, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
-        else:
-            small = frame_bgra
-        gray = cv2.cvtColor(small, cv2.COLOR_BGRA2GRAY)
-
-        kp, des = self.frame_detector.detectAndCompute(gray, None)
         # Near zero on a black or blank frame, which tells a capture problem from a map that
         # simply does not match.
-        info["keypoints"] = len(kp)
+        info["keypoints"] = keypoints
         if des is None or len(kp) < s.min_inliers:
             self._roi = None
             return None, info
 
-        fh, fw = frame_bgra.shape[:2]
         subset = self._roi_subset(s.min_inliers)
         if subset is not None:
             info["mode"] = "local"
@@ -249,6 +244,75 @@ class Tracker:
         else:
             self._roi = None
         return M, info
+
+
+def frame_features(detector, frame_bgra, params: TrackerParams):
+    """The frame's keypoints and descriptors at params.detect_scale, and what match() needs."""
+    scale = params.detect_scale
+    if scale != 1.0:
+        small = cv2.resize(frame_bgra, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    else:
+        small = frame_bgra
+    gray = cv2.cvtColor(small, cv2.COLOR_BGRA2GRAY)
+    kp, des = detector.detectAndCompute(gray, None)
+    return kp, des, scale, frame_bgra.shape[:2], len(kp)
+
+
+# A map that misses this many detections in a row is let go, and every map is searched again: the
+# player may have opened another one.
+RELEASE_AFTER_MISSES = 8
+
+
+class MapPicker:
+    """Several maps, one of which is on the screen: which, it finds out itself.
+
+    Until a map is found every detection is matched against all of them, and the one with the
+    most inliers wins; from then on that map alone is matched, as a lone Tracker would be, until
+    it has missed RELEASE_AFTER_MISSES detections in a row. The frame's keypoints are found once
+    for all of them. `info["map"]` says which map a detection is of, by its index.
+
+    It stands in for a Tracker wherever one is used: `path` and `coords_size` are the maps',
+    in order, and `ref_shape` the map's in hand.
+    """
+
+    def __init__(self, trackers) -> None:
+        self.trackers = list(trackers)
+        first = self.trackers[0]
+        self.build = first.build
+        self.path = tuple(t.path for t in self.trackers)
+        self.coords_size = tuple(t.coords_size for t in self.trackers)
+        self.frame_detector = first.frame_detector
+        self.active: int | None = None
+        self._misses = 0
+
+    @property
+    def ref_shape(self):
+        return self.trackers[self.active or 0].ref_shape
+
+    def find(self, frame_bgra, params: TrackerParams):
+        features = frame_features(self.frame_detector, frame_bgra, params)
+        if self.active is not None:
+            m, info = self.trackers[self.active].match(features, params)
+            info["map"] = self.active
+            if m is not None:
+                self._misses = 0
+                return m, info
+            self._misses += 1
+            if self._misses < RELEASE_AFTER_MISSES:
+                return None, info
+            self.active = None
+        best = None
+        info = {}
+        for i, tracker in enumerate(self.trackers):
+            m, info = tracker.match(features, params)
+            if m is not None and (best is None or info["inliers"] > best[2]["inliers"]):
+                best = (i, m, info)
+        if best is None:
+            return None, info
+        self.active, m, info = best
+        self._misses = 0
+        info["map"] = self.active
+        return m, info
 
 
 # ------------------------------------------------------------------ the points, kept between runs

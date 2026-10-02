@@ -109,43 +109,39 @@ def record_start(backend: Backend, monkeypatch: pytest.MonkeyPatch) -> list[dict
     return starts
 
 
-def test_with_the_cubes_on_a_start_with_no_route_asks_the_map_and_runs_on_it(
+def test_with_the_cubes_on_a_start_with_no_route_looks_for_every_map(
     no_route: Backend, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     starts = record_start(no_route, monkeypatch)
-    asked: list[list[str]] = []
+    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: pytest.fail("asked"))
+    no_route.updateSettings(json.dumps({"show_cubes": True}))
 
-    def choose(_title: str, _label: str, items: list[str], _current: int = 0) -> str:
-        asked.append(items)
-        return "Altgard"
+    no_route.start()
 
-    monkeypatch.setattr(no_route._dialogs, "ask_choice", choose)
+    assert len(starts) == 1
+    maps = starts[0]["maps"]
+    assert [Path(ref).parent.name for ref, _size in maps] == ["altgard", "verteron"]
+    assert drawn(no_route) == 0  # nothing until the engine says which map is open
+
+
+def test_the_map_the_engine_finds_brings_its_cubes(
+    no_route: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    record_start(no_route, monkeypatch)
     no_route.updateSettings(json.dumps({"show_cubes": True}))
     no_route.start()
 
-    assert asked == [["Altgard", "Verteron"]]
-    assert len(starts) == 1
-    assert Path(starts[0]["reference"]).parent.name == "altgard"
+    no_route.engine.mapFound.emit(0)  # Altgard, the first of the maps it was given
     assert drawn(no_route) == len(CUBES)
+
+    no_route.engine.mapFound.emit(1)  # the player opened Verteron, which has no set here
+    assert drawn(no_route) == 0
 
 
 def test_a_start_with_no_route_and_the_cubes_off_is_refused(
     no_route: Backend, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     starts = record_start(no_route, monkeypatch)
-    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: pytest.fail("asked"))
-
-    no_route.start()
-
-    assert starts == []
-
-
-def test_cancelling_the_map_starts_nothing(
-    no_route: Backend, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    starts = record_start(no_route, monkeypatch)
-    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: None)
-    no_route.updateSettings(json.dumps({"show_cubes": True}))
 
     no_route.start()
 

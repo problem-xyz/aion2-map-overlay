@@ -16,6 +16,11 @@ changes are left out unless they change how the app is installed, run or updated
   gems, wood, herbs and the rest, each with a mark of its own. The arrow beside it opens the list
   of the map's resources; tick the ones to show. Like the cubes, they stay on whatever the route
   does, and with them on the overlay starts without a route.
+
+### Changed
+
+- Started without a route, the overlay no longer asks which map to show the cubes and resources
+  on: it finds the map you have open, and when you open another, it follows within a few seconds.
 - The route editor lists the gathering points under a Gathering category, one entry per
   resource. They start hidden there; the eye shows them, and a point dropped on one snaps to it.
 

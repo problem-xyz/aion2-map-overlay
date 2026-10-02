@@ -53,6 +53,7 @@ class EngineController(QObject):
     transformChanged = Signal(object)
     failed = Signal(str)
     warned = Signal(str)
+    mapFound = Signal(int)  # of the maps start() was given, the one on the screen
 
     def __init__(self, parent=None, cache_dir=None) -> None:
         super().__init__(parent)
@@ -67,6 +68,7 @@ class EngineController(QObject):
         self._engine.previewReady.connect(self.preview)
         self._engine.failed.connect(self.failed)
         self._engine.warned.connect(self.warned)
+        self._engine.mapFound.connect(self.mapFound)
         self._engine.started_ok.connect(self._on_started)
         self._engine.finished.connect(self._on_finished)
 
@@ -89,7 +91,9 @@ class EngineController(QObject):
             self.phaseChanged.emit(phase)
 
     # ------------------------------------------------------------------ control
-    def start(self, settings, region, reference, screen_size, reference_size=None):
+    def start(self, settings, region, reference, screen_size, reference_size=None, *, maps=None):
+        """`maps`, (reference, reference_size) pairs, in place of the two: the map is one of
+        them, and the engine finds which (mapFound)."""
         config = {
             "settings": settings,
             "region": region,
@@ -97,6 +101,8 @@ class EngineController(QObject):
             "screen_size": screen_size,
             "reference_size": reference_size,
         }
+        if maps:
+            config["maps"] = maps
         if self._phase is Phase.STOPPING:
             # The previous run has not finished. Remember the request instead of dropping it.
             self._restart_pending = config

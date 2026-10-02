@@ -58,6 +58,7 @@ class StubEngine(QThread):
     failed = Signal(str)
     warned = Signal(str)
     started_ok = Signal(str)
+    mapFound = Signal(int)  # noqa: N815
     # `finished` is QThread's own signal; the real Engine does not declare one either.
 
     def __init__(self, cache_dir: object = None) -> None:
@@ -391,6 +392,8 @@ def test_the_engines_own_signals_are_re_emitted_to_the_gui(
     controller.preview.connect(previews.append)
     controller.failed.connect(failures.append)
     controller.warned.connect(warnings.append)
+    found: list[int] = []
+    controller.mapFound.connect(found.append)
 
     engine.transformChanged.emit(matrix)
     engine.playerMoved.emit(1.5, -2.5)
@@ -398,6 +401,7 @@ def test_the_engines_own_signals_are_re_emitted_to_the_gui(
     engine.previewReady.emit("<base64 jpeg>")
     engine.failed.emit("vision.no_region_or_route")
     engine.warned.emit("vision.tracker_rebuilt")
+    engine.mapFound.emit(1)
 
     assert transforms == [matrix]
     assert moves == [(1.5, -2.5)]
@@ -405,6 +409,7 @@ def test_the_engines_own_signals_are_re_emitted_to_the_gui(
     assert previews == ["<base64 jpeg>"]
     assert failures == ["vision.no_region_or_route"]
     assert warnings == ["vision.tracker_rebuilt"]
+    assert found == [1]
 
 
 def test_shutdown_joins_the_thread_and_lands_on_idle(

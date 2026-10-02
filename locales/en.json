@@ -187,8 +187,6 @@
   },
   "native": {
     "dialog": {
-      "freeMap": "Map to show",
-      "freeMapPrompt": "No route is chosen. Which map should the cubes and resources be shown on?",
       "jsonFilter": "JSON (*.json)",
       "openRoute": "Open route",
       "routeMap": "Map for the route",

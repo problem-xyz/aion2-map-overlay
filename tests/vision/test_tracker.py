@@ -14,7 +14,13 @@ import numpy as np
 import pytest
 
 from map_overlay.store.images import imwrite
-from map_overlay.vision.tracker import Tracker, TrackerBuildParams, TrackerParams
+from map_overlay.vision.tracker import (
+    RELEASE_AFTER_MISSES,
+    MapPicker,
+    Tracker,
+    TrackerBuildParams,
+    TrackerParams,
+)
 
 REFERENCE_SIZE = 1024
 CROP_SIZE = 300
@@ -264,3 +270,57 @@ def test_points_kept_for_another_version_of_the_image_are_not_used(
 
     assert len(after) == 1
     assert after != before  # found again and kept under the new name, the old one gone
+
+
+# ------------------------------------------------------------------ several maps, one on screen
+
+
+@pytest.fixture
+def two_maps(scene: Scene, tmp_path: Path) -> list[Tracker]:
+    """The scene's map, and another: the same picture mirrored, which nothing of it matches."""
+    other = tmp_path / "other.png"
+    imwrite(other, cv2.flip(_reference_image(), 1))
+    return [Tracker(str(other), BUILD), Tracker(str(scene.reference_path), BUILD)]
+
+
+def test_the_map_on_the_frame_is_picked_out_of_several(
+    scene: Scene, two_maps: list[Tracker]
+) -> None:
+    picker = MapPicker(two_maps)
+
+    found, info = picker.find(scene.frame_bgra, PARAMS)
+
+    assert found is not None
+    assert info["map"] == 1
+    assert picker.active == 1
+    assert picker.path == (two_maps[0].path, two_maps[1].path)
+    assert _corner_errors(found, scene.expected).max() < MAX_CORNER_ERROR_PX
+
+
+def test_a_map_found_is_held_until_it_has_missed_for_a_while(
+    scene: Scene, two_maps: list[Tracker]
+) -> None:
+    picker = MapPicker(two_maps)
+    picker.find(scene.frame_bgra, PARAMS)
+    blank = np.zeros_like(scene.frame_bgra)
+
+    for _ in range(RELEASE_AFTER_MISSES - 1):
+        found, info = picker.find(blank, PARAMS)
+        assert found is None
+        assert info["map"] == 1  # still the map in hand
+    picker.find(blank, PARAMS)
+
+    assert picker.active is None  # let go: the next frame is looked for on every map
+    found, info = picker.find(scene.frame_bgra, PARAMS)
+    assert found is not None
+    assert info["map"] == 1
+
+
+def test_a_frame_of_no_map_finds_none(scene: Scene, two_maps: list[Tracker]) -> None:
+    picker = MapPicker(two_maps)
+
+    found, info = picker.find(np.zeros_like(scene.frame_bgra), PARAMS)
+
+    assert found is None
+    assert "map" not in info
+    assert picker.active is None

@@ -129,17 +129,19 @@ def record_start(backend: Backend, monkeypatch: pytest.MonkeyPatch) -> list[dict
     return starts
 
 
-def test_with_resources_picked_a_start_with_no_route_asks_the_map_and_runs_on_it(
+def test_with_resources_picked_a_start_with_no_route_draws_the_map_the_engine_finds(
     no_route: Backend, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     starts = record_start(no_route, monkeypatch)
-    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: "Altgard")
+    monkeypatch.setattr(no_route._dialogs, "ask_choice", lambda *_: pytest.fail("asked"))
     no_route.updateSettings(json.dumps({"show_resources": True, "resources": ["ruby"]}))
 
     no_route.start()
-
     assert len(starts) == 1
-    assert Path(starts[0]["reference"]).parent.name == "altgard"
+    assert len(starts[0]["maps"]) == 2
+    assert drawn(no_route) == {}
+
+    no_route.engine.mapFound.emit(0)  # Altgard
     assert drawn(no_route) == {"ruby": 1}
 
 

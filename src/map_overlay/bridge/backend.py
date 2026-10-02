@@ -146,6 +146,10 @@ class Backend(QObject):
     # in the route as shown; class defaults for the same reason.
     _rejoin: int | None = None
     _rejoin_declined: int | None = None
+    # On a Start with no route: the maps the engine looks among, and the one it found open, whose
+    # cubes and resources are drawn. A route's map wins. Class defaults for the same reason.
+    _free_ids: tuple[str, ...] = ()
+    _free_map: str | None = None
 
     def __init__(
         self,
@@ -172,9 +176,6 @@ class Backend(QObject):
         self._cubes: list[tuple[float, float]] = []  # the route's map's hidden cubes, reference px
         # The same map's gathering points, by resource
         self._resources: dict[str, list[tuple[float, float]]] = {}
-        # The map a Start with no route was run on, for its cubes and resources alone; a route's
-        # map wins.
-        self._free_map: str | None = None
         self.overlay_visible = True
 
         self._editor_req = {"seq": 0, "id": None, "doc": None}
@@ -208,6 +209,7 @@ class Backend(QObject):
         self.engine.failed.connect(self._on_engine_failed)
         self.engine.warned.connect(self._on_engine_warned)
         self.engine.phaseChanged.connect(self._on_engine_phase)
+        self.engine.mapFound.connect(self._on_map_found)
         self._progress.changed.connect(self._on_progress_changed)
         # Before the plaque is first shown: the monitor either rectangle was saved on may have
         # been unplugged since the last run.
@@ -615,9 +617,13 @@ class Backend(QObject):
         if self._revalidate_screens():
             return
         # With the cubes or resources on there is something to draw without a route: the map's
-        # own. The map is then asked for, after the map area, so that a first Start asks it once.
+        # own. Which map that is the engine finds out, matching every map against the screen.
         free = not self.route and self._map_layers_on()
-        doc, ref, error = (None, None, None) if free else self._routes.runnable_route(self.route)
+        doc, ref, maps = None, None, []
+        if free:
+            maps, error = self._free_maps()
+        else:
+            doc, ref, error = self._routes.runnable_route(self.route)
         if error:
             self._notifier.from_error(error)
             return
@@ -627,45 +633,42 @@ class Backend(QObject):
             # leaves things as they were, and nothing starts.
             self._pick_region(RegionSelector.START_PROMPT, self._start_in)
             return
-        if free:
-            ref = self._ask_free_map()
-            if ref is None:
-                return
 
+        # Until the engine says which map is open, nothing of a map's own is drawn
+        self._free_ids = tuple(map_id for map_id, _ref, _size in maps)
+        self._free_map = None
         self._apply_route(doc)
         scr = primary_screen_geometry()
-        meta = self._map_meta(doc["map"] if doc else self._free_map)
+        meta = self._map_meta(doc["map"]) if doc else None
         self.engine.start(
             settings=asdict(self.settings),
             region=self.state.region,
-            reference=str(ref),
+            reference=str(ref) if ref else None,
             screen_size=(scr.width(), scr.height()),
             reference_size=meta["size"] if meta else None,
+            maps=[(str(r), size) for _id, r, size in maps] or None,
         )
         # The overlay comes up with STARTING, in _on_engine_phase: a Start pressed while the
         # last run is still stopping is parked, and the IDLE that ends that run hides it.
         self._emit_state()
 
-    def _ask_free_map(self):
-        """Which map a Start with no route runs on: its reference, or None if cancelled."""
-        maps = self._routes.maps()
-        if not maps:
-            return None
-        labels = [m["label"] for m in maps]
-        ids = [m["id"] for m in maps]
-        current = ids.index(self._free_map) if self._free_map in ids else 0
-        choice = self._dialogs.ask_choice(
-            t("native.dialog.freeMap"), t("native.dialog.freeMapPrompt"), labels, current
-        )
-        if choice is None:
-            return None
-        map_id = ids[labels.index(choice)]
-        _doc, ref, error = self._routes.runnable_map(map_id)
-        if error:
-            self._notifier.from_error(error)
-            return None
-        self._free_map = map_id
-        return ref
+    def _free_maps(self):
+        """([(map id, reference, size)], error): every map a Start with no route may find open."""
+        maps, error = [], None
+        for spec in self._routes.registry:
+            _doc, ref, error = self._routes.runnable_map(spec.id)
+            if ref is not None:
+                maps.append((spec.id, ref, list(spec.size)))
+        return maps, (None if maps else error)
+
+    def _on_map_found(self, index) -> None:
+        """The engine found which map is open, on a Start with no route: draw that map's own."""
+        if self.route or not 0 <= index < len(self._free_ids):
+            return
+        map_id = self._free_ids[index]
+        if map_id != self._free_map:
+            self._free_map = map_id
+            self._apply_route(None)
 
     @Slot()
     def stop(self) -> None:
