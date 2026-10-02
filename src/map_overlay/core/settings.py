@@ -93,6 +93,12 @@ class Settings:
     # next steps; "all": the whole route ahead in full, what was passed faded. The steps plaque
     # lists the last route_past passed too, whatever the view.
     route_view: str = field(default="steps", metadata=choices("steps", "dim", "all"))
+    # Whether the overlay follows the route at all. Off, it is a map of the game's objects alone:
+    # no route, no checklist and no word about being off it, the open map found by itself, and
+    # only the cubes and resources drawn. The route stays chosen for when it is turned back on.
+    route_mode: bool = True
+    # Far off the route, say so over the map and offer to go on from a later point.
+    route_far_notice: bool = True
     route_ahead: int = field(default=3, metadata=rng(1, 10))
     route_past: int = field(default=3, metadata=rng(0, 10))
     # The map's hidden cubes over the game, all of them and whatever the route's progress, each

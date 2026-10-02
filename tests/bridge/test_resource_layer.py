@@ -155,3 +155,30 @@ def test_the_switch_on_with_nothing_picked_does_not_start_without_a_route(
     no_route.start()
 
     assert starts == []
+
+
+def test_no_more_than_three_resources_are_drawn_at_once(backend: Backend) -> None:
+    backend._resources = {r: [(1.0, 1.0)] for r in ("odyle", "orichalcum", "ruby", "aria")}
+    backend.updateSettings(
+        json.dumps({"show_resources": True, "resources": ["odyle", "orichalcum", "ruby", "aria"]})
+    )
+
+    assert set(drawn(backend)) == {"odyle", "orichalcum", "ruby"}
+
+
+def test_with_the_route_mode_off_a_start_looks_for_every_map_though_a_route_is_chosen(
+    backend: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    backend._store.set_state(region={"left": 0, "top": 0, "width": 200, "height": 200})
+    backend._revalidate_screens = lambda: False
+    starts = record_start(backend, monkeypatch)
+    backend.updateSettings(
+        json.dumps({"route_mode": False, "show_resources": True, "resources": ["ruby"]})
+    )
+
+    backend.start()
+
+    assert len(starts) == 1
+    assert len(starts[0]["maps"]) == 2
+    backend.engine.mapFound.emit(0)  # Altgard
+    assert drawn(backend) == {"ruby": 1}

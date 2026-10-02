@@ -36,8 +36,8 @@ const FOLDED: Readonly<Record<string, PanelSection>> = { steps: "progress", area
 const NO_PROGRESS: ProgressState = { done: 0, total: 0, map: null, markers: [] };
 
 /**
- * The resources the filter's list offers: the route's map's. With no route the map is asked for at
- * Start, so every map's are offered, each once, in the order the first map lists them.
+ * The resources the filter's list offers: the route's map's. With no route followed the engine
+ * finds the open map itself, so every map's are offered, each once, in the order they are listed.
  */
 function mapResources(maps: readonly MapInfo[], mapId: string | undefined): string[] {
   const on = mapId ? maps.filter((m) => m.id === mapId) : maps;
@@ -227,25 +227,25 @@ export default function PanelPage() {
       <RunRow
         running={state.running}
         canStart={
-          Boolean(route) ||
+          (Boolean(route) && state.settings.route_mode) ||
           state.settings.show_cubes ||
           (state.settings.show_resources && state.settings.resources.length > 0)
         }
         checklistVisible={state.steps.visible}
-        overlayVisible={state.overlayVisible}
+        routeMode={state.settings.route_mode}
         captureVisible={state.captureVisible}
         captureExclusion={state.captureExclusion}
         onStart={() => api.start()}
         onStop={() => api.stop()}
         onChecklistVisible={(visible) => api.setStepsVisible(visible)}
-        onOverlayVisible={(visible) => api.setOverlayVisible(visible)}
+        onRouteMode={(on) => changeSetting("route_mode", on)}
         onCaptureVisible={(visible) => api.setCaptureVisible(visible)}
       />
       <OverlayFilters
         cubes={state.settings.show_cubes}
         resources={state.settings.show_resources}
         picked={state.settings.resources}
-        available={mapResources(state.maps, route?.map)}
+        available={mapResources(state.maps, state.settings.route_mode ? route?.map : undefined)}
         traces={state.settings.route_traces}
         seals={state.settings.route_seals}
         onCubes={(on) => changeSetting("show_cubes", on)}

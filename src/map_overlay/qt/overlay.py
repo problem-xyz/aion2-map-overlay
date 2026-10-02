@@ -46,11 +46,11 @@ CUBE_TOP = QColor("#f4a08c")
 CUBE_LEFT = QColor("#d9624f")
 CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
-CUBE_HALF = 8
+CUBE_HALF = 12
 CUBE_RING = QColor("#ff7a5c")
 # A gathering point: its resource's drawing (assets/marks/resources.json) on a dark disc, which
 # keeps it apart from the game's own map. RESOURCE_HALF is half its side in screen pixels.
-RESOURCE_HALF = 9
+RESOURCE_HALF = 13.5
 RESOURCE_DISC = QColor(15, 17, 22, 130)
 # The strip along the bottom of the map area that tells the player what the overlay is doing. A
 # map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all

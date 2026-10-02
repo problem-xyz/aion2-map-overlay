@@ -95,7 +95,7 @@ from map_overlay.store import legacy
 from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import cube_points, icons_under
-from map_overlay.store.resources import resource_points
+from map_overlay.store.resources import MAX_PICKED, resource_points
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
 from map_overlay.updater.service import UpdatePayload, UpdaterService
 
@@ -355,6 +355,8 @@ class Backend(QObject):
 
     def _apply_route(self, doc) -> None:
         self._routes.active_doc = doc
+        if not self.settings.route_mode:
+            doc = None  # a map of its objects alone: the route stays chosen, and is not drawn
         # What each point sits on, for the plaque's icons: worked out once per route, not on
         # every point passed
         map_id = doc["map"] if doc else self._free_map
@@ -411,8 +413,8 @@ class Backend(QObject):
 
     def _apply_resources(self) -> None:
         """The gathering points of the resources picked, while the Resources switch is on."""
-        picked = self.settings.resources if self.settings.show_resources else []
-        self.overlay.set_resources({r: self._resources[r] for r in picked if r in self._resources})
+        picked = self._picked_resources() if self.settings.show_resources else []
+        self.overlay.set_resources({r: self._resources[r] for r in picked})
         self._sync_overlay()
 
     def _overlay_wanted(self) -> bool:
@@ -424,7 +426,8 @@ class Backend(QObject):
         )
 
     def _picked_resources(self) -> list[str]:
-        return [r for r in self.settings.resources if r in self._resources]
+        """The resources picked that the map has, no more than MAX_PICKED of them."""
+        return [r for r in self.settings.resources if r in self._resources][:MAX_PICKED]
 
     def _map_layers_on(self) -> bool:
         """Whether something of the map's own is to be drawn: then a Start needs no route."""
@@ -470,6 +473,9 @@ class Backend(QObject):
             self._progress.set_done(reached, doc)
             return
         done = self._progress.done_count(doc)
+        if not self.settings.route_far_notice:
+            self._set_off_route(None)
+            return
         self._set_off_route(off_route(x, y, doc, done, size, was_off=self._off_route is not None))
         if self._off_route is not None and self.state.region:
             ahead = rejoin_at(x, y, doc, done, size, radius=self.settings.arrive_radius)
@@ -618,12 +624,14 @@ class Backend(QObject):
             return
         # With the cubes or resources on there is something to draw without a route: the map's
         # own. Which map that is the engine finds out, matching every map against the screen.
-        free = not self.route and self._map_layers_on()
+        free = not self._route_followed() and self._map_layers_on()
         doc, ref, maps = None, None, []
         if free:
             maps, error = self._free_maps()
         else:
-            doc, ref, error = self._routes.runnable_route(self.route)
+            doc, ref, error = self._routes.runnable_route(
+                self.route if self.settings.route_mode else None
+            )
         if error:
             self._notifier.from_error(error)
             return
@@ -637,7 +645,8 @@ class Backend(QObject):
         # Until the engine says which map is open, nothing of a map's own is drawn
         self._free_ids = tuple(map_id for map_id, _ref, _size in maps)
         self._free_map = None
-        self._apply_route(doc)
+        # the chosen route stays in hand while the map is drawn alone, for the Route switch
+        self._apply_route(doc or (self._routes.active_doc if self.route else None))
         scr = primary_screen_geometry()
         meta = self._map_meta(doc["map"]) if doc else None
         self.engine.start(
@@ -652,6 +661,25 @@ class Backend(QObject):
         # last run is still stopping is parked, and the IDLE that ends that run hides it.
         self._emit_state()
 
+    def _route_followed(self) -> bool:
+        """A route is chosen and the overlay follows it: it then runs on that route's map."""
+        return bool(self.route) and self.settings.route_mode
+
+    def _apply_route_mode(self) -> None:
+        """The Route switch flipped: draw the route or the map alone, and run on the right map."""
+        doc = self._routes.active_doc
+        if self.running:
+            if self._route_followed() and doc:
+                self._retarget_engine(doc)
+            else:
+                maps, _error = self._free_maps()
+                self._free_ids = tuple(map_id for map_id, _ref, _size in maps)
+                # most likely still the route's map: drawn at once, put right if it is not
+                self._free_map = doc["map"] if doc else self._free_map
+                if maps:
+                    self.engine.reconfigure(maps=[(str(r), size) for _id, r, size in maps])
+        self._apply_route(doc)
+
     def _free_maps(self):
         """([(map id, reference, size)], error): every map a Start with no route may find open."""
         maps, error = [], None
@@ -663,12 +691,12 @@ class Backend(QObject):
 
     def _on_map_found(self, index) -> None:
         """The engine found which map is open, on a Start with no route: draw that map's own."""
-        if self.route or not 0 <= index < len(self._free_ids):
+        if self._route_followed() or not 0 <= index < len(self._free_ids):
             return
         map_id = self._free_ids[index]
         if map_id != self._free_map:
             self._free_map = map_id
-            self._apply_route(None)
+            self._apply_route(self._routes.active_doc if self.route else None)
 
     @Slot()
     def stop(self) -> None:
@@ -804,18 +832,7 @@ class Backend(QObject):
             self.steps.set_pinned(after.steps_pinned)
         if before.steps_scale != after.steps_scale:
             self._resize_steps(before.steps_scale)
-        if (
-            before.auto_progress,
-            before.arrive_radius,
-            before.route_traces,
-            before.route_seals,
-        ) != (after.auto_progress, after.arrive_radius, after.route_traces, after.route_seals):
-            self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
-        else:
-            if (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
-                self._apply_cubes()
-            if (before.show_resources, before.resources) != (after.show_resources, after.resources):
-                self._apply_resources()
+        self._apply_overlay_settings(before, after)
         if before.language != after.language:
             self.apply_language()
         if before.updates_auto_check != after.updates_auto_check:
@@ -823,6 +840,25 @@ class Backend(QObject):
         if before.updates_skipped_version != after.updates_skipped_version:
             self._updates.settings_changed()
         self.engine.reconfigure(settings=asdict(after))
+
+    def _apply_overlay_settings(self, before: Settings, after: Settings) -> None:
+        """What the overlay draws: the route, the cubes, the resources and the notices."""
+        if (
+            before.auto_progress,
+            before.arrive_radius,
+            before.route_traces,
+            before.route_seals,
+        ) != (after.auto_progress, after.arrive_radius, after.route_traces, after.route_seals):
+            self._apply_route(self._routes.active_doc)  # the arrival ring came, went or resized
+        elif before.route_mode != after.route_mode:
+            self._apply_route_mode()
+        else:
+            if (before.show_cubes, before.cube_radius) != (after.show_cubes, after.cube_radius):
+                self._apply_cubes()
+            if (before.show_resources, before.resources) != (after.show_resources, after.resources):
+                self._apply_resources()
+        if before.route_far_notice and not after.route_far_notice:
+            self._set_off_route(None)
 
     def _apply_route_view(self, settings: Settings) -> None:
         self.overlay.set_view(settings.route_view, settings.route_ahead, settings.route_past)
@@ -1144,7 +1180,9 @@ class Backend(QObject):
         )
 
     def _retarget_engine(self, doc) -> None:
-        """Point a running engine at this route's map."""
+        """Point a running engine at this route's map, while the overlay follows the route."""
+        if not self.settings.route_mode:
+            return
         ref = self._routes.tracking_image_for_map(doc["map"])
         meta = self._map_meta(doc["map"])
         if ref is not None and ref.exists():

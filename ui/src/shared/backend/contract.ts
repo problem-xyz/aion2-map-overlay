@@ -39,6 +39,13 @@ export interface Settings {
    * faded away from the next steps; "all" the whole route ahead in full, what was passed faded.
    */
   route_view: RouteView;
+  /**
+   * Since api 27: whether the overlay follows the route. Off, it draws the cubes and resources of
+   * whichever map is open, found by itself, and no route, checklist or off-route hint.
+   */
+  route_mode: boolean;
+  /** Since api 27: far off the route, the hint over the map and the offer to go on from later. */
+  route_far_notice: boolean;
   route_ahead: number;
   route_past: number;
   /**

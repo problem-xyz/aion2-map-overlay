@@ -21,6 +21,10 @@ log = logging.getLogger(__name__)
 
 CATEGORY_PREFIX = "gathering-"
 
+# How many resources are drawn at once: more, and the map is all marks. The panel's list stops
+# offering more at this many (MAX_PICKED in ui/src/shared/ui/resourceMarks.ts).
+MAX_PICKED = 3
+
 
 @functools.cache
 def catalog() -> dict[str, Any]:

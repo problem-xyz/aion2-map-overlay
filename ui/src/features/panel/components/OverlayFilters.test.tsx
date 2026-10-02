@@ -115,6 +115,18 @@ describe("the resources filter", () => {
     expect(screen.queryByRole("checkbox", { name: en("common.resources.odyle") })).toBeNull();
   });
 
+  it("offers no more once three are ticked, and says why", () => {
+    mount({
+      available: ["odyle", "orichalcum", "ruby", "aria"],
+      picked: ["odyle", "orichalcum", "ruby"],
+    });
+    openList();
+
+    expect(box("common.resources.aria").disabled).toBe(true);
+    expect(box("common.resources.ruby").disabled).toBe(false); // a ticked one can be unticked
+    expect(screen.getByText(/Up to 3 at a time/)).toBeTruthy();
+  });
+
   it("says so when the map has none", () => {
     mount({ available: [] });
     openList();

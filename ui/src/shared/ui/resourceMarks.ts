@@ -32,6 +32,12 @@ const BY_ID = new Map(RESOURCES.map((r) => [r.id, r]));
 
 const PREFIX = "gathering-";
 
+/**
+ * How many resources are drawn at once: more, and the map is all marks. The overlay draws no
+ * more than this many either (MAX_PICKED in store/resources.py).
+ */
+export const MAX_PICKED = 3;
+
 /** Every resource, in the order the lists show them. */
 export const RESOURCE_IDS: readonly string[] = RESOURCES.map((r) => r.id);
 

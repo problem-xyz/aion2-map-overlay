@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { type MessageKey, useT } from "@/shared/i18n";
 import Icon from "@/shared/ui/Icon";
 import MarkIcon from "@/shared/ui/MarkIcon";
-import { RESOURCE_IDS, resourceIcon } from "@/shared/ui/resourceMarks";
+import { MAX_PICKED, RESOURCE_IDS, resourceIcon } from "@/shared/ui/resourceMarks";
 
 export interface ResourcesFilterProps {
   /** The Resources switch: settings.show_resources. */
@@ -25,7 +25,8 @@ export function resourceName(t: (key: MessageKey) => string, id: string): string
  * The map's gathering points: a slot like the others in the filters row, which turns them on and
  * off, and beside it the list of the map's resources to tick the ones to draw. Ticking one turns
  * the switch on; turning the switch on with none ticked opens the list. The slot wears the mark
- * of the first resource ticked.
+ * of the first resource ticked. No more than MAX_PICKED of the map's are ticked at once: past that
+ * the rest wait, greyed, until one is unticked.
  */
 export default function ResourcesFilter({
   on,
@@ -63,6 +64,7 @@ export default function ResourcesFilter({
   }, [open]);
 
   const shown = picked.find((id) => available.includes(id)) ?? available[0] ?? RESOURCE_IDS[0];
+  const full = picked.filter((id) => available.includes(id)).length >= MAX_PICKED;
 
   const pick = (id: string, checked: boolean) => {
     const next = new Set(picked);
@@ -117,6 +119,7 @@ export default function ResourcesFilter({
                 <input
                   type="checkbox"
                   checked={picked.includes(id)}
+                  disabled={full && !picked.includes(id)}
                   onChange={(e) => pick(id, e.target.checked)}
                 />
                 <MarkIcon name={resourceIcon(id)} className="pn-resource-icon" />
@@ -124,6 +127,11 @@ export default function ResourcesFilter({
               </label>
             ))
           )}
+          {full ? (
+            <p className="pn-resources-none">
+              {t("panel.filters.resourcesMax", { count: MAX_PICKED })}
+            </p>
+          ) : null}
         </div>
       ) : null}
     </div>

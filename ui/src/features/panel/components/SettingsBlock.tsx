@@ -6,6 +6,7 @@ import { available, languageName, type MessageKey, useI18n } from "@/shared/i18n
 import Icon from "@/shared/ui/Icon";
 import Segmented from "@/shared/ui/Segmented";
 import SettingSlider from "@/shared/ui/SettingSlider";
+import Switch from "@/shared/ui/Switch";
 
 import Card from "./Card";
 
@@ -133,6 +134,12 @@ export default function SettingsBlock({
           }
           tip={t("panel.settings.cubeRadiusTip")}
           onChange={(v) => onChange("cube_radius", v)}
+        />
+        <Switch
+          checked={s.route_far_notice}
+          onChange={(on) => onChange("route_far_notice", on)}
+          label={t("panel.settings.farNotice")}
+          hint={t("panel.settings.farNoticeHint")}
         />
       </Card>
 

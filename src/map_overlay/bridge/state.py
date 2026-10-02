@@ -228,7 +228,9 @@ def steps_state(settings, state) -> StepsPayload:
 # 25: settings has route_seals, which does the same for the route's points on sealed dungeons.
 # 26: settings has show_resources and resources, the gathering resources drawn over the game, and
 #     a map carries "resources", those its sets have; settingsSchema may describe a "list" field.
-API_VERSION = 26
+# 27: settings has route_mode, off for a map of its objects alone with no route followed, and
+#     route_far_notice; the panel no longer calls setOverlayVisible, which still works.
+API_VERSION = 27
 
 
 def build_state(
