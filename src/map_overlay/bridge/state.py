@@ -69,6 +69,7 @@ class MapInfo(TypedDict):
     thumb: str
     tiles: TilesInfo
     objects: list[dict[str, Any]]
+    resources: list[str]  # the gathering resources its sets have points of, in list order
     tilesUrl: NotRequired[str]
 
 
@@ -225,7 +226,9 @@ def steps_state(settings, state) -> StepsPayload:
 # 24: settings has route_traces; off, the route's feather points are left out of the overlay, the
 #     plaque and the progress, whose done, total and markers count only the points shown.
 # 25: settings has route_seals, which does the same for the route's points on sealed dungeons.
-API_VERSION = 25
+# 26: settings has show_resources and resources, the gathering resources drawn over the game, and
+#     a map carries "resources", those its sets have; settingsSchema may describe a "list" field.
+API_VERSION = 26
 
 
 def build_state(

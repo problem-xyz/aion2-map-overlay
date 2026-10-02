@@ -17,7 +17,30 @@
       "one": "{count} point",
       "other": "{count} points"
     },
-    "about": "About: {topic}"
+    "about": "About: {topic}",
+    "resources": {
+      "odyle": "Odyle",
+      "orichalcum": "Orichalcum",
+      "sapphire": "Sapphire",
+      "diamond": "Diamond",
+      "ruby": "Ruby",
+      "yggdrasil": "Yggdrasil",
+      "asvata": "Asvata",
+      "aria": "Aria",
+      "azpha": "Azpha",
+      "targena": "Targena",
+      "calendula": "Calendula",
+      "coriolus": "Coriolus",
+      "morfa": "Morfa",
+      "kukuru": "Kukuru",
+      "ohkra": "Ohkra",
+      "mela": "Mela",
+      "raydam": "Raydam",
+      "inina": "Inina",
+      "conide": "Conide",
+      "cypri": "Cypri",
+      "pujery": "Pujery"
+    }
   },
   "editor": {
     "actions": {
@@ -164,8 +187,8 @@
   },
   "native": {
     "dialog": {
-      "cubesMap": "Map for the cubes",
-      "cubesMapPrompt": "No route is chosen. Which map should the cubes be shown on?",
+      "freeMap": "Map to show",
+      "freeMapPrompt": "No route is chosen. Which map should the cubes and resources be shown on?",
       "jsonFilter": "JSON (*.json)",
       "openRoute": "Open route",
       "routeMap": "Map for the route",
@@ -398,6 +421,10 @@
       "label": "What the overlay shows",
       "cubes": "Show the map's hidden cubes over the game, all of them, each in a ring",
       "cubesShort": "Cubes",
+      "resources": "Show the map's gathering points over the game, of the resources ticked in the list beside it",
+      "resourcesShort": "Resources",
+      "resourcesPick": "Choose the resources to show",
+      "resourcesNone": "This map has no gathering points.",
       "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
       "tracesShort": "Feathers",
       "seals": "Sealed dungeon points in the route. Turn off to leave them out of the map, the checklist and the step count",

@@ -56,6 +56,12 @@ export interface Settings {
   /** Since api 25: the same for the route's points on sealed dungeons. */
   route_seals: boolean;
   /**
+   * Since api 26: the map's gathering points over the game, of the resources `resources` lists
+   * (ids from assets/marks/resources.json). The list is kept while the switch is off.
+   */
+  show_resources: boolean;
+  resources: string[];
+  /**
    * Since api 13: the same in the route editor, which always draws every point. "dim" fades the
    * route away from the selected point and `editor_route_ahead` steps from it; "all" draws it
    * all in full. `editor_opacity` is the lines' and arrows' opacity there.
@@ -95,8 +101,9 @@ export interface Settings {
  * field, and `choices` only on one with a fixed list.
  */
 export interface SettingSchema {
-  type: "bool" | "int" | "float" | "str";
-  default: boolean | number | string;
+  /** "list" since api 26: a list of strings, `resources`. */
+  type: "bool" | "int" | "float" | "str" | "list";
+  default: boolean | number | string | string[];
   min?: number;
   max?: number;
   choices?: string[];
@@ -166,6 +173,8 @@ export interface MapInfo {
   thumb: string;
   tiles: TilesInfo;
   objects: ObjectSetInfo[];
+  /** Since api 26: the gathering resources its sets have points of, in the order to list them. */
+  resources?: string[];
   tilesUrl?: string;
 }
 

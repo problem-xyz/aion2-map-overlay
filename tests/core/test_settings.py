@@ -3,7 +3,7 @@
 import json
 import logging
 import math
-from dataclasses import fields
+from dataclasses import MISSING, fields
 from pathlib import Path
 
 import pytest
@@ -194,9 +194,20 @@ def test_the_schema_carries_each_fields_type_and_default() -> None:
     schema = settings_schema()
     for f in fields(Settings):
         entry = schema[f.name]
-        assert entry["default"] == f.default, f.name
-        expected = {bool: "bool", int: "int", float: "float", str: "str"}[type(f.default)]
-        assert entry["type"] == expected, f.name
+        default = f.default_factory() if f.default_factory is not MISSING else f.default
+        assert entry["default"] == default, f.name
+        names = {bool: "bool", int: "int", float: "float", str: "str", list: "list"}
+        assert entry["type"] == names[type(default)], f.name
+
+
+def test_a_list_of_ids_keeps_its_strings_once_each_and_drops_the_rest() -> None:
+    settings, reset = coerce({"resources": ["odyle", "", 3, "ruby", "odyle"]}, Settings)
+
+    assert settings.resources == ["odyle", "ruby"]
+    assert reset == []
+    settings, reset = coerce({"resources": "odyle"}, Settings)
+    assert settings.resources == []
+    assert reset == ["resources"]
 
 
 def test_the_schema_ranges_are_the_metadata_coerce_enforces() -> None:

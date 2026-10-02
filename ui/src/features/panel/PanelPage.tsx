@@ -1,7 +1,7 @@
 import { useCallback, useState, type ReactNode } from "react";
 
 import { useBackendSignal, useBackendState } from "@/shared/backend/BackendProvider";
-import type { AppState, NotifyPayload, ProgressState } from "@/shared/backend/contract";
+import type { AppState, MapInfo, NotifyPayload, ProgressState } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { useConfirm } from "@/shared/hooks/useConfirm";
@@ -34,6 +34,15 @@ const SECTIONS: readonly PanelSection[] = ["routes", "progress", "settings"];
 // The sections that were folded into another: a panel last left on one opens on its new home
 const FOLDED: Readonly<Record<string, PanelSection>> = { steps: "progress", area: "settings" };
 const NO_PROGRESS: ProgressState = { done: 0, total: 0, map: null, markers: [] };
+
+/**
+ * The resources the filter's list offers: the route's map's. With no route the map is asked for at
+ * Start, so every map's are offered, each once, in the order the first map lists them.
+ */
+function mapResources(maps: readonly MapInfo[], mapId: string | undefined): string[] {
+  const on = mapId ? maps.filter((m) => m.id === mapId) : maps;
+  return [...new Set(on.flatMap((m) => m.resources ?? []))];
+}
 
 function loadSection(): PanelSection {
   try {
@@ -217,7 +226,11 @@ export default function PanelPage() {
 
       <RunRow
         running={state.running}
-        canStart={Boolean(route) || state.settings.show_cubes}
+        canStart={
+          Boolean(route) ||
+          state.settings.show_cubes ||
+          (state.settings.show_resources && state.settings.resources.length > 0)
+        }
         checklistVisible={state.steps.visible}
         overlayVisible={state.overlayVisible}
         captureVisible={state.captureVisible}
@@ -230,9 +243,14 @@ export default function PanelPage() {
       />
       <OverlayFilters
         cubes={state.settings.show_cubes}
+        resources={state.settings.show_resources}
+        picked={state.settings.resources}
+        available={mapResources(state.maps, route?.map)}
         traces={state.settings.route_traces}
         seals={state.settings.route_seals}
         onCubes={(on) => changeSetting("show_cubes", on)}
+        onResources={(on) => changeSetting("show_resources", on)}
+        onPick={(ids) => changeSetting("resources", ids)}
         onTraces={(on) => changeSetting("route_traces", on)}
         onSeals={(on) => changeSetting("route_seals", on)}
       />

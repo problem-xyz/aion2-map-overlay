@@ -4,6 +4,7 @@
 // cursor is found instantly.
 
 import type { ObjectSet } from "@/shared/backend/contract";
+import { isResourceIcon } from "@/shared/ui/resourceMarks";
 
 import { iconColor, iconFor, type ObjectIconName } from "./objectIcons";
 
@@ -175,13 +176,16 @@ export function categoryTree(index: ObjectsIndex): TreeCategory[] {
 }
 
 /**
- * What to show when a map is opened for the first time: every category that has points. The
- * large ones used to start hidden, lest the map be all dots; the owner wants the whole map in
- * view, and a category is one click away from being hidden.
+ * What to show when a map is opened for the first time: every category that has points, but the
+ * gathering resources. The large ones used to start hidden, lest the map be all dots; the owner
+ * wants the whole map in view, and a category is one click away from being hidden. The resources
+ * are the exception: thousands of them would bury the rest, and a route is rarely drawn by them.
  */
 export function defaultVisibility(index: ObjectsIndex): Visibility {
   const visible: Visibility = {};
-  for (const cat of index.categories) visible[cat.id] = cat.count > 0;
+  for (const cat of index.categories) {
+    visible[cat.id] = cat.count > 0 && !(cat.icon && isResourceIcon(cat.icon));
+  }
   return visible;
 }
 

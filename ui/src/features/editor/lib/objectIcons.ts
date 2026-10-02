@@ -7,6 +7,7 @@
 import type { MessageKey } from "@/shared/i18n";
 import type { ObjectIconName } from "@/shared/ui/markIcons";
 import { iconFor } from "@/shared/ui/objectMarks";
+import { isResourceIcon, resourceColor, type ResourceIconName } from "@/shared/ui/resourceMarks";
 
 import { MARKER_COLORS } from "./palette";
 
@@ -20,7 +21,7 @@ export { iconFor };
  * colours a route is read by. A point dropped on a teleport turns purple, its leg of the route
  * with it, and the colour picker shows that swatch pressed.
  */
-const ICON_COLOR: Record<ObjectIconName, MessageKey> = {
+const ICON_COLOR: Record<Exclude<ObjectIconName, ResourceIconName>, MessageKey> = {
   trace: "editor.colors.white",
   teleport: "editor.colors.purple",
   // purple too: the colour says what the point is, a teleport; the winged figure says whose
@@ -30,8 +31,12 @@ const ICON_COLOR: Record<ObjectIconName, MessageKey> = {
   cube: "editor.colors.red",
 };
 
-/** The colour of a category drawn with this icon. */
+/**
+ * The colour of a category drawn with this icon. A gathering resource keeps its mark's own: it is
+ * not a stop the route is read by, and the palette has no colour to say which resource it is.
+ */
 export function iconColor(name: ObjectIconName): string {
+  if (isResourceIcon(name)) return resourceColor(name) ?? "#e7eaf1";
   const swatch = MARKER_COLORS.find((c) => c.nameKey === ICON_COLOR[name]);
   // every key above is one of the palette's
   return swatch ? swatch.value : "#e7eaf1";

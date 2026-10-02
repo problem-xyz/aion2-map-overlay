@@ -28,6 +28,7 @@ def test_the_categories_the_game_draws_an_icon_for() -> None:
     assert icon_for("teleports", "Altgard") == "teleport"
     assert icon_for("teleports", "Verteron") == "teleportElyos"
     assert icon_for("gathering") == ""
+    assert icon_for("gathering-odyle") == "gathering-odyle"
 
 
 def test_a_point_on_an_object_takes_its_icon_and_one_off_it_none() -> None:

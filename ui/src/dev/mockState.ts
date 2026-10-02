@@ -112,6 +112,8 @@ export const MOCK_SETTINGS_SCHEMA: Record<keyof Settings, SettingSchema> = {
   show_cubes: { type: "bool", default: false },
   route_traces: { type: "bool", default: true },
   route_seals: { type: "bool", default: true },
+  show_resources: { type: "bool", default: false },
+  resources: { type: "list", default: [] },
   cube_radius: { type: "int", default: 20, min: 0, max: 100 },
   editor_route_view: { type: "str", default: "dim", choices: ["dim", "all"] },
   editor_route_ahead: { type: "int", default: 3, min: 1, max: 10 },
@@ -164,6 +166,7 @@ export function makeState(): AppState {
         thumb: swatch("#242a36", "Altgard"),
         tiles: { ready: true, zMax: 4, tile: 256 },
         objects: [{ file: "bundled/altgard.json", mapName: "Altgard", nodes: 7, bundled: true }],
+        resources: ["odyle", "orichalcum", "sapphire", "diamond", "ruby", "asvata", "azpha"],
       },
       {
         id: "verteron",
@@ -173,6 +176,7 @@ export function makeState(): AppState {
         thumb: swatch("#242a36", "Verteron"),
         tiles: { ready: false, zMax: 0, tile: 256 },
         objects: [],
+        resources: [],
       },
     ],
     settings: {
@@ -206,6 +210,8 @@ export function makeState(): AppState {
       show_cubes: false,
       route_traces: true,
       route_seals: true,
+      show_resources: false,
+      resources: [],
       cube_radius: 20,
       editor_route_view: "dim",
       editor_route_ahead: 3,

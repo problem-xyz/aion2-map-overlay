@@ -2,8 +2,8 @@
  * The small drawings the map and its lists use for what a point is: the object categories the
  * game gives an icon of its own -- a feather for the Empyrean Traces, a winged crest for the
  * teleports (a blue winged figure on the Elyos map), a question mark for the seals, a coral cube
- * for the hidden cubes -- and the two quest stars a route point can be given, yellow for a main
- * quest and green for a side one.
+ * for the hidden cubes, one of its own for each gathering resource (resourceMarks.ts) -- and the
+ * two quest stars a route point can be given, yellow for a main quest and green for a side one.
  *
  * Drawn here rather than taken from the game, whose art is NCSoft's and stays out of this
  * repository: after the client's icons in shape and colour, not copies of them. One drawing
@@ -13,7 +13,10 @@
 
 import type { MarkerIcon } from "@/shared/backend/contract";
 
-export type ObjectIconName = "trace" | "teleport" | "teleportElyos" | "seal" | "cube";
+import { isResourceIcon, resourceLayers, type ResourceIconName } from "./resourceMarks";
+
+type DrawnIconName = "trace" | "teleport" | "teleportElyos" | "seal" | "cube";
+export type ObjectIconName = DrawnIconName | ResourceIconName;
 export type QuestIconName = "questMain" | "questSide";
 export type MarkIconName = ObjectIconName | QuestIconName;
 
@@ -89,7 +92,7 @@ const FACES = [TOP, LEFT, RIGHT];
 const CUBE_INK = "#3a0c08";
 const CUBE_WHEEL = "#ffd6cb";
 
-const ICONS: Record<MarkIconName, readonly IconLayer[]> = {
+const ICONS: Record<DrawnIconName | QuestIconName, readonly IconLayer[]> = {
   // a pale feather, quill to the lower left
   trace: [
     {
@@ -181,7 +184,7 @@ const ICONS: Record<MarkIconName, readonly IconLayer[]> = {
 
 /** The drawing itself, for an SVG. */
 export function iconLayers(name: MarkIconName): readonly IconLayer[] {
-  return ICONS[name];
+  return isResourceIcon(name) ? resourceLayers(name) : ICONS[name];
 }
 
 const sprites = new Map<string, HTMLCanvasElement | null>();
@@ -211,7 +214,7 @@ export function iconSprite(
   ctx.scale(side / 24, side / 24);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  for (const layer of ICONS[name]) {
+  for (const layer of iconLayers(name)) {
     const path = new Path2D(layer.d);
     if (layer.fill) {
       ctx.fillStyle = layer.fill;

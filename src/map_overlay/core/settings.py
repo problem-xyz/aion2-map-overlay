@@ -104,6 +104,10 @@ class Settings:
     # The same for the route's points on sealed dungeons.
     route_seals: bool = True
     cube_radius: int = field(default=20, metadata=rng(0, 100))
+    # The map's gathering points over the game, of the resources listed in `resources` (ids from
+    # assets/marks/resources.json). The list is kept while the switch is off.
+    show_resources: bool = False
+    resources: list[str] = field(default_factory=list)
     # The same in the route editor, which always draws every point: "dim" fades the route away
     # from the selected point and the steps after it, "all" draws it all in full.
     editor_route_view: str = field(default="dim", metadata=choices("dim", "all"))
@@ -166,13 +170,14 @@ class State:
 class FieldSchema(TypedDict):
     """One Settings field as getState()["settingsSchema"] describes it to the UI.
 
-    `type` is one of "bool", "int", "float", "str". `min`/`max` exist only for a ranged
-    field and `choices` only for a field with a fixed list; both are the metadata coerce()
-    enforces, copied rather than restated, so the panel cannot offer a value the file rejects.
+    `type` is one of "bool", "int", "float", "str", "list" (of strings). `min`/`max` exist only
+    for a ranged field and `choices` only for a field with a fixed list; both are the metadata
+    coerce() enforces, copied rather than restated, so the panel cannot offer a value the file
+    rejects.
     """
 
     type: str
-    default: bool | int | float | str
+    default: bool | int | float | str | list[str]
     min: NotRequired[float]
     max: NotRequired[float]
     choices: NotRequired[list[str]]
@@ -180,7 +185,7 @@ class FieldSchema(TypedDict):
 
 def _type_name(value: object) -> str:
     # bool first: it is an int subclass, and a checkbox is not a number field.
-    for cls, name in ((bool, "bool"), (int, "int"), (float, "float"), (str, "str")):
+    for cls, name in ((bool, "bool"), (int, "int"), (float, "float"), (str, "str"), (list, "list")):
         if isinstance(value, cls):
             return name
     raise TypeError(f"no schema type for {value!r}")
@@ -190,9 +195,9 @@ def settings_schema() -> dict[str, FieldSchema]:
     """Every Settings field with its type, default and declared range or choices."""
     schema: dict[str, FieldSchema] = {}
     for f in fields(Settings):
-        default = f.default
+        default = f.default_factory() if f.default_factory is not MISSING else f.default
         if default is MISSING:
-            raise TypeError(f"Settings.{f.name} needs a plain default to be described")
+            raise TypeError(f"Settings.{f.name} needs a default to be described")
         entry = FieldSchema(type=_type_name(default), default=default)
         bounds = f.metadata.get("range")
         if bounds:
@@ -248,7 +253,7 @@ def _coerce_ids(value: Any) -> list[str] | None:
     return list(dict.fromkeys(v for v in value if isinstance(v, str) and v))
 
 
-# State fields with a shape of their own, each checked by its coercer, which returns None for a
+# Fields with a shape of their own, each checked by its coercer, which returns None for a
 # value it cannot use.
 _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "region": _coerce_region,
@@ -256,6 +261,7 @@ _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "progress": _coerce_progress,
     "route_order": _coerce_ids,
     "seeded_routes": _coerce_ids,
+    "resources": _coerce_ids,
 }
 
 

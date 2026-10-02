@@ -10,6 +10,15 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- A Resources button beside Cubes shows the map's gathering points over the game: odyle, ore,
+  gems, wood, herbs and the rest, each with a mark of its own. The arrow beside it opens the list
+  of the map's resources; tick the ones to show. Like the cubes, they stay on whatever the route
+  does, and with them on the overlay starts without a route.
+- The route editor lists the gathering points under a Gathering category, one entry per
+  resource. They start hidden there; the eye shows them, and a point dropped on one snaps to it.
+
 ## [1.4.0] - 2026-10-01
 
 ### Added

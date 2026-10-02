@@ -13,6 +13,7 @@ from typing import Any
 
 from map_overlay.core.errors import ObjectsError
 from map_overlay.core.fileio import read_json_or_none
+from map_overlay.store.resources import resource_of
 
 log = logging.getLogger(__name__)
 
@@ -104,6 +105,9 @@ def icon_for(category_id: str, map_name: str = "") -> str:
         return "seal"
     if category_id.startswith("hidden-cube"):
         return "cube"
+    # a resource is drawn by its own mark, which bears the category's id (store/resources.py)
+    if resource_of(category_id):
+        return category_id
     return ""
 
 
@@ -126,7 +130,7 @@ def icons_under(
     """The icon of the object under each point, in order; "" where there is none.
 
     Points are in map pixels, the sets' nodes in percent of `size`. Only objects that have an
-    icon are looked at, a few hundred on a map, and they are filed by the whole pixel they fall
+    icon are looked at, a few thousand on a map, and they are filed by the whole pixel they fall
     in, so a point is checked against its own pixel and the eight around it.
     """
     w, h = float(size[0]), float(size[1])

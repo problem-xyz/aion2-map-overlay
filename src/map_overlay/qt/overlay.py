@@ -12,8 +12,9 @@ import time
 
 import cv2
 import numpy as np
-from PySide6.QtCore import QPointF, QRectF, Qt, QTimer
+from PySide6.QtCore import QByteArray, QPointF, QRectF, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QFontMetrics, QImage, QPainter, QPainterPath, QPen
+from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QApplication, QWidget
 
 from map_overlay.i18n.catalog import t
@@ -24,6 +25,7 @@ from map_overlay.qt.win32 import (
     WS_EX_TRANSPARENT,
     set_capture_affinity,
 )
+from map_overlay.store.resources import resource_svg
 
 LINE_DARK = QColor(15, 17, 22, 200)  # outline under the coloured line, readable on any map
 LABEL_TEXT = QColor(18, 20, 26)
@@ -46,6 +48,10 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 8
 CUBE_RING = QColor("#ff7a5c")
+# A gathering point: its resource's drawing (assets/marks/resources.json) on a dark disc, which
+# keeps it apart from the game's own map. RESOURCE_HALF is half its side in screen pixels.
+RESOURCE_HALF = 9
+RESOURCE_DISC = QColor(15, 17, 22, 130)
 # The strip along the bottom of the map area that tells the player what the overlay is doing. A
 # map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all
 # the time, and a strip blinking over the map is worse than none. Past HINT_DELAY_S it says what to
@@ -181,6 +187,9 @@ class OverlayWindow(ClickThroughWindow):
         self._cubes = None  # hidden cubes in reference-map pixels, (N, 1, 2) float32
         self._cube_radius = 0
         self._cube_sprite = None  # QImage of one cube, drawn once per device pixel ratio
+        # gathering points by resource, in reference-map pixels, (N, 1, 2) float32 each
+        self._resources: dict[str, np.ndarray] = {}
+        self._resource_sprites: dict[str, QImage | None] = {}  # one per resource, as the cube's
         self._done = 0  # markers already passed, counted from the start of the route
         self._radius = 0.0  # arrival radius in route coordinates; 0 draws no ring
         self._faded = None  # QImage the faded part is drawn into, kept between frames
@@ -254,7 +263,7 @@ class OverlayWindow(ClickThroughWindow):
             self.update()
 
     def set_route_visible(self, visible) -> None:
-        """Whether the route is drawn. The cubes are not: they go by set_cubes alone."""
+        """Whether the route is drawn. The cubes and resources are not: they go by their setters."""
         visible = bool(visible)
         if visible != self._route_on:
             self._route_on = visible
@@ -273,6 +282,18 @@ class OverlayWindow(ClickThroughWindow):
             else None
         )
         self._cube_radius = max(0, int(radius))
+        self.update()
+
+    def set_resources(self, groups) -> None:
+        """The gathering points to draw: resource id -> points in reference-map pixels.
+
+        The map's, like the cubes, and drawn under them; a resource with no points draws nothing.
+        """
+        self._resources = {
+            rid: np.array(points, dtype=np.float32).reshape(-1, 1, 2)
+            for rid, points in (groups or {}).items()
+            if len(points)
+        }
         self.update()
 
     def set_route(self, doc, ref_size=None, arrive_radius=0.0) -> None:
@@ -334,6 +355,7 @@ class OverlayWindow(ClickThroughWindow):
         p.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         if self._T is not None:
             # Under the route: where a step stands on a cube, its number stays readable.
+            self._paint_resources(p)
             self._paint_cubes(p)
             if self._route_on:
                 self._paint_route(p)
@@ -467,11 +489,9 @@ class OverlayWindow(ClickThroughWindow):
         moved = max(0.0, now - self._marquee_since - MARQUEE_PAUSE_S) * MARQUEE_SPEED
         return moved % (run_w + MARQUEE_GAP)
 
-    def _paint_cubes(self, p) -> None:
-        if self._cubes is None:
-            return
-        pts = cv2.perspectiveTransform(self._cubes, self._T.astype(np.float32)).reshape(-1, 2)  # pyright: ignore[reportOptionalMemberAccess]
-        margin = self._cube_radius + CUBE_HALF
+    def _on_screen(self, points, margin):
+        """`points` (reference-map pixels) through the transform, less those off the window."""
+        pts = cv2.perspectiveTransform(points, self._T.astype(np.float32)).reshape(-1, 2)  # pyright: ignore[reportOptionalMemberAccess]
         keep = (
             np.isfinite(pts).all(axis=1)
             & (pts[:, 0] > -margin)
@@ -479,7 +499,48 @@ class OverlayWindow(ClickThroughWindow):
             & (pts[:, 1] > -margin)
             & (pts[:, 1] < self.height() + margin)
         )
-        pts = pts[keep]
+        return pts[keep]
+
+    def _paint_resources(self, p) -> None:
+        if not self._resources:
+            return
+        p.setOpacity(self._opacity)
+        for rid, points in self._resources.items():
+            sprite = self._resource_image(rid)
+            if sprite is None:
+                continue
+            for x, y in self._on_screen(points, RESOURCE_HALF):
+                p.drawImage(QPointF(x - RESOURCE_HALF, y - RESOURCE_HALF), sprite)
+
+    def _resource_image(self, rid):
+        """One resource's mark on its disc, drawn once per device pixel ratio; None if not drawn."""
+        ratio = self.devicePixelRatioF()
+        known = self._resource_sprites.get(rid)
+        if known is not None and known.devicePixelRatio() == ratio:
+            return known
+        svg = resource_svg(rid)
+        if svg is None:
+            return None
+        side = RESOURCE_HALF * 2
+        image = QImage(
+            int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
+        )
+        image.setDevicePixelRatio(ratio)
+        image.fill(Qt.GlobalColor.transparent)
+        q = QPainter(image)
+        q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        q.setPen(Qt.PenStyle.NoPen)
+        q.setBrush(RESOURCE_DISC)
+        q.drawEllipse(QRectF(0, 0, side, side))
+        QSvgRenderer(QByteArray(svg.encode())).render(q, QRectF(1, 1, side - 2, side - 2))
+        q.end()
+        self._resource_sprites[rid] = image
+        return image
+
+    def _paint_cubes(self, p) -> None:
+        if self._cubes is None:
+            return
+        pts = self._on_screen(self._cubes, self._cube_radius + CUBE_HALF)
         if not len(pts):
             return
         p.setOpacity(self._opacity)
