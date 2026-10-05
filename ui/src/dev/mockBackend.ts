@@ -14,6 +14,7 @@ import type {
   NotifyPayload,
   RouteDoc,
   Settings,
+  TimerChoice,
   UpdateState,
 } from "@/shared/backend/contract";
 
@@ -25,6 +26,7 @@ import {
   makeState,
   makeStepsData,
 } from "./mockState";
+import { makeTimers } from "./mockTimers";
 import {
   applyScenario,
   loadObjectSets,
@@ -65,6 +67,7 @@ type MockSignals = Record<
   | "progressChanged"
   | "stepsChanged"
   | "updateChanged"
+  | "timersChanged"
   | "dataChanged",
   MockSignal
 >;
@@ -80,6 +83,7 @@ interface MockRuntime {
   signals: MockSignals;
   statsTimer: ReturnType<typeof setInterval> | null;
   updateTimer: ReturnType<typeof setTimeout> | null;
+  timersTimer: ReturnType<typeof setInterval> | null;
 }
 
 let runtime: MockRuntime | null = null;
@@ -102,12 +106,18 @@ function boot(): MockRuntime {
       progressChanged: signal(),
       stepsChanged: signal(),
       updateChanged: signal(),
+      timersChanged: signal(),
       dataChanged: signal(),
     },
     statsTimer: null,
     updateTimer: null,
+    timersTimer: null,
   };
   applyScenario(runtime.state, runtime.editorDoc, runtime.scenario);
+  pushTimers(runtime);
+  // As Python's tick: the timers are worked out again every so often, the page counts the seconds
+  const rt = runtime;
+  rt.timersTimer = setInterval(() => pushTimers(rt), 15_000);
   void takeLocalFiles(runtime);
   return runtime;
 }
@@ -147,6 +157,13 @@ async function takeLocalFiles(rt: MockRuntime) {
 
 function pushState(rt: MockRuntime) {
   rt.signals.stateChanged.emit(JSON.stringify(rt.state));
+}
+
+/** The timers at the mock's clock: now, moved by the scenario's `shift` minutes. */
+function pushTimers(rt: MockRuntime, fetching = false) {
+  const now = Date.now() + rt.scenario.shift * 60_000;
+  rt.state.timers = makeTimers(rt.state.settings, now, fetching);
+  rt.signals.timersChanged.emit(JSON.stringify(rt.state.timers));
 }
 
 function pushSteps(rt: MockRuntime) {
@@ -253,6 +270,7 @@ function backendObject(rt: MockRuntime) {
     setPreview: () => {},
     updateSettings: (json: string) => {
       Object.assign(rt.state.settings, JSON.parse(json));
+      pushTimers(rt);
       pushState(rt);
       pushSteps(rt); // the plaque's scale and opacity are settings too
     },
@@ -445,6 +463,23 @@ function backendObject(rt: MockRuntime) {
         setUpdate(rt, { ...current, skipped: current.version === version });
       }
       pushState(rt);
+    },
+
+    setTimerEvent: (eventId: string, json: string) => {
+      const events = rt.state.settings.timers_events;
+      events[eventId] = { ...events[eventId], ...(JSON.parse(json) as Partial<TimerChoice>) };
+      pushTimers(rt);
+      pushState(rt);
+    },
+    setTimersWorldShown: (json: string) => {
+      rt.state.settings.timers_world_shown = JSON.parse(json) as string[];
+      pushTimers(rt);
+      pushState(rt);
+    },
+    refreshTimersData: () => {
+      // a fetch that finds nothing newer, after a moment
+      pushTimers(rt, true);
+      setTimeout(() => pushTimers(rt), 900);
     },
   };
 }

@@ -15,8 +15,8 @@ from dataclasses import dataclass
 from PySide6.QtCore import QObject, Qt, QTimer, Signal, Slot
 
 from map_overlay.store.timers import TimersError
+from map_overlay.timers import data as timers_data
 from map_overlay.timers.data import FILES, FetchError, TimersData, TimersStore, Transport
-from map_overlay.timers.data import http_transport as default_transport
 
 log = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class TimersDataService(QObject):
     def __init__(
         self,
         store: TimersStore,
-        transport: Transport = default_transport,
+        transport: Transport | None = None,
         first_check_ms: int = FIRST_CHECK_DELAY_MS,
         interval_ms: int = CHECK_INTERVAL_MS,
         parent: QObject | None = None,
@@ -108,7 +108,9 @@ class TimersDataService(QObject):
         taken, error = False, None
         for kind in FILES:
             try:
-                taken = self._store.refresh(kind, self._transport) or taken
+                # looked up at each fetch, not bound once, so a test can take the network away
+                transport = self._transport or timers_data.http_transport
+                taken = self._store.refresh(kind, transport) or taken
             except (FetchError, TimersError) as e:
                 log.warning("timers %s not fetched: %s", kind, e)
                 error = error or str(e)

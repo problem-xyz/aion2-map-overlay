@@ -70,6 +70,8 @@ export interface Scenario {
   markers: number | null;
   tilesBusy: boolean;
   bg: string | null;
+  /** Minutes the timers' clock is moved by, either way, to show an event running or a boss up. */
+  shift: number;
 }
 
 function pick<T extends string>(value: string | null, allowed: readonly T[]): T | null {
@@ -99,6 +101,7 @@ export function readScenario(search: string): Scenario {
     markers: count(q.get("markers")),
     tilesBusy: q.get("tiles") === "busy",
     bg: q.get("bg"),
+    shift: /^-?\d{1,5}$/.test(q.get("shift") ?? "") ? Number(q.get("shift")) : 0,
   };
 }
 

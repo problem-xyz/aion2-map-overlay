@@ -143,6 +143,27 @@ class Settings:
     updates_auto_check: bool = True
     updates_auto_download: bool = True
     updates_skipped_version: str = ""
+    # The timers. The server region by its id in the schedule; "" works it out from the clock's
+    # offset. The server group narrows a Korean region's siege to one of its three start times.
+    timers_region: str = ""
+    timers_server_group: str = ""
+    timers_clock_12h: bool = False
+    timers_sound: bool = True
+    timers_volume: float = field(default=0.8, metadata=rng(0.0, 1.0))
+    # Whether the schedule and the world bosses are fetched from the repository; off, the copies
+    # already held stay in use.
+    timers_fetch: bool = True
+    # Each event's own choices by its id: {"shown": bool, "lead": minutes, "signal": "voice" or
+    # "chime"}. An event the map does not name, or a key missing, takes timer_defaults().
+    timers_events: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # The world bosses: which are on the plaque, and one reminder for them all.
+    timers_world_shown: list[str] = field(default_factory=list)
+    timers_world_lead: int = field(default=5, metadata=rng(0, 15))
+    timers_world_signal: str = field(default="chime", metadata=choices("voice", "chime"))
+    timers_plaque_pinned: bool = True
+    timers_plaque_scale: float = field(default=1.0, metadata=rng(0.5, 1.5))
+    timers_plaque_filter: str = field(default="all", metadata=choices("all", "event", "boss"))
+    timers_plaque_collapsed: bool = False
 
 
 @dataclass(frozen=True)
@@ -168,6 +189,10 @@ class State:
     route_order: list[str] = field(default_factory=list)
     # The bundled routes already copied into routes/, so that one the user deleted stays deleted.
     seeded_routes: list[str] = field(default_factory=list)
+    # The timers' plaque: where it was left, and whether it is up. Off for a new install: the
+    # timers are a second tool, and a plaque appearing over the game unasked would be in the way.
+    timers_plaque_region: Region | None = None
+    timers_plaque_visible: bool = False
 
 
 # --------------------------------------------------------------------------- schema export
@@ -176,14 +201,14 @@ class State:
 class FieldSchema(TypedDict):
     """One Settings field as getState()["settingsSchema"] describes it to the UI.
 
-    `type` is one of "bool", "int", "float", "str", "list" (of strings). `min`/`max` exist only
-    for a ranged field and `choices` only for a field with a fixed list; both are the metadata
-    coerce() enforces, copied rather than restated, so the panel cannot offer a value the file
-    rejects.
+    `type` is one of "bool", "int", "float", "str", "list" (of strings), "map" (of objects).
+    `min`/`max` exist only for a ranged field and `choices` only for a field with a fixed list;
+    both are the metadata coerce() enforces, copied rather than restated, so the panel cannot
+    offer a value the file rejects.
     """
 
     type: str
-    default: bool | int | float | str | list[str]
+    default: bool | int | float | str | list[str] | dict[str, Any]
     min: NotRequired[float]
     max: NotRequired[float]
     choices: NotRequired[list[str]]
@@ -191,7 +216,14 @@ class FieldSchema(TypedDict):
 
 def _type_name(value: object) -> str:
     # bool first: it is an int subclass, and a checkbox is not a number field.
-    for cls, name in ((bool, "bool"), (int, "int"), (float, "float"), (str, "str"), (list, "list")):
+    for cls, name in (
+        (bool, "bool"),
+        (int, "int"),
+        (float, "float"),
+        (str, "str"),
+        (list, "list"),
+        (dict, "map"),
+    ):
         if isinstance(value, cls):
             return name
     raise TypeError(f"no schema type for {value!r}")
@@ -259,6 +291,40 @@ def _coerce_ids(value: Any) -> list[str] | None:
     return list(dict.fromkeys(v for v in value if isinstance(v, str) and v))
 
 
+# The reminder leads the timers offer, in minutes; 0 is no reminder.
+TIMER_LEADS = (0, 2, 5, 10, 15)
+TIMER_SIGNALS = ("voice", "chime")
+
+
+def timer_defaults(kind: str) -> dict[str, Any]:
+    """An event's choices before the user made any: on the plaque, a chime five minutes ahead.
+
+    A reset is a moment rather than something to attend, so it is shown and not announced.
+    """
+    return {"shown": True, "lead": 0 if kind == "reset" else 5, "signal": "chime"}
+
+
+def _coerce_timer_events(value: Any) -> dict[str, dict[str, Any]] | None:
+    """Each event's choices, keeping only the keys and values the timers know."""
+    if not isinstance(value, dict):
+        return None
+    out: dict[str, dict[str, Any]] = {}
+    for event_id, choice in value.items():
+        if not isinstance(event_id, str) or not event_id or not isinstance(choice, dict):
+            continue
+        kept: dict[str, Any] = {}
+        if isinstance(choice.get("shown"), bool):
+            kept["shown"] = choice["shown"]
+        lead = choice.get("lead")
+        if _finite(lead) and int(lead) in TIMER_LEADS and lead == int(lead):
+            kept["lead"] = int(lead)
+        if choice.get("signal") in TIMER_SIGNALS:
+            kept["signal"] = choice["signal"]
+        if kept:
+            out[event_id] = kept
+    return out
+
+
 # Fields with a shape of their own, each checked by its coercer, which returns None for a
 # value it cannot use.
 _STRUCTURED: dict[str, Callable[[Any], Any]] = {
@@ -268,6 +334,9 @@ _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "route_order": _coerce_ids,
     "seeded_routes": _coerce_ids,
     "resources": _coerce_ids,
+    "timers_events": _coerce_timer_events,
+    "timers_world_shown": _coerce_ids,
+    "timers_plaque_region": _coerce_region,
 }
 
 

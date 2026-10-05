@@ -36,7 +36,15 @@ WRITE_DELAY_MS = 400
 # and clearing it would bring back a banner they dismissed. The two switches decide whether the
 # app goes online at all, and a reset of the detection settings must not quietly turn network
 # access back on for someone who turned it off.
-KEPT_ON_RESET = ("updates_auto_check", "updates_auto_download", "updates_skipped_version")
+#
+# The timers' choices are kept as well: the Settings block that offers the reset is the map's,
+# and the timers are a tool of their own with their own settings view.
+KEPT_ON_RESET = (
+    "updates_auto_check",
+    "updates_auto_download",
+    "updates_skipped_version",
+    *(f.name for f in dataclass_fields(Settings) if f.name.startswith("timers_")),
+)
 
 
 class SettingsStore(QObject):

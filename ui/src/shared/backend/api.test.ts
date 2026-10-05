@@ -102,6 +102,10 @@ function makeBackendDouble(replies: Replies) {
     installUpdate: vi.fn(),
     skipUpdate: vi.fn(),
 
+    setTimerEvent: vi.fn(),
+    setTimersWorldShown: vi.fn(),
+    refreshTimersData: vi.fn(),
+
     stateChanged: qtSignal(),
     statsChanged: qtSignal(),
     previewChanged: qtSignal(),
@@ -110,6 +114,7 @@ function makeBackendDouble(replies: Replies) {
     progressChanged: qtSignal(),
     stepsChanged: qtSignal(),
     updateChanged: qtSignal(),
+    timersChanged: qtSignal(),
   } satisfies BackendObject;
 }
 
@@ -304,6 +309,14 @@ describe("createBackendApi", () => {
     api.updateSettings({ fps: 45, detector: "orb" });
 
     expectOnlySlot(backend, "updateSettings", ['{"fps":45,"detector":"orb"}']);
+  });
+
+  it("sends a timer choice as JSON beside the event's id, and the shown bosses as a list", () => {
+    api.setTimerEvent("rift", { lead: 10 });
+    expectOnlySlot(backend, "setTimerEvent", ["rift", '{"lead":10}']);
+    backend.setTimerEvent.mockClear();
+    api.setTimersWorldShown(["melted-danar"]);
+    expectOnlySlot(backend, "setTimersWorldShown", ['["melted-danar"]']);
   });
 
   it("parses the state payload instead of handing the JSON string up", async () => {

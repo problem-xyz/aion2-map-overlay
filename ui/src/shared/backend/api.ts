@@ -17,6 +17,7 @@ import type {
   StepsData,
   StepsObject,
   StepsSize,
+  TimerChoice,
 } from "./contract";
 import { safeParse } from "./json";
 import { call } from "./transport";
@@ -69,6 +70,10 @@ export interface BackendApi {
   downloadUpdate(): void;
   installUpdate(restart: boolean): void;
   skipUpdate(version: string): void;
+
+  setTimerEvent(eventId: string, choice: Partial<TimerChoice>): void;
+  setTimersWorldShown(ids: string[]): void;
+  refreshTimersData(): void;
 }
 
 export function createBackendApi(object: BackendObject): BackendApi {
@@ -126,6 +131,10 @@ export function createBackendApi(object: BackendObject): BackendApi {
     downloadUpdate: () => object.downloadUpdate(),
     installUpdate: (restart) => object.installUpdate(restart),
     skipUpdate: (version) => object.skipUpdate(version),
+
+    setTimerEvent: (eventId, choice) => object.setTimerEvent(eventId, JSON.stringify(choice)),
+    setTimersWorldShown: (ids) => object.setTimersWorldShown(JSON.stringify(ids)),
+    refreshTimersData: () => object.refreshTimersData(),
   };
 }
 

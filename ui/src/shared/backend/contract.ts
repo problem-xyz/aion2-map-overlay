@@ -98,6 +98,108 @@ export interface Settings {
   updates_auto_check: boolean;
   updates_auto_download: boolean;
   updates_skipped_version: string;
+  /**
+   * Since api 28, the timers. The server region by its id in the schedule; "" works it out from
+   * the clock's offset (TimersState.regionGuessed). The server group narrows a Korean region's
+   * siege to one of its start times; "" for all of them.
+   */
+  timers_region: string;
+  timers_server_group: string;
+  timers_clock_12h: boolean;
+  timers_sound: boolean;
+  timers_volume: number;
+  /** Fetch newer schedules and boss readings from the repository. */
+  timers_fetch: boolean;
+  /** Each event's own choices by its id; missing keys take the defaults for its kind. */
+  timers_events: Record<string, Partial<TimerChoice>>;
+  timers_world_shown: string[];
+  timers_world_lead: number;
+  timers_world_signal: TimerSignal;
+  timers_plaque_pinned: boolean;
+  timers_plaque_scale: number;
+  timers_plaque_filter: "all" | "event" | "boss";
+  timers_plaque_collapsed: boolean;
+}
+
+/** How a reminder sounds: a spoken phrase, or a chime. */
+export type TimerSignal = "voice" | "chime";
+
+/** What the user chose for one event, over the defaults for its kind. */
+export interface TimerChoice {
+  /** On the plaque. */
+  shown: boolean;
+  /** Minutes ahead the reminder sounds: 0, 2, 5, 10 or 15; 0 is none. */
+  lead: number;
+  signal: TimerSignal;
+}
+
+/** A span of an event, in epoch milliseconds. */
+export interface TimerSpan {
+  start: number;
+  end: number;
+}
+
+/** One event as getState().timers lists it: what it is, the user's choices, and its moments. */
+export interface TimerEvent extends TimerChoice {
+  id: string;
+  /** As the game client spells it; never translated. */
+  name: string;
+  kind: "event" | "boss" | "reset";
+  realm: "abyss" | "world" | null;
+  /** A mark of shared/ui/timerMarks.ts; an unknown one draws a neutral token. */
+  icon: string;
+  /** 0 for a moment, such as a reset, rather than a span. */
+  durationMin: number;
+  /** How long entry stays open after the start; 0 for no such phase. */
+  entryMin: number;
+  live: TimerSpan | null;
+  /** While entry is still open, when it closes. */
+  entryCloses: number | null;
+  /** null only for a one-off event that has passed. */
+  next: (TimerSpan & { group: string | null }) | null;
+  /** Every occurrence from two hours back to two days ahead, as [start, end]. */
+  occurrences: [number, number][];
+}
+
+/** A world boss: one spawn read off the game's list, and the cycles after it estimated. */
+export interface WorldBossTimer {
+  id: string;
+  name: string;
+  /** Where on the map it spawns. */
+  area: string;
+  level: number;
+  respawnS: number;
+  /** On the plaque. */
+  shown: boolean;
+  /** Its current spawn while up, else the next one. */
+  spawn: number;
+  up: boolean;
+  /** Worked out past the reading: spawn, a kill of about 90 s, the cycle. */
+  estimated: boolean;
+  /** Every spawn from two hours back to two days ahead. */
+  spawns: number[];
+}
+
+/** getState().timers since api 28; null when no schedule could be loaded at all. */
+export interface TimersState {
+  /** When Python worked this out; a page counts on from its own clock. */
+  now: number;
+  region: string;
+  regionGuessed: boolean;
+  regions: { id: string; label: string; group: string }[];
+  /** The region's server groups; empty for most. */
+  serverGroups: string[];
+  serverGroup: string | null;
+  /** The schedule's date. */
+  updatedAt: string;
+  fetching: boolean;
+  events: TimerEvent[];
+  /** Empty when the reading is from another region than the one shown. */
+  bosses: WorldBossTimer[];
+  bossesReadAt: number | null;
+  bossesMap: string | null;
+  /** Bosses whose reading said more time left than their cycle: the cycle in the file is wrong. */
+  wrongCycle: string[];
 }
 
 /**
@@ -108,9 +210,9 @@ export interface Settings {
  * field, and `choices` only on one with a fixed list.
  */
 export interface SettingSchema {
-  /** "list" since api 26: a list of strings, `resources`. */
-  type: "bool" | "int" | "float" | "str" | "list";
-  default: boolean | number | string | string[];
+  /** "list" since api 26: a list of strings, `resources`. "map" since api 28: `timers_events`. */
+  type: "bool" | "int" | "float" | "str" | "list" | "map";
+  default: boolean | number | string | string[] | Record<string, unknown>;
   min?: number;
   max?: number;
   choices?: string[];
@@ -291,6 +393,8 @@ export interface AppState {
   links?: SupportLinks;
   /** The advertising banner that ships with the app, or null for none. Api 22. */
   banner?: BannerInfo | null;
+  /** The timers, as `timersChanged` also carries them. Absent before api 28. */
+  timers?: TimersState | null;
 }
 
 export interface BannerInfo {
@@ -491,6 +595,14 @@ export interface BackendSlots {
   installUpdate(restart: boolean): void;
   /** Do not offer this version again; "" forgets the skip. */
   skipUpdate(version: string): void;
+
+  // timers (api 28)
+  /** JSON Partial<TimerChoice>, merged over the event's earlier choices. */
+  setTimerEvent(eventId: string, payload: string): void;
+  /** JSON list of world-boss ids, the ones on the plaque. */
+  setTimersWorldShown(payload: string): void;
+  /** Fetch the schedule and the world bosses now. */
+  refreshTimersData(): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {
@@ -508,6 +620,8 @@ export interface BackendSignals {
   stepsChanged: QtSignal;
   /** JSON UpdateState on every change, download progress included. Api 4. */
   updateChanged: QtSignal;
+  /** JSON TimersState (or null) when what it says changes. Api 28. */
+  timersChanged: QtSignal;
 }
 
 export type BackendObject = BackendSlots & BackendSignals;
