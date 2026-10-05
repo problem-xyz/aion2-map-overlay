@@ -106,6 +106,8 @@ function makeBackendDouble(replies: Replies) {
     setTimersWorldShown: vi.fn(),
     refreshTimersData: vi.fn(),
     previewTimerSignal: vi.fn(),
+    setTimersPlaqueVisible: vi.fn(),
+    setTimersPlaquePinned: vi.fn(),
 
     stateChanged: qtSignal(),
     statsChanged: qtSignal(),

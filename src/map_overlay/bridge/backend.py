@@ -12,7 +12,7 @@ in getState(); it never means editing one of these.
     signals: stateChanged, statsChanged, previewChanged, notify, editorRequest,
              progressChanged, stepsChanged, updateChanged, timersChanged
 
-    slots (42):
+    slots (44):
       checkForUpdates()
       closeEditor()
       copyRouteCode(route_id)
@@ -50,6 +50,8 @@ in getState(); it never means editing one of these.
       setStepsSize(size)
       setStepsVisible(visible)
       setTimerEvent(event_id, payload)
+      setTimersPlaquePinned(pinned)
+      setTimersPlaqueVisible(visible)
       setTimersWorldShown(payload)
       skipUpdate(version)
       start()
@@ -79,6 +81,7 @@ from map_overlay.bridge.route_service import RouteService
 from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
 from map_overlay.bridge.tile_queue import TileBuildQueue
+from map_overlay.bridge.timers_plaque import TimersPlaque
 from map_overlay.bridge.timers_service import TimersService
 from map_overlay.bridge.windows import WindowManager
 from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
@@ -255,7 +258,23 @@ class Backend(QObject):
             parent=self,
         )
         timers.changed.connect(self.timersChanged)
+        plaque = TimersPlaque(
+            dev=self.dev,
+            settings=lambda: self.settings,
+            state=lambda: self.state,
+            set_state=self._store.set_state,
+            change_settings=self._change_settings,
+            recordable=lambda: self._recordable,
+            on_visibility=self._emit_state,
+            parent=self,
+        )
+        timers.changed.connect(plaque.set_timers)
+        timers.reminded.connect(plaque.reminded)
+        timers.peek.connect(plaque.peek)
+        self._timers_plaque = plaque
         timers.start()
+        plaque.set_timers(json.dumps(timers.view(), ensure_ascii=False))
+        plaque.sync()
         return timers
 
     def _migrate_legacy(self) -> None:
@@ -602,6 +621,10 @@ class Backend(QObject):
             },
             banner=(self._banner_payload(self._banner) if self._banner else None),
             timers=self._timers.view(),
+            timers_plaque={
+                "visible": self.state.timers_plaque_visible,
+                "pinned": self.settings.timers_plaque_pinned,
+            },
         )
 
     def _banner_payload(self, banner: Banner) -> dict[str, str]:
@@ -866,6 +889,7 @@ class Backend(QObject):
         if before.updates_skipped_version != after.updates_skipped_version:
             self._updates.settings_changed()
         self._timers.settings_changed(before, after)
+        self._timers_plaque.settings_changed(before, after)
         self.engine.reconfigure(settings=asdict(after))
 
     def _apply_overlay_settings(self, before: Settings, after: Settings) -> None:
@@ -946,6 +970,10 @@ class Backend(QObject):
     def _apply_recordable(self) -> None:
         for window in (self.overlay, self.steps, self._windows.prompt):
             window.set_recordable(self._recordable)
+        # Not there yet while the windows are first laid out: the plaque comes with the timers
+        plaque = getattr(self, "_timers_plaque", None)
+        if plaque is not None:
+            plaque.set_recordable(self._recordable)
 
     def _setup_steps(self) -> None:
         window = self.steps
@@ -1363,6 +1391,7 @@ class Backend(QObject):
         self._store.flush()
         self.engine.shutdown()  # waits for the thread, at most ENGINE_SHUTDOWN_WAIT_MS (2 s)
         self._windows.hide_all()
+        self._timers_plaque.hide()
         self._store.flush()  # anything the stop above changed
 
     def _after_failed_update_exit(self) -> None:
@@ -1401,6 +1430,16 @@ class Backend(QObject):
         """Play the event's reminder at the volume set; "" plays the chime."""
         self._timers.preview(str(event_id))
 
+    @Slot(bool)
+    def setTimersPlaqueVisible(self, visible: bool) -> None:
+        """The timers plaque over the game, up or down; it is built the first time it goes up."""
+        self._timers_plaque.set_visible(bool(visible))
+
+    @Slot(bool)
+    def setTimersPlaquePinned(self, pinned: bool) -> None:
+        """A pinned plaque passes clicks through to the game, but for its buttons."""
+        self._change_settings({"timers_plaque_pinned": bool(pinned)})
+
     @Slot()
     def refreshTimersData(self) -> None:
         """Fetch the schedule and the world bosses now, rather than at the next check."""
@@ -1422,6 +1461,7 @@ class Backend(QObject):
         # otherwise arrive at a widget that is already being destroyed.
         with contextlib.suppress(RuntimeError, TypeError):
             self.engine.transformChanged.disconnect(self.overlay.set_transform)
+        self._timers_plaque.shutdown()
         self._windows.shutdown()
         self._timers.close()
         # No more checks. A downloaded update is not handed over here but in hand_over_update(),
@@ -1439,6 +1479,7 @@ class Backend(QObject):
         """
         set_language(resolve_language(self.settings.language, QLocale.system().name()))
         self._windows.retitle()
+        self._timers_plaque.retitle()
         # The control window is this object's Qt parent and owns its own title. Reaching it
         # by name would import the window back into the bridge, which is the cycle the
         # split was made to avoid.

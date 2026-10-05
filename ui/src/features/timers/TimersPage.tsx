@@ -57,6 +57,7 @@ export default function TimersPage() {
   const { t } = useI18n();
   const changeSetting = useSettingsPatch();
   const timers = useBackendState<AppState | null, AppState["timers"]>((s) => s?.timers);
+  const plaque = useBackendState<AppState | null, AppState["timersPlaque"]>((s) => s?.timersPlaque);
   const settings = useBackendState<AppState | null, AppState["settings"] | undefined>(
     (s) => s?.settings,
   );
@@ -99,6 +100,34 @@ export default function TimersPage() {
   return (
     <div className="tm-page">
       <TimersHero lead={lead} resets={resets} now={now} twelve={twelve} />
+
+      {/* The plaque over the game and the reminders' sound: what is switched most, a click away */}
+      <div className="tm-quick">
+        <label className="pn-chip" title={t("timers.plaque.show")}>
+          <input
+            type="checkbox"
+            checked={Boolean(plaque?.visible)}
+            onChange={(e) => api.setTimersPlaqueVisible(e.target.checked)}
+            aria-label={t("timers.plaque.show")}
+          />
+          <Icon name="list" className="pn-chip-icon" />
+          <span className="pn-chip-label" aria-hidden="true">
+            {t("timers.plaque.show")}
+          </span>
+        </label>
+        <label className="pn-chip" title={t("timers.settings.sound")}>
+          <input
+            type="checkbox"
+            checked={settings.timers_sound}
+            onChange={(e) => changeSetting("timers_sound", e.target.checked)}
+            aria-label={t("timers.settings.sound")}
+          />
+          <Icon name="bell" className="pn-chip-icon" />
+          <span className="pn-chip-label" aria-hidden="true">
+            {t("timers.plaque.sound")}
+          </span>
+        </label>
+      </div>
 
       <div role="tablist" aria-label={t("timers.label")} className="pn-menu tm-menu">
         {VIEWS.map(({ id, label, icon }) => {

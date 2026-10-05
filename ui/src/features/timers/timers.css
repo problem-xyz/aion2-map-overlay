@@ -94,6 +94,13 @@
   --tmark-size: 20px;
 }
 
+/* ---------- the plaque and the sound, as the map's quick slots ---------- */
+.tm-quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
 /* ---------- the two views, as the map's section tiles ---------- */
 .tm-menu {
   grid-template-columns: repeat(2, 1fr);

@@ -18,6 +18,10 @@ changes are left out unless they change how the app is installed, run or updated
   bosses to the world's or the Abyss's. Settings picks your server region, the clock, and for each
   event whether it shows on the plaque and how many minutes ahead it is announced, by a chime or a
   spoken phrase.
+- A timers plaque over the game, beside the checklist: the timers you picked, soonest first, with
+  what is on now in its own colour, a bell beside what is about to start, and the resets along its
+  foot. Tabs on it switch between all, events and bosses; the arrow folds it to the nearest timer
+  alone. With the sound off, a reminder shows the plaque for a few seconds when it is hidden.
 - The schedule and the world bosses' respawn times are fetched from the project's GitHub, so they
   stay current between releases. Nothing about you is sent; Settings in Timers turns it off.
 

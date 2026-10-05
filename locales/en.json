@@ -241,7 +241,8 @@
       "overlay": "Route overlay",
       "selector": "Select area",
       "steps": "Checklist",
-      "prompt": "Route question"
+      "prompt": "Route question",
+      "timers": "Timers"
     }
   },
   "notify": {
@@ -718,6 +719,13 @@
       "as": "Asia",
       "kr": "Korea",
       "tw": "Taiwan"
+    },
+    "plaque": {
+      "fold": "Fold up",
+      "unfold": "Unfold",
+      "hide": "Hide the plaque",
+      "show": "Plaque",
+      "sound": "Sound"
     }
   }
 }

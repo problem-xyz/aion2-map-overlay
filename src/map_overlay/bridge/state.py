@@ -235,7 +235,9 @@ def steps_state(settings, state) -> StepsPayload:
 #     settings has the timers_* fields, and settingsSchema may describe a "map" field.
 # 29: previewTimerSignal plays an event's reminder sound; the reminders sound when they fall due.
 # 30: a timers event carries "weekStarts", a weekly event's starts over the coming week.
-API_VERSION = 30
+# 31: timersPlaque {visible, pinned}, the timers plaque over the game, with the slots
+#     setTimersPlaqueVisible and setTimersPlaquePinned.
+API_VERSION = 31
 
 
 def build_state(
@@ -260,6 +262,7 @@ def build_state(
     links: dict[str, str],
     banner: dict[str, str] | None,
     timers: dict[str, Any] | None,
+    timers_plaque: dict[str, bool],
 ) -> dict[str, Any]:
     """The getState() payload.
 
@@ -298,4 +301,5 @@ def build_state(
         "links": links,
         "banner": banner,
         "timers": timers,
+        "timersPlaque": timers_plaque,
     }

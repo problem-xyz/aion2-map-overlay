@@ -15,6 +15,7 @@ import type {
   RouteDoc,
   Settings,
   TimerChoice,
+  TimersPlaqueData,
   UpdateState,
 } from "@/shared/backend/contract";
 
@@ -84,6 +85,8 @@ interface MockRuntime {
   statsTimer: ReturnType<typeof setInterval> | null;
   updateTimer: ReturnType<typeof setTimeout> | null;
   timersTimer: ReturnType<typeof setInterval> | null;
+  /** This page is the timers plaque: the timers go out on dataChanged as its data as well. */
+  timersPlaque: { pinned: boolean; collapsed: boolean; filter: "all" | "event" | "boss" } | null;
 }
 
 let runtime: MockRuntime | null = null;
@@ -112,6 +115,7 @@ function boot(): MockRuntime {
     statsTimer: null,
     updateTimer: null,
     timersTimer: null,
+    timersPlaque: null,
   };
   applyScenario(runtime.state, runtime.editorDoc, runtime.scenario);
   pushTimers(runtime);
@@ -164,6 +168,49 @@ function pushTimers(rt: MockRuntime, fetching = false) {
   const now = Date.now() + rt.scenario.shift * 60_000;
   rt.state.timers = makeTimers(rt.state.settings, now, fetching);
   rt.signals.timersChanged.emit(JSON.stringify(rt.state.timers));
+  if (rt.timersPlaque) rt.signals.dataChanged.emit(JSON.stringify(timersPlaqueData(rt)));
+}
+
+function timersPlaqueData(rt: MockRuntime): TimersPlaqueData {
+  const p = rt.timersPlaque ?? { pinned: true, collapsed: false, filter: "all" };
+  return {
+    timers: rt.state.timers ?? null,
+    filter: p.filter,
+    clock12h: rt.state.settings.timers_clock_12h,
+    worldLead: rt.state.settings.timers_world_lead,
+    collapsed: p.collapsed,
+    ring: null,
+    scale: 1,
+    pinned: p.pinned,
+    opacity: rt.state.settings.opacity,
+    grip: 8,
+    language: rt.scenario.lang ?? "en",
+  };
+}
+
+function timersPlaqueObject(rt: MockRuntime) {
+  // StrictMode connects twice: the plaque's state is made once and read where it is used
+  if (!rt.timersPlaque) {
+    rt.timersPlaque = { pinned: rt.scenario.pinned ?? true, collapsed: false, filter: "all" };
+    // a few world bosses on the plaque, as a player would have picked them
+    rt.state.settings.timers_world_shown = ["melted-danar", "black-warrior-aed", "faithful-rajit"];
+    pushTimers(rt);
+  }
+  return {
+    dataChanged: rt.signals.dataChanged,
+    getData: (cb: (j: string) => void) => cb(JSON.stringify(timersPlaqueData(rt))),
+    dragStart: () => {},
+    dragEnd: () => {},
+    action: (name: string) => {
+      const plaque = rt.timersPlaque;
+      if (!plaque) return;
+      if (name === "pin") plaque.pinned = !plaque.pinned;
+      if (name === "collapse") plaque.collapsed = !plaque.collapsed;
+      if (name.startsWith("filter:")) plaque.filter = name.slice(7) as typeof plaque.filter;
+      pushTimers(rt);
+    },
+    setHotspot: () => {},
+  };
 }
 
 function pushSteps(rt: MockRuntime) {
@@ -477,6 +524,14 @@ function backendObject(rt: MockRuntime) {
       pushState(rt);
     },
     previewTimerSignal: () => {},
+    setTimersPlaqueVisible: (visible: boolean) => {
+      rt.state.timersPlaque = { visible, pinned: rt.state.timersPlaque?.pinned ?? true };
+      pushState(rt);
+    },
+    setTimersPlaquePinned: (pinned: boolean) => {
+      rt.state.timersPlaque = { visible: rt.state.timersPlaque?.visible ?? false, pinned };
+      pushState(rt);
+    },
     refreshTimersData: () => {
       // a fetch that finds nothing newer, after a moment
       pushTimers(rt, true);
@@ -516,9 +571,14 @@ function stepsObject(rt: MockRuntime) {
 
 export function createMockObject(name: string): unknown {
   const rt = boot();
-  const object = name === "steps" ? stepsObject(rt) : backendObject(rt);
+  const object =
+    name === "steps"
+      ? stepsObject(rt)
+      : name === "timers"
+        ? timersPlaqueObject(rt)
+        : backendObject(rt);
 
-  if (name !== "steps" && !rt.noticesSent) {
+  if (name === "backend" && !rt.noticesSent) {
     rt.noticesSent = true;
     // After the page has had a moment to subscribe: a notice nobody listens to is lost
     const notices = scenarioNotices(rt.scenario);

@@ -16,16 +16,17 @@ import { I18nProvider } from "@/shared/i18n";
 
 const page = pageFromHash(window.location.hash);
 const Page = PAGES[page];
-const isSteps = page === "steps";
+// The two plaques live in transparent windows over the game, each on an object of its own.
+const isPlaque = page === "steps" || page === "timers";
 
-// The plaque lives in a transparent window: a dark page background would paint over the game.
-if (isSteps) document.documentElement.classList.add("steps-page");
+// A dark page background would paint over the game.
+if (isPlaque) document.documentElement.classList.add("steps-page");
 
 followWindowFocus();
 
-// The plaque talks to a different Qt object, with its own state signal and getter.
-const connection = isSteps
-  ? { object: "steps", stateSignal: "dataChanged", stateGetter: "getData" }
+// A plaque talks to a Qt object of its own, with its own state signal and getter.
+const connection = isPlaque
+  ? { object: page, stateSignal: "dataChanged", stateGetter: "getData" }
   : { object: "backend", stateSignal: "stateChanged", stateGetter: "getState" };
 
 const container = document.getElementById("root");
@@ -37,8 +38,8 @@ createRoot(container).render(
         see, and they have to be translated as well. */}
     <I18nProvider>
       <BackendProvider {...connection}>
-        <BackendGate quiet={isSteps}>
-          {isSteps ? (
+        <BackendGate quiet={isPlaque}>
+          {isPlaque ? (
             <Page />
           ) : (
             <AppShell>
