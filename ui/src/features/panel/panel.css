@@ -106,7 +106,7 @@ html:has(.pn-app) {
   font: 600 var(--text-2xs) / 1.2 var(--font-display);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-frame-strong);
+  color: var(--color-text-bronze);
 }
 .pn-hero-name {
   margin: 3px 0 2px;

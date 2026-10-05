@@ -106,10 +106,11 @@ describe("order and filters", () => {
 
 describe("format", () => {
   it("counts down as precisely as the distance is worth", () => {
-    expect(countdown(44 * MIN + 32_000, t)).toBe("44:32");
+    expect(countdown(44 * MIN + 32_000, t)).toBe("44m 32s");
+    expect(countdown(5 * MIN + 2_000, t)).toBe("5m 02s");
     expect(countdown(4 * HOUR + 44 * MIN, t)).toBe("4h 44m");
     expect(countdown(52 * HOUR, t)).toBe("2d 4h");
-    expect(countdown(-5_000, t)).toBe("0:00");
+    expect(countdown(-5_000, t)).toBe("0s");
   });
 
   it("writes a cycle as a length", () => {

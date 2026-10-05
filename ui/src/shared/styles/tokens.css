@@ -40,6 +40,7 @@
      the lightness and about 60% of the chroma. */
   --bronze-500: #514a42;
   --bronze-300: #857a6b;
+  --bronze-250: #918676;
 
   /* Gold, the main-action fill. The client's gradient drifts from hue 78 at the dark end to 100
      at the bright one, which is what makes it read as metal rather than paint. */
@@ -89,6 +90,9 @@
      own slate or the map, which keeps it from reading as a painted line. */
   --color-frame: rgb(from var(--bronze-500) r g b / 80%);
   --color-frame-strong: var(--bronze-300);
+  /* Small bronze text, a kicker over a card's title: the strong frame is a border at 4.4:1 on
+     a card, short of text's 4.5:1; this one is 4.8:1 on the lightest card fill. */
+  --color-text-bronze: var(--bronze-250);
   --color-text: var(--slate-100);
   --color-text-secondary: var(--slate-200);
   --color-text-muted: var(--slate-400);

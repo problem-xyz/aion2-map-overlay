@@ -624,6 +624,8 @@
       "settings": "Settings"
     },
     "time": {
+      "s": "{s}s",
+      "ms": "{m}m {s}s",
       "hm": "{h}h {m}m",
       "dh": "{d}d {h}h"
     },

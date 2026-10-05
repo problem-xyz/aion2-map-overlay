@@ -69,7 +69,8 @@
   border: 0;
   background: none;
   font: 600 calc(14px * var(--tp-scale)) / 1.2 var(--font-display);
-  color: var(--color-overlay-ink-muted);
+  /* not the muted ink: over a white scene at the thinnest backing that is 2.7:1, this is 4.3:1 */
+  color: var(--color-overlay-ink-dim);
   text-shadow: var(--shadow-text);
   cursor: pointer;
 }
@@ -258,8 +259,10 @@
 .tp-row.live .tp-sub {
   color: var(--color-overlay-ink);
 }
+/* The running timer's countdown stays in ink: in its hue it fell to 2.2:1 over a bright scene.
+   The hue is on the row's band, its mark and its progress line instead. */
 .tp-row.live .tp-left {
-  color: var(--tp-hue);
+  color: var(--color-overlay-ink);
 }
 .tp-prog {
   position: absolute;
