@@ -1,0 +1,202 @@
+{
+  "format": "map-overlay-world-bosses",
+  "version": 1,
+  "readAt": "2026-10-05T13:18:00Z",
+  "region": "global-eu",
+  "map": "altgard",
+  "faction": "asmodian",
+  "bosses": [
+    {
+      "id": "melted-danar",
+      "name": "Melted Danar",
+      "area": "Dredgion Crash Site",
+      "level": 45,
+      "respawn": "30m",
+      "timeLeft": "29min 8s"
+    },
+    {
+      "id": "black-warrior-aed",
+      "name": "Black Warrior Aed",
+      "area": "Nameless Cemetery",
+      "level": 45,
+      "respawn": "30m",
+      "timeLeft": "13s"
+    },
+    {
+      "id": "faithful-rajit",
+      "name": "Faithful Rajit",
+      "area": "Sanctum Outpost",
+      "level": 45,
+      "respawn": "30m",
+      "timeLeft": "3min 11s"
+    },
+    {
+      "id": "berserker-vargor",
+      "name": "Berserker Vargor",
+      "area": "Sanctum Outpost",
+      "level": 45,
+      "respawn": "1h",
+      "timeLeft": "34min 4s"
+    },
+    {
+      "id": "predator-garsan",
+      "name": "Predator Garsan",
+      "area": "Moslan Forest",
+      "level": 45,
+      "respawn": "2h",
+      "timeLeft": "1h 31min 19s"
+    },
+    {
+      "id": "blood-warrior-lannar",
+      "name": "Blood Warrior Lannar",
+      "area": "Moslan Forest",
+      "level": 45,
+      "respawn": "1h 30m",
+      "timeLeft": "1h 2min 26s"
+    },
+    {
+      "id": "deceiver-trid",
+      "name": "Deceiver Trid",
+      "area": "Uruthumheim",
+      "level": 45,
+      "respawn": "2h",
+      "timeLeft": "1h 32min 40s"
+    },
+    {
+      "id": "blue-wave-kelpina",
+      "name": "Blue Wave Kelpina",
+      "area": "Purifying Forest",
+      "level": 45,
+      "respawn": "2h",
+      "timeLeft": "1h 33min 59s"
+    },
+    {
+      "id": "high-overseer-nutah",
+      "name": "High Overseer Nutah",
+      "area": "Dranactus",
+      "level": 45,
+      "respawn": "2h",
+      "timeLeft": "1h 34min 20s"
+    },
+    {
+      "id": "advisor-resana",
+      "name": "Advisor Resana",
+      "area": "Dranactus",
+      "level": 45,
+      "respawn": "3h",
+      "timeLeft": "2h 33min 27s"
+    },
+    {
+      "id": "special-operations-leader",
+      "name": "Special Operations Leader Linx",
+      "area": "Basfelt Ruins",
+      "level": 45,
+      "respawn": "3h",
+      "timeLeft": "2h 25min 44s"
+    },
+    {
+      "id": "desecrator-newbold",
+      "name": "Desecrator Newbold",
+      "area": "Basfelt Ruins",
+      "level": 45,
+      "respawn": "4h",
+      "timeLeft": "3h 25min 8s"
+    },
+    {
+      "id": "specter-archon-axios",
+      "name": "Specter Archon Axios",
+      "area": "Basfelt Ruins",
+      "level": 45,
+      "respawn": "4h",
+      "timeLeft": "3h 27min 31s"
+    },
+    {
+      "id": "addicted-hardirun",
+      "name": "Addicted Hardirun",
+      "area": "Fafnite Deposit",
+      "level": 45,
+      "respawn": "3h",
+      "timeLeft": "2h 29min 16s"
+    },
+    {
+      "id": "executioner-barthien",
+      "name": "Executioner Barthien",
+      "area": "Western Gribade Highland",
+      "level": 45,
+      "respawn": "4h",
+      "timeLeft": "3h 28min 53s"
+    },
+    {
+      "id": "drakan-battalion-weaponsmith",
+      "name": "Drakan Battalion Weapon Guruta",
+      "area": "Eastern Gribade Highland",
+      "level": 45,
+      "respawn": "6h",
+      "timeLeft": "5h 27min 24s"
+    },
+    {
+      "id": "veteran-shujakan",
+      "name": "Veteran Shujakan",
+      "area": "Black Claw Village",
+      "level": 45,
+      "respawn": "3h",
+      "timeLeft": "2h 26min 36s"
+    },
+    {
+      "id": "visionary-karuka",
+      "name": "Visionary Karuka",
+      "area": "Black Claw Village",
+      "level": 45,
+      "respawn": "4h",
+      "timeLeft": "3h 24min 20s"
+    },
+    {
+      "id": "dark-shadow-vishwada",
+      "name": "Dark Shadow Vishwada",
+      "area": "Lagta Fortress",
+      "level": 45,
+      "respawn": "6h",
+      "timeLeft": "5h 22min 49s"
+    },
+    {
+      "id": "sharp-shylak",
+      "name": "Sharp Shylak",
+      "area": "Impetusium Square",
+      "level": 45,
+      "respawn": "6h",
+      "timeLeft": "5h 24min 46s"
+    },
+    {
+      "id": "immortal-gartua",
+      "name": "Immortal Gartua",
+      "area": "Immortal Isle",
+      "level": 51,
+      "respawn": "12h",
+      "timeLeft": "11h 16min 50s"
+    },
+    {
+      "id": "high-commander-lagta",
+      "name": "High Commander Lagta",
+      "area": "Lagta Fortress",
+      "level": 48,
+      "respawn": "12h",
+      "timeLeft": "11h 20min 52s"
+    },
+    {
+      "id": "soul-ruler-kashapa",
+      "name": "Soul Ruler Kashapa",
+      "area": "Fafnite Deposit",
+      "level": 48,
+      "respawn": "6h",
+      "timeLeft": "5h 21min 11s"
+    },
+    {
+      "id": "silent-dartan",
+      "name": "Silent Dartan",
+      "area": "Purifying Forest",
+      "level": 48,
+      "respawn": "6h",
+      "timeLeft": "5h 22min 40s"
+    }
+  ]
+}

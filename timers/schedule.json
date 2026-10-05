@@ -1,0 +1,266 @@
+{
+  "format": "map-overlay-timers",
+  "version": 1,
+  "updatedAt": "2026-10-02",
+  "regions": [
+    {
+      "id": "global-nae",
+      "group": "global",
+      "label": "NA East",
+      "timeZone": "America/New_York"
+    },
+    {
+      "id": "global-naw",
+      "group": "global",
+      "label": "NA West",
+      "timeZone": "America/Los_Angeles"
+    },
+    {
+      "id": "global-eu",
+      "group": "global",
+      "label": "Europe",
+      "timeZone": "Europe/Berlin"
+    },
+    {
+      "id": "global-sa",
+      "group": "global",
+      "label": "S. America",
+      "timeZone": "America/Sao_Paulo"
+    },
+    {
+      "id": "global-as",
+      "group": "global",
+      "label": "Asia",
+      "timeZone": "Asia/Seoul"
+    },
+    {
+      "id": "kr",
+      "group": "kr",
+      "label": "Korea",
+      "timeZone": "Asia/Seoul"
+    },
+    {
+      "id": "tw",
+      "group": "kr",
+      "label": "Taiwan",
+      "timeZone": "Asia/Taipei"
+    }
+  ],
+  "events": [
+    {
+      "id": "rift",
+      "name": "Spacetime Rift",
+      "kind": "event",
+      "icon": "vortex",
+      "durationMinutes": 60,
+      "entryMinutes": 10,
+      "schedules": {
+        "global": {
+          "type": "daily",
+          "timeZone": "UTC",
+          "times": [
+            "00:00",
+            "03:00",
+            "06:00",
+            "09:00",
+            "12:00",
+            "15:00",
+            "18:00",
+            "21:00"
+          ]
+        },
+        "kr": {
+          "type": "daily",
+          "times": [
+            "02:00",
+            "05:00",
+            "08:00",
+            "11:00",
+            "14:00",
+            "17:00",
+            "20:00",
+            "23:00"
+          ]
+        }
+      }
+    },
+    {
+      "id": "shugo-festival",
+      "name": "Shugo Festival",
+      "kind": "event",
+      "icon": "fox",
+      "durationMinutes": 10,
+      "schedules": {
+        "global": {
+          "type": "hourly",
+          "minute": 0
+        },
+        "kr": {
+          "type": "hourly",
+          "minute": 0
+        }
+      }
+    },
+    {
+      "id": "artifact-siege",
+      "name": "Artifact Siege",
+      "kind": "event",
+      "icon": "siege",
+      "durationMinutes": 30,
+      "schedules": {
+        "global": {
+          "type": "weekly",
+          "timeZone": "UTC",
+          "days": [
+            "mon",
+            "thu",
+            "sat"
+          ],
+          "times": [
+            "21:00"
+          ]
+        },
+        "kr": {
+          "type": "weekly",
+          "days": [
+            "wed",
+            "sat"
+          ],
+          "times": [
+            "21:20",
+            "21:50",
+            "22:20"
+          ],
+          "groups": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "siege-bosses",
+      "name": "Siege Bosses",
+      "kind": "boss",
+      "realm": "abyss",
+      "icon": "demon",
+      "durationMinutes": 30,
+      "schedules": {
+        "global": {
+          "type": "weekly",
+          "timeZone": "UTC",
+          "days": [
+            "mon",
+            "thu",
+            "sat"
+          ],
+          "times": [
+            "21:30"
+          ]
+        },
+        "kr": {
+          "type": "weekly",
+          "days": [
+            "wed",
+            "sat"
+          ],
+          "times": [
+            "21:45",
+            "22:15",
+            "22:45"
+          ],
+          "groups": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "guardian-nahma",
+      "name": "Guardian General Nahma",
+      "kind": "boss",
+      "realm": "abyss",
+      "icon": "demon",
+      "durationMinutes": 30,
+      "schedules": {
+        "global": {
+          "type": "weekly",
+          "timeZone": "UTC",
+          "days": [
+            "fri",
+            "sun"
+          ],
+          "times": [
+            "21:00"
+          ]
+        },
+        "kr": {
+          "type": "weekly",
+          "days": [
+            "fri",
+            "sun"
+          ],
+          "times": [
+            "22:00",
+            "22:30",
+            "23:00"
+          ],
+          "groups": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      }
+    },
+    {
+      "id": "daily-reset",
+      "name": "Daily reset",
+      "kind": "reset",
+      "icon": "daily",
+      "schedules": {
+        "global": {
+          "type": "daily",
+          "times": [
+            "09:00"
+          ]
+        },
+        "kr": {
+          "type": "daily",
+          "times": [
+            "05:00"
+          ]
+        }
+      }
+    },
+    {
+      "id": "weekly-reset",
+      "name": "Weekly reset",
+      "kind": "reset",
+      "icon": "weekly",
+      "schedules": {
+        "global": {
+          "type": "weekly",
+          "days": [
+            "wed"
+          ],
+          "times": [
+            "09:00"
+          ]
+        },
+        "kr": {
+          "type": "weekly",
+          "days": [
+            "wed"
+          ],
+          "times": [
+            "05:00"
+          ]
+        }
+      }
+    }
+  ]
+}
