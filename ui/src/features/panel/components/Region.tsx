@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 
 import type { Region as RegionRect } from "@/shared/backend/contract";
 import { useI18n } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import Icon from "@/shared/ui/Icon";
-
-import Card from "./Card";
 
 export interface RegionProps {
   region: RegionRect | null;

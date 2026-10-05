@@ -2,10 +2,9 @@ import type { CSSProperties } from "react";
 
 import type { ProgressState } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import MarkIcon from "@/shared/ui/MarkIcon";
 import type { MarkIconName } from "@/shared/ui/markIcons";
-
-import Card from "./Card";
 
 // The number's colour and the bar's share travel in CSS variables, which CSSProperties does not
 // know about

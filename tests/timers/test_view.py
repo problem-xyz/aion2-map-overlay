@@ -112,3 +112,11 @@ def test_world_bosses_belong_to_the_region_they_were_read_on() -> None:
 
 def test_no_schedule_means_no_timers() -> None:
     assert timers_view(TimersData(None, None), Settings(), NOW, BERLIN) is None
+
+
+def test_a_weekly_event_names_its_starts_over_the_week() -> None:
+    v = view()
+    siege = event(v, "artifact-siege")
+    days = {datetime.fromtimestamp(s / 1000, UTC).weekday() for s in siege["weekStarts"]}
+    assert days == {0, 3, 5}  # Monday, Thursday, Saturday
+    assert event(v, "rift")["weekStarts"] == []

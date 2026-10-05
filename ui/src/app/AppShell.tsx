@@ -16,7 +16,13 @@ import {
   useBackendState,
   useBackendStore,
 } from "@/shared/backend/BackendProvider";
-import type { AppState, ProgressTick, StepsState, UpdateState } from "@/shared/backend/contract";
+import type {
+  AppState,
+  ProgressTick,
+  StepsState,
+  TimersState,
+  UpdateState,
+} from "@/shared/backend/contract";
 import { useI18n } from "@/shared/i18n";
 import { ConfirmProvider } from "@/shared/ui/ConfirmProvider";
 import { ToastProvider } from "@/shared/ui/ToastProvider";
@@ -43,6 +49,13 @@ function StatePatches() {
   useBackendSignal<UpdateState>(
     "updateChanged",
     (update) => store.set((s) => (s ? { ...s, update } : s)),
+    { parse: true },
+  );
+
+  // The timers, when what they say changes; the whole state is never resent for them.
+  useBackendSignal<TimersState | null>(
+    "timersChanged",
+    (timers) => store.set((s) => (s ? { ...s, timers } : s)),
     { parse: true },
   );
 

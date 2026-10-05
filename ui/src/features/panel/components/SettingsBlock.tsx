@@ -3,12 +3,11 @@ import type { ReactNode } from "react";
 import type { RouteView, Settings, SettingsSchema } from "@/shared/backend/contract";
 import { useConfirm } from "@/shared/hooks/useConfirm";
 import { type MessageKey, useI18n } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import Icon from "@/shared/ui/Icon";
 import Segmented from "@/shared/ui/Segmented";
 import SettingSlider from "@/shared/ui/SettingSlider";
 import Switch from "@/shared/ui/Switch";
-
-import Card from "./Card";
 
 /**
  * The patch callback useSettingsPatch hands out. Generic over the key, so a value is checked
