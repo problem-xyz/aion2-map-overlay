@@ -120,7 +120,7 @@ describe("SettingsBlock", () => {
 
     expect(screen.queryAllByRole("slider")).toHaveLength(0);
     // the choices do not depend on a range, so they stay
-    expect(screen.getByRole("radiogroup", { name: en("panel.settings.language") })).toBeDefined();
+    expect(screen.getByRole("radiogroup", { name: en("panel.settings.routeView") })).toBeDefined();
   });
 
   it("keeps the algorithm settings in an Advanced section that starts closed", async () => {

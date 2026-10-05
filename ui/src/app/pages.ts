@@ -8,14 +8,14 @@
 
 import type { ComponentType } from "react";
 
+import ControlPage from "@/app/ControlPage";
 import EditorPage from "@/features/editor/EditorPage";
-import PanelPage from "@/features/panel/PanelPage";
 import StepsPage from "@/features/steps/StepsPage";
 
 export type PageId = "" | "editor" | "steps";
 
 export const PAGES: Record<PageId, ComponentType> = {
-  "": PanelPage,
+  "": ControlPage,
   editor: EditorPage,
   steps: StepsPage,
 };

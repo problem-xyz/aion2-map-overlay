@@ -1,13 +1,11 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
-import { useBackendSignal, useBackendState } from "@/shared/backend/BackendProvider";
-import type { AppState, MapInfo, NotifyPayload, ProgressState } from "@/shared/backend/contract";
+import { useBackendState } from "@/shared/backend/BackendProvider";
+import type { AppState, MapInfo, ProgressState } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { useConfirm } from "@/shared/hooks/useConfirm";
 import { useT } from "@/shared/i18n";
-import { useToasts } from "@/shared/ui/ToastProvider";
-import Toasts from "@/shared/ui/Toasts";
 
 import AutoMarkBlock from "./components/AutoMarkBlock";
 import FirstRun from "./components/FirstRun";
@@ -23,9 +21,6 @@ import SearchHint from "./components/SearchHint";
 import SettingsBlock from "./components/SettingsBlock";
 import Status from "./components/Status";
 import StepsBlock from "./components/StepsBlock";
-import SupportBlock from "./components/SupportBlock";
-import UpdateBanner from "./components/UpdateBanner";
-import UpdatesBlock from "./components/UpdatesBlock";
 import WarmUp from "./components/WarmUp";
 import { usePointIcons } from "./hooks/usePointIcons";
 
@@ -54,19 +49,17 @@ function loadSection(): PanelSection {
 }
 
 /**
- * The control panel.
+ * The map tool of the control panel (app/ControlPage.tsx holds the switch between the tools).
  *
  * It holds no copy of the backend state: every field is read through a selector, so a stats
- * tick at 10 Hz re-renders the status strip and nothing else. What it does own is the two
- * pieces of state the backend has no opinion about -- whether the preview is switched on, and
- * the toast queue.
+ * tick at 10 Hz re-renders the status strip and nothing else. What it does own is the one piece
+ * of state the backend has no opinion about: whether the preview is switched on.
  */
 export default function PanelPage() {
   const api = useApi();
   const t = useT();
   const confirm = useConfirm();
   const changeSetting = useSettingsPatch();
-  const toasts = useToasts();
   const [previewOn, setPreviewOn] = useState(false);
   const [section, setSectionState] = useState<PanelSection>(loadSection);
 
@@ -79,8 +72,6 @@ export default function PanelPage() {
     }
   }, []);
 
-  useBackendSignal<NotifyPayload>("notify", (payload) => toasts.push(payload), { parse: true });
-
   const state = useBackendState<AppState, AppState | null>((s) => s);
 
   const togglePreview = useCallback(
@@ -91,12 +82,22 @@ export default function PanelPage() {
     [api],
   );
 
+  // Switching to the other tool unmounts this page: a preview left on would go on streaming
+  // frames nobody sees.
+  const previewLive = useRef({ on: previewOn, api });
+  previewLive.current = { on: previewOn, api };
+  useEffect(
+    () => () => {
+      if (previewLive.current.on) previewLive.current.api?.setPreview(false);
+    },
+    [],
+  );
+
   const route = state?.routes.find((r) => r.id === state.route);
   const pointIcons = usePointIcons(route?.map, state?.progress ?? NO_PROGRESS);
 
   if (!state || !api) return null;
 
-  const updateWaiting = state.update?.phase === "available" || state.update?.phase === "ready";
   const panel = (id: PanelSection) => ({
     id: sectionPanelId(id),
     role: "tabpanel",
@@ -182,33 +183,13 @@ export default function PanelPage() {
             changeSetting.cancel();
             api.resetSettings();
           }}
-        >
-          <UpdatesBlock
-            settings={state.settings}
-            update={state.update}
-            version={state.version}
-            isPortable={Boolean(state.isPortable)}
-            onChange={changeSetting}
-            onCheck={() => api.checkForUpdates()}
-            onUnskip={() => api.skipUpdate("")}
-          />
-        </SettingsBlock>
+        />
       </>
     ),
   };
 
   return (
-    <div className="app pn-app">
-      <UpdateBanner
-        update={state.update}
-        repoUrl={state.repoUrl}
-        editorOpen={state.editorOpen}
-        onDownload={() => api.downloadUpdate()}
-        onRestart={() => api.installUpdate(true)}
-        onSkip={(version) => api.skipUpdate(version)}
-        onOpenUrl={(url) => api.openUrl(url)}
-      />
-
+    <>
       {/* Until there is a route the card has nothing to show: the two steps to one take its
           place. The map area is not one of them -- the first Start asks for it. */}
       {state.routes.length === 0 ? (
@@ -260,7 +241,6 @@ export default function PanelPage() {
         active={section}
         onSelect={setSection}
         onEditor={() => api.openEditor(state.route ?? "")}
-        updateWaiting={updateWaiting}
       />
 
       <div {...panel(section)}>{content[section]}</div>
@@ -274,23 +254,6 @@ export default function PanelPage() {
           </div>
         ))}
       </WarmUp>
-
-      <SupportBlock
-        links={state.links}
-        repoUrl={state.repoUrl}
-        banner={state.banner}
-        onOpenUrl={(url) => api.openUrl(url)}
-        onCopy={(text) => api.copyText(text)}
-      />
-
-      <footer className="foot">
-        <span>Aion 2 - Map Overlay {state.version}</span>
-        <span>
-          {state.captureBackend ? t("panel.footer.capture", { backend: state.captureBackend }) : ""}
-        </span>
-      </footer>
-
-      <Toasts />
-    </div>
+    </>
   );
 }

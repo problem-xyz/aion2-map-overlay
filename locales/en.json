@@ -1,4 +1,12 @@
 {
+  "app": {
+    "tools": {
+      "label": "Tools",
+      "map": "Map",
+      "timers": "Timers",
+      "settings": "App settings"
+    }
+  },
   "common": {
     "backend": {
       "channelFailed": "The channel to the app could not be opened.",

@@ -45,6 +45,7 @@ export type IconName =
   | "record"
   | "area"
   | "map"
+  | "clock"
   | "share"
   | "layers"
   | "search"
@@ -208,6 +209,13 @@ const PATHS: Record<IconName, ReactNode> = {
   ),
   area: <path d="M2 5V2.5h2.5M11.5 2.5H14V5M14 11v2.5h-2.5M4.5 13.5H2V11" />,
   map: <path d="M1.5 3.5l4-1.5 5 2 4-1.5v10l-4 1.5-5-2-4 1.5zM5.5 2v10M10.5 4v10" />,
+  // a stopwatch: the timers
+  clock: (
+    <>
+      <circle cx="8" cy="9" r="5.5" />
+      <path d="M8 6v3l2 1.5M6.5 1.5h3M8 1.5v2" />
+    </>
+  ),
   share: (
     <>
       <circle cx="11.5" cy="3.5" r="1.75" />

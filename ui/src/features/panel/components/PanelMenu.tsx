@@ -37,8 +37,6 @@ export interface PanelMenuProps {
   active: PanelSection;
   onSelect: (id: PanelSection) => void;
   onEditor: () => void;
-  /** An update waits in Settings: the tile carries a badge, as the client marks new mail. */
-  updateWaiting: boolean;
 }
 
 /**
@@ -51,7 +49,7 @@ export interface PanelMenuProps {
  * area with the rest of the settings. E still opens the editor from anywhere in the panel; its
  * button now sits over the routes.
  */
-export default function PanelMenu({ active, onSelect, onEditor, updateWaiting }: PanelMenuProps) {
+export default function PanelMenu({ active, onSelect, onEditor }: PanelMenuProps) {
   const t = useT();
   const live = useLatest({ onSelect, onEditor });
 
@@ -110,11 +108,6 @@ export default function PanelMenu({ active, onSelect, onEditor, updateWaiting }:
               </kbd>
               <Icon name={tile.icon} className="pn-tile-icon" />
               <span className="pn-tile-label">{t(tile.label)}</span>
-              {tile.id === "settings" && updateWaiting ? (
-                <span className="pn-tile-badge" title={t("panel.menu.update")}>
-                  <span className="pn-sr-only">{t("panel.menu.update")}</span>
-                </span>
-              ) : null}
             </button>
           );
         })}

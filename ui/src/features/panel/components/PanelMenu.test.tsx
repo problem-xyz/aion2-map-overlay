@@ -11,17 +11,12 @@ import { I18nProvider } from "@/shared/i18n";
 
 import PanelMenu, { type PanelSection } from "./PanelMenu";
 
-function mount(active: PanelSection = "routes", updateWaiting = false) {
+function mount(active: PanelSection = "routes") {
   const onSelect = vi.fn();
   const onEditor = vi.fn();
   render(
     <I18nProvider initial="en">
-      <PanelMenu
-        active={active}
-        onSelect={onSelect}
-        onEditor={onEditor}
-        updateWaiting={updateWaiting}
-      />
+      <PanelMenu active={active} onSelect={onSelect} onEditor={onEditor} />
       <input aria-label="field" />
     </I18nProvider>,
   );
@@ -73,14 +68,6 @@ describe("PanelMenu", () => {
     await user.keyboard("{ArrowLeft}");
 
     expect(onSelect).toHaveBeenLastCalledWith("settings");
-  });
-
-  it("marks Settings while an update waits there", () => {
-    mount("routes", true);
-
-    expect(screen.getByRole("tab", { name: /Settings/ }).textContent).toContain(
-      "An update is available",
-    );
   });
 
   it("lays the living sheen under the selected tile alone, hidden from a screen reader", () => {
