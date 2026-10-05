@@ -44,3 +44,8 @@ PARTNER_DISCORD_URL = "https://discord.gg/aion2global"
 # HttpSource: given as a plain string, a github.com URL is taken for a repository and sent to
 # GitHub's API, where this path does not exist (measured: 404).
 UPDATE_URL = f"{REPO_URL}/releases/latest/download/"
+
+# Where the timers' schedule and world bosses are fetched from, newer than the copies bundled
+# with the app: raw files of the repository's data branch, so a day's boss reading or a changed
+# event time reaches players without a release. The trailing slash matters, as with UPDATE_URL.
+TIMERS_DATA_URL = "https://raw.githubusercontent.com/problem-xyz/aion2-map-overlay/data/timers/"

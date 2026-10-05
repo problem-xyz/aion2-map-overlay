@@ -324,6 +324,9 @@
     "system": {
       "old_windows": "Windows {version} cannot hide the overlay from screen capture; that needs Windows 10 version 2004 or later. The route will show in recordings and in the frames the map is searched in, so detection may get worse."
     },
+    "timers": {
+      "fetch_failed": "The timers could not be updated. They keep the schedule they have."
+    },
     "update": {
       "available": "Version {version} is available.",
       "checking": "Checking for updates…",
