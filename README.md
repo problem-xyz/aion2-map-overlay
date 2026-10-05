@@ -4,7 +4,8 @@
 
 Aion 2 - Map Overlay draws your own route on top of the Aion 2 map. You place numbered points
 once, and the app finds the map on screen and keeps the route on it while you move and zoom
-the map.
+the map. It also counts down the game's events and world bosses, with a plaque over the game and
+a sound before each one starts.
 
 It is a free, unofficial fan project for Windows 10 and 11.
 
@@ -55,12 +56,28 @@ fullscreen.
 - **Recording videos.** The route is hidden from screen recordings by default. Tick **Visible in
   screen recordings** before you record, and use Display Capture in OBS.
 
+## Timers
+
+The panel's second tool, **Timers**, counts down Aion 2's recurring events (Spacetime Rift, Shugo
+Festival, the sieges and the Abyss bosses), the world bosses and the daily and weekly resets, in
+your own time.
+
+- **Your server.** Choose it under **Settings** in Timers; until you do, it is guessed from your
+  clock.
+- **Reminders.** Each event can sound a few minutes before it starts, and be shown or left off the
+  plaque over the game. With the sound off, the plaque shows itself for a moment instead.
+- **Day timeline.** A wide window with one or two days at a glance: every event and world boss on
+  its own line.
+- **World bosses** come from the in-game list, read once a day for this project. Later spawns are
+  worked out from each boss's respawn time and marked as estimates; after maintenance they can be
+  off until the next reading.
+
 ## Updates
 
 The app checks for updates by itself, downloads them in the background and installs them when
 you close it, so a game session is never interrupted. A banner in the panel says when a new
 version is ready, with **Restart now** if you do not want to wait. You can turn automatic
-checks or downloads off in the panel's **Updates** block.
+checks or downloads off under the gear at the top of the panel.
 
 An update never deletes or changes the routes you made. The routes that come with the app get
 the new version only if you never edited them. If you edited one, it stays as you left it, and
@@ -82,9 +99,10 @@ A portable copy is removed by deleting its folder.
   `Portable.zip` on the Releases page is built from it by GitHub Actions, in a public build log.
 - Every release links a [VirusTotal](https://www.virustotal.com) report for both files at the
   end of its notes.
-- There is no telemetry and no account. The only thing it sends is the update check to GitHub,
+- There is no telemetry and no account. It sends two things, both to GitHub: the update check,
   which carries the installed version, the app's name and a random number made once per
-  installation.
+  installation, and a request for the latest timers schedule, which carries nothing about you.
+  **Fetch new schedules** in Timers' Settings turns the second one off.
 - **Use it at your own risk.** Whether the game allows overlays is up to its publisher; check the
   game's Terms of Service.
 
