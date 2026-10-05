@@ -175,12 +175,14 @@ def test_maps_root(
 @pytest.fixture(autouse=True)
 def no_timers_network(monkeypatch: pytest.MonkeyPatch) -> None:
     """Every Backend starts the timers, and they fetch their data a few seconds in: never from the
-    real repository under test. A test of the transport itself serves its own files locally."""
+    real repository under test. A test of the transport itself serves its own files locally.
 
-    def offline(url: str, _etag: str | None) -> timers_data.Fetched:
-        raise timers_data.FetchError(f"{url}: no network under test")
-
-    monkeypatch.setattr(timers_data, "http_transport", offline)
+    The stand-in finds nothing newer, quietly. A failure would log a warning from a fetch thread
+    a test left behind, and that warning lands in whichever test runs next and counts its log.
+    """
+    monkeypatch.setattr(
+        timers_data, "http_transport", lambda _url, etag: timers_data.Fetched(None, etag)
+    )
 
 
 @pytest.fixture

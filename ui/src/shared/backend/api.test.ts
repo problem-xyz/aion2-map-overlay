@@ -105,6 +105,7 @@ function makeBackendDouble(replies: Replies) {
     setTimerEvent: vi.fn(),
     setTimersWorldShown: vi.fn(),
     refreshTimersData: vi.fn(),
+    previewTimerSignal: vi.fn(),
 
     stateChanged: qtSignal(),
     statsChanged: qtSignal(),

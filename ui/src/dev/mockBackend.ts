@@ -476,6 +476,7 @@ function backendObject(rt: MockRuntime) {
       pushTimers(rt);
       pushState(rt);
     },
+    previewTimerSignal: () => {},
     refreshTimersData: () => {
       // a fetch that finds nothing newer, after a moment
       pushTimers(rt, true);

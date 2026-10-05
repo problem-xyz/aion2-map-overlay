@@ -12,6 +12,7 @@ from PySide6.QtWidgets import QApplication
 
 from map_overlay.bridge.backend import Backend
 from map_overlay.core.paths import DataDirs
+from map_overlay.timers import data as timers_data
 
 
 @pytest.fixture
@@ -25,7 +26,7 @@ def backend(qapp: QApplication, dirs: DataDirs) -> Iterator[Backend]:
 
 def timers_of(backend: Backend) -> dict[str, Any]:
     state = json.loads(backend.getState())
-    assert state["api"] == 28
+    assert state["api"] == 29
     return state["timers"]
 
 
@@ -81,7 +82,13 @@ def test_a_reset_of_the_settings_keeps_the_timers_choices(backend: Backend) -> N
     assert backend.settings.timers_events == {"rift": {"lead": 15}}
 
 
-def test_a_fetch_the_user_asked_for_that_fails_says_so(backend: Backend) -> None:
+def test_a_fetch_the_user_asked_for_that_fails_says_so(
+    backend: Backend, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def down(url: str, _etag: str | None) -> timers_data.Fetched:
+        raise timers_data.FetchError(f"{url}: offline")
+
+    monkeypatch.setattr(timers_data, "http_transport", down)
     notices: list[dict[str, Any]] = []
     backend.notify.connect(lambda payload: notices.append(json.loads(payload)))
     backend.refreshTimersData()

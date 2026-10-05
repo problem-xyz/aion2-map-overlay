@@ -12,7 +12,7 @@ in getState(); it never means editing one of these.
     signals: stateChanged, statsChanged, previewChanged, notify, editorRequest,
              progressChanged, stepsChanged, updateChanged, timersChanged
 
-    slots (41):
+    slots (42):
       checkForUpdates()
       closeEditor()
       copyRouteCode(route_id)
@@ -31,6 +31,7 @@ in getState(); it never means editing one of these.
       openRoutesFolder()
       openUrl(url)
       pasteRouteCode()
+      previewTimerSignal(event_id)
       refreshRoutes()
       refreshTimersData()
       reorderRoutes(payload)
@@ -1394,6 +1395,11 @@ class Backend(QObject):
             return
         if isinstance(ids, list):
             self._timers.set_world_shown(ids)
+
+    @Slot(str)
+    def previewTimerSignal(self, event_id: str) -> None:
+        """Play the event's reminder at the volume set; "" plays the chime."""
+        self._timers.preview(str(event_id))
 
     @Slot()
     def refreshTimersData(self) -> None:

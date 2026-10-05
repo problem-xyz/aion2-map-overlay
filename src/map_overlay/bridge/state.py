@@ -233,7 +233,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 28: timers, the event and world-boss timers (null when no schedule loads), with the signal
 #     timersChanged and the slots setTimerEvent, setTimersWorldShown and refreshTimersData;
 #     settings has the timers_* fields, and settingsSchema may describe a "map" field.
-API_VERSION = 28
+# 29: previewTimerSignal plays an event's reminder sound; the reminders sound when they fall due.
+API_VERSION = 29
 
 
 def build_state(

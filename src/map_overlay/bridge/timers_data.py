@@ -56,6 +56,7 @@ class TimersDataService(QObject):
         self._transport = transport
         self._data = store.current()
         self._enabled = True
+        self._closed = False
         self._thread: threading.Thread | None = None
         self._first_check_ms = first_check_ms
         self._relay = _Relay(self)
@@ -88,28 +89,30 @@ class TimersDataService(QObject):
 
     def refresh(self, *, manual: bool = True) -> bool:
         """Start a fetch of both files; False when one is already running or fetching is off."""
-        if self._thread is not None or not (self._enabled or manual):
+        if self._closed or self._thread is not None or not (self._enabled or manual):
             return False
         # Collect here, on the GUI thread: an allocation on the fetch thread could otherwise
         # start a collection there and free a Qt object off its own thread.
         gc.collect()
+        # Looked up now, not bound at construction, so a test can take the network away -- and
+        # not on the thread, which may outlive that test and find the network given back.
+        transport = self._transport or timers_data.http_transport
         self._thread = threading.Thread(
-            target=self._work, args=(manual,), name="timers-fetch", daemon=True
+            target=self._work, args=(manual, transport), name="timers-fetch", daemon=True
         )
         self._thread.start()
         return True
 
     def close(self) -> None:
-        """Stop the checks. A fetch still running is left to end with the process."""
+        """Stop the checks, and start no fetch after this. One running is left to end alone."""
+        self._closed = True
         self._timer.stop()
 
-    def _work(self, manual: bool) -> None:
+    def _work(self, manual: bool, transport: Transport) -> None:
         """Fetch thread. Touches the store's files and the relay, nothing of Qt's widgets."""
         taken, error = False, None
         for kind in FILES:
             try:
-                # looked up at each fetch, not bound once, so a test can take the network away
-                transport = self._transport or timers_data.http_transport
                 taken = self._store.refresh(kind, transport) or taken
             except (FetchError, TimersError) as e:
                 log.warning("timers %s not fetched: %s", kind, e)

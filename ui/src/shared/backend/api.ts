@@ -74,6 +74,7 @@ export interface BackendApi {
   setTimerEvent(eventId: string, choice: Partial<TimerChoice>): void;
   setTimersWorldShown(ids: string[]): void;
   refreshTimersData(): void;
+  previewTimerSignal(eventId: string): void;
 }
 
 export function createBackendApi(object: BackendObject): BackendApi {
@@ -135,6 +136,7 @@ export function createBackendApi(object: BackendObject): BackendApi {
     setTimerEvent: (eventId, choice) => object.setTimerEvent(eventId, JSON.stringify(choice)),
     setTimersWorldShown: (ids) => object.setTimersWorldShown(JSON.stringify(ids)),
     refreshTimersData: () => object.refreshTimersData(),
+    previewTimerSignal: (eventId) => object.previewTimerSignal(eventId),
   };
 }
 
