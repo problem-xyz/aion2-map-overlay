@@ -46,6 +46,7 @@ export type IconName =
   | "area"
   | "map"
   | "clock"
+  | "bell"
   | "share"
   | "layers"
   | "search"
@@ -209,6 +210,8 @@ const PATHS: Record<IconName, ReactNode> = {
   ),
   area: <path d="M2 5V2.5h2.5M11.5 2.5H14V5M14 11v2.5h-2.5M4.5 13.5H2V11" />,
   map: <path d="M1.5 3.5l4-1.5 5 2 4-1.5v10l-4 1.5-5-2-4 1.5zM5.5 2v10M10.5 4v10" />,
+  // a bell: a reminder about to sound
+  bell: <path d="M4 11.5V7.5a4 4 0 0 1 8 0v4l1 1.5H3zM6.5 14.5a1.5 1.5 0 0 0 3 0" />,
   // a stopwatch: the timers
   clock: (
     <>

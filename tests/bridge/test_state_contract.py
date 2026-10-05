@@ -49,6 +49,7 @@ STATE_KEYS = frozenset(
         "steps",
         "tilesBusy",
         "timers",
+        "timersPlaque",
         "update",
         "version",
     }
@@ -92,6 +93,8 @@ SLOTS = (
     "setStepsSize",
     "setStepsVisible",
     "setTimerEvent",
+    "setTimersPlaquePinned",
+    "setTimersPlaqueVisible",
     "setTimersWorldShown",
     "skipUpdate",
     "start",
@@ -115,7 +118,7 @@ NOTIFY_KEYS = frozenset({"level", "code", "params", "text"})
 
 # Pinned as a number, not just compared against itself: a bump is the one way the UI can tell
 # which contract it reached, so it has to be a deliberate edit here rather than a side effect.
-EXPECTED_API_VERSION = 30
+EXPECTED_API_VERSION = 31
 
 _DOC_SLOTS = re.compile(r"slots \((\d+)\):\n(.+?)\n\n", re.DOTALL)
 _DOC_SIGNALS = re.compile(r"signals:(.+?)\n\n", re.DOTALL)

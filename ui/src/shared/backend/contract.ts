@@ -397,6 +397,8 @@ export interface AppState {
   banner?: BannerInfo | null;
   /** The timers, as `timersChanged` also carries them. Absent before api 28. */
   timers?: TimersState | null;
+  /** The timers plaque over the game. Absent before api 31. */
+  timersPlaque?: { visible: boolean; pinned: boolean };
 }
 
 export interface BannerInfo {
@@ -607,6 +609,9 @@ export interface BackendSlots {
   refreshTimersData(): void;
   /** Play the event's (or world boss's) reminder at the volume set; "" plays the chime. Api 29. */
   previewTimerSignal(eventId: string): void;
+  /** The timers plaque over the game, up or down. Api 31. */
+  setTimersPlaqueVisible(visible: boolean): void;
+  setTimersPlaquePinned(pinned: boolean): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {
@@ -649,3 +654,33 @@ export interface StepsSignals {
 }
 
 export type StepsObject = StepsSlots & StepsSignals;
+
+/** What the timers plaque draws, from qt/timers_window.py. Api 31. */
+export interface TimersPlaqueData {
+  timers: TimersState | null;
+  filter: "all" | "event" | "boss";
+  clock12h: boolean;
+  /** The world bosses' common reminder lead, for the plaque's bell. */
+  worldLead: number;
+  /** Folded up to its head: the nearest timer alone. */
+  collapsed: boolean;
+  /** The reminder last sounded, marked on its row until its event starts. */
+  ring: { id: string; name: string; start: number; boss: boolean } | null;
+  scale: number;
+  pinned: boolean;
+  opacity: number;
+  grip: number;
+  language: string;
+}
+
+/** The `timers` object the timers plaque talks to: the steps plaque's, but for `setHeight`. */
+export interface TimersPlaqueSlots {
+  getData(cb: (json: string) => void): void;
+  dragStart(): void;
+  dragEnd(): void;
+  /** "pin", "collapse", "close", "filter:all", "filter:event" or "filter:boss". */
+  action(name: string): void;
+  setHotspot(x: number, y: number, w: number, h: number): void;
+}
+
+export type TimersPlaqueObject = TimersPlaqueSlots & StepsSignals;

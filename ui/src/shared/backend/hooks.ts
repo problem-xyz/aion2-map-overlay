@@ -8,9 +8,16 @@
 
 import { useMemo } from "react";
 
-import { createBackendApi, createStepsApi, type BackendApi, type StepsApi } from "./api";
+import {
+  createBackendApi,
+  createStepsApi,
+  createTimersPlaqueApi,
+  type BackendApi,
+  type StepsApi,
+  type TimersPlaqueApi,
+} from "./api";
 import { useBackend } from "./BackendProvider";
-import type { BackendObject, StepsObject } from "./contract";
+import type { BackendObject, StepsObject, TimersPlaqueObject } from "./contract";
 
 export function useApi(): BackendApi | null {
   const { object } = useBackend<BackendObject>();
@@ -20,4 +27,9 @@ export function useApi(): BackendApi | null {
 export function useStepsApi(): StepsApi | null {
   const { object } = useBackend<StepsObject>();
   return useMemo(() => (object ? createStepsApi(object) : null), [object]);
+}
+
+export function useTimersPlaqueApi(): TimersPlaqueApi | null {
+  const { object } = useBackend<TimersPlaqueObject>();
+  return useMemo(() => (object ? createTimersPlaqueApi(object) : null), [object]);
 }

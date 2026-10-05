@@ -18,6 +18,8 @@ import type {
   StepsObject,
   StepsSize,
   TimerChoice,
+  TimersPlaqueData,
+  TimersPlaqueObject,
 } from "./contract";
 import { safeParse } from "./json";
 import { call } from "./transport";
@@ -75,6 +77,8 @@ export interface BackendApi {
   setTimersWorldShown(ids: string[]): void;
   refreshTimersData(): void;
   previewTimerSignal(eventId: string): void;
+  setTimersPlaqueVisible(visible: boolean): void;
+  setTimersPlaquePinned(pinned: boolean): void;
 }
 
 export function createBackendApi(object: BackendObject): BackendApi {
@@ -137,6 +141,8 @@ export function createBackendApi(object: BackendObject): BackendApi {
     setTimersWorldShown: (ids) => object.setTimersWorldShown(JSON.stringify(ids)),
     refreshTimersData: () => object.refreshTimersData(),
     previewTimerSignal: (eventId) => object.previewTimerSignal(eventId),
+    setTimersPlaqueVisible: (visible) => object.setTimersPlaqueVisible(visible),
+    setTimersPlaquePinned: (pinned) => object.setTimersPlaquePinned(pinned),
   };
 }
 
@@ -158,6 +164,25 @@ export function createStepsApi(object: StepsObject): StepsApi {
     dragEnd: () => object.dragEnd(),
     action: (name) => object.action(name),
     setHeight: (height) => object.setHeight(height),
+    setHotspot: (x, y, w, h) => object.setHotspot(x, y, w, h),
+  };
+}
+
+export interface TimersPlaqueApi {
+  getData(): Promise<TimersPlaqueData | null>;
+  dragStart(): void;
+  dragEnd(): void;
+  action(name: string): void;
+  setHotspot(x: number, y: number, w: number, h: number): void;
+}
+
+export function createTimersPlaqueApi(object: TimersPlaqueObject): TimersPlaqueApi {
+  return {
+    getData: () =>
+      call<string>(object, "getData").then((j) => safeParse<TimersPlaqueData | null>(j, null)),
+    dragStart: () => object.dragStart(),
+    dragEnd: () => object.dragEnd(),
+    action: (name) => object.action(name),
     setHotspot: (x, y, w, h) => object.setHotspot(x, y, w, h),
   };
 }

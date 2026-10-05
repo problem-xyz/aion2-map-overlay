@@ -1,0 +1,343 @@
+/* The timers plaque over the game, the steps plaque's sibling (steps.css): the same backing, the
+   same floor under its opacity, the same buttons. Everything is sized from --tp-scale. Each row
+   carries its kind's hue in --tp-hue. */
+
+.tp-card {
+  --tp-scale: 1;
+  --tp-alpha: 1;
+  --tp-grip: 8px;
+  --tp-pad: calc(12px * var(--tp-scale));
+  --tp-backing: max(var(--tp-alpha), 0.85);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  border: 1px solid var(--color-overlay-frame);
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    180deg,
+    rgb(from var(--color-overlay-top) r g b / calc(0.8 * var(--tp-backing))),
+    rgb(from var(--color-overlay-bottom) r g b / calc(0.86 * var(--tp-backing)))
+  );
+  color: var(--color-overlay-ink);
+  font-family: var(--font-body);
+  user-select: none;
+}
+.tp-card.loose {
+  border-color: var(--color-overlay-frame-loose);
+  background: linear-gradient(
+    180deg,
+    var(--color-overlay-loose-top),
+    var(--color-overlay-loose-bottom)
+  );
+  cursor: grab;
+}
+.tp-card.loose:active {
+  cursor: grabbing;
+}
+
+/* ---------- the head: the filter as tabs, the region, the pin and the fold ---------- */
+.tp-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: calc(6px * var(--tp-scale));
+  padding: calc(var(--tp-pad) * 0.5) calc(var(--tp-pad) * 0.4) calc(var(--tp-pad) * 0.45)
+    var(--tp-pad);
+}
+.tp-live {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: calc(4px * var(--tp-scale));
+}
+.tp-card.folded .tp-live {
+  flex: none;
+}
+.tp-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: calc(12px * var(--tp-scale));
+}
+.tp-tab {
+  position: relative;
+  padding: calc(4px * var(--tp-scale)) 0 calc(5px * var(--tp-scale));
+  border: 0;
+  background: none;
+  font: 600 calc(14px * var(--tp-scale)) / 1.2 var(--font-display);
+  color: var(--color-overlay-ink-muted);
+  text-shadow: var(--shadow-text);
+  cursor: pointer;
+}
+.tp-tab.on {
+  color: var(--color-overlay-ink);
+}
+/* the chosen tab: a line of glow under it, so the choice is not the colour alone */
+.tp-tab.on::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-info);
+  box-shadow: 0 0 6px var(--color-info);
+}
+.tp-tab:focus-visible,
+.tp-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.tp-region {
+  flex: none;
+  padding: 3px 5px 2px;
+  border: 1px solid var(--color-overlay-frame-loose);
+  border-radius: var(--radius-sm);
+  font: 600 calc(11px * var(--tp-scale)) / 1 var(--font-display);
+  letter-spacing: 0.06em;
+  color: var(--color-overlay-ink-dim);
+}
+.tp-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: max(24px, calc(26px * var(--tp-scale)));
+  height: max(24px, calc(26px * var(--tp-scale)));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-icon-warm);
+  cursor: pointer;
+}
+.tp-btn > span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.tp-btn .ui-icon {
+  width: calc(17px * var(--tp-scale));
+  height: calc(17px * var(--tp-scale));
+  stroke-width: 1.3;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%));
+}
+.tp-btn:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-overlay-ink);
+}
+.tp-btn.on {
+  background: rgb(from var(--color-icon-warm) r g b / 14%);
+}
+.tp-btn.tp-close {
+  color: var(--color-icon-glint);
+  filter: var(--filter-glint);
+}
+.tp-btn.tp-close .ui-icon {
+  filter: none;
+}
+
+/* folded: the nearest timer in the head itself */
+.tp-mini {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: calc(10px * var(--tp-scale));
+  text-shadow: var(--shadow-text);
+}
+.tp-mini-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 calc(14px * var(--tp-scale)) / 1.2 var(--font-display);
+}
+.tp-mini-left {
+  margin-left: auto;
+  font: 600 calc(15px * var(--tp-scale)) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-rule {
+  flex: none;
+  height: 1px;
+  margin: 0 var(--tp-pad);
+  background: var(--line-rule);
+}
+
+/* ---------- the rows ---------- */
+.tp-list {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: calc(var(--tp-pad) * 0.25) 0;
+}
+.tp-kick {
+  padding: calc(8px * var(--tp-scale)) var(--tp-pad) calc(3px * var(--tp-scale));
+  font: 600 calc(11px * var(--tp-scale)) / 1 var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: var(--shadow-text);
+}
+.tp-row {
+  --tp-hue: var(--color-icon-warm);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: calc(9px * var(--tp-scale));
+  padding: calc(6px * var(--tp-scale)) var(--tp-pad);
+  text-shadow: var(--shadow-text);
+}
+.tp-row + .tp-row {
+  border-top: 1px solid var(--color-veil-line);
+}
+.tp-mark {
+  --tmark-size: calc(26px * var(--tp-scale));
+}
+.tp-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.tp-name {
+  font-size: calc(14px * var(--tp-scale));
+  line-height: 1.2;
+  color: var(--color-overlay-ink-list);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tp-sub {
+  margin-top: 1px;
+  font-size: calc(12px * var(--tp-scale));
+  color: var(--color-overlay-ink-dim);
+  white-space: nowrap;
+}
+.tp-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 600 calc(15px * var(--tp-scale)) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.tp-bell {
+  width: calc(13px * var(--tp-scale));
+  height: calc(13px * var(--tp-scale));
+}
+.tp-row.far .tp-left {
+  font-weight: 500;
+  color: var(--color-overlay-ink-dim);
+}
+.tp-row.soon .tp-left {
+  color: var(--color-accent);
+}
+/* running: the row wears its own hue, a band from the left and a line of how far along it is */
+.tp-row.live {
+  background: linear-gradient(
+    90deg,
+    rgb(from var(--tp-hue) r g b / 26%),
+    rgb(from var(--tp-hue) r g b / 6%) 75%
+  );
+  box-shadow: inset 2px 0 0 var(--tp-hue);
+}
+.tp-row.live,
+.tp-row.live + .tp-row {
+  border-top-color: transparent;
+}
+.tp-row.live .tp-name {
+  font-weight: 600;
+}
+.tp-row.live .tp-sub {
+  color: var(--color-overlay-ink);
+}
+.tp-row.live .tp-left {
+  color: var(--tp-hue);
+}
+.tp-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgb(from var(--tp-hue) r g b / 18%);
+}
+.tp-prog::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--tp-p, 0) * 100%);
+  background: var(--tp-hue);
+}
+/* the reminder just sounded for it: an ice line on its left until it starts */
+.tp-row.ring {
+  background: linear-gradient(
+    90deg,
+    rgb(from var(--color-info) r g b / 18%),
+    rgb(from var(--color-info) r g b / 4%)
+  );
+  box-shadow: inset 2px 0 0 var(--color-info);
+}
+
+.tp-foot {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(4px * var(--tp-scale)) calc(14px * var(--tp-scale));
+  padding: calc(6px * var(--tp-scale)) var(--tp-pad) calc(8px * var(--tp-scale));
+  border-top: 1px solid var(--color-veil-line);
+  font-size: calc(12px * var(--tp-scale));
+  color: var(--color-overlay-ink-dim);
+  text-shadow: var(--shadow-text);
+}
+.tp-foot b {
+  font: 600 calc(13px * var(--tp-scale)) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-overlay-ink);
+}
+
+/* ---------- the resize strips of a loose plaque, for the cursor only ---------- */
+.tp-grip {
+  position: absolute;
+  z-index: 1;
+}
+.tp-grip-r {
+  top: 0;
+  right: 0;
+  bottom: var(--tp-grip);
+  width: var(--tp-grip);
+  cursor: ew-resize;
+}
+.tp-grip-b {
+  left: 0;
+  right: var(--tp-grip);
+  bottom: 0;
+  height: var(--tp-grip);
+  cursor: ns-resize;
+}
+.tp-grip-rb {
+  right: 0;
+  bottom: 0;
+  width: calc(var(--tp-grip) * 2);
+  height: calc(var(--tp-grip) * 2);
+  cursor: nwse-resize;
+  background: linear-gradient(
+    135deg,
+    transparent 45%,
+    var(--color-overlay-frame-loose) 45% 52%,
+    transparent 52% 68%,
+    var(--color-overlay-frame-loose) 68% 75%,
+    transparent 75%
+  );
+}
+.tp-card.folded .tp-grip-b,
+.tp-card.folded .tp-grip-rb {
+  display: none;
+}
