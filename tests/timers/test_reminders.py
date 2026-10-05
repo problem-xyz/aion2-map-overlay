@@ -67,10 +67,11 @@ def test_world_bosses_remind_only_when_on_the_plaque() -> None:
     quiet = Settings(timers_events=only(), timers_world_lead=5)
     assert reminders_between(data(), quiet, BERLIN, NOON, NOON + timedelta(hours=2)) == []
     shown = Settings(timers_events=only(), timers_world_lead=5, timers_world_shown=["melted-danar"])
-    # the reading is from 13:18, so from 14:00 on the spawns are a cycle and a kill apart
-    due = reminders_between(
-        data(), shown, BERLIN, NOON + timedelta(hours=2), NOON + timedelta(hours=4)
-    )
+    # an hour past the reading, whenever it was made, the spawns are a cycle and a kill apart
+    bosses = data().bosses
+    assert bosses is not None
+    after = bosses.read_at + timedelta(hours=1)
+    due = reminders_between(data(), shown, BERLIN, after, after + timedelta(hours=2))
     assert due and all(r.boss and r.event_id == "melted-danar" for r in due)
     gaps = {(b.at - a.at) for a, b in itertools.pairwise(due)}
     assert gaps == {timedelta(minutes=31, seconds=30)}

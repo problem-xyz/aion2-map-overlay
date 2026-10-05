@@ -52,6 +52,7 @@ function boss(spawns: number[], estimated = false): WorldBossTimer {
     area: "",
     level: 45,
     respawnS: 3600,
+    drops: [],
     shown: true,
     spawn: must(spawns[0]),
     up: false,

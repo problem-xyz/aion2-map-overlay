@@ -212,11 +212,20 @@ def test_world_bosses_become_utc_moments() -> None:
         ("bosses.0.level", -1),
         ("bosses.2.spawnsAt", "tomorrow"),
         ("bosses.1.id", "aed"),
+        ("bosses.0.drops", "painting"),
+        ("bosses.0.drops", ["painting", ""]),
     ],
 )
 def test_each_broken_boss_field_refuses_the_list(path: str, value: Any) -> None:
     with pytest.raises(TimersError):
         parse_world_bosses(broken(BOSSES, path, value))
+
+
+def test_a_boss_drops_what_the_list_says_and_nothing_by_default() -> None:
+    doc = broken(BOSSES, "bosses.0.drops", ["painting", "painting", "relic"])
+    aed, gartua, _ = parse_world_bosses(doc).bosses
+    assert aed.drops == ("painting", "relic"), "repeats go, an unknown kind is kept"
+    assert gartua.drops == ()
 
 
 def test_the_bundled_files_load() -> None:
@@ -225,6 +234,7 @@ def test_the_bundled_files_load() -> None:
     assert schedule and bosses
     assert {e.id for e in schedule.events} >= {"rift", "daily-reset", "weekly-reset"}
     assert len(bosses.bosses) == 24
+    assert sum("painting" in b.drops for b in bosses.bosses) == 11
     eu = schedule.region(bosses.region)
     assert eu is not None, "the bosses' region must be one of the schedule's"
     # every Global region has a rule for every event

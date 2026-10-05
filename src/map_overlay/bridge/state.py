@@ -238,7 +238,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 31: timersPlaque {visible, pinned}, the timers plaque over the game, with the slots
 #     setTimersPlaqueVisible and setTimersPlaquePinned.
 # 32: openTimersTimeline and closeTimersTimeline, the day timeline in a window of its own.
-API_VERSION = 32
+# 33: a world boss carries "drops", what it drops that is worth the trip ("painting").
+API_VERSION = 33
 
 
 def build_state(

@@ -5,6 +5,8 @@
 
 import { describe, expect, it } from "vitest";
 
+import bossDoc from "../../../assets/timers/world-bosses.json";
+
 import { makeState } from "./mockState";
 import { makeTimers } from "./mockTimers";
 
@@ -33,7 +35,8 @@ describe("makeTimers", () => {
   });
 
   it("lists the world bosses a cycle and a kill apart", () => {
-    const timers = makeTimers(makeState().settings, NOW + 6 * 3_600_000);
+    // six hours past the reading, whenever it was made: every spawn by then is worked out
+    const timers = makeTimers(makeState().settings, Date.parse(bossDoc.readAt) + 6 * 3_600_000);
     const danar = timers.bosses.find((b) => b.id === "melted-danar");
     expect(danar?.estimated).toBe(true);
     const gaps = danar!.spawns.slice(1).map((s, i) => s - danar!.spawns[i]!);

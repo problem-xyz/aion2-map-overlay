@@ -1,7 +1,7 @@
 {
   "format": "map-overlay-world-bosses",
   "version": 1,
-  "readAt": "2026-10-05T13:18:00Z",
+  "readAt": "2026-10-05T21:10:10Z",
   "region": "global-eu",
   "map": "altgard",
   "faction": "asmodian",
@@ -12,7 +12,7 @@
       "area": "Dredgion Crash Site",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "29min 8s"
+      "spawnsAt": "2026-10-05T21:23:48Z"
     },
     {
       "id": "black-warrior-aed",
@@ -20,7 +20,7 @@
       "area": "Nameless Cemetery",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "13s"
+      "spawnsAt": "2026-10-05T21:26:54Z"
     },
     {
       "id": "faithful-rajit",
@@ -28,7 +28,7 @@
       "area": "Sanctum Outpost",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "3min 11s"
+      "spawnsAt": "2026-10-05T21:32:16Z"
     },
     {
       "id": "berserker-vargor",
@@ -36,7 +36,7 @@
       "area": "Sanctum Outpost",
       "level": 45,
       "respawn": "1h",
-      "timeLeft": "34min 4s"
+      "spawnsAt": "2026-10-05T22:00:28Z"
     },
     {
       "id": "predator-garsan",
@@ -44,7 +44,7 @@
       "area": "Moslan Forest",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "1h 31min 19s"
+      "spawnsAt": "2026-10-05T21:29:22Z"
     },
     {
       "id": "blood-warrior-lannar",
@@ -52,7 +52,7 @@
       "area": "Moslan Forest",
       "level": 45,
       "respawn": "1h 30m",
-      "timeLeft": "1h 2min 26s"
+      "spawnsAt": "2026-10-05T22:39:18Z"
     },
     {
       "id": "deceiver-trid",
@@ -60,7 +60,7 @@
       "area": "Uruthumheim",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "1h 32min 40s"
+      "spawnsAt": "2026-10-05T21:31:06Z"
     },
     {
       "id": "blue-wave-kelpina",
@@ -68,7 +68,7 @@
       "area": "Purifying Forest",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "1h 33min 59s"
+      "spawnsAt": "2026-10-05T21:33:26Z"
     },
     {
       "id": "high-overseer-nutah",
@@ -76,7 +76,7 @@
       "area": "Dranactus",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "1h 34min 20s"
+      "spawnsAt": "2026-10-05T21:36:27Z"
     },
     {
       "id": "advisor-resana",
@@ -84,7 +84,7 @@
       "area": "Dranactus",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "2h 33min 27s"
+      "spawnsAt": "2026-10-05T22:26:33Z"
     },
     {
       "id": "special-operations-leader",
@@ -92,7 +92,7 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "2h 25min 44s"
+      "spawnsAt": "2026-10-05T22:21:58Z"
     },
     {
       "id": "desecrator-newbold",
@@ -100,7 +100,10 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "3h 25min 8s"
+      "spawnsAt": "2026-10-05T21:15:05Z",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "specter-archon-axios",
@@ -108,7 +111,10 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "3h 27min 31s"
+      "timeLeft": "7min 20s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "addicted-hardirun",
@@ -116,7 +122,7 @@
       "area": "Fafnite Deposit",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "2h 29min 16s"
+      "timeLeft": "1h 12min 15s"
     },
     {
       "id": "executioner-barthien",
@@ -124,7 +130,10 @@
       "area": "Western Gribade Highland",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "3h 28min 53s"
+      "timeLeft": "9min 27s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "drakan-battalion-weaponsmith",
@@ -132,7 +141,10 @@
       "area": "Eastern Gribade Highland",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "5h 27min 24s"
+      "timeLeft": "4h 7min 19s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "veteran-shujakan",
@@ -140,7 +152,7 @@
       "area": "Black Claw Village",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "2h 26min 36s"
+      "timeLeft": "1h 9min 48s"
     },
     {
       "id": "visionary-karuka",
@@ -148,7 +160,10 @@
       "area": "Black Claw Village",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "3h 24min 20s"
+      "timeLeft": "4min 52s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "dark-shadow-vishwada",
@@ -156,7 +171,10 @@
       "area": "Lagta Fortress",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "5h 22min 49s"
+      "timeLeft": "4h 5min 52s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "sharp-shylak",
@@ -164,7 +182,10 @@
       "area": "Impetusium Square",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "5h 24min 46s"
+      "timeLeft": "4h 3min 59s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "immortal-gartua",
@@ -172,7 +193,10 @@
       "area": "Immortal Isle",
       "level": 51,
       "respawn": "12h",
-      "timeLeft": "11h 16min 50s"
+      "timeLeft": "3h 53min 47s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "high-commander-lagta",
@@ -180,7 +204,10 @@
       "area": "Lagta Fortress",
       "level": 48,
       "respawn": "12h",
-      "timeLeft": "11h 20min 52s"
+      "timeLeft": "3h 57min 49s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "soul-ruler-kashapa",
@@ -188,7 +215,10 @@
       "area": "Fafnite Deposit",
       "level": 48,
       "respawn": "6h",
-      "timeLeft": "5h 21min 11s"
+      "timeLeft": "3h 59min 42s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "silent-dartan",
@@ -196,7 +226,10 @@
       "area": "Purifying Forest",
       "level": 48,
       "respawn": "6h",
-      "timeLeft": "5h 22min 40s"
+      "timeLeft": "4h 2min 6s",
+      "drops": [
+        "painting"
+      ]
     }
   ]
 }

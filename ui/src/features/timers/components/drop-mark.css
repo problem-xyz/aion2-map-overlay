@@ -1,0 +1,20 @@
+/* A world boss's prized drop, beside its name in the schedule, the plaque and the timeline. The
+   name keeps its ellipsis and the mark stays whole, so a long name never hides it. */
+.tm-name-line {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  min-width: 0;
+}
+.tm-name-line > :first-child {
+  min-width: 0;
+}
+.tm-drop {
+  display: inline-flex;
+  flex: none;
+  color: var(--color-drop);
+}
+.tm-drop .ui-icon {
+  width: 1.05em;
+  height: 1.05em;
+}

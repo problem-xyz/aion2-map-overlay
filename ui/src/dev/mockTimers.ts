@@ -138,7 +138,7 @@ function eventOf(
   };
 }
 
-function seconds(text: string): number {
+function seconds(text = ""): number {
   let out = 0;
   for (const [, n, unit] of text.matchAll(/(\d+)\s*(h|min|m|s)/g)) {
     out += Number(n) * (unit === "h" ? 3600 : unit === "s" ? 1 : 60);
@@ -153,7 +153,11 @@ function bossOf(
   shown: string[],
 ): WorldBossTimer {
   const respawn = seconds(b.respawn) * 1000;
-  const first = readAt + seconds(b.timeLeft) * 1000;
+  // a boss missing from the last reading keeps the spawn the one before projected for it
+  const first =
+    "spawnsAt" in b && b.spawnsAt
+      ? Date.parse(b.spawnsAt)
+      : readAt + seconds("timeLeft" in b ? b.timeLeft : undefined) * 1000;
   const cycle = KILL + respawn;
   let spawn = first;
   if (first + UP <= now) spawn += cycle * (Math.floor((now - UP - first) / cycle) + 1);
@@ -167,6 +171,7 @@ function bossOf(
     area: b.area,
     level: b.level,
     respawnS: respawn / 1000,
+    drops: "drops" in b && Array.isArray(b.drops) ? b.drops : [],
     shown: shown.includes(b.id),
     spawn,
     up: spawn <= now && now < spawn + UP,

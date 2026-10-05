@@ -103,6 +103,9 @@ class WorldBoss:
     level: int
     respawn_s: int
     spawns_at: datetime  # UTC
+    # What it drops that is worth the trip ("painting"): the app marks such a boss. A kind it
+    # does not know is kept and passed on, so a newer list does not need a newer app.
+    drops: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -137,6 +140,14 @@ def parse_schedule(doc: Any) -> Schedule:
     return Schedule(updated_at=_str(doc, "updatedAt", "updatedAt"), regions=regions, events=events)
 
 
+def _drops(raw: Any, where: str) -> tuple[str, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list) or not all(isinstance(d, str) and d for d in raw):
+        raise TimersError("timers.invalid", field=where)
+    return tuple(dict.fromkeys(raw))
+
+
 def parse_world_bosses(doc: Any) -> WorldBosses:
     """A world-bosses document; each boss's timeLeft (or spawnsAt) becomes a UTC moment."""
     _check_header(doc, BOSSES_FORMAT)
@@ -162,6 +173,7 @@ def parse_world_bosses(doc: Any) -> WorldBosses:
                 level=level,
                 respawn_s=parse_duration(b.get("respawn"), f"{where}.respawn"),
                 spawns_at=spawns_at,
+                drops=_drops(b.get("drops"), f"{where}.drops"),
             )
         )
     _unique([b.id for b in bosses], "bosses")

@@ -116,6 +116,7 @@ def _boss(boss: WorldBoss, now: datetime, shown: set[str]) -> dict[str, Any]:
         "area": boss.area,
         "level": boss.level,
         "respawnS": boss.respawn_s,
+        "drops": list(boss.drops),
         "shown": boss.id in shown,
         "spawn": ms(state.spawn),
         "up": state.up,

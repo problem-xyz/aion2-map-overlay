@@ -117,6 +117,8 @@
   /* The client's close cross: a pale ice blade in a blue glow, brighter under the pointer. Used
      by the dialog's cancel and the steps plaque's close. */
   --color-icon-glint: var(--ice-100);
+  /* A world boss worth the trip for what it drops: the gold of the client's rare loot. */
+  --color-drop: var(--gold-500);
   --filter-glint: drop-shadow(0 0 2px rgb(from var(--glow-400) r g b / 55%))
     drop-shadow(0 0 5px rgb(from var(--glow-400) r g b / 25%));
   --filter-glint-hover: drop-shadow(0 0 2px rgb(from var(--glow-400) r g b / 90%))
