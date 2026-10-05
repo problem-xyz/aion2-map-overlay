@@ -10,6 +10,12 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Changed
+
+- The panel opens with a switch between two tools, Map and Timers. Map holds everything the
+  panel had; the language and the updates moved behind the gear beside the switch, since both
+  tools share them. The support links stay at the foot of both.
+
 ## [1.5.0] - 2026-10-02
 
 ### Added

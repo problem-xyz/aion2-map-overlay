@@ -623,6 +623,66 @@ html:has(.pn-app) {
 }
 
 /* ---------- the menu: tiles like the client's main menu ---------- */
+/* ---------- the switch between the panel's tools, over everything else (app/ToolSwitch.tsx) ----------
+   The map and the timers as two wide tabs, the gear for what both share as a square one beside
+   them: the menu tile's look, one step larger, since it ranks above the sections. */
+.pn-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr 46px;
+  gap: 6px;
+}
+.pn-tool {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 10px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: var(--radius-sm);
+  background: var(--fill-tile);
+  color: var(--color-text-secondary);
+  font: 600 var(--text-lg) / 1.15 var(--font-display);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+.pn-tool:hover {
+  border-color: var(--color-frame-strong);
+}
+.pn-tool.on {
+  border-color: var(--color-selected-border);
+  background: var(--fill-tile-on);
+  color: var(--color-text);
+}
+.pn-tool:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pn-tool-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.3;
+  color: var(--color-icon-warm);
+}
+.pn-tool.on .pn-tool-icon {
+  color: var(--color-text);
+}
+.pn-tool-gear {
+  padding: 0;
+}
+.pn-tool-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
 .pn-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

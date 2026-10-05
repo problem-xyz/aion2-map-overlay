@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import type { RouteView, Settings, SettingsSchema } from "@/shared/backend/contract";
 import { useConfirm } from "@/shared/hooks/useConfirm";
-import { available, languageName, type MessageKey, useI18n } from "@/shared/i18n";
+import { type MessageKey, useI18n } from "@/shared/i18n";
 import Icon from "@/shared/ui/Icon";
 import Segmented from "@/shared/ui/Segmented";
 import SettingSlider from "@/shared/ui/SettingSlider";
@@ -31,13 +31,12 @@ export interface SettingsBlockProps {
   onReset: () => void;
   /** The checklist's card, after the route's: both are about what is drawn over the game. */
   checklist?: ReactNode;
-  /** Cards between the advanced settings and the reset at the section's foot: Updates. */
-  children?: ReactNode;
 }
 
 /**
- * The settings, a card per thing they are about: the app itself, the route drawn over the game,
- * and -- folded away -- how the map is followed and how it is found. Every field says what it is
+ * The map's settings, a card per thing they are about: the route drawn over the game and -- folded
+ * away -- how the map is followed and how it is found. The app's own, the language and the
+ * updates, are behind the gear beside the tool switch (AppSettings), since the timers share them. Every field says what it is
  * in a word or two; the longer explanation is behind the "i" beside its label, so the cards stay
  * short enough to scan.
  */
@@ -47,31 +46,13 @@ export default function SettingsBlock({
   onChange,
   onReset,
   checklist = null,
-  children = null,
 }: SettingsBlockProps) {
   const { t, format } = useI18n();
   const confirm = useConfirm();
   const s = settings;
   return (
     <>
-      <Card title={t("panel.settings.general")}>
-        {/* First, because it is the only control here that changes every other label on screen.
-            The options come from the catalogues that shipped, so a new locales/<code>.json shows
-            up by itself -- but Settings.language in core/settings.py still lists its choices,
-            and that list has to grow with it. */}
-        <Segmented
-          label={t("panel.settings.language")}
-          value={s.language}
-          options={[
-            { value: "auto", label: t("panel.settings.languageAuto") },
-            ...available.map((code) => ({
-              value: code as Settings["language"],
-              label: languageName(code),
-            })),
-          ]}
-          tip={t("panel.settings.languageTip")}
-          onChange={(v) => onChange("language", v)}
-        />
+      <Card title={t("panel.settings.overlay")}>
         <SettingSlider
           name="fps"
           schema={schema}
@@ -81,9 +62,6 @@ export default function SettingsBlock({
           tip={t("panel.settings.fpsTip")}
           onChange={(v) => onChange("fps", v)}
         />
-      </Card>
-
-      <Card title={t("panel.settings.overlay")}>
         <SettingSlider
           name="opacity"
           schema={schema}
@@ -250,8 +228,6 @@ export default function SettingsBlock({
           </section>
         </div>
       </details>
-
-      {children}
 
       <div className="pn-section-foot">
         <button
