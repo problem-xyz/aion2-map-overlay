@@ -274,3 +274,13 @@ def test_the_transport_refuses_errors_and_oversized_bodies(server: str) -> None:
         http_transport(f"{server}/big", None)
     with pytest.raises(FetchError):
         http_transport("http://127.0.0.1:9/nothing-listens-here", None)
+
+
+def test_a_closed_service_starts_no_fetch(
+    service_for: Callable[[FakeNet], TimersDataService],
+) -> None:
+    net = FakeNet({"schedule.json": Fetched(None, None), "world-bosses.json": Fetched(None, None)})
+    service = service_for(net)
+    service.close()
+    assert not service.refresh(manual=True)
+    assert net.asked == []
