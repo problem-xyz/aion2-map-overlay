@@ -171,6 +171,8 @@ export interface WorldBossTimer {
   area: string;
   level: number;
   respawnS: number;
+  /** What it drops that is worth the trip, as "painting". Api 33. */
+  drops: string[];
   /** On the plaque. */
   shown: boolean;
   /** Its current spawn while up, else the next one. */

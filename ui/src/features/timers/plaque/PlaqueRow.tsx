@@ -5,6 +5,7 @@ import Icon from "@/shared/ui/Icon";
 import TimerMark from "@/shared/ui/TimerMark";
 import { timerHue } from "@/shared/ui/timerMarks";
 
+import DropMark from "../components/DropMark";
 import { clock, countdown, day } from "../lib/format";
 import { far, soon, type TimerNow } from "../lib/model";
 import { timerName } from "../lib/names";
@@ -54,7 +55,10 @@ function PlaqueRow({ timer, now, twelve, ringing }: PlaqueRowProps) {
     <li className={classes.join(" ")} style={hue}>
       <TimerMark icon={timer.icon} size="sm" className="tp-mark" />
       <span className="tp-text">
-        <span className="tp-name">{timerName(timer, t)}</span>
+        <span className="tm-name-line">
+          <span className="tp-name">{timerName(timer, t)}</span>
+          <DropMark drops={timer.boss?.drops} />
+        </span>
         <span className="tp-sub">{sub}</span>
       </span>
       <span className="tp-left">

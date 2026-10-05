@@ -44,6 +44,7 @@ function boss(i: number): WorldBossTimer {
     area: "",
     level: 45,
     respawnS: 1800,
+    drops: [],
     shown: false,
     spawn,
     up: false,

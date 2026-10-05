@@ -711,7 +711,8 @@
       "chime": "Chime",
       "preview": "Listen to {name}",
       "allWorld": "All world bosses",
-      "worldNote": "The plaque shows the three soonest of those picked below."
+      "worldNote": "The plaque shows the three soonest of those picked below.",
+      "withDrop": "With a painting"
     },
     "empty": "No schedule could be loaded. The timers come back with the next update.",
     "region": {
@@ -738,6 +739,9 @@
       "now": "now",
       "table": "Next start of each timer",
       "nothing": "Nothing here under this filter."
+    },
+    "drop": {
+      "painting": "Drops a painting"
     }
   }
 }

@@ -8,6 +8,7 @@ import Segmented from "@/shared/ui/Segmented";
 import TimerMark from "@/shared/ui/TimerMark";
 import { timerHue } from "@/shared/ui/timerMarks";
 
+import DropMark from "../components/DropMark";
 import { useNow } from "../hooks/useNow";
 import { useRemembered } from "../hooks/useRemembered";
 import { clock, day } from "../lib/format";
@@ -222,6 +223,7 @@ export default function TimelinePage() {
                     <div className="tl-label">
                       <TimerMark icon={lane.timer.icon} size="sm" />
                       <span className="tl-name">{timerName(lane.timer, t)}</span>
+                      <DropMark drops={lane.timer.boss?.drops} />
                     </div>
                     <div className="tl-track">
                       {lane.bars.map((b, bi) => {

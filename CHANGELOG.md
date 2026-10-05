@@ -25,6 +25,9 @@ changes are left out unless they change how the app is installed, run or updated
 - A day timeline, opened from Timers in a wide window of its own: a lane for every event and
   world boss across one or two days, a line at now and the resets drawn through them all. Hover a
   bar for its name and times; Esc closes the window, and it opens again where you left it.
+- World bosses that drop a painting carry a small picture mark beside their name, in the
+  schedule, on the plaque and in the day timeline. "With a painting" among the bosses in Settings
+  puts all of them on the plaque at once.
 - The schedule and the world bosses' respawn times are fetched from the project's GitHub, so they
   stay current between releases. Nothing about you is sent; Settings in Timers turns it off.
 

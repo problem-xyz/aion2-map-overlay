@@ -68,6 +68,7 @@ describe("bossNow", () => {
     area: "",
     level: 45,
     respawnS: 1800,
+    drops: [],
     shown: true,
     spawn,
     up: false,

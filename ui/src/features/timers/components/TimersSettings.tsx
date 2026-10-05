@@ -14,6 +14,7 @@ import { REALM_HUES } from "@/shared/ui/timerMarks";
 import { scheduleDate } from "../lib/format";
 import { regionName, timerName } from "../lib/names";
 
+import DropMark from "./DropMark";
 import EventSettings, { LEADS } from "./EventSettings";
 
 type Change = <K extends keyof Settings>(key: K, value: Settings[K]) => void;
@@ -90,6 +91,9 @@ export default function TimersSettings({
     ) : null;
 
   const shownWorld = new Set(settings.timers_world_shown);
+  // the bosses worth the trip for a painting: one chip puts them all on the plaque, or takes them off
+  const prized = timers.bosses.filter((b) => b.drops.includes("painting")).map((b) => b.id);
+  const allPrized = prized.length > 0 && prized.every((id) => shownWorld.has(id));
   const worldSignal: TimerSignal = settings.timers_world_signal;
   const updated = scheduleDate(timers.updatedAt, locale);
 
@@ -207,6 +211,28 @@ export default function TimersSettings({
             </ul>
             <p className="tm-set-note">{t("timers.settings.worldNote")}</p>
             <div className="tm-chips">
+              {prized.length ? (
+                <button
+                  type="button"
+                  className={`tm-chip tm-chip-drop${allPrized ? " on" : ""}`}
+                  aria-pressed={allPrized}
+                  onClick={() =>
+                    api.setTimersWorldShown(
+                      allPrized
+                        ? settings.timers_world_shown.filter((id) => !prized.includes(id))
+                        : [...new Set([...settings.timers_world_shown, ...prized])],
+                    )
+                  }
+                >
+                  <span className="tm-name-line">
+                    {/* the chip says it in words; the mark is only its picture */}
+                    <span aria-hidden="true">
+                      <DropMark drops={["painting"]} />
+                    </span>
+                    <span>{t("timers.settings.withDrop")}</span>
+                  </span>
+                </button>
+              ) : null}
               {timers.bosses.map((b) => {
                 const on = shownWorld.has(b.id);
                 return (
@@ -223,7 +249,10 @@ export default function TimersSettings({
                       )
                     }
                   >
-                    {b.name}
+                    <span className="tm-name-line">
+                      <span>{b.name}</span>
+                      <DropMark drops={b.drops} />
+                    </span>
                   </button>
                 );
               })}

@@ -8,6 +8,8 @@ import { clock, countdown, day, duration, frequency, span } from "../lib/format"
 import { far, type TimerNow } from "../lib/model";
 import { timerName } from "../lib/names";
 
+import DropMark from "./DropMark";
+
 export interface TimerRowProps {
   timer: TimerNow;
   now: number;
@@ -58,7 +60,10 @@ function TimerRow({ timer, now, twelve, wrongCycle = false }: TimerRowProps) {
     <li className={`tm-row${timer.live ? " live" : ""}`} style={hue}>
       <TimerMark icon={timer.icon} />
       <span className="tm-row-text">
-        <span className="tm-row-name">{name}</span>
+        <span className="tm-name-line">
+          <span className="tm-row-name">{name}</span>
+          <DropMark drops={timer.boss?.drops} />
+        </span>
         {sub ? <span className="tm-row-sub">{sub}</span> : null}
       </span>
       <span className="tm-row-when">
