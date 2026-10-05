@@ -65,6 +65,7 @@ links to them; their source is part of the Qt source above.
 | PySide6_Addons | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only | `python/pyside6-addons/` |
 | PySide6_Essentials | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only | `python/pyside6-essentials/` |
 | shiboken6 | 6.11.2 | LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only | `python/shiboken6/` |
+| tzdata | 2026.5 | Apache-2.0 | `python/tzdata/` |
 | pyinstaller | 6.22.3 | GPL-2.0-or-later with the Bootloader Exception; Apache-2.0 for the run-time hooks | `python/pyinstaller/` |
 | typing_extensions | 4.16.0 | PSF-2.0 | `python/typing-extensions/` |
 | @react-leaflet/core | 2.1.0 | Hippocratic-2.1 | `npm/@react-leaflet/core/` |
