@@ -1,7 +1,7 @@
 {
   "format": "map-overlay-world-bosses",
   "version": 1,
-  "readAt": "2026-10-05T21:10:45Z",
+  "readAt": "2026-10-05T21:10:10Z",
   "region": "global-eu",
   "map": "altgard",
   "faction": "asmodian",
@@ -12,7 +12,7 @@
       "area": "Dredgion Crash Site",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "13min 46s"
+      "spawnsAt": "2026-10-05T21:23:48Z"
     },
     {
       "id": "black-warrior-aed",
@@ -20,7 +20,7 @@
       "area": "Nameless Cemetery",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "16min 52s"
+      "spawnsAt": "2026-10-05T21:26:54Z"
     },
     {
       "id": "faithful-rajit",
@@ -28,7 +28,7 @@
       "area": "Sanctum Outpost",
       "level": 45,
       "respawn": "30m",
-      "timeLeft": "22min 14s"
+      "spawnsAt": "2026-10-05T21:32:16Z"
     },
     {
       "id": "berserker-vargor",
@@ -36,7 +36,7 @@
       "area": "Sanctum Outpost",
       "level": 45,
       "respawn": "1h",
-      "timeLeft": "50min 26s"
+      "spawnsAt": "2026-10-05T22:00:28Z"
     },
     {
       "id": "predator-garsan",
@@ -44,7 +44,7 @@
       "area": "Moslan Forest",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "19min 20s"
+      "spawnsAt": "2026-10-05T21:29:22Z"
     },
     {
       "id": "blood-warrior-lannar",
@@ -52,7 +52,7 @@
       "area": "Moslan Forest",
       "level": 45,
       "respawn": "1h 30m",
-      "timeLeft": "1h 29min 16s"
+      "spawnsAt": "2026-10-05T22:39:18Z"
     },
     {
       "id": "deceiver-trid",
@@ -60,7 +60,7 @@
       "area": "Uruthumheim",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "21min 4s"
+      "spawnsAt": "2026-10-05T21:31:06Z"
     },
     {
       "id": "blue-wave-kelpina",
@@ -68,7 +68,7 @@
       "area": "Purifying Forest",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "23min 24s"
+      "spawnsAt": "2026-10-05T21:33:26Z"
     },
     {
       "id": "high-overseer-nutah",
@@ -76,7 +76,7 @@
       "area": "Dranactus",
       "level": 45,
       "respawn": "2h",
-      "timeLeft": "26min 25s"
+      "spawnsAt": "2026-10-05T21:36:27Z"
     },
     {
       "id": "advisor-resana",
@@ -84,7 +84,7 @@
       "area": "Dranactus",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "1h 16min 31s"
+      "spawnsAt": "2026-10-05T22:26:33Z"
     },
     {
       "id": "special-operations-leader",
@@ -92,7 +92,7 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "3h",
-      "timeLeft": "1h 11min 56s"
+      "spawnsAt": "2026-10-05T22:21:58Z"
     },
     {
       "id": "desecrator-newbold",
@@ -100,7 +100,7 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "5min 3s"
+      "spawnsAt": "2026-10-05T21:15:05Z"
     },
     {
       "id": "specter-archon-axios",
