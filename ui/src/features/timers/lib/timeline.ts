@@ -81,7 +81,7 @@ function group(timer: TimerNow): Lane["group"] {
 const ORDER: readonly Lane["group"][] = ["event", "abyss", "world"];
 
 /**
- * A lane per timer the filter lets through, events first, then the Abyss's bosses, then the
+ * A lane per timer switched on that the filter lets through, events first, then the Abyss's bosses, then the
  * world's, each group in the schedule's own order: lanes that kept moving as times came round
  * would be hard to follow. The resets are not lanes; see `resets`.
  */
@@ -93,7 +93,7 @@ export function lanes(
   realm: Realm,
 ): Lane[] {
   const kept = timers
-    .filter((t) => t.kind !== "reset" && passes(t, filter, realm))
+    .filter((t) => t.kind !== "reset" && t.shown && passes(t, filter, realm))
     .map((t) => ({ timer: t, group: group(t), bars: bars(t, now, span) }));
   return ORDER.flatMap((g) => kept.filter((l) => l.group === g));
 }

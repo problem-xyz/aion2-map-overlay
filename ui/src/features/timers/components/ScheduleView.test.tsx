@@ -1,6 +1,6 @@
 /**
- * The schedule: soonest first, what runs leading, the filters narrowing it, and the world bosses
- * kept to a few outside their own tab with a way to the rest.
+ * The schedule: soonest first, what runs leading, the filters narrowing it, only what is switched
+ * on, and the world bosses kept to a few outside their own tab, where every one of them is listed.
  */
 
 import { render, screen, within } from "@testing-library/react";
@@ -45,7 +45,8 @@ function boss(i: number): WorldBossTimer {
     level: 45,
     respawnS: 1800,
     drops: [],
-    shown: false,
+    // the last one is switched off
+    shown: i < 4,
     spawn,
     up: false,
     estimated: false,
@@ -54,7 +55,9 @@ function boss(i: number): WorldBossTimer {
 }
 
 function mount(filter: Filter = "all", realm: Realm = "all") {
+  const off = { ...event("Off", "event", NOW + 5 * MIN), shown: false };
   const timers = [
+    eventNow(off, NOW),
     eventNow(event("Siege", "event", NOW + 60 * MIN), NOW),
     eventNow(event("Running", "event", NOW - 2 * MIN), NOW),
     eventNow(event("Abyss Boss", "boss", NOW + 90 * MIN), NOW),
@@ -62,6 +65,7 @@ function mount(filter: Filter = "all", realm: Realm = "all") {
   ];
   const onFilter = vi.fn();
   const onRealm = vi.fn();
+  const onSettings = vi.fn();
   render(
     <I18nProvider initial="en">
       <ScheduleView
@@ -74,10 +78,11 @@ function mount(filter: Filter = "all", realm: Realm = "all") {
         onRealm={onRealm}
         bossesReadAt={NOW - 60 * MIN}
         wrongCycle={[]}
+        onSettings={onSettings}
       />
     </I18nProvider>,
   );
-  return { onFilter, onRealm };
+  return { onFilter, onRealm, onSettings };
 }
 
 const names = () =>
@@ -96,24 +101,51 @@ describe("ScheduleView", () => {
       "Siege",
       "Abyss Boss",
     ]);
-    expect(screen.getByRole("button", { name: "2 more world bosses" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "1 more world boss" })).toBeDefined();
   });
 
   it("takes the world bosses' own tab for the rest of them", async () => {
     const { onFilter, onRealm } = mount();
-    await userEvent.click(screen.getByRole("button", { name: "2 more world bosses" }));
+    await userEvent.click(screen.getByRole("button", { name: "1 more world boss" }));
     expect(onFilter).toHaveBeenCalledWith("boss");
     expect(onRealm).toHaveBeenCalledWith("world");
   });
 
-  it("lists every world boss in their tab, and only bosses", () => {
+  it("lists every world boss in their tab, the one switched off said to be", () => {
     mount("boss", "world");
     expect(names()).toHaveLength(5);
+    expect(screen.getAllByText("switched off")).toHaveLength(1);
     expect(screen.queryByRole("button", { name: /more world/ })).toBeNull();
+  });
+
+  it("leaves what is switched off out of every other list", () => {
+    mount("event");
+    expect(names()).not.toContain("Off");
   });
 
   it("keeps the events alone under Events", () => {
     mount("event");
     expect(names()).toEqual(["Running", "Siege"]);
+  });
+  it("says where to switch timers on when a list has none", async () => {
+    const onSettings = vi.fn();
+    render(
+      <I18nProvider initial="en">
+        <ScheduleView
+          timers={[eventNow({ ...event("Off", "event", NOW + MIN), shown: false }, NOW)]}
+          now={NOW}
+          twelve={false}
+          filter="all"
+          realm="all"
+          onFilter={vi.fn()}
+          onRealm={vi.fn()}
+          bossesReadAt={null}
+          wrongCycle={[]}
+          onSettings={onSettings}
+        />
+      </I18nProvider>,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Open Settings" }));
+    expect(onSettings).toHaveBeenCalled();
   });
 });

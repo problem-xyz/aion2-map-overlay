@@ -16,13 +16,15 @@ export interface TimerRowProps {
   twelve: boolean;
   /** The world boss's cycle needs fixing: the game showed more time left than it. */
   wrongCycle?: boolean;
+  /** Switched off in Settings: listed only where every world boss is, and quieter there. */
+  off?: boolean;
 }
 
 /**
  * One timer in the schedule: its mark, its name and how often it comes round, the countdown, and
  * when -- or, while it runs, that it does and until when. A running timer wears its own hue.
  */
-function TimerRow({ timer, now, twelve, wrongCycle = false }: TimerRowProps) {
+function TimerRow({ timer, now, twelve, wrongCycle = false, off = false }: TimerRowProps) {
   const { t, locale } = useI18n();
   const hue: CSSProperties = { "--tm-hue": timerHue(timer.icon) };
   const name = timerName(timer, t);
@@ -57,12 +59,13 @@ function TimerRow({ timer, now, twelve, wrongCycle = false }: TimerRowProps) {
   const left = timer.target !== null ? countdown(timer.target - now, t) : "—";
   const quiet = far(timer, now);
   return (
-    <li className={`tm-row${timer.live ? " live" : ""}`} style={hue}>
+    <li className={`tm-row${timer.live ? " live" : ""}${off ? " off" : ""}`} style={hue}>
       <TimerMark icon={timer.icon} />
       <span className="tm-row-text">
         <span className="tm-name-line">
           <span className="tm-row-name">{name}</span>
           <DropMark drops={timer.boss?.drops} />
+          {off ? <span className="ui-sr-only">{t("timers.list.off")}</span> : null}
         </span>
         {sub ? <span className="tm-row-sub">{sub}</span> : null}
       </span>
