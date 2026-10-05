@@ -79,6 +79,8 @@ export interface BackendApi {
   previewTimerSignal(eventId: string): void;
   setTimersPlaqueVisible(visible: boolean): void;
   setTimersPlaquePinned(pinned: boolean): void;
+  openTimersTimeline(): void;
+  closeTimersTimeline(): void;
 }
 
 export function createBackendApi(object: BackendObject): BackendApi {
@@ -143,6 +145,8 @@ export function createBackendApi(object: BackendObject): BackendApi {
     previewTimerSignal: (eventId) => object.previewTimerSignal(eventId),
     setTimersPlaqueVisible: (visible) => object.setTimersPlaqueVisible(visible),
     setTimersPlaquePinned: (pinned) => object.setTimersPlaquePinned(pinned),
+    openTimersTimeline: () => object.openTimersTimeline(),
+    closeTimersTimeline: () => object.closeTimersTimeline(),
   };
 }
 

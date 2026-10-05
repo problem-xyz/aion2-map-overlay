@@ -108,6 +108,8 @@ function makeBackendDouble(replies: Replies) {
     previewTimerSignal: vi.fn(),
     setTimersPlaqueVisible: vi.fn(),
     setTimersPlaquePinned: vi.fn(),
+    openTimersTimeline: vi.fn(),
+    closeTimersTimeline: vi.fn(),
 
     stateChanged: qtSignal(),
     statsChanged: qtSignal(),
@@ -184,6 +186,9 @@ describe("createBackendApi", () => {
     "openLogsFolder",
     "checkForUpdates",
     "downloadUpdate",
+    "refreshTimersData",
+    "openTimersTimeline",
+    "closeTimersTimeline",
   ] as const;
 
   it.each(NO_ARGUMENT_METHODS)("calls the %s slot, and no other", (name) => {

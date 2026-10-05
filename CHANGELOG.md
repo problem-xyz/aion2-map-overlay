@@ -22,6 +22,9 @@ changes are left out unless they change how the app is installed, run or updated
   what is on now in its own colour, a bell beside what is about to start, and the resets along its
   foot. Tabs on it switch between all, events and bosses; the arrow folds it to the nearest timer
   alone. With the sound off, a reminder shows the plaque for a few seconds when it is hidden.
+- A day timeline, opened from Timers in a wide window of its own: a lane for every event and
+  world boss across one or two days, a line at now and the resets drawn through them all. Hover a
+  bar for its name and times; Esc closes the window, and it opens again where you left it.
 - The schedule and the world bosses' respawn times are fetched from the project's GitHub, so they
   stay current between releases. Nothing about you is sent; Settings in Timers turns it off.
 

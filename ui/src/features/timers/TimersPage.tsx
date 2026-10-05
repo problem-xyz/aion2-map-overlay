@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
@@ -12,6 +12,7 @@ import ScheduleView from "./components/ScheduleView";
 import TimersHero from "./components/TimersHero";
 import TimersSettings from "./components/TimersSettings";
 import { useNow } from "./hooks/useNow";
+import { useRemembered } from "./hooks/useRemembered";
 import { byTime, type Filter, type Realm, timersAt } from "./lib/model";
 import "./timers.css";
 
@@ -20,31 +21,6 @@ const VIEWS: readonly { id: View; label: MessageKey; icon: IconName }[] = [
   { id: "schedule", label: "timers.tabs.schedule", icon: "clock" },
   { id: "settings", label: "timers.tabs.settings", icon: "gear" },
 ];
-
-function remembered<T extends string>(key: string, allowed: readonly T[], fallback: T): T {
-  try {
-    const stored = window.localStorage.getItem(key) ?? "";
-    return allowed.find((x) => x === stored) ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function useRemembered<T extends string>(key: string, allowed: readonly T[], fallback: T) {
-  const [value, setValue] = useState<T>(() => remembered(key, allowed, fallback));
-  const set = useCallback(
-    (next: T) => {
-      setValue(next);
-      try {
-        window.localStorage.setItem(key, next);
-      } catch {
-        /* private mode: the choice lasts until the panel closes */
-      }
-    },
-    [key],
-  );
-  return [value, set] as const;
-}
 
 /**
  * The timers tool of the control panel: the leading card, then the schedule or the settings.
@@ -127,6 +103,10 @@ export default function TimersPage() {
             {t("timers.plaque.sound")}
           </span>
         </label>
+        <button type="button" className="pn-chip" onClick={() => api.openTimersTimeline()}>
+          <Icon name="timeline" className="pn-chip-icon" />
+          <span className="pn-chip-label">{t("timers.timeline.open")}</span>
+        </button>
       </div>
 
       <div role="tablist" aria-label={t("timers.label")} className="pn-menu tm-menu">

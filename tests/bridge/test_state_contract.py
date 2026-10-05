@@ -58,6 +58,7 @@ STATE_KEYS = frozenset(
 SLOTS = (
     "checkForUpdates",
     "closeEditor",
+    "closeTimersTimeline",
     "copyRouteCode",
     "copyText",
     "deleteRoute",
@@ -72,6 +73,7 @@ SLOTS = (
     "openLogsFolder",
     "openMapsFolder",
     "openRoutesFolder",
+    "openTimersTimeline",
     "openUrl",
     "pasteRouteCode",
     "previewTimerSignal",
@@ -118,7 +120,7 @@ NOTIFY_KEYS = frozenset({"level", "code", "params", "text"})
 
 # Pinned as a number, not just compared against itself: a bump is the one way the UI can tell
 # which contract it reached, so it has to be a deliberate edit here rather than a side effect.
-EXPECTED_API_VERSION = 31
+EXPECTED_API_VERSION = 32
 
 _DOC_SLOTS = re.compile(r"slots \((\d+)\):\n(.+?)\n\n", re.DOTALL)
 _DOC_SIGNALS = re.compile(r"signals:(.+?)\n\n", re.DOTALL)

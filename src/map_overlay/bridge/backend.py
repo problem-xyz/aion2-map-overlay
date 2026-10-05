@@ -12,9 +12,10 @@ in getState(); it never means editing one of these.
     signals: stateChanged, statsChanged, previewChanged, notify, editorRequest,
              progressChanged, stepsChanged, updateChanged, timersChanged
 
-    slots (44):
+    slots (46):
       checkForUpdates()
       closeEditor()
+      closeTimersTimeline()
       copyRouteCode(route_id)
       copyText(text)
       deleteRoute(route_id)
@@ -29,6 +30,7 @@ in getState(); it never means editing one of these.
       openLogsFolder()
       openMapsFolder()
       openRoutesFolder()
+      openTimersTimeline()
       openUrl(url)
       pasteRouteCode()
       previewTimerSignal(event_id)
@@ -1441,6 +1443,21 @@ class Backend(QObject):
         self._change_settings({"timers_plaque_pinned": bool(pinned)})
 
     @Slot()
+    def openTimersTimeline(self) -> None:
+        """The day timeline in a wide window of its own, raised if it is already open."""
+        self._windows.raise_timeline(
+            self,
+            ui_url(self.dev, "timeline"),
+            system_dpi_scale(),
+            self.state.timers_timeline_region,
+            lambda region: self._store.set_state(timers_timeline_region=region),
+        )
+
+    @Slot()
+    def closeTimersTimeline(self) -> None:
+        self._windows.close_timeline()
+
+    @Slot()
     def refreshTimersData(self) -> None:
         """Fetch the schedule and the world bosses now, rather than at the next check."""
         self._timers.refresh()
@@ -1450,6 +1467,8 @@ class Backend(QObject):
         self._updates.hand_over()
 
     def shutdown(self) -> None:
+        # Hidden first, so where it was left is in state before the write below
+        self._windows.close_timeline()
         # Before anything else: a debounced write that never lands is a lost setting.
         self._store.flush()
         self._screens.close()

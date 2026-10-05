@@ -21,6 +21,7 @@ from map_overlay.qt.overlay import OverlayWindow, primary_screen_geometry
 from map_overlay.qt.prompt import PromptWindow
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.steps_window import WebStepsWindow
+from map_overlay.qt.timeline_window import TimelineWindow
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ EDITOR_CLOSE_TIMEOUT_MS = 1000
 
 
 class WindowManager(QObject):
-    """Owns the overlay, the steps plaque, the editor window and the region picker.
+    """Owns the overlay, the steps plaque, the editor and timeline windows and the region picker.
 
     It owns their lifetimes as well as the objects: a caller reaches a window through the
     properties and must never close, delete or re-parent one itself -- the two rules above
@@ -52,6 +53,7 @@ class WindowManager(QObject):
         self.prompt = PromptWindow()
         self._selector = None
         self._editor = None
+        self._timeline: TimelineWindow | None = None
 
     def retitle(self) -> None:
         """Re-read every window title after a language change.
@@ -65,6 +67,8 @@ class WindowManager(QObject):
         self.prompt.retitle()
         if self._editor is not None:
             self._editor.retitle()
+        if self._timeline is not None:
+            self._timeline.retitle()
         if self._selector is not None:
             self._selector.retitle()
 
@@ -173,6 +177,27 @@ class WindowManager(QObject):
         if self._editor:
             self._editor.hide()
 
+    # ------------------------------------------------------------------ timeline
+    def timeline_visible(self) -> bool:
+        return bool(self._timeline and self._timeline.isVisible())
+
+    def raise_timeline(self, backend, url, scale, region, on_moved) -> TimelineWindow:
+        """Show the day timeline, built on first use, and bring it to the front."""
+        from PySide6.QtCore import Qt  # noqa: PLC0415 -- only needed for this one flag
+
+        if self._timeline is None:
+            self._timeline = TimelineWindow(backend, url, scale, region, on_moved)
+        window = self._timeline
+        window.show()
+        window.setWindowState(window.windowState() & ~Qt.WindowState.WindowMinimized)
+        window.raise_()
+        window.activateWindow()
+        return window
+
+    def close_timeline(self) -> None:
+        if self._timeline:
+            self._timeline.hide()
+
     # ------------------------------------------------------------------ shutdown
     def hide_all(self) -> None:
         """Take every window off the screen and keep it, pages and channels included.
@@ -182,6 +207,7 @@ class WindowManager(QObject):
         is shown again by sync_steps(), the editor on the next request to open it.
         """
         self.close_editor()
+        self.close_timeline()
         self.steps.hide()
         self.overlay.hide()
         self.prompt.hide()
@@ -194,6 +220,9 @@ class WindowManager(QObject):
         if self._editor:
             self._editor.force_close()
             self._editor = None
+        if self._timeline:
+            self._timeline.force_close()
+            self._timeline = None
         # The plaque is deleted, not detached. Its channel and the bridge object it serves both
         # die with the window, page first, so nothing is left calling into a half-destroyed
         # object. Detaching a page that is still loading is itself a crash: an access violation
