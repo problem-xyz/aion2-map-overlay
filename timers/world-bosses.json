@@ -100,7 +100,10 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "4h",
-      "spawnsAt": "2026-10-05T21:15:05Z"
+      "spawnsAt": "2026-10-05T21:15:05Z",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "specter-archon-axios",
@@ -108,7 +111,10 @@
       "area": "Basfelt Ruins",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "7min 20s"
+      "timeLeft": "7min 20s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "addicted-hardirun",
@@ -124,7 +130,10 @@
       "area": "Western Gribade Highland",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "9min 27s"
+      "timeLeft": "9min 27s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "drakan-battalion-weaponsmith",
@@ -132,7 +141,10 @@
       "area": "Eastern Gribade Highland",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "4h 7min 19s"
+      "timeLeft": "4h 7min 19s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "veteran-shujakan",
@@ -148,7 +160,10 @@
       "area": "Black Claw Village",
       "level": 45,
       "respawn": "4h",
-      "timeLeft": "4min 52s"
+      "timeLeft": "4min 52s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "dark-shadow-vishwada",
@@ -156,7 +171,10 @@
       "area": "Lagta Fortress",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "4h 5min 52s"
+      "timeLeft": "4h 5min 52s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "sharp-shylak",
@@ -164,7 +182,10 @@
       "area": "Impetusium Square",
       "level": 45,
       "respawn": "6h",
-      "timeLeft": "4h 3min 59s"
+      "timeLeft": "4h 3min 59s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "immortal-gartua",
@@ -172,7 +193,10 @@
       "area": "Immortal Isle",
       "level": 51,
       "respawn": "12h",
-      "timeLeft": "3h 53min 47s"
+      "timeLeft": "3h 53min 47s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "high-commander-lagta",
@@ -180,7 +204,10 @@
       "area": "Lagta Fortress",
       "level": 48,
       "respawn": "12h",
-      "timeLeft": "3h 57min 49s"
+      "timeLeft": "3h 57min 49s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "soul-ruler-kashapa",
@@ -188,7 +215,10 @@
       "area": "Fafnite Deposit",
       "level": 48,
       "respawn": "6h",
-      "timeLeft": "3h 59min 42s"
+      "timeLeft": "3h 59min 42s",
+      "drops": [
+        "painting"
+      ]
     },
     {
       "id": "silent-dartan",
@@ -196,7 +226,10 @@
       "area": "Purifying Forest",
       "level": 48,
       "respawn": "6h",
-      "timeLeft": "4h 2min 6s"
+      "timeLeft": "4h 2min 6s",
+      "drops": [
+        "painting"
+      ]
     }
   ]
 }
