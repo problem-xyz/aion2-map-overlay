@@ -38,6 +38,8 @@ a = Analysis(  # noqa: F821
         *((str(p), "assets/object-sets") for p in (ROOT / "assets" / "object-sets").glob("*.json")),
         # the drawings of the gathering resources, which the overlay draws them by
         (str(ROOT / "assets" / "marks" / "resources.json"), "assets/marks"),
+        # the timers' schedule and world bosses, the copy used until a newer one is fetched
+        *((str(p), "assets/timers") for p in (ROOT / "assets" / "timers").glob("*.json")),
         # the starter routes, copied into a new user's routes/ on first run, and the digests of
         # their earlier versions, by which an untouched copy is brought up to date
         *((str(p), "assets/routes") for p in (ROOT / "assets" / "routes").glob("*.json")),
