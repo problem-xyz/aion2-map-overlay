@@ -603,6 +603,8 @@ export interface BackendSlots {
   setTimersWorldShown(payload: string): void;
   /** Fetch the schedule and the world bosses now. */
   refreshTimersData(): void;
+  /** Play the event's (or world boss's) reminder at the volume set; "" plays the chime. Api 29. */
+  previewTimerSignal(eventId: string): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {

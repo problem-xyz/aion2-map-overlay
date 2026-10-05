@@ -1,10 +1,16 @@
-"""The timers behind Backend: their data, the user's choices for them, and what the pages see.
+"""The timers behind Backend: their data, the user's choices for them, what the pages see, and
+the reminders.
 
 Backend's timers slots are one call each into this service. It keeps the data fresh through
 TimersDataService, writes the user's choices through the settings store like any preference, and
 works out getState()["timers"] (timers/view.py). Pages count the seconds themselves, so the view
 is only worked out again on a short tick and sent when what it says has changed: an event
 starting or ending, a boss spawning, a choice made, newer data arriving.
+
+Reminders wake a single-shot timer at exactly the next one due. When it fires, everything due
+since the last look sounds once -- except what is long past, which is what a machine waking from
+sleep would otherwise play as a pile. With the sound off, the plaque is asked to show itself
+instead (`peek`), and either way `reminded` names the event, for the plaque to mark it.
 """
 
 import json
@@ -18,12 +24,20 @@ from PySide6.QtCore import QObject, QTimer, Signal
 from map_overlay.bridge.timers_data import TimersDataService
 from map_overlay.core.paths import DataDirs
 from map_overlay.core.settings import Settings
+from map_overlay.store.timers import TimedEvent, WorldBoss
 from map_overlay.timers.data import TimersStore
-from map_overlay.timers.view import timers_view
+from map_overlay.timers.reminders import Reminder, reminders_between, sound_for
+from map_overlay.timers.sound import SoundPlayer
+from map_overlay.timers.view import choice, ms, timers_view
 
 log = logging.getLogger(__name__)
 
 TICK_MS = 15_000
+# Looked this far ahead for the next reminder; with none in it, looked again after RECHECK_MS.
+LOOKAHEAD = timedelta(hours=2)
+RECHECK_MS = 10 * 60 * 1000
+# A reminder found later than this past its moment -- the machine slept through it -- is dropped.
+STALE = timedelta(seconds=60)
 
 
 def local_offset() -> timedelta:
@@ -35,6 +49,8 @@ class TimersService(QObject):
     """GUI thread only. `changed` carries getState()["timers"] as JSON."""
 
     changed = Signal(str)
+    reminded = Signal(str)  # JSON {"id", "name", "start", "boss"}: a reminder fell due
+    peek = Signal()  # with the sound off, a reminder asks the plaque to show itself
 
     def __init__(
         self,
@@ -44,6 +60,8 @@ class TimersService(QObject):
         update_settings: Callable[[dict[str, Any]], None],
         notify: Callable[[str, str], None],
         data: TimersDataService | None = None,
+        player: SoundPlayer | None = None,
+        clock: Callable[[], datetime] | None = None,
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
@@ -51,27 +69,37 @@ class TimersService(QObject):
         self._update_settings = update_settings
         self._data = data if data is not None else TimersDataService(TimersStore(dirs.cache))
         self._data.setParent(self)
-        self._data.changed.connect(lambda _data: self._emit(force=True))
+        self._data.changed.connect(lambda _data: self._data_changed())
         self._data.failed.connect(lambda code: notify("warning", code))
         self._last = ""
         self._tick = QTimer(self)
         self._tick.setInterval(TICK_MS)
         self._tick.timeout.connect(self._emit)
+        self._player = player or SoundPlayer()
+        self._clock = clock or (lambda: datetime.now(UTC))
+        self._looked = self._clock()
+        self._sounded: set[tuple[str, datetime]] = set()
+        self._remind = QTimer(self)
+        self._remind.setSingleShot(True)
+        self._remind.timeout.connect(self._on_due)
 
     def start(self) -> None:
         self._data.set_enabled(self._settings().timers_fetch)
         self._data.start()
         self._tick.start()
+        self._looked = self._clock()
+        self._schedule_reminder()
 
     def close(self) -> None:
         self._tick.stop()
+        self._remind.stop()
         self._data.close()
 
     def view(self, now: datetime | None = None) -> dict[str, Any] | None:
         return timers_view(
             self._data.data,
             self._settings(),
-            now or datetime.now(UTC),
+            now or self._clock(),
             local_offset(),
             fetching=self._data.busy,
         )
@@ -98,6 +126,74 @@ class TimersService(QObject):
         timers = [name for name in vars(after) if name.startswith("timers_")]
         if any(getattr(before, n) != getattr(after, n) for n in timers):
             self._emit(force=True)
+            self._schedule_reminder()
+
+    def preview(self, event_id: str) -> None:
+        """Play what the event's reminder sounds like, at the volume set; "" plays the chime.
+
+        Whatever timers_sound says: this is the button that tries the sound out.
+        """
+        settings = self._settings()
+        now = self._clock()
+        reminder = None
+        event = self._event(event_id)
+        boss = self._boss(event_id)
+        if event is not None:
+            picked = choice(settings, event)
+            lead = int(picked["lead"]) or 5
+            reminder = Reminder(event.id, event.name, now, now, lead, picked["signal"])
+        elif boss is not None:
+            lead = settings.timers_world_lead or 5
+            signal = "voice" if settings.timers_world_signal == "voice" else "chime"
+            reminder = Reminder(boss.id, boss.name, now, now, lead, signal, boss=True)
+        self._player.play(sound_for(reminder), settings.timers_volume)
+
+    def _event(self, event_id: str) -> TimedEvent | None:
+        schedule = self._data.data.schedule
+        return next((e for e in schedule.events if e.id == event_id), None) if schedule else None
+
+    def _boss(self, boss_id: str) -> WorldBoss | None:
+        bosses = self._data.data.bosses
+        return next((b for b in bosses.bosses if b.id == boss_id), None) if bosses else None
+
+    def _schedule_reminder(self) -> None:
+        now = self._clock()
+        ahead = reminders_between(
+            self._data.data, self._settings(), local_offset(), now, now + LOOKAHEAD
+        )
+        delay = RECHECK_MS
+        if ahead:
+            delay = max(250, int((ahead[0].at - now).total_seconds() * 1000) + 50)
+        self._remind.start(delay)
+
+    def _on_due(self) -> None:
+        now = self._clock()
+        settings = self._settings()
+        due = reminders_between(self._data.data, settings, local_offset(), self._looked, now)
+        self._looked = now
+        for reminder in due:
+            if reminder.key in self._sounded or now - reminder.at > STALE:
+                continue
+            self._sounded.add(reminder.key)
+            log.info("reminder: %s at %s", reminder.name, reminder.start.isoformat())
+            if settings.timers_sound:
+                self._player.play(sound_for(reminder), settings.timers_volume)
+            else:
+                self.peek.emit()
+            payload = {
+                "id": reminder.event_id,
+                "name": reminder.name,
+                "start": ms(reminder.start),
+                "boss": reminder.boss,
+            }
+            self.reminded.emit(json.dumps(payload, ensure_ascii=False))
+        # what has started is never due again
+        self._sounded = {k for k in self._sounded if k[1] > now}
+        self._schedule_reminder()
+
+    def _data_changed(self) -> None:
+        self._emit(force=True)
+        self._schedule_reminder()
 
     def _emit(self, *, force: bool = False) -> None:
         view = self.view()

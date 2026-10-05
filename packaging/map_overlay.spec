@@ -40,6 +40,11 @@ a = Analysis(  # noqa: F821
         (str(ROOT / "assets" / "marks" / "resources.json"), "assets/marks"),
         # the timers' schedule and world bosses, the copy used until a newer one is fetched
         *((str(p), "assets/timers") for p in (ROOT / "assets" / "timers").glob("*.json")),
+        # the reminders' chime, and the spoken phrases beside it as they arrive
+        *(
+            (str(p), p.parent.relative_to(ROOT).as_posix())
+            for p in (ROOT / "assets" / "sounds").rglob("*.wav")
+        ),
         # the starter routes, copied into a new user's routes/ on first run, and the digests of
         # their earlier versions, by which an untouched copy is brought up to date
         *((str(p), "assets/routes") for p in (ROOT / "assets" / "routes").glob("*.json")),
