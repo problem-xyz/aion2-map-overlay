@@ -11,6 +11,7 @@ import pytest
 from map_overlay.core.settings import (
     SETTINGS_VERSION,
     STATE_VERSION,
+    TIMER_LEADS,
     Settings,
     State,
     coerce,
@@ -20,6 +21,7 @@ from map_overlay.core.settings import (
     settings_payload,
     settings_schema,
     state_payload,
+    timer_defaults,
 )
 
 
@@ -67,6 +69,9 @@ RANGED = {
     "cube_radius": (0, 100),
     "editor_route_ahead": (1, 10),
     "editor_opacity": (0.1, 1.0),
+    "timers_volume": (0.0, 1.0),
+    "timers_world_lead": (0, 15),
+    "timers_plaque_scale": (0.5, 1.5),
 }
 
 
@@ -196,7 +201,7 @@ def test_the_schema_carries_each_fields_type_and_default() -> None:
         entry = schema[f.name]
         default = f.default_factory() if f.default_factory is not MISSING else f.default
         assert entry["default"] == default, f.name
-        names = {bool: "bool", int: "int", float: "float", str: "str", list: "list"}
+        names = {bool: "bool", int: "int", float: "float", str: "str", list: "list", dict: "map"}
         assert entry["type"] == names[type(default)], f.name
 
 
@@ -521,3 +526,28 @@ def test_a_route_order_that_is_not_a_list_is_reset() -> None:
     state, reset = coerce({"route_order": "a,b"}, State)
     assert state.route_order == []
     assert reset == ["route_order"]
+
+
+def test_each_timer_choice_keeps_only_what_the_timers_offer() -> None:
+    raw = {
+        "rift": {"shown": False, "lead": 10, "signal": "voice"},
+        "shugo": {"shown": "yes", "lead": 7, "signal": "trumpet", "colour": "red"},
+        "siege": {"lead": 5.0},
+        "": {"shown": True},
+        "nahma": "hidden",
+    }
+    settings, reset = coerce({"timers_events": raw}, Settings)
+    assert settings.timers_events == {
+        "rift": {"shown": False, "lead": 10, "signal": "voice"},
+        "siege": {"lead": 5},
+    }
+    assert reset == []
+    settings, reset = coerce({"timers_events": ["rift"]}, Settings)
+    assert settings.timers_events == {}
+    assert reset == ["timers_events"]
+
+
+def test_a_reset_is_shown_but_not_announced_by_default() -> None:
+    assert timer_defaults("reset")["lead"] == 0
+    assert timer_defaults("event") == {"shown": True, "lead": 5, "signal": "chime"}
+    assert all(timer_defaults(k)["lead"] in TIMER_LEADS for k in ("event", "boss", "reset"))

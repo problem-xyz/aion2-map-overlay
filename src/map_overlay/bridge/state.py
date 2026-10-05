@@ -230,7 +230,10 @@ def steps_state(settings, state) -> StepsPayload:
 #     a map carries "resources", those its sets have; settingsSchema may describe a "list" field.
 # 27: settings has route_mode, off for a map of its objects alone with no route followed, and
 #     route_far_notice; the panel no longer calls setOverlayVisible, which still works.
-API_VERSION = 27
+# 28: timers, the event and world-boss timers (null when no schedule loads), with the signal
+#     timersChanged and the slots setTimerEvent, setTimersWorldShown and refreshTimersData;
+#     settings has the timers_* fields, and settingsSchema may describe a "map" field.
+API_VERSION = 28
 
 
 def build_state(
@@ -254,6 +257,7 @@ def build_state(
     repo_url: str,
     links: dict[str, str],
     banner: dict[str, str] | None,
+    timers: dict[str, Any] | None,
 ) -> dict[str, Any]:
     """The getState() payload.
 
@@ -264,6 +268,7 @@ def build_state(
     `links` the exact addresses it opens beside it: `donate`, `discord` and `partnerDiscord`.
     `banner` is the bundled advertising banner, {"image", "url", "label"} and, with a discount
     code to offer, {"code", "discount"}, or None; openUrl() opens its `url` as well.
+    `timers` is timers/view.py's timers_view(), or None when no schedule loads.
     """
     return {
         "version": version,
@@ -290,4 +295,5 @@ def build_state(
         "repoUrl": repo_url,
         "links": links,
         "banner": banner,
+        "timers": timers,
     }

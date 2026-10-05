@@ -10,9 +10,9 @@ those formats. New capability means a new slot or a new optional field, plus a b
 in getState(); it never means editing one of these.
 
     signals: stateChanged, statsChanged, previewChanged, notify, editorRequest,
-             progressChanged, stepsChanged, updateChanged
+             progressChanged, stepsChanged, updateChanged, timersChanged
 
-    slots (38):
+    slots (41):
       checkForUpdates()
       closeEditor()
       copyRouteCode(route_id)
@@ -32,6 +32,7 @@ in getState(); it never means editing one of these.
       openUrl(url)
       pasteRouteCode()
       refreshRoutes()
+      refreshTimersData()
       reorderRoutes(payload)
       resetProgress()
       resetRegion()
@@ -47,6 +48,8 @@ in getState(); it never means editing one of these.
       setStepsPinned(pinned)
       setStepsSize(size)
       setStepsVisible(visible)
+      setTimerEvent(event_id, payload)
+      setTimersWorldShown(payload)
       skipUpdate(version)
       start()
       stop()
@@ -75,6 +78,7 @@ from map_overlay.bridge.route_service import RouteService
 from map_overlay.bridge.settings_store import SettingsStore
 from map_overlay.bridge.state import build_state, progress_state, steps_of, steps_state
 from map_overlay.bridge.tile_queue import TileBuildQueue
+from map_overlay.bridge.timers_service import TimersService
 from map_overlay.bridge.windows import WindowManager
 from map_overlay.core.appinfo import DISCORD_URL, DONATE_URL, PARTNER_DISCORD_URL, REPO_URL
 from map_overlay.core.errors import AppError
@@ -132,6 +136,8 @@ class Backend(QObject):
     # reason: the plaque is dragged by mouse, and the whole state reads every route and map
     updateChanged = Signal(str)  # JSON: UpdatePayload, as getState()["update"] carries it. On
     # every change, download progress included; stateChanged follows only a change of phase
+    timersChanged = Signal(str)  # JSON: getState()["timers"], when what it says changes: an
+    # event starting or ending, a choice made, newer data. Kept off stateChanged for its size
 
     # Counts the errors the overlay was given to show, so that the timer of one already cleared
     # does not clear the next. A class default: Backend.__init__ is at its statement limit.
@@ -235,7 +241,21 @@ class Backend(QObject):
         )
         self._update_phase = self._updates.snapshot()["phase"]
         self._updates.stateChanged.connect(self._on_update_changed)
+        self._timers = self._start_background()
+
+    def _start_background(self) -> TimersService:
+        """The updater's checks, and the timers with their fetches: last, once all is built."""
         self._updates.start()
+        timers = TimersService(
+            self.dirs,
+            settings=lambda: self.settings,
+            update_settings=self._change_settings,
+            notify=self._notify,
+            parent=self,
+        )
+        timers.changed.connect(self.timersChanged)
+        timers.start()
+        return timers
 
     def _migrate_legacy(self) -> None:
         """Move version 2 routes out of routes/, naming that folder if something would not move."""
@@ -580,6 +600,7 @@ class Backend(QObject):
                 "partnerDiscord": PARTNER_DISCORD_URL,
             },
             banner=(self._banner_payload(self._banner) if self._banner else None),
+            timers=self._timers.view(),
         )
 
     def _banner_payload(self, banner: Banner) -> dict[str, str]:
@@ -798,8 +819,12 @@ class Backend(QObject):
             data = {**data, "steps_scale": STEPS_SIZE_SCALE[size]}
         # The patch goes through the same coercion as the file on disk: unknown keys dropped,
         # types checked, ranges clamped. A UI bug cannot put a bad value into settings.json.
+        self._change_settings(data)
+
+    def _change_settings(self, patch: dict[str, Any]) -> None:
+        """A patch through the store's coercion, pushed out and sent to the pages if it took."""
         before = self.settings
-        after = self._store.update_settings(data)
+        after = self._store.update_settings(patch)
         if after == before:
             return
         self._apply_settings(before, after)
@@ -839,6 +864,7 @@ class Backend(QObject):
             self._updates.schedule_auto()
         if before.updates_skipped_version != after.updates_skipped_version:
             self._updates.settings_changed()
+        self._timers.settings_changed(before, after)
         self.engine.reconfigure(settings=asdict(after))
 
     def _apply_overlay_settings(self, before: Settings, after: Settings) -> None:
@@ -1347,6 +1373,33 @@ class Backend(QObject):
         self._sync_steps()
         self._emit_state()
 
+    # ------------------------------------------------------------------ timers
+
+    @Slot(str, str)
+    def setTimerEvent(self, event_id: str, payload: str) -> None:
+        """One event's choices: {"shown"?, "lead"?, "signal"?}, merged over the earlier ones."""
+        try:
+            patch = json.loads(payload)
+        except ValueError:
+            return
+        if isinstance(patch, dict):
+            self._timers.set_event(str(event_id), patch)
+
+    @Slot(str)
+    def setTimersWorldShown(self, payload: str) -> None:
+        """The world bosses on the plaque, as a JSON list of their ids."""
+        try:
+            ids = json.loads(payload)
+        except ValueError:
+            return
+        if isinstance(ids, list):
+            self._timers.set_world_shown(ids)
+
+    @Slot()
+    def refreshTimersData(self) -> None:
+        """Fetch the schedule and the world bosses now, rather than at the next check."""
+        self._timers.refresh()
+
     def hand_over_update(self) -> None:
         """The very end of the process: give a downloaded update to Update.exe (app.py main())."""
         self._updates.hand_over()
@@ -1364,6 +1417,7 @@ class Backend(QObject):
         with contextlib.suppress(RuntimeError, TypeError):
             self.engine.transformChanged.disconnect(self.overlay.set_transform)
         self._windows.shutdown()
+        self._timers.close()
         # No more checks. A downloaded update is not handed over here but in hand_over_update(),
         # after the event loop: Update.exe's wait for this process can be denied, and then it
         # applies at once, racing whatever of the exit is still to run.

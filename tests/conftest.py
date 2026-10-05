@@ -27,6 +27,7 @@ from map_overlay.store import maps as maps_store
 from map_overlay.store import routes as routes_store
 from map_overlay.store.images import imwrite
 from map_overlay.store.maps import MapSpec
+from map_overlay.timers import data as timers_data
 
 
 @pytest.fixture
@@ -169,6 +170,17 @@ def test_maps_root(
     # Nor the shipped starter routes, which every Backend would copy into the test's routes/.
     monkeypatch.setattr(routes_store, "bundled_routes_root", lambda: root().parent / "routes")
     return root
+
+
+@pytest.fixture(autouse=True)
+def no_timers_network(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every Backend starts the timers, and they fetch their data a few seconds in: never from the
+    real repository under test. A test of the transport itself serves its own files locally."""
+
+    def offline(url: str, _etag: str | None) -> timers_data.Fetched:
+        raise timers_data.FetchError(f"{url}: no network under test")
+
+    monkeypatch.setattr(timers_data, "http_transport", offline)
 
 
 @pytest.fixture
