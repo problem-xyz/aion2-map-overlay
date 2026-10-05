@@ -3,9 +3,9 @@ import type { AppState, Settings } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { available, languageName, useI18n } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import Segmented from "@/shared/ui/Segmented";
 
-import Card from "./components/Card";
 import UpdatesBlock from "./components/UpdatesBlock";
 
 /**

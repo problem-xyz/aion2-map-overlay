@@ -1,0 +1,339 @@
+/* The timers tool of the panel. Each timer carries its kind's hue in --tm-hue (shared/ui/
+   timerMarks.ts): data colour, used for the mark's disc, a running row's band and its countdown. */
+
+.tm-page,
+.tm-schedule,
+.tm-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.tm-empty {
+  padding: var(--space-6) var(--space-2);
+  text-align: center;
+}
+
+/* ---------- the leading card ---------- */
+.tm-hero {
+  --tm-hue: var(--color-icon-warm);
+  position: relative;
+  overflow: hidden;
+  background: var(--fill-panel-deep);
+}
+.tm-hero-main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 14px 14px;
+}
+.tm-hero-body {
+  flex: 1;
+  min-width: 0;
+}
+.tm-hero-name {
+  font: 600 var(--text-xl) / 1.15 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tm-hero-meta {
+  margin-top: 3px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.tm-hero-meta b {
+  font-weight: 600;
+  color: var(--tm-hue);
+}
+.tm-hero-left {
+  font: 600 30px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.tm-hero-main.live .tm-hero-left {
+  color: var(--tm-hue);
+}
+.tm-hero-prog,
+.tm-row-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgb(from var(--tm-hue) r g b / 15%);
+}
+.tm-hero-prog::after,
+.tm-row-prog::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--tm-p, 0) * 100%);
+  background: var(--tm-hue);
+}
+.tm-hero-resets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--color-veil-line);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.tm-hero-resets span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tm-hero-resets b {
+  font: 600 var(--text-sm) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+.tm-hero-reset-mark {
+  --tmark-size: 20px;
+}
+
+/* ---------- the two views, as the map's section tiles ---------- */
+.tm-menu {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ---------- the schedule ---------- */
+.tm-list-card {
+  overflow: hidden;
+  background: var(--fill-panel);
+}
+.tm-list-note {
+  margin: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-veil-line);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.tm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tm-row {
+  --tm-hue: var(--color-icon-warm);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+}
+.tm-row + .tm-row {
+  border-top: 1px solid var(--color-veil-line);
+}
+.tm-row.live {
+  background: linear-gradient(90deg, rgb(from var(--tm-hue) r g b / 14%), transparent 65%);
+  box-shadow: inset 2px 0 0 var(--tm-hue);
+}
+.tm-row-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.tm-row-name {
+  font: 600 var(--text-md) / 1.25 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tm-row-sub {
+  margin-top: 2px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tm-row-when {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+  position: relative;
+}
+.tm-row-left {
+  font: 600 var(--text-lg) / 1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+/* more than an hour off: read more quietly; running: in the event's own hue */
+.tm-row-left.far {
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+.tm-row.live .tm-row-left,
+.tm-row.live .tm-row-at b {
+  color: var(--tm-hue);
+}
+.tm-row-at {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.tm-row-at b {
+  font-weight: 600;
+}
+.tm-row-warn {
+  position: absolute;
+  top: -2px;
+  left: -14px;
+  font: 700 var(--text-xs) / 1 var(--font-display);
+  color: var(--color-warning);
+}
+.tm-list-more {
+  display: block;
+  width: 100%;
+  padding: 9px;
+  border: 0;
+  border-top: 1px solid var(--color-veil-line);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.tm-list-more:hover {
+  background: var(--color-veil-hover);
+}
+.tm-list-more:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ---------- the settings ---------- */
+.tm-select {
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+}
+.tm-select:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.tm-volume {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2);
+}
+.tm-fetch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.tm-set-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tm-set-title {
+  margin: 4px 2px 0;
+  font: 600 var(--text-2xs) / 1.2 var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.tm-set-card {
+  background: var(--fill-panel);
+}
+.tm-set-heads {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px 0 52px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+.tm-set-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tm-set {
+  padding: 8px 12px 10px;
+}
+.tm-set + .tm-set {
+  border-top: 1px solid var(--color-veil-line);
+}
+.tm-set-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tm-set-name {
+  flex: 1;
+  min-width: 0;
+  font: 600 var(--text-md) / 1.2 var(--font-display);
+}
+.tm-set.off .tm-set-name {
+  color: var(--color-text-muted);
+}
+.tm-set-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 6px 0 0 40px;
+}
+/* Each option as wide as its word: the lead's numbers are short, and "Off" must read whole */
+.tm-set-controls .ui-seg button {
+  flex: 1 0 auto;
+  text-overflow: clip;
+}
+.tm-set-play {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+}
+.tm-set-controls .ui-field {
+  margin: 0;
+}
+.tm-set-controls .ui-field:first-child {
+  flex: 1;
+}
+.tm-set-note {
+  margin: 0;
+  padding: 2px 12px 8px 52px;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+.tm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px 12px;
+}
+.tm-chip {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--color-tile-border);
+  border-radius: 13px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+.tm-chip.on {
+  border-color: rgb(from #f07178 r g b / 45%);
+  background: rgb(from #f07178 r g b / 10%);
+  color: var(--color-text);
+}
+.tm-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

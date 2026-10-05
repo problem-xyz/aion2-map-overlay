@@ -80,6 +80,13 @@ def _event(
         return None
     state = event_state(event, region, now, group)
     window = occurrences(event, region, now - WINDOW_BEFORE, now + WINDOW_AFTER, group)
+    rule = event.rule_for(region)
+    # A weekly event comes round once or twice in the window: its days are read off a week
+    week = (
+        [ms(o.start) for o in occurrences(event, region, now, now + timedelta(days=7), group)]
+        if rule is not None and rule.type == "weekly"
+        else []
+    )
     return {
         "id": event.id,
         "name": event.name,
@@ -97,6 +104,7 @@ def _event(
             else None
         ),
         "occurrences": [[ms(o.start), ms(o.end)] for o in window],
+        "weekStarts": week,
     }
 
 

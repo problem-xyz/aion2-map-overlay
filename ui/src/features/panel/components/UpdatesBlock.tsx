@@ -1,8 +1,8 @@
 import type { Settings, UpdateState } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import Switch from "@/shared/ui/Switch";
 
-import Card from "./Card";
 import type { SettingsChange } from "./SettingsBlock";
 
 export interface UpdatesBlockProps {

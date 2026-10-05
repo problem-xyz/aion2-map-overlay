@@ -75,7 +75,7 @@ function starts(rule: Rule, zone: string, from: number, to: number): [number, st
   const tz = rule.timeZone ?? zone;
   const first = wall(from - 24 * HOUR, tz);
   const out: [number, string | null][] = [];
-  for (let k = 0; k < 6; k += 1) {
+  for (let k = 0; k < 10; k += 1) {
     const day = new Date(Date.UTC(first.y, first.m - 1, first.d + k));
     const [y, m, d] = [day.getUTCFullYear(), day.getUTCMonth() + 1, day.getUTCDate()];
     if (rule.type === "hourly") {
@@ -131,6 +131,10 @@ function eventOf(
         (o) => o.start < now + AFTER && (span ? o.end > now - BEFORE : o.start >= now - BEFORE),
       )
       .map((o) => [o.start, o.end] as [number, number]),
+    weekStarts:
+      rule.type === "weekly"
+        ? all.filter((o) => o.start >= now && o.start < now + 7 * 24 * HOUR).map((o) => o.start)
+        : [],
   };
 }
 

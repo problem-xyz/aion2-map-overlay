@@ -614,5 +614,110 @@
     "unpin": "Unpin: the buttons come back, and the checklist can be moved and sized",
     "stepBack": "Step back: the last point is not done",
     "stepNext": "Step forward: the next point is done"
+  },
+  "timers": {
+    "label": "Timers",
+    "tabs": {
+      "schedule": "Schedule",
+      "settings": "Settings"
+    },
+    "time": {
+      "hm": "{h}h {m}m",
+      "dh": "{d}d {h}h"
+    },
+    "day": {
+      "today": "today",
+      "tomorrow": "tomorrow"
+    },
+    "every": {
+      "hour": "every hour",
+      "hours": {
+        "one": "every {count} h",
+        "other": "every {count} h"
+      },
+      "day": "daily"
+    },
+    "entry": {
+      "one": "entry {count} min",
+      "other": "entry {count} min"
+    },
+    "lasts": {
+      "one": "{count} min",
+      "other": "{count} min"
+    },
+    "filter": {
+      "label": "Show",
+      "all": "All",
+      "event": "Events",
+      "boss": "Bosses",
+      "realmLabel": "Which bosses",
+      "realmAll": "All bosses",
+      "world": "World",
+      "abyss": "Abyss"
+    },
+    "status": {
+      "entryOpen": "entry open",
+      "running": "under way",
+      "up": "up now",
+      "until": "until {time}",
+      "estimated": "estimated",
+      "next": "next"
+    },
+    "reset": {
+      "daily": "Daily reset",
+      "weekly": "Weekly reset"
+    },
+    "world": {
+      "listFrom": "Boss list of {time} {day}",
+      "more": {
+        "one": "{count} more world boss",
+        "other": "{count} more world bosses"
+      },
+      "respawn": "respawn {cycle}",
+      "wrongCycle": "The game showed more time left than this boss's respawn: its cycle needs fixing."
+    },
+    "settings": {
+      "general": "General",
+      "server": "Server",
+      "serverGuessed": "{label}, from your clock",
+      "group": "Server group",
+      "groupAll": "All",
+      "groupN": "Group {n}",
+      "volume": "Volume",
+      "test": "Test the sound",
+      "sound": "Sound",
+      "clock12": "12-hour clock",
+      "fetch": "Fetch new schedules",
+      "fetchHint": "From this project's GitHub. Nothing about you is sent.",
+      "schedule": "Schedule of {date}",
+      "refresh": "Update now",
+      "refreshing": "Updating…",
+      "events": "Events",
+      "abyss": "Bosses · Abyss",
+      "world": "Bosses · World",
+      "resets": "Resets",
+      "lead": "Remind, min",
+      "leadNone": "Off",
+      "leadLabel": "Remind before {name}",
+      "shown": "On the plaque",
+      "shownLabel": "{name} on the plaque",
+      "signal": "Signal",
+      "signalLabel": "How {name} is announced",
+      "voice": "Phrase",
+      "chime": "Chime",
+      "preview": "Listen to {name}",
+      "allWorld": "All world bosses",
+      "worldNote": "The plaque shows the three soonest of those picked below."
+    },
+    "empty": "No schedule could be loaded. The timers come back with the next update.",
+    "region": {
+      "nae": "NA East",
+      "naw": "NA West",
+      "eu": "Europe",
+      "sa": "S. America",
+      "as": "Asia",
+      "kr": "Korea",
+      "tw": "Taiwan"
+    }
   }
 }

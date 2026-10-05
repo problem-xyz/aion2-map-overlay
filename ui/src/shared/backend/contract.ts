@@ -159,6 +159,8 @@ export interface TimerEvent extends TimerChoice {
   next: (TimerSpan & { group: string | null }) | null;
   /** Every occurrence from two hours back to two days ahead, as [start, end]. */
   occurrences: [number, number][];
+  /** A weekly event's starts over the coming week, to read its days off; empty otherwise. Api 30. */
+  weekStarts?: number[];
 }
 
 /** A world boss: one spawn read off the game's list, and the cycles after it estimated. */

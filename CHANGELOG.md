@@ -10,6 +10,17 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- Timers, the panel's second tool: every recurring Aion 2 event and the world bosses, counting
+  down in your own time. The card at the top says what is on now or next and when the daily and
+  weekly resets come; Schedule lists the rest, soonest first, filtered to events or bosses and the
+  bosses to the world's or the Abyss's. Settings picks your server region, the clock, and for each
+  event whether it shows on the plaque and how many minutes ahead it is announced, by a chime or a
+  spoken phrase.
+- The schedule and the world bosses' respawn times are fetched from the project's GitHub, so they
+  stay current between releases. Nothing about you is sent; Settings in Timers turns it off.
+
 ### Changed
 
 - The panel opens with a switch between two tools, Map and Timers. Map holds everything the

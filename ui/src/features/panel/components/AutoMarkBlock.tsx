@@ -2,10 +2,9 @@ import { useId } from "react";
 
 import type { SettingsSchema } from "@/shared/backend/contract";
 import { useI18n } from "@/shared/i18n";
+import Card from "@/shared/ui/Card";
 import SettingSlider from "@/shared/ui/SettingSlider";
 import Switch from "@/shared/ui/Switch";
-
-import Card from "./Card";
 
 export interface AutoMarkBlockProps {
   /** settings.auto_progress: a point is ticked off once the player comes within the radius. */

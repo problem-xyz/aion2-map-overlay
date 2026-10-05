@@ -234,7 +234,8 @@ def steps_state(settings, state) -> StepsPayload:
 #     timersChanged and the slots setTimerEvent, setTimersWorldShown and refreshTimersData;
 #     settings has the timers_* fields, and settingsSchema may describe a "map" field.
 # 29: previewTimerSignal plays an event's reminder sound; the reminders sound when they fall due.
-API_VERSION = 29
+# 30: a timers event carries "weekStarts", a weekly event's starts over the coming week.
+API_VERSION = 30
 
 
 def build_state(
