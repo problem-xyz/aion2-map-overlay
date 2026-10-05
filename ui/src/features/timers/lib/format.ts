@@ -12,10 +12,14 @@ const DAY = 24 * HOUR;
 
 const two = (n: number) => String(n).padStart(2, "0");
 
-/** 44:32 under an hour, 4h 44m under a day, 2d 4h beyond: as precise as the distance is worth. */
+/**
+ * 44m 32s under an hour, 4h 44m under a day, 2d 4h beyond: as precise as the distance is worth.
+ * Never 44:32, which beside the clock times in the same row read as one of them.
+ */
 export function countdown(ms: number, t: TFunction): string {
   const s = Math.max(0, Math.floor(ms / 1000));
-  if (s < 3600) return `${Math.floor(s / 60)}:${two(s % 60)}`;
+  if (s < 60) return t("timers.time.s", { s });
+  if (s < 3600) return t("timers.time.ms", { m: Math.floor(s / 60), s: two(s % 60) });
   const h = Math.floor(s / 3600);
   if (h < 24) return t("timers.time.hm", { h, m: two(Math.floor((s % 3600) / 60)) });
   return t("timers.time.dh", { d: Math.floor(h / 24), h: h % 24 });
