@@ -612,6 +612,9 @@ export interface BackendSlots {
   /** The timers plaque over the game, up or down. Api 31. */
   setTimersPlaqueVisible(visible: boolean): void;
   setTimersPlaquePinned(pinned: boolean): void;
+  /** The day timeline in a window of its own; a second call raises it. Api 32. */
+  openTimersTimeline(): void;
+  closeTimersTimeline(): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {

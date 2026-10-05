@@ -97,7 +97,7 @@
 /* ---------- the plaque and the sound, as the map's quick slots ---------- */
 .tm-quick {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 
@@ -341,6 +341,16 @@
   color: var(--color-text);
 }
 .tm-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* the quick row's one button among its toggles: opens the day timeline's window */
+.tm-quick button.pn-chip {
+  font: inherit;
+  font-size: var(--text-2xs);
+}
+.tm-quick button.pn-chip:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }

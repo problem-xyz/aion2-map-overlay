@@ -532,6 +532,12 @@ function backendObject(rt: MockRuntime) {
       rt.state.timersPlaque = { visible: rt.state.timersPlaque?.visible ?? false, pinned };
       pushState(rt);
     },
+    // A browser window stands in for the Qt one: the same page, in its #timeline mode
+    openTimersTimeline: () => {
+      const url = `${window.location.pathname}${window.location.search}#timeline`;
+      window.open(url, "mo-timeline", "width=1200,height=640")?.focus();
+    },
+    closeTimersTimeline: () => window.close(),
     refreshTimersData: () => {
       // a fetch that finds nothing newer, after a moment
       pushTimers(rt, true);

@@ -242,7 +242,8 @@
       "selector": "Select area",
       "steps": "Checklist",
       "prompt": "Route question",
-      "timers": "Timers"
+      "timers": "Timers",
+      "timeline": "Day timeline"
     }
   },
   "notify": {
@@ -726,6 +727,15 @@
       "hide": "Hide the plaque",
       "show": "Plaque",
       "sound": "Sound"
+    },
+    "timeline": {
+      "open": "Day timeline",
+      "span": "Span",
+      "day": "24 hours",
+      "twoDays": "48 hours",
+      "now": "now",
+      "table": "Next start of each timer",
+      "nothing": "Nothing here under this filter."
     }
   }
 }

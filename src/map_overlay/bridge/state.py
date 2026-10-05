@@ -237,7 +237,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 30: a timers event carries "weekStarts", a weekly event's starts over the coming week.
 # 31: timersPlaque {visible, pinned}, the timers plaque over the game, with the slots
 #     setTimersPlaqueVisible and setTimersPlaquePinned.
-API_VERSION = 31
+# 32: openTimersTimeline and closeTimersTimeline, the day timeline in a window of its own.
+API_VERSION = 32
 
 
 def build_state(

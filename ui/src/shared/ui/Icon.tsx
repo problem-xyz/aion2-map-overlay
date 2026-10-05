@@ -46,6 +46,7 @@ export type IconName =
   | "area"
   | "map"
   | "clock"
+  | "timeline"
   | "bell"
   | "share"
   | "layers"
@@ -227,6 +228,8 @@ const PATHS: Record<IconName, ReactNode> = {
       <path d="M6 7l4-2.5M6 9l4 2.5" />
     </>
   ),
+  // lanes of bars and the line at now: the day timeline
+  timeline: <path d="M2 4.5h5M6 8h7M3 11.5h6M10.5 2v12" />,
   layers: <path d="M8 2l6 3.5-6 3.5-6-3.5zM2 9l6 3.5L14 9" />,
   search: (
     <>

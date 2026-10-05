@@ -193,6 +193,8 @@ class State:
     # timers are a second tool, and a plaque appearing over the game unasked would be in the way.
     timers_plaque_region: Region | None = None
     timers_plaque_visible: bool = False
+    # The day timeline's window, where it was left.
+    timers_timeline_region: Region | None = None
 
 
 # --------------------------------------------------------------------------- schema export
@@ -337,6 +339,7 @@ _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "timers_events": _coerce_timer_events,
     "timers_world_shown": _coerce_ids,
     "timers_plaque_region": _coerce_region,
+    "timers_timeline_region": _coerce_region,
 }
 
 
