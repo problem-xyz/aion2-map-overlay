@@ -483,3 +483,42 @@ textarea:focus-visible {
     translate: 125% 0;
   }
 }
+
+/* ---------- a timer's mark: the drawing on a disc of its kind's hue (TimerMark.tsx) ---------- */
+/* The hue is the event's data colour, so the disc is a faint wash of it inside a ring of it: the
+   mark stays the loudest thing, the ring says which kind it is at a glance. */
+.ui-tmark {
+  --tmark-hue: var(--color-icon-warm);
+  --tmark-size: 30px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--tmark-size);
+  height: var(--tmark-size);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgb(from var(--tmark-hue) r g b / 24%),
+    rgb(from var(--tmark-hue) r g b / 7%) 70%
+  );
+  box-shadow: inset 0 0 0 1px rgb(from var(--tmark-hue) r g b / 38%);
+}
+.ui-tmark svg {
+  width: 73%;
+  height: 73%;
+  /* lifts the drawing off a light patch of the game behind the plaque */
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 50%));
+}
+.ui-tmark-sm {
+  --tmark-size: 24px;
+}
+.ui-tmark-lg {
+  --tmark-size: 54px;
+  box-shadow:
+    inset 0 0 0 1px rgb(from var(--tmark-hue) r g b / 45%),
+    0 0 22px rgb(from var(--tmark-hue) r g b / 22%);
+}
+.ui-tmark-lg svg {
+  width: 67%;
+  height: 67%;
+}
