@@ -93,11 +93,34 @@ def test_no_etag_is_sent_when_the_file_it_belongs_to_is_gone(store: TimersStore)
     assert net.asked == [("world-bosses.json", None)]
 
 
-def test_an_older_file_is_not_taken(store: TimersStore) -> None:
+def test_a_file_older_than_the_bundled_copy_is_not_taken(store: TimersStore) -> None:
     old = bundled("world-bosses.json")
     old["readAt"] = "2020-01-01T00:00:00Z"
     assert not store.refresh("bosses", FakeNet({"world-bosses.json": Fetched(body(old), "x")}))
     assert not (store.dir / "world-bosses.json").exists()
+
+
+def test_a_correction_that_moves_the_reading_back_still_replaces_the_fetched_copy(
+    store: TimersStore,
+) -> None:
+    late = newer_bosses()
+    late["readAt"] = "2099-01-01T00:00:45Z"
+    assert store.refresh("bosses", FakeNet({"world-bosses.json": Fetched(body(late), "a")}))
+    fixed = newer_bosses()
+    fixed["readAt"] = "2099-01-01T00:00:10Z"
+    assert store.refresh("bosses", FakeNet({"world-bosses.json": Fetched(body(fixed), "b")}))
+    data = store.current()
+    assert data.bosses and data.bosses.read_at.second == 10
+
+
+def test_a_field_added_without_a_new_reading_is_taken(store: TimersStore) -> None:
+    marked = bundled("world-bosses.json")
+    marked["bosses"][0]["drops"] = ["relic"]
+    assert store.refresh("bosses", FakeNet({"world-bosses.json": Fetched(body(marked), "m")}))
+    data = store.current()
+    assert data.bosses and data.bosses.bosses[0].drops == ("relic",), "a tie goes to the fetched"
+    again = FakeNet({"world-bosses.json": Fetched(body(marked), None)})
+    assert not store.refresh("bosses", again), "the same file again is nothing new"
 
 
 @pytest.mark.parametrize(

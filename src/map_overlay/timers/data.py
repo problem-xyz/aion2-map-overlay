@@ -2,9 +2,14 @@
 
 Two files, the schedule and the world bosses, each in two places: the copy bundled with the
 app, and one fetched later and kept under the data directory's cache. The newer of the two wins
--- by updatedAt for the schedule and readAt for the bosses -- so a fetched copy outlives an app
-update only while it is still the newer one. A fetched file is checked whole before it replaces
-anything; a broken or foreign one is refused and the copy in use stays.
+-- by updatedAt for the schedule and readAt for the bosses, the fetched one on a tie -- so a
+fetched copy outlives an app update only while it is still the newer one.
+
+What the repository serves replaces the last fetched copy whatever its date: it is the
+publisher's latest word, and a correction can move a reading back by a few seconds, or add a
+field without a new reading at all. Only the bundled copy is a floor, so a stale file there
+never undoes an app update. A fetched file is checked whole before it replaces anything; a
+broken or foreign one is refused and the copy in use stays.
 
 The network itself is a callable handed in, so this module can be tested without one and the
 caller decides which thread it runs on.
@@ -95,9 +100,9 @@ class TimersStore:
         return TimersData(schedule=self._schedule(), bosses=self._bosses())
 
     def refresh(self, kind: Kind, transport: Transport = http_transport) -> bool:
-        """Fetch one file; True when a newer copy was taken in. Raises FetchError, TimersError.
+        """Fetch one file; True when a changed copy was taken in. Raises FetchError, TimersError.
 
-        A body that does not parse, or is older than the copy in use, is not written.
+        A body that does not parse, or is older than the bundled copy, is not written.
         """
         path = self.dir / FILES[kind]
         etags = self._etags()
@@ -111,33 +116,36 @@ class TimersStore:
             raise TimersError("timers.invalid", field="json") from e
         if kind == "schedule":
             fresh = parse_schedule(doc)
-            current = self._schedule()
-            newer = current is None or fresh.updated_at > current.updated_at
+            bundled = bundled_schedule()
+            older = bundled is not None and fresh.updated_at < bundled.updated_at
         else:
             fresh_bosses = parse_world_bosses(doc)
-            current_bosses = self._bosses()
-            newer = current_bosses is None or fresh_bosses.read_at > current_bosses.read_at
-        if not newer:
-            log.info("fetched timers %s is not newer than the copy in use", kind)
+            bundled_bosses = bundled_world_bosses()
+            older = bundled_bosses is not None and fresh_bosses.read_at < bundled_bosses.read_at
+        if older:
+            log.info("fetched timers %s is older than the copy bundled with the app", kind)
             return False
+        same = path.is_file() and path.read_bytes() == got.body
         atomic_write_bytes(path, got.body)
         if got.etag:
             etags[kind] = got.etag
             atomic_write_json(self.dir / "etags.json", etags)
+        if same:
+            return False
         log.info("timers %s updated from %s", kind, self.base_url)
         return True
 
     def _schedule(self) -> Schedule | None:
         cached = self._cached(FILES["schedule"], parse_schedule)
         bundled = bundled_schedule()
-        if cached is None or (bundled is not None and bundled.updated_at >= cached.updated_at):
+        if cached is None or (bundled is not None and bundled.updated_at > cached.updated_at):
             return bundled
         return cached
 
     def _bosses(self) -> WorldBosses | None:
         cached = self._cached(FILES["bosses"], parse_world_bosses)
         bundled = bundled_world_bosses()
-        if cached is None or (bundled is not None and bundled.read_at >= cached.read_at):
+        if cached is None or (bundled is not None and bundled.read_at > cached.read_at):
             return bundled
         return cached
 
