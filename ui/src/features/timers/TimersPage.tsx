@@ -152,6 +152,7 @@ export default function TimersPage() {
             onRealm={setRealm}
             bossesReadAt={timers.bossesReadAt}
             wrongCycle={timers.wrongCycle}
+            onSettings={() => setView("settings")}
           />
         ) : (
           <TimersSettings

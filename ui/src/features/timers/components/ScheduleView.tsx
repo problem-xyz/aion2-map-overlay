@@ -20,6 +20,8 @@ export interface ScheduleViewProps {
   /** When the world bosses' list was read in the game; null with none for this region. */
   bossesReadAt: number | null;
   wrongCycle: string[];
+  /** Where the timers are switched on and off: shown when a list has none switched on. */
+  onSettings?: () => void;
 }
 
 /**
@@ -36,10 +38,15 @@ export default function ScheduleView({
   onRealm,
   bossesReadAt,
   wrongCycle,
+  onSettings,
 }: ScheduleViewProps) {
   const { t, locale } = useI18n();
   const worldTab = filter === "boss" && realm === "world";
-  const listed = timers.filter((x) => passes(x, filter, realm)).sort(byTime);
+  // A list holds what the player follows. The world tab is the one place every world boss is
+  // listed, the ones switched off greyed, so a boss can still be looked up there.
+  const listed = timers
+    .filter((x) => passes(x, filter, realm) && (x.shown || worldTab))
+    .sort(byTime);
   const world = listed.filter((x) => x.source === "boss");
   const hidden = worldTab ? 0 : Math.max(0, world.length - WORLD_PREVIEW);
   const kept = new Set(world.slice(0, WORLD_PREVIEW).map((x) => x.id));
@@ -81,17 +88,29 @@ export default function ScheduleView({
             })}
           </p>
         ) : null}
-        <ul className="tm-list">
-          {rows.map((x) => (
-            <TimerRow
-              key={`${x.source}:${x.id}`}
-              timer={x}
-              now={now}
-              twelve={twelve}
-              wrongCycle={x.source === "boss" && wrongCycle.includes(x.id)}
-            />
-          ))}
-        </ul>
+        {rows.length ? (
+          <ul className="tm-list">
+            {rows.map((x) => (
+              <TimerRow
+                key={`${x.source}:${x.id}`}
+                timer={x}
+                now={now}
+                twelve={twelve}
+                wrongCycle={x.source === "boss" && wrongCycle.includes(x.id)}
+                off={!x.shown}
+              />
+            ))}
+          </ul>
+        ) : (
+          <div className="tm-list-empty">
+            <p className="muted">{t("timers.list.noneOn")}</p>
+            {onSettings ? (
+              <button type="button" className="btn-small" onClick={onSettings}>
+                {t("timers.list.toSettings")}
+              </button>
+            ) : null}
+          </div>
+        )}
         {hidden ? (
           <button
             type="button"

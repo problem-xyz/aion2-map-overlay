@@ -354,3 +354,25 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
+
+/* a world boss switched off, in the one list that still names it */
+.tm-row.off .tm-row-name,
+.tm-row.off .tm-row-left {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.tm-row.off .ui-tmark {
+  opacity: 0.5;
+}
+.tm-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+.tm-list-empty p {
+  margin: 0;
+  text-wrap: pretty;
+}

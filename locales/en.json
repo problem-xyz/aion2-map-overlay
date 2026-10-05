@@ -742,6 +742,11 @@
     },
     "drop": {
       "painting": "Drops a painting"
+    },
+    "list": {
+      "off": "switched off",
+      "noneOn": "Nothing here is switched on. Pick the timers you follow in Settings.",
+      "toSettings": "Open Settings"
     }
   }
 }
