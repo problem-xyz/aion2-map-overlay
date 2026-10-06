@@ -32,7 +32,7 @@ export default function ScheduleView({
   timers,
   now,
   twelve,
-  filter,
+  filter: chosenFilter,
   realm: chosenRealm,
   onFilter,
   onRealm,
@@ -41,6 +41,10 @@ export default function ScheduleView({
   onSettings,
 }: ScheduleViewProps) {
   const { t, locale } = useI18n();
+  // With no boss in the data (bosses can be switched off app-wide) Events is All: no filter is
+  // offered, and one chosen before applies no longer.
+  const hasBosses = timers.some((x) => x.kind === "boss");
+  const filter: Filter = hasBosses ? chosenFilter : "all";
   // With no world bosses in the data (they can be switched off app-wide) there is nothing to
   // tell the Abyss's bosses apart from, so the choice is neither offered nor applied.
   const hasWorld = timers.some((x) => x.source === "boss");
@@ -58,17 +62,19 @@ export default function ScheduleView({
 
   return (
     <div className="tm-schedule">
-      <Segmented
-        label={t("timers.filter.label")}
-        labelHidden
-        value={filter}
-        options={[
-          { value: "all", label: t("timers.filter.all") },
-          { value: "event", label: t("timers.filter.event") },
-          { value: "boss", label: t("timers.filter.boss") },
-        ]}
-        onChange={onFilter}
-      />
+      {hasBosses ? (
+        <Segmented
+          label={t("timers.filter.label")}
+          labelHidden
+          value={filter}
+          options={[
+            { value: "all", label: t("timers.filter.all") },
+            { value: "event", label: t("timers.filter.event") },
+            { value: "boss", label: t("timers.filter.boss") },
+          ]}
+          onChange={onFilter}
+        />
+      ) : null}
       {filter === "boss" && hasWorld ? (
         <Segmented
           label={t("timers.filter.realmLabel")}

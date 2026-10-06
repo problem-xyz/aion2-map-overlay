@@ -12,15 +12,15 @@ changes are left out unless they change how the app is installed, run or updated
 
 ### Added
 
-- Timers, the panel's second tool: every recurring Aion 2 event and Abyss boss, counting down in
-  your own time. The card at the top says what is on now or next and when the daily and weekly
-  resets come; Schedule lists the rest, soonest first, filtered to events or bosses. Settings
-  picks your server region, the clock, and for each event whether it shows on the plaque and how
-  many minutes ahead it is announced, by a chime or a spoken phrase.
+- Timers, the panel's second tool: every recurring Aion 2 event, counting down in your own time.
+  The card at the top says what is on now or next and when the daily and weekly resets come;
+  Schedule lists the rest, soonest first. Settings picks your server region, the clock, and for
+  each event whether it shows on the plaque and how many minutes ahead it is announced, by a chime
+  or a spoken phrase.
 - A timers plaque over the game, beside the checklist: the timers you picked, soonest first, with
   what is on now in its own colour, a bell beside what is about to start, and the resets along its
-  foot. Tabs on it switch between all, events and bosses; the arrow folds it to the nearest timer
-  alone. With the sound off, a reminder shows the plaque for a few seconds when it is hidden.
+  foot. The arrow folds it to the nearest timer alone. With the sound off, a reminder shows the
+  plaque for a few seconds when it is hidden.
 - A day timeline, opened from Timers in a wide window of its own: a lane for every event across
   one or two days, a line at now and the resets drawn through them all. Hover a bar for its name
   and times; Esc closes the window, and it opens again where you left it.

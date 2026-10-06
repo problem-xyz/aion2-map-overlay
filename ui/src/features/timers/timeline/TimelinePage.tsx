@@ -55,7 +55,7 @@ export default function TimelinePage() {
   const settings = useBackendState<AppState | null, AppState["settings"] | undefined>(
     (s) => s?.settings,
   );
-  const [filter, setFilter] = useRemembered<Filter>(
+  const [chosenFilter, setFilter] = useRemembered<Filter>(
     "mo.timeline.filter",
     ["all", "event", "boss"],
     "all",
@@ -85,7 +85,10 @@ export default function TimelinePage() {
     [timers, settings, now],
   );
   const span = useMemo(() => timelineSpan(now, span_h), [now, span_h]);
-  // no world bosses (switched off app-wide): no realm to choose between
+  // no boss at all (switched off app-wide): nothing for the filter to tell apart
+  const hasBosses = all.some((x) => x.kind === "boss");
+  const filter: Filter = hasBosses ? chosenFilter : "all";
+  // no world bosses: no realm to choose between
   const hasWorld = Boolean(timers?.bosses.length);
   const realm: Realm = hasWorld ? chosenRealm : "all";
   const rows = useMemo(() => lanes(all, now, span, filter, realm), [all, now, span, filter, realm]);
@@ -129,17 +132,19 @@ export default function TimelinePage() {
         <h1 className="tl-title">{t("timers.timeline.open")}</h1>
         <span className="tl-clock">{clock(now, locale, twelve)}</span>
         <div className="tl-controls">
-          <Segmented
-            label={t("timers.filter.label")}
-            labelHidden
-            value={filter}
-            options={[
-              { value: "all", label: t("timers.filter.all") },
-              { value: "event", label: t("timers.filter.event") },
-              { value: "boss", label: t("timers.filter.boss") },
-            ]}
-            onChange={setFilter}
-          />
+          {hasBosses ? (
+            <Segmented
+              label={t("timers.filter.label")}
+              labelHidden
+              value={filter}
+              options={[
+                { value: "all", label: t("timers.filter.all") },
+                { value: "event", label: t("timers.filter.event") },
+                { value: "boss", label: t("timers.filter.boss") },
+              ]}
+              onChange={setFilter}
+            />
+          ) : null}
           {filter === "boss" && hasWorld ? (
             <Segmented
               label={t("timers.filter.realmLabel")}

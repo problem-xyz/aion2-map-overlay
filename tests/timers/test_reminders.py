@@ -219,7 +219,7 @@ def test_the_preview_plays_whatever_the_sound_switch_says(
 
 
 @pytest.mark.parametrize("on", [False, True])
-def test_with_the_world_bosses_off_they_are_neither_shown_nor_reminded(
+def test_with_the_bosses_off_none_is_shown_or_reminded(
     qapp: QApplication, dirs: DataDirs, on: bool
 ) -> None:
     bosses = data().bosses
@@ -236,12 +236,13 @@ def test_with_the_world_bosses_off_they_are_neither_shown_nor_reminded(
         ),
         player=Played().player(),
         clock=Clock(bosses.read_at),
-        world_bosses=on,
+        bosses=on,
     )
     try:
         view = s.view()
         assert view is not None
         assert bool(view["bosses"]) is on
+        assert any(e["kind"] == "boss" for e in view["events"]) is on, "the Abyss's too"
         soon = reminders_between(
             s._in_use, settings, BERLIN, bosses.read_at, bosses.read_at + timedelta(hours=1)
         )
