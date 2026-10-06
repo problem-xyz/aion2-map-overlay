@@ -51,13 +51,11 @@ const SMALL_OBJECT_R = 3;
 // smaller again far out, where there are many of them
 const OBJECT_ICON = 30;
 const SMALL_OBJECT_ICON = 21;
-// The badge on a cube above or below the ground about it, as the overlay draws it over the game: a
-// white arrow on a dark disc at the cube's top right corner for up, its bottom right for down. The
-// disc's side and how far its middle is from the cube's, in parts of the icon's side.
-const LEVEL_SIDE = 15 / 24;
-const LEVEL_AT = 10 / 24;
-const LEVEL_DISC = "rgba(15, 17, 22, 0.92)";
-const LEVEL_FILL = "#ffffff";
+// The arrow beside a cube above or below the ground about it, as the overlay draws it over the
+// game: up at the cube's top right corner, down at its bottom right. In parts of the icon's side.
+const LEVEL_SIDE = 11 / 24;
+const LEVEL_X = 8 / 24;
+const LEVEL_FILL = "#f2f4f8";
 const CULL_PAD = 20; // margin past the screen edge: a point just outside it is still half visible
 const HINT_R = 9; // circle of the "insert a marker here" hint
 const HINT_CROSS = 4;
@@ -241,30 +239,28 @@ function drawScene(
         ctx.drawImage(sprite, x - size / 2, y - size / 2, size, size);
       }
     }
-    // the arrow in fifteenths of the disc, as overlay.py has it: a broad head, its tip off the rim
-    const u = (size * LEVEL_SIDE) / 15;
-    const at = size * LEVEL_AT;
-    const discs = new Path2D();
-    const arrows = new Path2D();
+    const side = size * LEVEL_SIDE;
+    ctx.beginPath();
     for (const group of icons) {
       for (const p of group.points) {
         if (!p.level) continue;
-        const cx = sx(p.x) + at;
-        const cy = sy(p.y) + (p.level > 0 ? -at : at);
-        if (!visibleAt(cx, cy)) continue;
-        discs.moveTo(cx + 7.5 * u, cy);
-        discs.arc(cx, cy, 7.5 * u, 0, TAU);
-        const [tip, base] = p.level > 0 ? [-4.5, 3.5] : [4.5, -3.5];
-        arrows.moveTo(cx, cy + tip * u);
-        arrows.lineTo(cx + 4.5 * u, cy + base * u);
-        arrows.lineTo(cx - 4.5 * u, cy + base * u);
-        arrows.closePath();
+        const x = sx(p.x) + size * LEVEL_X;
+        const y = sy(p.y);
+        if (!visibleAt(x, y)) continue;
+        const top = p.level > 0 ? y - size / 2 : y + size / 2 - side;
+        const [tip, base] = p.level > 0 ? [top + 1.5, top + side - 2] : [top + side - 1.5, top + 2];
+        ctx.moveTo(x + side / 2, tip);
+        ctx.lineTo(x + side - 1, base);
+        ctx.lineTo(x + 1, base);
+        ctx.closePath();
       }
     }
-    ctx.fillStyle = LEVEL_DISC;
-    ctx.fill(discs);
     ctx.fillStyle = LEVEL_FILL;
-    ctx.fill(arrows);
+    ctx.strokeStyle = DARK;
+    ctx.lineWidth = 1.5;
+    ctx.lineJoin = "round";
+    ctx.fill();
+    ctx.stroke();
   }
 
   const pts = markers.map((m) => ({ x: sx(m.x), y: sy(m.y) }));

@@ -115,9 +115,9 @@ def test_cube_points_are_the_hidden_cubes_in_map_pixels() -> None:
     assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0), (2048.0, 512.0, -1)]
 
 
-# Where the arrow on the cube falls: at its top right corner for up, its bottom right for down.
-ABOVE = (CUBE[0] + 10, CUBE[1] - 10)
-BELOW = (CUBE[0] + 10, CUBE[1] + 10)
+# Where the arrow beside the cube falls: right of it, at its top corner for up, its bottom for down.
+ABOVE = (CUBE[0] + 13, CUBE[1] - 6)
+BELOW = (CUBE[0] + 13, CUBE[1] + 6)
 
 
 def test_a_cube_on_the_ground_has_no_arrow(overlay: OverlayWindow) -> None:

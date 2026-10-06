@@ -50,14 +50,12 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 12
 CUBE_RING = QColor("#ff7a5c")
-# The badge on a cube above or below the ground about it: a white arrow on a dark disc, which reads
-# on any ground, at the cube's top right corner for up and its bottom right for down. LEVEL_SIDE is
-# the disc's side and LEVEL_AT how far its middle is from the cube's, across and up or down, in
-# pixels at 100% Windows scale.
-LEVEL_SIDE = 15
-LEVEL_AT = 10
-LEVEL_DISC = QColor(15, 17, 22, 235)
-LEVEL_FILL = QColor("#ffffff")
+# The arrow beside a cube above or below the ground about it: up at its top right corner, down at
+# its bottom right. LEVEL_SIDE is the arrow's side and LEVEL_X how far right of the cube's middle
+# it starts, in pixels at 100% Windows scale.
+LEVEL_SIDE = 11
+LEVEL_X = 8
+LEVEL_FILL = QColor("#f2f4f8")
 # A gathering point: its resource's drawing (assets/marks/resources.json) on a dark disc, which
 # keeps it apart from the game's own map. RESOURCE_HALF is half its side at 100% Windows scale.
 RESOURCE_HALF = 13.5
@@ -285,7 +283,7 @@ class OverlayWindow(ClickThroughWindow):
         """The hidden cubes to draw, in reference-map pixels; empty or None draws none.
 
         A point is (x, y), or (x, y, level) with level 1 for a cube above the ground about it
-        and -1 for one below, which gets an arrow at its corner. They stay on whatever the
+        and -1 for one below, which gets an arrow beside it. They stay on whatever the
         route does -- finished, off screen, its view cut to the next steps -- because they are
         the map's, not the route's. `radius` is the ring around each in pixels at 100% Windows
         scale, constant at any zoom like the route's circles.
@@ -580,14 +578,14 @@ class OverlayWindow(ClickThroughWindow):
         sprite = self._cube_image()
         for x, y in pts:
             p.drawImage(QPointF(x - half, y - half), sprite)
-        at, badge = LEVEL_AT * k, LEVEL_SIDE * k / 2
+        side = LEVEL_SIDE * k
         for (x, y), level in zip(pts, levels, strict=True):
             if level:
-                cy = y - at if level > 0 else y + at
-                p.drawImage(QPointF(x + at - badge, cy - badge), self._level_image(int(level)))
+                top = y - half if level > 0 else y + half - side
+                p.drawImage(QPointF(x + LEVEL_X * k, top), self._level_image(int(level)))
 
     def _level_image(self, level):
-        """The badge with the arrow up (level 1) or down (-1), drawn once like the cube."""
+        """The arrow up (level 1) or down (-1), drawn once per device pixel ratio like the cube."""
         ratio = self.devicePixelRatioF()
         known = self._level_sprites.get(level)
         if known is not None and known.devicePixelRatio() == ratio:
@@ -596,18 +594,24 @@ class OverlayWindow(ClickThroughWindow):
         image = QImage(int(s * ratio), int(s * ratio), QImage.Format.Format_ARGB32_Premultiplied)
         image.setDevicePixelRatio(ratio)
         image.fill(Qt.GlobalColor.transparent)
+        # the arrow in elevenths of its side, inside a dark outline
+        u = s / LEVEL_SIDE
+        tip, base = (1.5 * u, s - 2.0 * u) if level > 0 else (s - 1.5 * u, 2.0 * u)
+        path = QPainterPath(QPointF(s / 2, tip))
+        path.lineTo(s - u, base)
+        path.lineTo(u, base)
+        path.closeSubpath()
         q = QPainter(image)
         q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        q.setPen(Qt.PenStyle.NoPen)
-        q.setBrush(LEVEL_DISC)
-        q.drawEllipse(QRectF(0, 0, s, s))
-        # the arrow, in fifteenths of the disc: a broad head, its tip a little off the rim
-        u = s / 15
-        tip, base = (3.0, 11.0) if level > 0 else (12.0, 4.0)
-        path = QPainterPath(QPointF(7.5 * u, tip * u))
-        path.lineTo(12.0 * u, base * u)
-        path.lineTo(3.0 * u, base * u)
-        path.closeSubpath()
+        q.setPen(
+            QPen(
+                LINE_DARK,
+                1.5 * self._ui_scale,
+                Qt.PenStyle.SolidLine,
+                Qt.PenCapStyle.RoundCap,
+                Qt.PenJoinStyle.RoundJoin,
+            )
+        )
         q.setBrush(LEVEL_FILL)
         q.drawPath(path)
         q.end()
