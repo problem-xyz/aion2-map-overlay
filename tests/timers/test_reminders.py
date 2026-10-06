@@ -216,3 +216,35 @@ def test_the_preview_plays_whatever_the_sound_switch_says(
         if thread.name == "timers-sound":
             thread.join(2)
     assert len(played.sounds) == 2
+
+
+@pytest.mark.parametrize("on", [False, True])
+def test_with_the_world_bosses_off_they_are_neither_shown_nor_reminded(
+    qapp: QApplication, dirs: DataDirs, on: bool
+) -> None:
+    bosses = data().bosses
+    assert bosses is not None
+    every = [b.id for b in bosses.bosses]
+    settings = Settings(timers_events=only(), timers_world_lead=5, timers_world_shown=every)
+    s = TimersService(
+        dirs,
+        settings=lambda: settings,
+        update_settings=lambda _patch: None,
+        notify=lambda _level, _code: None,
+        data=TimersDataService(
+            TimersStore(dirs.cache), lambda _u, _e: Fetched(None, None), 10**9, 10**9
+        ),
+        player=Played().player(),
+        clock=Clock(bosses.read_at),
+        world_bosses=on,
+    )
+    try:
+        view = s.view()
+        assert view is not None
+        assert bool(view["bosses"]) is on
+        soon = reminders_between(
+            s._in_use, settings, BERLIN, bosses.read_at, bosses.read_at + timedelta(hours=1)
+        )
+        assert bool(soon) is on
+    finally:
+        s.close()

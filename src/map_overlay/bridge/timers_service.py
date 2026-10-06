@@ -13,6 +13,7 @@ sleep would otherwise play as a pile. With the sound off, the plaque is asked to
 instead (`peek`), and either way `reminded` names the event, for the plaque to mark it.
 """
 
+import dataclasses
 import json
 import logging
 from collections.abc import Callable
@@ -25,7 +26,7 @@ from map_overlay.bridge.timers_data import TimersDataService
 from map_overlay.core.paths import DataDirs
 from map_overlay.core.settings import Settings
 from map_overlay.store.timers import TimedEvent, WorldBoss
-from map_overlay.timers.data import TimersStore
+from map_overlay.timers.data import TimersData, TimersStore
 from map_overlay.timers.reminders import Reminder, reminders_between, sound_for
 from map_overlay.timers.sound import SoundPlayer
 from map_overlay.timers.view import choice, ms, timers_view
@@ -33,6 +34,10 @@ from map_overlay.timers.view import choice, ms, timers_view
 log = logging.getLogger(__name__)
 
 TICK_MS = 15_000
+# The world bosses are off, at the owner's word: their list is still read and published, but the
+# app neither shows them nor reminds of them. True brings back the lists, the plaque's rows, the
+# timeline's lanes, the choice of bosses in Settings and their reminders, all at once.
+WORLD_BOSSES = False
 # Looked this far ahead for the next reminder; with none in it, looked again after RECHECK_MS.
 LOOKAHEAD = timedelta(hours=2)
 RECHECK_MS = 10 * 60 * 1000
@@ -62,9 +67,11 @@ class TimersService(QObject):
         data: TimersDataService | None = None,
         player: SoundPlayer | None = None,
         clock: Callable[[], datetime] | None = None,
+        world_bosses: bool | None = None,
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
+        self._world_bosses = WORLD_BOSSES if world_bosses is None else world_bosses
         self._settings = settings
         self._update_settings = update_settings
         self._data = data if data is not None else TimersDataService(TimersStore(dirs.cache))
@@ -95,9 +102,15 @@ class TimersService(QObject):
         self._remind.stop()
         self._data.close()
 
+    @property
+    def _in_use(self) -> TimersData:
+        """The data as the app uses it: without the world bosses while they are off."""
+        data = self._data.data
+        return data if self._world_bosses else dataclasses.replace(data, bosses=None)
+
     def view(self, now: datetime | None = None) -> dict[str, Any] | None:
         return timers_view(
-            self._data.data,
+            self._in_use,
             self._settings(),
             now or self._clock(),
             local_offset(),
@@ -149,17 +162,17 @@ class TimersService(QObject):
         self._player.play(sound_for(reminder), settings.timers_volume)
 
     def _event(self, event_id: str) -> TimedEvent | None:
-        schedule = self._data.data.schedule
+        schedule = self._in_use.schedule
         return next((e for e in schedule.events if e.id == event_id), None) if schedule else None
 
     def _boss(self, boss_id: str) -> WorldBoss | None:
-        bosses = self._data.data.bosses
+        bosses = self._in_use.bosses
         return next((b for b in bosses.bosses if b.id == boss_id), None) if bosses else None
 
     def _schedule_reminder(self) -> None:
         now = self._clock()
         ahead = reminders_between(
-            self._data.data, self._settings(), local_offset(), now, now + LOOKAHEAD
+            self._in_use, self._settings(), local_offset(), now, now + LOOKAHEAD
         )
         delay = RECHECK_MS
         if ahead:
@@ -169,7 +182,7 @@ class TimersService(QObject):
     def _on_due(self) -> None:
         now = self._clock()
         settings = self._settings()
-        due = reminders_between(self._data.data, settings, local_offset(), self._looked, now)
+        due = reminders_between(self._in_use, settings, local_offset(), self._looked, now)
         self._looked = now
         for reminder in due:
             if reminder.key in self._sounded or now - reminder.at > STALE:

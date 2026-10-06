@@ -60,7 +60,7 @@ export default function TimelinePage() {
     ["all", "event", "boss"],
     "all",
   );
-  const [realm, setRealm] = useRemembered<Realm>(
+  const [chosenRealm, setRealm] = useRemembered<Realm>(
     "mo.timeline.realm",
     ["all", "world", "abyss"],
     "all",
@@ -85,6 +85,9 @@ export default function TimelinePage() {
     [timers, settings, now],
   );
   const span = useMemo(() => timelineSpan(now, span_h), [now, span_h]);
+  // no world bosses (switched off app-wide): no realm to choose between
+  const hasWorld = Boolean(timers?.bosses.length);
+  const realm: Realm = hasWorld ? chosenRealm : "all";
   const rows = useMemo(() => lanes(all, now, span, filter, realm), [all, now, span, filter, realm]);
   const lines = useMemo(() => resets(all, span), [all, span]);
   const marks = useMemo(() => ticks(span, span_h), [span, span_h]);
@@ -137,7 +140,7 @@ export default function TimelinePage() {
             ]}
             onChange={setFilter}
           />
-          {filter === "boss" ? (
+          {filter === "boss" && hasWorld ? (
             <Segmented
               label={t("timers.filter.realmLabel")}
               labelHidden
