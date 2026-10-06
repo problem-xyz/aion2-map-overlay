@@ -148,4 +148,24 @@ describe("ScheduleView", () => {
     await userEvent.click(screen.getByRole("button", { name: "Open Settings" }));
     expect(onSettings).toHaveBeenCalled();
   });
+
+  it("offers no filter when there is no boss to tell the events apart from", () => {
+    render(
+      <I18nProvider initial="en">
+        <ScheduleView
+          timers={[eventNow(event("Rift", "event", NOW + MIN), NOW)]}
+          now={NOW}
+          twelve={false}
+          filter="boss"
+          realm="world"
+          onFilter={vi.fn()}
+          onRealm={vi.fn()}
+          bossesReadAt={null}
+          wrongCycle={[]}
+        />
+      </I18nProvider>,
+    );
+    expect(screen.queryByRole("radiogroup")).toBeNull();
+    expect(names()).toEqual(["Rift"]);
+  });
 });

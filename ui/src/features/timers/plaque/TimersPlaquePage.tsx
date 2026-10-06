@@ -109,7 +109,10 @@ export default function TimersPlaquePage() {
   );
   if (!data || !timers) return null;
 
-  const filter = data.filter;
+  // With no boss in the data (switched off app-wide) the tabs would all say the same: none is
+  // drawn, and a filter chosen before applies no longer.
+  const hasBosses = all.some((x) => x.kind === "boss");
+  const filter = hasBosses ? data.filter : "all";
   let world = 0;
   const rows = all
     .filter((x) => x.shown && x.kind !== "reset" && passes(x, filter, "all"))
@@ -158,7 +161,9 @@ export default function TimersPlaquePage() {
           )
         ) : null}
         <div className="tp-live">
-          {data.collapsed ? null : (
+          {data.collapsed ? null : !hasBosses ? (
+            <div className="tp-tabs" />
+          ) : (
             <div role="tablist" aria-label={t("timers.filter.label")} className="tp-tabs">
               {TABS.map(({ id, label }) => (
                 <button

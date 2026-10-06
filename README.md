@@ -59,7 +59,7 @@ fullscreen.
 ## Timers
 
 The panel's second tool, **Timers**, counts down Aion 2's recurring events (Spacetime Rift, Shugo
-Festival, the sieges and the Abyss bosses) and the daily and weekly resets, in your own time.
+Festival and the sieges) and the daily and weekly resets, in your own time.
 
 - **Your server.** Choose it under **Settings** in Timers; until you do, it is guessed from your
   clock.

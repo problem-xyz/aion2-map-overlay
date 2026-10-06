@@ -34,10 +34,11 @@ from map_overlay.timers.view import choice, ms, timers_view
 log = logging.getLogger(__name__)
 
 TICK_MS = 15_000
-# The world bosses are off, at the owner's word: their list is still read and published, but the
-# app neither shows them nor reminds of them. True brings back the lists, the plaque's rows, the
-# timeline's lanes, the choice of bosses in Settings and their reminders, all at once.
-WORLD_BOSSES = False
+# Every boss is off, at the owner's word: the world bosses and the schedule's Abyss bosses alike.
+# Their data is still read, published and fetched, but the app neither shows them nor reminds of
+# them, and with no boss left the pages drop their Bosses filter. True brings it all back at once:
+# the lists, the plaque's rows and tab, the timeline's lanes, Settings and the reminders.
+BOSSES = False
 # Looked this far ahead for the next reminder; with none in it, looked again after RECHECK_MS.
 LOOKAHEAD = timedelta(hours=2)
 RECHECK_MS = 10 * 60 * 1000
@@ -67,11 +68,11 @@ class TimersService(QObject):
         data: TimersDataService | None = None,
         player: SoundPlayer | None = None,
         clock: Callable[[], datetime] | None = None,
-        world_bosses: bool | None = None,
+        bosses: bool | None = None,
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
-        self._world_bosses = WORLD_BOSSES if world_bosses is None else world_bosses
+        self._bosses = BOSSES if bosses is None else bosses
         self._settings = settings
         self._update_settings = update_settings
         self._data = data if data is not None else TimersDataService(TimersStore(dirs.cache))
@@ -104,9 +105,15 @@ class TimersService(QObject):
 
     @property
     def _in_use(self) -> TimersData:
-        """The data as the app uses it: without the world bosses while they are off."""
+        """The data as the app uses it: without any boss while they are off."""
         data = self._data.data
-        return data if self._world_bosses else dataclasses.replace(data, bosses=None)
+        if self._bosses:
+            return data
+        schedule = data.schedule
+        if schedule is not None:
+            events = tuple(e for e in schedule.events if e.kind != "boss")
+            schedule = dataclasses.replace(schedule, events=events)
+        return TimersData(schedule=schedule, bosses=None)
 
     def view(self, now: datetime | None = None) -> dict[str, Any] | None:
         return timers_view(
