@@ -1,7 +1,7 @@
 {
   "format": "map-overlay-timers",
   "version": 1,
-  "updatedAt": "2026-10-02",
+  "updatedAt": "2026-10-07",
   "regions": [
     {
       "id": "global-nae",
@@ -90,6 +90,7 @@
       "kind": "event",
       "icon": "fox",
       "durationMinutes": 10,
+      "entryMinutes": 5,
       "schedules": {
         "global": {
           "type": "hourly",
