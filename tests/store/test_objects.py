@@ -397,6 +397,28 @@ def test_unknown_keys_are_ignored_at_every_level() -> None:
     assert doc["nodes"] == [{"c": "teleports", "x": 1.0, "y": 2.0, "t": "", "d": ""}]
 
 
+@pytest.mark.parametrize(("node", "level"), [({"level": "up"}, 1), ({"level": "down"}, -1)])
+def test_a_cube_above_or_below_the_ground_keeps_its_level(node: dict[str, Any], level: int) -> None:
+    doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, **node}]))
+
+    assert doc["nodes"][0]["l"] == level
+
+
+def test_a_stored_level_reads_back() -> None:
+    doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, "l": -1}]))
+
+    assert validate_objects(doc)["nodes"][0]["l"] == -1
+
+
+@pytest.mark.parametrize(
+    "node", [{"level": "side"}, {"level": ["up"]}, {"l": 2}, {"l": True}, {"l": "1"}]
+)
+def test_a_level_that_is_neither_up_nor_down_is_left_out(node: dict[str, Any]) -> None:
+    doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, **node}]))
+
+    assert "l" not in doc["nodes"][0]
+
+
 def test_a_missing_map_name_becomes_an_empty_string() -> None:
     """It seeds the stored file name, so import falls back to the source stem instead."""
     doc = validate_objects({"categories": [{"id": "a"}], "nodes": [{"c": "a", "x": 1.0, "y": 2.0}]})

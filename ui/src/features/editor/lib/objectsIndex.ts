@@ -40,6 +40,8 @@ export interface IndexPoint {
   description: string;
   /** id of the category the point belongs to. */
   cat: string;
+  /** A hidden cube above (1) or below (-1) the ground about it, as the set says. */
+  level?: 1 | -1;
 }
 
 /** Which categories to show: category id -> visible or not. */
@@ -93,6 +95,7 @@ export function buildIndex(
         title: n.t,
         description: n.d,
         cat: cat.id,
+        ...(n.l ? { level: n.l } : {}),
       });
     }
   }

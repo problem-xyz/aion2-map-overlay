@@ -18,11 +18,17 @@ from map_overlay.store.resources import resource_of
 log = logging.getLogger(__name__)
 
 
+# A cube's "level" in a set's own spelling -> the "l" the app keeps.
+LEVELS = {"up": 1, "down": -1}
+
+
 def validate_objects(doc: Any) -> dict[str, Any]:
     """Normalise an object set: categories, plus points in percent of the map size.
 
     Both the long spelling the sets in assets/object-sets use (categoryId/title/description)
     and the short form this app stores (c/t/d) are accepted, so a saved set still reads back.
+    A hidden cube above or below the ground about it carries "level" ("up" or "down"), which
+    becomes "l", 1 or -1; any other point has no "l".
     """
     if not isinstance(doc, dict):
         raise ObjectsError("objects.invalid.not_object")
@@ -47,15 +53,18 @@ def validate_objects(doc: Any) -> dict[str, Any]:
         cat = str(n.get("categoryId") or n.get("c") or "")
         if cat not in cats or not (0 <= x <= 100 and 0 <= y <= 100):
             continue
-        nodes.append(
-            {
-                "c": cat,
-                "x": round(x, 3),
-                "y": round(y, 3),
-                "t": str(n.get("title") or n.get("t") or ""),
-                "d": str(n.get("description") or n.get("d") or ""),
-            }
-        )
+        node = {
+            "c": cat,
+            "x": round(x, 3),
+            "y": round(y, 3),
+            "t": str(n.get("title") or n.get("t") or ""),
+            "d": str(n.get("description") or n.get("d") or ""),
+        }
+        raw = n.get("level")
+        lvl = LEVELS.get(raw) if isinstance(raw, str) else n.get("l")
+        if type(lvl) is int and lvl in (1, -1):
+            node["l"] = lvl
+        nodes.append(node)
     if not nodes:
         raise ObjectsError("objects.invalid.empty")
     return {
@@ -111,11 +120,17 @@ def icon_for(category_id: str, map_name: str = "") -> str:
     return ""
 
 
-def cube_points(sets: Iterable[dict[str, Any]], size: Sequence[float]) -> list[tuple[float, float]]:
-    """Every hidden cube in the sets, in map pixels of `size`; the nodes are in percent of it."""
+def cube_points(
+    sets: Iterable[dict[str, Any]], size: Sequence[float]
+) -> list[tuple[float, float, int]]:
+    """Every hidden cube in the sets, in map pixels of `size`, with its level.
+
+    The nodes are in percent of `size`. The level is 1 for a cube above the ground about it, -1
+    for one below and 0 for the rest.
+    """
     w, h = float(size[0]), float(size[1])
     return [
-        (n["x"] / 100 * w, n["y"] / 100 * h)
+        (n["x"] / 100 * w, n["y"] / 100 * h, n.get("l", 0))
         for doc in sets
         for n in doc["nodes"]
         if icon_for(n["c"], doc.get("mapName", "")) == "cube"

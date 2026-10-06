@@ -26,7 +26,7 @@ def backend(qapp: QApplication, dirs: DataDirs) -> Iterator[Backend]:
 
 def timers_of(backend: Backend) -> dict[str, Any]:
     state = json.loads(backend.getState())
-    assert state["api"] == 33
+    assert state["api"] == 34
     return state["timers"]
 
 

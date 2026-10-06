@@ -24,6 +24,7 @@ RADIUS = 30
 @pytest.fixture
 def overlay(qapp: QApplication) -> Iterator[OverlayWindow]:
     window = OverlayWindow()
+    window._ui_scale = 1.0  # the pixels below are at 100% Windows scale
     window.resize(SIZE, SIZE)
     window.set_opacity(1.0)
     window.set_cubes([CUBE], RADIUS)
@@ -105,9 +106,51 @@ def test_cube_points_are_the_hidden_cubes_in_map_pixels() -> None:
             "categories": [{"id": "hidden-cube-verteron"}, {"id": "teleports"}],
             "nodes": [
                 {"c": "hidden-cube-verteron", "x": 25.0, "y": 50.0},
+                {"c": "hidden-cube-verteron", "x": 50.0, "y": 25.0, "l": -1},
                 {"c": "teleports", "x": 10.0, "y": 10.0},
             ],
         }
     ]
 
-    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0)]
+    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0), (2048.0, 512.0, -1)]
+
+
+# Where the arrow beside the cube falls: right of it, at its top corner for up, its bottom for down.
+ABOVE = (CUBE[0] + 13, CUBE[1] - 6)
+BELOW = (CUBE[0] + 13, CUBE[1] + 6)
+
+
+def test_a_cube_on_the_ground_has_no_arrow(overlay: OverlayWindow) -> None:
+    image = frame(overlay)
+
+    assert not lit(image, *ABOVE)
+    assert not lit(image, *BELOW)
+
+
+@pytest.mark.parametrize(("level", "at", "not_at"), [(1, ABOVE, BELOW), (-1, BELOW, ABOVE)])
+def test_a_cube_above_or_below_the_ground_has_an_arrow_beside_it(
+    overlay: OverlayWindow, level: int, at: tuple[float, float], not_at: tuple[float, float]
+) -> None:
+    overlay.set_cubes([(*CUBE, level)], RADIUS)
+    image = frame(overlay)
+
+    assert lit(image, *at)
+    assert not lit(image, *not_at)
+
+
+def test_the_cube_and_its_ring_grow_with_the_windows_scale(qapp: QApplication) -> None:
+    window = OverlayWindow()
+    window.resize(SIZE, SIZE)
+    window.set_opacity(1.0)
+    window._ui_scale = 1.5
+    window.set_cubes([CUBE], RADIUS)
+    window.set_transform(np.eye(3))
+    try:
+        image = frame(window)
+    finally:
+        window.deleteLater()
+
+    x, y = CUBE
+    assert lit(image, x + 11, y)  # the cube's right face, past where it ends at 100%
+    assert lit(image, x + RADIUS * 1.5, y)  # the ring
+    assert not lit(image, x + RADIUS, y + 0.5)

@@ -51,6 +51,11 @@ const SMALL_OBJECT_R = 3;
 // smaller again far out, where there are many of them
 const OBJECT_ICON = 30;
 const SMALL_OBJECT_ICON = 21;
+// The arrow beside a cube above or below the ground about it, as the overlay draws it over the
+// game: up at the cube's top right corner, down at its bottom right. In parts of the icon's side.
+const LEVEL_SIDE = 11 / 24;
+const LEVEL_X = 8 / 24;
+const LEVEL_FILL = "#f2f4f8";
 const CULL_PAD = 20; // margin past the screen edge: a point just outside it is still half visible
 const HINT_R = 9; // circle of the "insert a marker here" hint
 const HINT_CROSS = 4;
@@ -234,6 +239,28 @@ function drawScene(
         ctx.drawImage(sprite, x - size / 2, y - size / 2, size, size);
       }
     }
+    const side = size * LEVEL_SIDE;
+    ctx.beginPath();
+    for (const group of icons) {
+      for (const p of group.points) {
+        if (!p.level) continue;
+        const x = sx(p.x) + size * LEVEL_X;
+        const y = sy(p.y);
+        if (!visibleAt(x, y)) continue;
+        const top = p.level > 0 ? y - size / 2 : y + size / 2 - side;
+        const [tip, base] = p.level > 0 ? [top + 1.5, top + side - 2] : [top + side - 1.5, top + 2];
+        ctx.moveTo(x + side / 2, tip);
+        ctx.lineTo(x + side - 1, base);
+        ctx.lineTo(x + 1, base);
+        ctx.closePath();
+      }
+    }
+    ctx.fillStyle = LEVEL_FILL;
+    ctx.strokeStyle = DARK;
+    ctx.lineWidth = 1.5;
+    ctx.lineJoin = "round";
+    ctx.fill();
+    ctx.stroke();
   }
 
   const pts = markers.map((m) => ({ x: sx(m.x), y: sy(m.y) }));
