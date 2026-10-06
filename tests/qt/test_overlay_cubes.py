@@ -24,6 +24,7 @@ RADIUS = 30
 @pytest.fixture
 def overlay(qapp: QApplication) -> Iterator[OverlayWindow]:
     window = OverlayWindow()
+    window._ui_scale = 1.0  # the pixels below are at 100% Windows scale
     window.resize(SIZE, SIZE)
     window.set_opacity(1.0)
     window.set_cubes([CUBE], RADIUS)
@@ -114,9 +115,9 @@ def test_cube_points_are_the_hidden_cubes_in_map_pixels() -> None:
     assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0), (2048.0, 512.0, -1)]
 
 
-# Where the arrow beside the cube falls: right of it, at its top corner for up, its bottom for down.
-ABOVE = (CUBE[0] + 13, CUBE[1] - 6)
-BELOW = (CUBE[0] + 13, CUBE[1] + 6)
+# Where the arrow on the cube falls: at its top right corner for up, its bottom right for down.
+ABOVE = (CUBE[0] + 10, CUBE[1] - 10)
+BELOW = (CUBE[0] + 10, CUBE[1] + 10)
 
 
 def test_a_cube_on_the_ground_has_no_arrow(overlay: OverlayWindow) -> None:
@@ -135,3 +136,21 @@ def test_a_cube_above_or_below_the_ground_has_an_arrow_beside_it(
 
     assert lit(image, *at)
     assert not lit(image, *not_at)
+
+
+def test_the_cube_and_its_ring_grow_with_the_windows_scale(qapp: QApplication) -> None:
+    window = OverlayWindow()
+    window.resize(SIZE, SIZE)
+    window.set_opacity(1.0)
+    window._ui_scale = 1.5
+    window.set_cubes([CUBE], RADIUS)
+    window.set_transform(np.eye(3))
+    try:
+        image = frame(window)
+    finally:
+        window.deleteLater()
+
+    x, y = CUBE
+    assert lit(image, x + 11, y)  # the cube's right face, past where it ends at 100%
+    assert lit(image, x + RADIUS * 1.5, y)  # the ring
+    assert not lit(image, x + RADIUS, y + 0.5)

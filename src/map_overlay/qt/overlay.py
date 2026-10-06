@@ -41,21 +41,25 @@ POINTER_W = 14  # and how wide it is at the circle
 # that loops about a village was a tangle nobody could read the way on from.
 FADED_OPACITY = 0.3
 # The hidden cube as the panel draws it (markIcons.ts): a coral cube from above a corner, the lit
-# top palest. CUBE_HALF is half its height in screen pixels.
+# top palest. CUBE_HALF is half its height in pixels at 100% Windows scale. The cubes, their rings
+# and the gathering points are all multiplied by system_dpi_scale(), as the strip's type is: at
+# 150% on a 4K screen they were too small to make out over the game.
 CUBE_TOP = QColor("#f4a08c")
 CUBE_LEFT = QColor("#d9624f")
 CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 12
 CUBE_RING = QColor("#ff7a5c")
-# The arrow beside a cube above or below the ground about it: up at its top right corner, down at
-# its bottom right. LEVEL_SIDE is the arrow's side in screen pixels, LEVEL_X how far right of the
-# cube's middle it starts.
-LEVEL_SIDE = 11
-LEVEL_X = 8
-LEVEL_FILL = QColor("#f2f4f8")
+# The badge on a cube above or below the ground about it: a white arrow on a dark disc, which reads
+# on any ground, at the cube's top right corner for up and its bottom right for down. LEVEL_SIDE is
+# the disc's side and LEVEL_AT how far its middle is from the cube's, across and up or down, in
+# pixels at 100% Windows scale.
+LEVEL_SIDE = 15
+LEVEL_AT = 10
+LEVEL_DISC = QColor(15, 17, 22, 235)
+LEVEL_FILL = QColor("#ffffff")
 # A gathering point: its resource's drawing (assets/marks/resources.json) on a dark disc, which
-# keeps it apart from the game's own map. RESOURCE_HALF is half its side in screen pixels.
+# keeps it apart from the game's own map. RESOURCE_HALF is half its side at 100% Windows scale.
 RESOURCE_HALF = 13.5
 RESOURCE_DISC = QColor(15, 17, 22, 130)
 # The strip along the bottom of the map area that tells the player what the overlay is doing. A
@@ -281,10 +285,10 @@ class OverlayWindow(ClickThroughWindow):
         """The hidden cubes to draw, in reference-map pixels; empty or None draws none.
 
         A point is (x, y), or (x, y, level) with level 1 for a cube above the ground about it
-        and -1 for one below, which gets an arrow beside it. They stay on whatever the route
-        does -- finished, off screen, its view cut to the next steps -- because they are the
-        map's, not the route's. `radius` is the ring around each in screen pixels, constant at
-        any zoom like the route's circles.
+        and -1 for one below, which gets an arrow at its corner. They stay on whatever the
+        route does -- finished, off screen, its view cut to the next steps -- because they are
+        the map's, not the route's. `radius` is the ring around each in pixels at 100% Windows
+        scale, constant at any zoom like the route's circles.
         """
         rows = [tuple(pt) for pt in points] if points is not None else []
         self._cubes = (
@@ -522,12 +526,13 @@ class OverlayWindow(ClickThroughWindow):
         if not self._resources:
             return
         p.setOpacity(self._opacity)
+        half = RESOURCE_HALF * self._ui_scale
         for rid, points in self._resources.items():
             sprite = self._resource_image(rid)
             if sprite is None:
                 continue
-            for x, y in self._on_screen(points, RESOURCE_HALF):
-                p.drawImage(QPointF(x - RESOURCE_HALF, y - RESOURCE_HALF), sprite)
+            for x, y in self._on_screen(points, half):
+                p.drawImage(QPointF(x - half, y - half), sprite)
 
     def _resource_image(self, rid):
         """One resource's mark on its disc, drawn once per device pixel ratio; None if not drawn."""
@@ -538,7 +543,7 @@ class OverlayWindow(ClickThroughWindow):
         svg = resource_svg(rid)
         if svg is None:
             return None
-        side = RESOURCE_HALF * 2
+        side = RESOURCE_HALF * 2 * self._ui_scale
         image = QImage(
             int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
         )
@@ -557,12 +562,13 @@ class OverlayWindow(ClickThroughWindow):
     def _paint_cubes(self, p) -> None:
         if self._cubes is None or self._cube_levels is None:
             return
-        pts, keep = self._projected(self._cubes, self._cube_radius + CUBE_HALF + LEVEL_SIDE)
+        k = self._ui_scale
+        half, r = CUBE_HALF * k, self._cube_radius * k
+        pts, keep = self._projected(self._cubes, r + half + LEVEL_SIDE * k)
         pts, levels = pts[keep], self._cube_levels[keep]
         if not len(pts):
             return
         p.setOpacity(self._opacity)
-        r = self._cube_radius
         if r > 0:
             fill = QColor(CUBE_RING)
             fill.setAlpha(40)
@@ -573,38 +579,35 @@ class OverlayWindow(ClickThroughWindow):
                     p.drawEllipse(QPointF(x, y), r, r)
         sprite = self._cube_image()
         for x, y in pts:
-            p.drawImage(QPointF(x - CUBE_HALF, y - CUBE_HALF), sprite)
+            p.drawImage(QPointF(x - half, y - half), sprite)
+        at, badge = LEVEL_AT * k, LEVEL_SIDE * k / 2
         for (x, y), level in zip(pts, levels, strict=True):
             if level:
-                top = y - CUBE_HALF if level > 0 else y + CUBE_HALF - LEVEL_SIDE
-                p.drawImage(QPointF(x + LEVEL_X, top), self._level_image(int(level)))
+                cy = y - at if level > 0 else y + at
+                p.drawImage(QPointF(x + at - badge, cy - badge), self._level_image(int(level)))
 
     def _level_image(self, level):
-        """The arrow up (level 1) or down (-1), drawn once per device pixel ratio like the cube."""
+        """The badge with the arrow up (level 1) or down (-1), drawn once like the cube."""
         ratio = self.devicePixelRatioF()
         known = self._level_sprites.get(level)
         if known is not None and known.devicePixelRatio() == ratio:
             return known
-        s = LEVEL_SIDE
+        s = LEVEL_SIDE * self._ui_scale
         image = QImage(int(s * ratio), int(s * ratio), QImage.Format.Format_ARGB32_Premultiplied)
         image.setDevicePixelRatio(ratio)
         image.fill(Qt.GlobalColor.transparent)
-        tip, base = (1.5, s - 2.0) if level > 0 else (s - 1.5, 2.0)
-        path = QPainterPath(QPointF(s / 2, tip))
-        path.lineTo(s - 1.0, base)
-        path.lineTo(1.0, base)
-        path.closeSubpath()
         q = QPainter(image)
         q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
-        q.setPen(
-            QPen(
-                LINE_DARK,
-                1.5,
-                Qt.PenStyle.SolidLine,
-                Qt.PenCapStyle.RoundCap,
-                Qt.PenJoinStyle.RoundJoin,
-            )
-        )
+        q.setPen(Qt.PenStyle.NoPen)
+        q.setBrush(LEVEL_DISC)
+        q.drawEllipse(QRectF(0, 0, s, s))
+        # the arrow, in fifteenths of the disc: a broad head, its tip a little off the rim
+        u = s / 15
+        tip, base = (3.0, 11.0) if level > 0 else (12.0, 4.0)
+        path = QPainterPath(QPointF(7.5 * u, tip * u))
+        path.lineTo(12.0 * u, base * u)
+        path.lineTo(3.0 * u, base * u)
+        path.closeSubpath()
         q.setBrush(LEVEL_FILL)
         q.drawPath(path)
         q.end()
@@ -616,7 +619,7 @@ class OverlayWindow(ClickThroughWindow):
         ratio = self.devicePixelRatioF()
         if self._cube_sprite is not None and self._cube_sprite.devicePixelRatio() == ratio:
             return self._cube_sprite
-        side = CUBE_HALF * 2
+        side = CUBE_HALF * 2 * self._ui_scale
         image = QImage(
             int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
         )

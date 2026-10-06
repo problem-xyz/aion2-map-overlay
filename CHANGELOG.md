@@ -31,15 +31,20 @@ changes are left out unless they change how the app is installed, run or updated
 - The schedule and the world bosses' respawn times are fetched from the project's GitHub, so they
   stay current between releases. Nothing about you is sent; Settings in Timers turns it off.
 - A hidden cube above or below the ground around it, on a cliff or a roof, in a cave or a
-  ravine, has a small arrow beside it, up or down, over the game and in the route editor.
+  ravine, has a white arrow on its corner, up or down, over the game and in the route editor.
 
 ### Changed
 
 - The panel opens with a switch between two tools, Map and Timers. Map holds everything the
   panel had; the language and the updates moved behind the gear beside the switch, since both
   tools share them. The support links stay at the foot of both.
-- Altgard shows every spot a hidden cube can appear at, 1371 of them, in place of the 108 it
-  had, some of which were off.
+- Both maps show every spot a hidden cube can appear at, 1440 on Verteron and 1371 on Altgard,
+  in place of the hundred or so each had, some of which were off.
+
+### Fixed
+
+- The cubes and the gathering points over the game are drawn at the Windows display scale. At
+  150% on a 4K screen they were too small to make out.
 
 ## [1.5.0] - 2026-10-02
 
