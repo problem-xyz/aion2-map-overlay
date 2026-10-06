@@ -57,15 +57,28 @@
 .tp-card.folded .tp-live {
   flex: none;
 }
+/* Folded, the head is the whole plaque: centred in its height, and as far from the right edge
+   as from the left once the buttons' own inner space is counted. */
+.tp-card.folded .tp-head {
+  flex: 1;
+  padding-block: 0;
+  padding-inline: calc(var(--tp-pad) * 0.8) calc(var(--tp-pad) * 0.5);
+}
+/* The tabs reach down through the head's padding to the rule under it, so the chosen tab's line
+   lies on that rule as one line rather than floating above it. */
 .tp-tabs {
   flex: 1 1 auto;
   min-width: 0;
+  align-self: stretch;
   display: flex;
   gap: calc(12px * var(--tp-scale));
 }
 .tp-tab {
   position: relative;
-  padding: calc(4px * var(--tp-scale)) 0 calc(5px * var(--tp-scale));
+  display: flex;
+  align-items: center;
+  margin-bottom: calc(var(--tp-pad) * -0.45);
+  padding: calc(4px * var(--tp-scale)) 0 calc(var(--tp-pad) * 0.45 + 5px * var(--tp-scale));
   border: 0;
   background: none;
   font: 600 calc(14px * var(--tp-scale)) / 1.2 var(--font-display);
@@ -83,7 +96,8 @@
   position: absolute;
   left: -2px;
   right: -2px;
-  bottom: 0;
+  /* on the rule below the head, which starts a pixel under the tab's own edge */
+  bottom: -1px;
   height: 1px;
   background: var(--color-info);
   box-shadow: 0 0 6px var(--color-info);
@@ -147,7 +161,7 @@
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: calc(10px * var(--tp-scale));
   text-shadow: var(--shadow-text);
 }
@@ -157,6 +171,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font: 600 calc(14px * var(--tp-scale)) / 1.2 var(--font-display);
+}
+.tp-mini-mark {
+  --tmark-size: calc(22px * var(--tp-scale));
 }
 .tp-mini-left {
   margin-left: auto;

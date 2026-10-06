@@ -14,6 +14,7 @@ import { useTimersPlaqueApi } from "@/shared/backend/hooks";
 import { type MessageKey, useI18n } from "@/shared/i18n";
 import Icon from "@/shared/ui/Icon";
 import IconButton from "@/shared/ui/IconButton";
+import TimerMark from "@/shared/ui/TimerMark";
 import { REALM_HUES } from "@/shared/ui/timerMarks";
 
 import { useNow } from "../hooks/useNow";
@@ -146,6 +147,7 @@ export default function TimersPlaquePage() {
         {data.collapsed ? (
           first ? (
             <span className="tp-mini">
+              <TimerMark icon={first.icon} size="sm" className="tp-mark tp-mini-mark" />
               <span className="tp-mini-name">{timerName(first, t)}</span>
               <span className="tp-mini-left">
                 {first.target !== null ? countdown(first.target - now, t) : "—"}
@@ -187,7 +189,11 @@ export default function TimersPlaquePage() {
             className="tp-btn"
             label={data.collapsed ? t("timers.plaque.unfold") : t("timers.plaque.fold")}
             icon={<Icon name={data.collapsed ? "chevronDown" : "up"} />}
-            onClick={() => bridge?.action("collapse")}
+            onClick={(e) => {
+              // the head is redrawn around it: a click must not leave the focus ring behind
+              if (e.detail > 0) e.currentTarget.blur();
+              bridge?.action("collapse");
+            }}
           />
         </div>
         {data.pinned ? null : (
