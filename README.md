@@ -4,8 +4,8 @@
 
 Aion 2 - Map Overlay draws your own route on top of the Aion 2 map. You place numbered points
 once, and the app finds the map on screen and keeps the route on it while you move and zoom
-the map. It also counts down the game's events and world bosses, with a plaque over the game and
-a sound before each one starts.
+the map. It also counts down the game's events, with a plaque over the game and a sound before
+each one starts.
 
 It is a free, unofficial fan project for Windows 10 and 11.
 
@@ -59,18 +59,13 @@ fullscreen.
 ## Timers
 
 The panel's second tool, **Timers**, counts down Aion 2's recurring events (Spacetime Rift, Shugo
-Festival, the sieges and the Abyss bosses), the world bosses and the daily and weekly resets, in
-your own time.
+Festival, the sieges and the Abyss bosses) and the daily and weekly resets, in your own time.
 
 - **Your server.** Choose it under **Settings** in Timers; until you do, it is guessed from your
   clock.
 - **Reminders.** Each event can sound a few minutes before it starts, and be shown or left off the
   plaque over the game. With the sound off, the plaque shows itself for a moment instead.
-- **Day timeline.** A wide window with one or two days at a glance: every event and world boss on
-  its own line.
-- **World bosses** come from the in-game list, read once a day for this project. Later spawns are
-  worked out from each boss's respawn time and marked as estimates; after maintenance they can be
-  off until the next reading.
+- **Day timeline.** A wide window with one or two days at a glance: every event on its own line.
 
 ## Updates
 

@@ -33,7 +33,7 @@ export default function ScheduleView({
   now,
   twelve,
   filter,
-  realm,
+  realm: chosenRealm,
   onFilter,
   onRealm,
   bossesReadAt,
@@ -41,6 +41,10 @@ export default function ScheduleView({
   onSettings,
 }: ScheduleViewProps) {
   const { t, locale } = useI18n();
+  // With no world bosses in the data (they can be switched off app-wide) there is nothing to
+  // tell the Abyss's bosses apart from, so the choice is neither offered nor applied.
+  const hasWorld = timers.some((x) => x.source === "boss");
+  const realm: Realm = hasWorld ? chosenRealm : "all";
   const worldTab = filter === "boss" && realm === "world";
   // A list holds what the player follows. The world tab is the one place every world boss is
   // listed, the ones switched off greyed, so a boss can still be looked up there.
@@ -65,7 +69,7 @@ export default function ScheduleView({
         ]}
         onChange={onFilter}
       />
-      {filter === "boss" ? (
+      {filter === "boss" && hasWorld ? (
         <Segmented
           label={t("timers.filter.realmLabel")}
           labelHidden

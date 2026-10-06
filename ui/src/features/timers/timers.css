@@ -91,7 +91,7 @@
   color: var(--color-text-secondary);
 }
 .tm-hero-reset-mark {
-  --tmark-size: 20px;
+  --tmark-size: 24px;
 }
 
 /* ---------- the plaque and the sound, as the map's quick slots ---------- */
