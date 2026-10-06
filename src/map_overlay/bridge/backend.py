@@ -268,6 +268,7 @@ class Backend(QObject):
             change_settings=self._change_settings,
             recordable=lambda: self._recordable,
             on_visibility=self._emit_state,
+            display_scale=system_dpi_scale(),
             parent=self,
         )
         timers.changed.connect(plaque.set_timers)

@@ -41,6 +41,7 @@ class TimersPlaque(QObject):
         change_settings: Callable[[dict[str, Any]], None],
         recordable: Callable[[], bool],
         on_visibility: Callable[[], None],
+        display_scale: float = 1.0,
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
@@ -51,6 +52,9 @@ class TimersPlaque(QObject):
         self._change_settings = change_settings
         self._recordable = recordable
         self._on_visibility = on_visibility
+        # Qt's own HiDPI scaling is off, so every window works in physical pixels: on a 4K screen
+        # at 150% the plaque has to be drawn half as large again, or it comes up tiny.
+        self._display_scale = display_scale
         self._window: TimersPlaqueWindow | None = None
         self._timers = ""
 
@@ -114,6 +118,8 @@ class TimersPlaque(QObject):
         if self._window is None:
             return
         if any(getattr(before, k) != getattr(after, k) for k in PLAQUE_SETTINGS):
+            if before.timers_plaque_scale != after.timers_plaque_scale:
+                self._resize_by(after.timers_plaque_scale / before.timers_plaque_scale)
             self._apply_prefs()
             self._window.set_opacity(after.opacity)
             self._window.set_pinned(after.timers_plaque_pinned)
@@ -146,8 +152,16 @@ class TimersPlaque(QObject):
             filter_=s.timers_plaque_filter,
             clock_12h=s.timers_clock_12h,
             world_lead=s.timers_world_lead,
-            scale=s.timers_plaque_scale,
+            scale=s.timers_plaque_scale * self._display_scale,
         )
+
+    def _resize_by(self, ratio: float) -> None:
+        """The size slider moved: the window grows with what it draws, as the steps plaque does."""
+        if self._window is None:
+            return
+        g = self._window.geometry()
+        self._window.resize(round(g.width() * ratio), round(g.height() * ratio))
+        self._set_state(timers_plaque_region=self._window.region_dict())
 
     def _on_moved(self, region: dict[str, int]) -> None:
         self._set_state(timers_plaque_region=region)

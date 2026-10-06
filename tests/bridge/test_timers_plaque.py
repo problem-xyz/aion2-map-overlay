@@ -9,7 +9,9 @@ import pytest
 from PySide6.QtWidgets import QApplication
 
 from map_overlay.bridge.backend import Backend
+from map_overlay.bridge.timers_plaque import TimersPlaque
 from map_overlay.core.paths import DataDirs
+from map_overlay.core.settings import Settings, State
 from map_overlay.qt.timers_window import TimersPlaqueWindow
 
 
@@ -59,7 +61,9 @@ def test_folding_keeps_the_height_to_unfold_to(backend: Backend) -> None:
     window.set_region({"left": 100, "top": 100, "width": 330, "height": 300})
     plaque_window(backend).actionClicked.emit("collapse")
     assert backend.settings.timers_plaque_collapsed
-    assert window.height() == TimersPlaqueWindow.COLLAPSED_HEIGHT
+    # at whatever the machine's display scale is: the folded head is drawn at it too
+    drawn_at = json.loads(window.data_json())["scale"]
+    assert window.height() == round(TimersPlaqueWindow.COLLAPSED_HEIGHT * drawn_at)
     assert window.region_dict()["height"] == 300
     window.actionClicked.emit("collapse")
     assert window.height() == 300
@@ -85,3 +89,33 @@ def test_a_reminder_marks_its_row(backend: Backend) -> None:
     backend.setTimersPlaqueVisible(True)
     backend._timers.reminded.emit(json.dumps({"id": "rift", "name": "Spacetime Rift", "start": 1}))
     assert data(backend)["ring"]["id"] == "rift"
+
+
+def test_the_plaque_is_drawn_at_the_windows_display_scale(qapp: QApplication) -> None:
+    """Qt's own HiDPI scaling is off: at 150% the plaque must be drawn half as large again."""
+    settings = Settings(timers_plaque_scale=1.2)
+    state: dict[str, Any] = {"timers_plaque_visible": True}
+    plaque = TimersPlaque(
+        dev=False,
+        settings=lambda: settings,
+        state=lambda: State(**state),
+        set_state=state.update,
+        change_settings=lambda patch: None,
+        recordable=lambda: False,
+        on_visibility=lambda: None,
+        display_scale=1.5,
+    )
+    try:
+        plaque.sync()
+        window = plaque.window
+        assert window is not None
+        assert json.loads(window.data_json())["scale"] == pytest.approx(1.8)
+        assert window.width() == round(TimersPlaqueWindow.BASE_WIDTH * 1.8)
+
+        bigger = Settings(timers_plaque_scale=1.5)
+        plaque.settings_changed(settings, bigger)
+        settings = bigger
+        assert window.width() == round(TimersPlaqueWindow.BASE_WIDTH * 1.8 * 1.25)
+        assert state["timers_plaque_region"]["width"] == window.width()
+    finally:
+        plaque.shutdown()
