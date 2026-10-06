@@ -175,10 +175,13 @@
 .tp-mini-mark {
   --tmark-size: calc(22px * var(--tp-scale));
 }
+/* The countdown is never broken over two lines: the name gives way first, to an ellipsis. */
 .tp-mini-left {
+  flex: none;
   margin-left: auto;
   font: 600 calc(15px * var(--tp-scale)) / 1 var(--font-display);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .tp-rule {
@@ -240,11 +243,13 @@
   white-space: nowrap;
 }
 .tp-left {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font: 600 calc(15px * var(--tp-scale)) / 1 var(--font-display);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .tp-bell {
   width: calc(13px * var(--tp-scale));
