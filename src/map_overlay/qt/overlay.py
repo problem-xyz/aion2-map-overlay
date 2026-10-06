@@ -48,6 +48,12 @@ CUBE_RIGHT = QColor("#a83a2f")
 CUBE_INK = QColor("#3a0c08")
 CUBE_HALF = 12
 CUBE_RING = QColor("#ff7a5c")
+# The arrow beside a cube above or below the ground about it: up at its top right corner, down at
+# its bottom right. LEVEL_SIDE is the arrow's side in screen pixels, LEVEL_X how far right of the
+# cube's middle it starts.
+LEVEL_SIDE = 11
+LEVEL_X = 8
+LEVEL_FILL = QColor("#f2f4f8")
 # A gathering point: its resource's drawing (assets/marks/resources.json) on a dark disc, which
 # keeps it apart from the game's own map. RESOURCE_HALF is half its side in screen pixels.
 RESOURCE_HALF = 13.5
@@ -186,7 +192,9 @@ class OverlayWindow(ClickThroughWindow):
         self._route_on = True  # the panel's Arrows switch; the cubes have their own
         self._cubes = None  # hidden cubes in reference-map pixels, (N, 1, 2) float32
         self._cube_radius = 0
+        self._cube_levels = None  # each cube's level: 1 above the ground, -1 below, 0 neither
         self._cube_sprite = None  # QImage of one cube, drawn once per device pixel ratio
+        self._level_sprites: dict[int, QImage] = {}  # the arrow up (1) and down (-1), as the cube's
         # gathering points by resource, in reference-map pixels, (N, 1, 2) float32 each
         self._resources: dict[str, np.ndarray] = {}
         self._resource_sprites: dict[str, QImage | None] = {}  # one per resource, as the cube's
@@ -272,14 +280,18 @@ class OverlayWindow(ClickThroughWindow):
     def set_cubes(self, points, radius=0) -> None:
         """The hidden cubes to draw, in reference-map pixels; empty or None draws none.
 
-        They stay on whatever the route does -- finished, off screen, its view cut to the next
-        steps -- because they are the map's, not the route's. `radius` is the ring around each
-        in screen pixels, constant at any zoom like the route's circles.
+        A point is (x, y), or (x, y, level) with level 1 for a cube above the ground about it
+        and -1 for one below, which gets an arrow beside it. They stay on whatever the route
+        does -- finished, off screen, its view cut to the next steps -- because they are the
+        map's, not the route's. `radius` is the ring around each in screen pixels, constant at
+        any zoom like the route's circles.
         """
+        rows = [tuple(pt) for pt in points] if points is not None else []
         self._cubes = (
-            np.array(points, dtype=np.float32).reshape(-1, 1, 2)
-            if points is not None and len(points)
-            else None
+            np.array([r[:2] for r in rows], dtype=np.float32).reshape(-1, 1, 2) if rows else None
+        )
+        self._cube_levels = (
+            np.array([r[2] if len(r) > 2 else 0 for r in rows], dtype=np.int8) if rows else None
         )
         self._cube_radius = max(0, int(radius))
         self.update()
@@ -491,6 +503,11 @@ class OverlayWindow(ClickThroughWindow):
 
     def _on_screen(self, points, margin):
         """`points` (reference-map pixels) through the transform, less those off the window."""
+        pts, keep = self._projected(points, margin)
+        return pts[keep]
+
+    def _projected(self, points, margin):
+        """`points` through the transform, all of them, and which of them are on the window."""
         pts = cv2.perspectiveTransform(points, self._T.astype(np.float32)).reshape(-1, 2)  # pyright: ignore[reportOptionalMemberAccess]
         keep = (
             np.isfinite(pts).all(axis=1)
@@ -499,7 +516,7 @@ class OverlayWindow(ClickThroughWindow):
             & (pts[:, 1] > -margin)
             & (pts[:, 1] < self.height() + margin)
         )
-        return pts[keep]
+        return pts, keep
 
     def _paint_resources(self, p) -> None:
         if not self._resources:
@@ -538,9 +555,10 @@ class OverlayWindow(ClickThroughWindow):
         return image
 
     def _paint_cubes(self, p) -> None:
-        if self._cubes is None:
+        if self._cubes is None or self._cube_levels is None:
             return
-        pts = self._on_screen(self._cubes, self._cube_radius + CUBE_HALF)
+        pts, keep = self._projected(self._cubes, self._cube_radius + CUBE_HALF + LEVEL_SIDE)
+        pts, levels = pts[keep], self._cube_levels[keep]
         if not len(pts):
             return
         p.setOpacity(self._opacity)
@@ -556,6 +574,42 @@ class OverlayWindow(ClickThroughWindow):
         sprite = self._cube_image()
         for x, y in pts:
             p.drawImage(QPointF(x - CUBE_HALF, y - CUBE_HALF), sprite)
+        for (x, y), level in zip(pts, levels, strict=True):
+            if level:
+                top = y - CUBE_HALF if level > 0 else y + CUBE_HALF - LEVEL_SIDE
+                p.drawImage(QPointF(x + LEVEL_X, top), self._level_image(int(level)))
+
+    def _level_image(self, level):
+        """The arrow up (level 1) or down (-1), drawn once per device pixel ratio like the cube."""
+        ratio = self.devicePixelRatioF()
+        known = self._level_sprites.get(level)
+        if known is not None and known.devicePixelRatio() == ratio:
+            return known
+        s = LEVEL_SIDE
+        image = QImage(int(s * ratio), int(s * ratio), QImage.Format.Format_ARGB32_Premultiplied)
+        image.setDevicePixelRatio(ratio)
+        image.fill(Qt.GlobalColor.transparent)
+        tip, base = (1.5, s - 2.0) if level > 0 else (s - 1.5, 2.0)
+        path = QPainterPath(QPointF(s / 2, tip))
+        path.lineTo(s - 1.0, base)
+        path.lineTo(1.0, base)
+        path.closeSubpath()
+        q = QPainter(image)
+        q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        q.setPen(
+            QPen(
+                LINE_DARK,
+                1.5,
+                Qt.PenStyle.SolidLine,
+                Qt.PenCapStyle.RoundCap,
+                Qt.PenJoinStyle.RoundJoin,
+            )
+        )
+        q.setBrush(LEVEL_FILL)
+        q.drawPath(path)
+        q.end()
+        self._level_sprites[level] = image
+        return image
 
     def _cube_image(self):
         """One cube, drawn once: a hundred of them a frame are then a hundred blits."""

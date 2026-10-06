@@ -128,6 +128,28 @@ describe("buildIndex", () => {
   });
 });
 
+describe("buildIndex, the cubes above and below the ground", () => {
+  const sets: ObjectSet[] = [
+    {
+      file: "altgard.json",
+      mapName: "altgard",
+      categories: [{ id: "hidden-cube-altgard", name: "Hidden Cube", parentId: null, color: "" }],
+      nodes: [
+        { ...at("hidden-cube-altgard", 10, 10), l: 1 },
+        { ...at("hidden-cube-altgard", 20, 20), l: -1 },
+        at("hidden-cube-altgard", 30, 30),
+      ],
+    },
+  ];
+
+  it("keeps a cube's level, and gives a cube on the ground none", () => {
+    const points = buildIndex(sets, SIZE).points;
+
+    expect(points.map((p) => p.level)).toEqual([1, -1, undefined]);
+    expect(points[2]).not.toHaveProperty("level");
+  });
+});
+
 describe("buildIndex colour inheritance", () => {
   const sets: ObjectSet[] = [
     {

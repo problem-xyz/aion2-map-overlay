@@ -258,6 +258,8 @@ export interface ObjectNode {
   y: number;
   t: string;
   d: string;
+  /** A hidden cube above (1) or below (-1) the ground about it; absent on any other point. */
+  l?: 1 | -1;
 }
 
 /**

@@ -105,9 +105,33 @@ def test_cube_points_are_the_hidden_cubes_in_map_pixels() -> None:
             "categories": [{"id": "hidden-cube-verteron"}, {"id": "teleports"}],
             "nodes": [
                 {"c": "hidden-cube-verteron", "x": 25.0, "y": 50.0},
+                {"c": "hidden-cube-verteron", "x": 50.0, "y": 25.0, "l": -1},
                 {"c": "teleports", "x": 10.0, "y": 10.0},
             ],
         }
     ]
 
-    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0)]
+    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0), (2048.0, 512.0, -1)]
+
+
+# Where the arrow beside the cube falls: right of it, at its top corner for up, its bottom for down.
+ABOVE = (CUBE[0] + 13, CUBE[1] - 6)
+BELOW = (CUBE[0] + 13, CUBE[1] + 6)
+
+
+def test_a_cube_on_the_ground_has_no_arrow(overlay: OverlayWindow) -> None:
+    image = frame(overlay)
+
+    assert not lit(image, *ABOVE)
+    assert not lit(image, *BELOW)
+
+
+@pytest.mark.parametrize(("level", "at", "not_at"), [(1, ABOVE, BELOW), (-1, BELOW, ABOVE)])
+def test_a_cube_above_or_below_the_ground_has_an_arrow_beside_it(
+    overlay: OverlayWindow, level: int, at: tuple[float, float], not_at: tuple[float, float]
+) -> None:
+    overlay.set_cubes([(*CUBE, level)], RADIUS)
+    image = frame(overlay)
+
+    assert lit(image, *at)
+    assert not lit(image, *not_at)

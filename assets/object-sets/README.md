@@ -13,13 +13,21 @@ and nothing else. There is no importing or removing a set; a set a user imported
 | File            | Map      | Nodes | Upstream file                        |
 | --------------- | -------- | ----- | ------------------------------------ |
 | `verteron.json` | Verteron | 3574  | `public/data/markers/World_L_A.yaml` |
-| `altgard.json`  | Altgard  | 3524  | `public/data/markers/World_D_A.yaml` |
+| `altgard.json`  | Altgard  | 4787  | `public/data/markers/World_D_A.yaml` |
 
 The gathering points -- 2733 on Verteron, 2692 on Altgard -- are not in the upstream repository.
 They come from the marker data the project's site serves, and `scripts/import_gathering.py`
 fetches them and writes them into both files as a `gathering` category with a child category
 `gathering-<resource>` per resource. Run it again to bring them up to date; `--check` says
 whether they are. A resource is taken only if `assets/marks/resources.json` has its drawing.
+
+The hidden cubes on Altgard, 1371 of them, are every spot a cube can appear at, from a list of
+the game's cube groups in world coordinates rather than from upstream.
+`scripts/import_cubes.py <file> --map altgard` puts them into the set, and marks a spot
+`"level": "up"` or `"down"` where it stands more than 20 units above or below the ground about
+it, which the overlay and the editor show as an arrow beside the cube. The world lies on the
+8192 x 8192 map layer centred, 8160 units to its side: `px = 4096 + x * 8192 / 8160`, and the
+same for `z`.
 
 ## Source and licence
 

@@ -239,7 +239,8 @@ def steps_state(settings, state) -> StepsPayload:
 #     setTimersPlaqueVisible and setTimersPlaquePinned.
 # 32: openTimersTimeline and closeTimersTimeline, the day timeline in a window of its own.
 # 33: a world boss carries "drops", what it drops that is worth the trip ("painting").
-API_VERSION = 33
+# 34: an object node may carry "l", a hidden cube above (1) or below (-1) the ground about it.
+API_VERSION = 34
 
 
 def build_state(

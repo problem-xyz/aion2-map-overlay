@@ -70,6 +70,12 @@ Changes   Established by comparing these files with the upstream data. The tool 
             "gathering" category, named and titled by its English name; its colour was added.
           - Marker ids gained an "oss-" prefix; z, images, contributors, indexInSubtype and tier
             were dropped, and the description left empty.
+          For the hidden cubes of altgard.json, made by scripts/import_cubes.py:
+          - The upstream cubes were replaced by every spot a cube can appear at, from a list of
+            the game's cube groups in world coordinates, which is not upstream data.
+          - Each spot's "level" (up or down) compares its height with the median z of the
+            upstream markers within 100 pixels of it, or of its own group where fewer than
+            three are near.
 
 
 assets/maps/altgard/reference.webp
