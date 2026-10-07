@@ -6,7 +6,7 @@ from types import ModuleType
 
 import pytest
 
-from map_overlay.store.objects import validate_objects
+from map_overlay.store.objects import cube_tints, validate_objects
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -57,7 +57,7 @@ def ground(
 def test_a_spot_is_measured_against_the_markers_about_it() -> None:
     groups = [{"s": "EnvObj_D1_A_HiddenBox_01", "pos": [[0, 150, 0], [0, 60, 0], [0, 100, 0]]}]
 
-    nodes = ic.cube_nodes(groups, ground(100), CATEGORY)
+    nodes = ic.cube_nodes(groups, ground(100), CATEGORY, [0])
 
     assert [n.get("level") for n in nodes] == ["up", "down", None]
 
@@ -66,13 +66,13 @@ def test_markers_too_far_away_are_not_its_ground() -> None:
     far = ground(0, at=(4096 + ic.NEAR + 1, 4096))
     groups = [{"s": "EnvObj_D1_A_HiddenBox_01", "pos": [[0, 100, 0]] * 3}]
 
-    assert all("level" not in n for n in ic.cube_nodes(groups, far, CATEGORY))
+    assert all("level" not in n for n in ic.cube_nodes(groups, far, CATEGORY, [0]))
 
 
 def test_with_no_ground_near_a_spot_its_group_is_the_ground() -> None:
     groups = [{"s": "EnvObj_D1_A_HiddenBox_01", "pos": [[0, 150, 0], [0, 100, 0], [0, 90, 0]]}]
 
-    nodes = ic.cube_nodes(groups, [], CATEGORY)
+    nodes = ic.cube_nodes(groups, [], CATEGORY, [0])
 
     assert [n.get("level") for n in nodes] == ["up", None, None]
 
@@ -84,14 +84,14 @@ def test_the_nodes_are_percent_of_the_layer_and_read_as_cubes() -> None:
     doc = {
         "mapName": "Altgard",
         "categories": [{"id": CATEGORY}],
-        "nodes": ic.cube_nodes(groups, ground(100), CATEGORY),
+        "nodes": ic.cube_nodes(groups, ground(100), CATEGORY, [0]),
     }
 
     nodes = validate_objects(doc)["nodes"]
 
     assert nodes == [
-        {"c": CATEGORY, "x": 50.0, "y": 50.0, "t": "Hidden Cube", "d": "", "l": 1},
-        {"c": CATEGORY, "x": 0.0, "y": 100.0, "t": "Hidden Cube", "d": ""},
+        {"c": CATEGORY, "x": 50.0, "y": 50.0, "t": "Hidden Cube", "d": "", "l": 1, "g": 0},
+        {"c": CATEGORY, "x": 0.0, "y": 100.0, "t": "Hidden Cube", "d": "", "g": 0},
     ]
 
 
@@ -126,3 +126,48 @@ def test_the_ground_leaves_the_upstream_cubes_and_markers_without_a_height_out()
     ]
 
     assert ic.ground_markers(markers) == [(1.0, 2.0, 3.0)]
+
+
+def test_every_spot_of_a_group_wears_the_group_s_tint() -> None:
+    groups = [
+        {"s": "EnvObj_L1_A_HiddenCube_01", "pos": [[0, 0, 0], [10, 0, 0]]},
+        {"s": "EnvObj_L1_B_HiddenCube_01", "pos": [[2000, 0, 0]]},
+    ]
+
+    nodes = ic.cube_nodes(groups, [], CATEGORY, [3, 5])
+
+    assert [n["tint"] for n in nodes] == [3, 3, 5]
+
+
+def spots(*xs: float) -> dict[str, object]:
+    """A group with a spot at each x, on the world's middle line."""
+    return {"s": "EnvObj_L1_A_HiddenCube_01", "pos": [[x, 0, 0] for x in xs]}
+
+
+def test_groups_with_spots_near_each_other_are_neighbours() -> None:
+    near = ic.neighbours([[ic.layer_px(x, 0) for x in g] for g in ([0, 1000], [1100], [3000])])
+
+    assert near == [{1}, {0}, set()]
+
+
+def test_neighbouring_groups_get_different_tints() -> None:
+    groups = [spots(0), spots(60), spots(120), spots(3000)]  # three all within NEIGHBOURS
+
+    tint_of, same = ic.group_tints(groups, 3)
+
+    assert same == 0
+    assert len(set(tint_of[:3])) == 3
+
+
+def test_with_too_few_tints_the_clash_is_counted() -> None:
+    groups = [spots(0), spots(50), spots(100)]
+
+    tint_of, same = ic.group_tints(groups, 2)
+
+    assert sorted(tint_of) == [0, 0, 1]
+    assert same == 1
+
+
+def test_the_tints_file_matches_the_one_the_app_reads() -> None:
+    assert ic.TINTS == REPO / "assets" / "marks" / "cubes.json"
+    assert cube_tints()[0]["id"] == "coral"

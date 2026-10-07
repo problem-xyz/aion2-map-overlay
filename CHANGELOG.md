@@ -10,6 +10,12 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Changed
+
+- The hidden cubes are coloured by group. Each group is the set of spots one cube can appear
+  at, so the cubes of one colour in an area are one cube to look for; groups side by side never
+  share a colour. Over the game the ring around a cube takes its colour too.
+
 ## [1.6.0] - 2026-10-07
 
 ### Added

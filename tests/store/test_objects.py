@@ -404,6 +404,21 @@ def test_a_cube_above_or_below_the_ground_keeps_its_level(node: dict[str, Any], 
     assert doc["nodes"][0]["l"] == level
 
 
+@pytest.mark.parametrize("node", [{"tint": 4}, {"g": 4}])
+def test_a_cube_keeps_its_group_s_tint(node: dict[str, Any]) -> None:
+    doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, **node}]))
+
+    assert doc["nodes"][0]["g"] == 4
+    assert validate_objects(doc)["nodes"][0]["g"] == 4
+
+
+@pytest.mark.parametrize("node", [{"tint": -1}, {"tint": "2"}, {"tint": True}, {"g": 1.5}])
+def test_a_tint_that_is_not_a_whole_number_from_naught_is_left_out(node: dict[str, Any]) -> None:
+    doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, **node}]))
+
+    assert "g" not in doc["nodes"][0]
+
+
 def test_a_stored_level_reads_back() -> None:
     doc = validate_objects(_doc(nodes=[{"c": "teleports", "x": 1.0, "y": 2.0, "l": -1}]))
 

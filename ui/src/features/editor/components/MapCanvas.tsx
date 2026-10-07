@@ -12,7 +12,7 @@ import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 import type { RouteStyle } from "@/shared/backend/contract";
 import { useLatest } from "@/shared/hooks/useLatest";
-import { iconSprite, type ObjectIconName } from "@/shared/ui/markIcons";
+import { cubeSprite, iconSprite, type ObjectIconName } from "@/shared/ui/markIcons";
 
 import { useEditorActions, useEditorState } from "../EditorContext";
 import createCanvasOverlay, { type CanvasOverlayLayer } from "../lib/CanvasOverlay";
@@ -236,7 +236,9 @@ function drawScene(
         const x = sx(p.x);
         const y = sy(p.y);
         if (!visibleAt(x, y)) continue;
-        ctx.drawImage(sprite, x - size / 2, y - size / 2, size, size);
+        // a cube in its group's colour, so the spots of one cube read as one
+        const own = p.tint !== undefined ? cubeSprite(p.tint, size, ratio) : null;
+        ctx.drawImage(own ?? sprite, x - size / 2, y - size / 2, size, size);
       }
     }
     const side = size * LEVEL_SIDE;

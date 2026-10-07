@@ -25,7 +25,9 @@ The hidden cubes, 1440 on Verteron and 1371 on Altgard, are every spot a cube ca
 from lists of the game's cube groups in world coordinates rather than from upstream.
 `scripts/import_cubes.py <file> --map <map>` puts them into a set, and marks a spot
 `"level": "up"` or `"down"` where it stands more than 20 units above or below the ground about
-it, which the overlay and the editor show as an arrow beside the cube. The world lies on the
+it, which the overlay and the editor show as an arrow beside the cube. Each group is given
+`"tint"`, an index into [`assets/marks/cubes.json`](../marks/cubes.json), and its cubes are drawn
+in that colour; groups with spots within 150 pixels of each other get different ones. The world lies on the
 8192 x 8192 map layer centred, 8160 units to its side: `px = 4096 + x * 8192 / 8160`, and the
 same for `z`.
 
