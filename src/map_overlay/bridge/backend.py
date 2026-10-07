@@ -185,7 +185,7 @@ class Backend(QObject):
         self._banner = load_banner()
         self._progress = ProgressTracker(self._store, self)
         self._step_objects: list[str] = []  # the icon under each point, for the plaque
-        self._cubes: list[tuple[float, float, int]] = []  # the map's hidden cubes, px and level
+        self._cubes: list[tuple[float, float, int, int]] = []  # the map's cubes: px, level, tint
         # The same map's gathering points, by resource
         self._resources: dict[str, list[tuple[float, float]]] = {}
         self.overlay_visible = True

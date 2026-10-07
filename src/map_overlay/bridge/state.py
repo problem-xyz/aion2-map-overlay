@@ -240,7 +240,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 32: openTimersTimeline and closeTimersTimeline, the day timeline in a window of its own.
 # 33: a world boss carries "drops", what it drops that is worth the trip ("painting").
 # 34: an object node may carry "l", a hidden cube above (1) or below (-1) the ground about it.
-API_VERSION = 34
+# 35: an object node may carry "g", a hidden cube's group colour (assets/marks/cubes.json).
+API_VERSION = 35
 
 
 def build_state(

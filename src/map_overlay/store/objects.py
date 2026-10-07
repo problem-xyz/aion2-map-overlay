@@ -5,6 +5,8 @@ or removing one: the owner decided that a map's objects are fixed, as the maps t
 Files a user imported before api 8 stay in maps/<id>/objects/ untouched and unread.
 """
 
+import functools
+import json
 import logging
 import math
 from collections.abc import Iterable, Sequence
@@ -13,6 +15,7 @@ from typing import Any
 
 from map_overlay.core.errors import ObjectsError
 from map_overlay.core.fileio import read_json_or_none
+from map_overlay.core.paths import resource_path
 from map_overlay.store.resources import resource_of
 
 log = logging.getLogger(__name__)
@@ -28,7 +31,8 @@ def validate_objects(doc: Any) -> dict[str, Any]:
     Both the long spelling the sets in assets/object-sets use (categoryId/title/description)
     and the short form this app stores (c/t/d) are accepted, so a saved set still reads back.
     A hidden cube above or below the ground about it carries "level" ("up" or "down"), which
-    becomes "l", 1 or -1; any other point has no "l".
+    becomes "l", 1 or -1; any other point has no "l". A hidden cube's "tint", the colour of its
+    group (an index into cube_tints()), becomes "g".
     """
     if not isinstance(doc, dict):
         raise ObjectsError("objects.invalid.not_object")
@@ -64,6 +68,9 @@ def validate_objects(doc: Any) -> dict[str, Any]:
         lvl = LEVELS.get(raw) if isinstance(raw, str) else n.get("l")
         if type(lvl) is int and lvl in (1, -1):
             node["l"] = lvl
+        tint = n.get("tint", n.get("g"))
+        if type(tint) is int and tint >= 0:
+            node["g"] = tint
         nodes.append(node)
     if not nodes:
         raise ObjectsError("objects.invalid.empty")
@@ -120,17 +127,46 @@ def icon_for(category_id: str, map_name: str = "") -> str:
     return ""
 
 
+# The coral cube, the game's own, for a cube with no tint or a file that cannot be read.
+CORAL = {
+    "id": "coral",
+    "top": "#f4a08c",
+    "left": "#d9624f",
+    "right": "#a83a2f",
+    "wheel": "#ffd6cb",
+    "ink": "#3a0c08",
+    "ring": "#ff7a5c",
+}
+
+
+@functools.cache
+def cube_tints() -> list[dict[str, str]]:
+    """The colours a cube's group is painted in, out of assets/marks/cubes.json.
+
+    The editor reads the same file (ui/src/shared/ui/markIcons.ts). Read once; the coral cube
+    alone, and a log line, if it cannot be.
+    """
+    path = resource_path("assets/marks/cubes.json")
+    try:
+        tints = json.loads(path.read_text(encoding="utf-8"))["tints"]
+        out = [{key: str(t[key]) for key in CORAL} for t in tints]
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        log.warning("cube tints %s are not usable: %s", path, e)
+        return [CORAL]
+    return out or [CORAL]
+
+
 def cube_points(
     sets: Iterable[dict[str, Any]], size: Sequence[float]
-) -> list[tuple[float, float, int]]:
-    """Every hidden cube in the sets, in map pixels of `size`, with its level.
+) -> list[tuple[float, float, int, int]]:
+    """Every hidden cube in the sets, in map pixels of `size`, with its level and its tint.
 
     The nodes are in percent of `size`. The level is 1 for a cube above the ground about it, -1
-    for one below and 0 for the rest.
+    for one below and 0 for the rest; the tint is its group's colour, 0 (coral) where it has none.
     """
     w, h = float(size[0]), float(size[1])
     return [
-        (n["x"] / 100 * w, n["y"] / 100 * h, n.get("l", 0))
+        (n["x"] / 100 * w, n["y"] / 100 * h, n.get("l", 0), n.get("g", 0))
         for doc in sets
         for n in doc["nodes"]
         if icon_for(n["c"], doc.get("mapName", "")) == "cube"

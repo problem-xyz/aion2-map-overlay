@@ -260,6 +260,8 @@ export interface ObjectNode {
   d: string;
   /** A hidden cube above (1) or below (-1) the ground about it; absent on any other point. */
   l?: 1 | -1;
+  /** A hidden cube's group colour, an index into assets/marks/cubes.json. */
+  g?: number;
 }
 
 /**

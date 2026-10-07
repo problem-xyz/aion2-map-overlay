@@ -17,6 +17,10 @@ LEVEL_STEP. The ground is the median height of the upstream markers within NEAR 
 gathering points and the places, whose heights the upstream data has; where fewer than MIN_NEAR
 are near, it is the median of the spot's own group.
 
+Each group is given a tint, an index into assets/marks/cubes.json, which the overlay and the
+editor paint its cubes in: a cube is one of its group's spots, so its colour says which spots
+are the same cube. Groups with spots within NEIGHBOURS pixels of each other get different tints.
+
 The script replaces the nodes of the map's hidden-cube category and leaves the rest of the set
 as it is.
 """
@@ -43,6 +47,8 @@ WORLD = 8160  # the side of the world it shows, in world units
 NEAR = 100.0  # how far a marker is still about a spot, in layer pixels
 MIN_NEAR = 3  # fewer markers near than this, and the spot's group is its ground
 LEVEL_STEP = 20.0  # how much higher or lower than the ground a spot is up or down
+NEIGHBOURS = 150.0  # groups with spots this close, in layer pixels, are tinted apart
+TINTS = ROOT / "assets" / "marks" / "cubes.json"
 
 
 def layer_px(x: float, z: float) -> tuple[float, float]:
@@ -57,7 +63,7 @@ def group_name(raw: str) -> str:
 
 
 def level(height: float, ground: float) -> str:
-    """ "up", "down", or "" where the spot is about as high as the ground."""
+    """The spot's level: "up", "down", or "" where it is about as high as the ground."""
     if height - ground > LEVEL_STEP:
         return "up"
     if ground - height > LEVEL_STEP:
@@ -71,12 +77,69 @@ def ground_at(px: float, py: float, markers: Sequence[tuple[float, float, float]
     return statistics.median(near) if len(near) >= MIN_NEAR else None
 
 
+def neighbours(groups: Sequence[Sequence[tuple[float, float]]]) -> list[set[int]]:
+    """For each group, the groups with a spot within NEIGHBOURS of one of its own."""
+    boxes = [
+        (min(x for x, _ in g), min(y for _, y in g), max(x for x, _ in g), max(y for _, y in g))
+        for g in groups
+    ]
+    near: list[set[int]] = [set() for _ in groups]
+    for i, a in enumerate(groups):
+        for j in range(i + 1, len(groups)):
+            bi, bj = boxes[i], boxes[j]
+            if (
+                bj[0] - bi[2] > NEIGHBOURS
+                or bi[0] - bj[2] > NEIGHBOURS
+                or bj[1] - bi[3] > NEIGHBOURS
+                or bi[1] - bj[3] > NEIGHBOURS
+            ):
+                continue
+            close = any(
+                (ax - bx) ** 2 + (ay - by) ** 2 <= NEIGHBOURS * NEIGHBOURS
+                for ax, ay in a
+                for bx, by in groups[j]
+            )
+            if close:
+                near[i].add(j)
+                near[j].add(i)
+    return near
+
+
+def tints(near: Sequence[set[int]], count: int) -> list[int]:
+    """A tint for each group, none the same as a neighbour's where `count` tints allow it.
+
+    The group whose neighbours already wear the most different tints goes next, ties to the one
+    with more neighbours and then to the earlier one; it takes the first tint none of them wears,
+    or failing that the one the fewest of them wear.
+    """
+    out: list[int | None] = [None] * len(near)
+    for _ in near:
+        i = max(
+            (i for i, t in enumerate(out) if t is None),
+            key=lambda i: (len({out[j] for j in near[i]} - {None}), len(near[i]), -i),
+        )
+        worn = [out[j] for j in near[i]]
+        out[i] = min(range(count), key=lambda t: (worn.count(t), t))
+    return [t for t in out if t is not None]
+
+
+def group_tints(groups: Sequence[dict[str, Any]], count: int) -> tuple[list[int], int]:
+    """Each group's tint, and how many pairs of neighbouring groups were left the same."""
+    near = neighbours([[layer_px(float(p[0]), float(p[2])) for p in g["pos"]] for g in groups])
+    out = tints(near, count)
+    same = sum(1 for i, js in enumerate(near) for j in js if j > i and out[i] == out[j])
+    return out, same
+
+
 def cube_nodes(
-    groups: Iterable[dict[str, Any]], markers: Sequence[tuple[float, float, float]], category: str
+    groups: Sequence[dict[str, Any]],
+    markers: Sequence[tuple[float, float, float]],
+    category: str,
+    tint_of: Sequence[int],
 ) -> list[dict[str, Any]]:
     """The object-set nodes for every spot of every group, in the order the groups list them."""
     nodes = []
-    for g in groups:
+    for g, tint in zip(groups, tint_of, strict=True):
         name = group_name(str(g["s"]))
         spots = [(float(x), float(h), float(z)) for x, h, z in g["pos"]]
         own = statistics.median(h for _, h, _ in spots)
@@ -90,6 +153,7 @@ def cube_nodes(
                 "y": round(py / LAYER * 100, 3),
                 "title": "Hidden Cube",
                 "description": "",
+                "tint": tint,
             }
             lvl = level(h, own if ground is None else ground)
             if lvl:
@@ -131,7 +195,11 @@ def main() -> int:
     groups = json.loads(args.cubes.read_text(encoding="utf-8"))
     markers = ground_markers(fetch(f"markers/{MAPS[args.map]}.json")["markers"])
     category = f"hidden-cube-{args.map}"
-    nodes = cube_nodes(groups, markers, category)
+    count = len(json.loads(TINTS.read_text(encoding="utf-8"))["tints"])
+    tint_of, same = group_tints(groups, count)
+    if same:
+        print(f"{args.map}: {same} pairs of neighbouring groups share a tint", file=sys.stderr)
+    nodes = cube_nodes(groups, markers, category, tint_of)
 
     path = SETS / f"{args.map}.json"
     before = path.read_text(encoding="utf-8")
