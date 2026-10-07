@@ -38,8 +38,9 @@ const STONE_INK = "#102a3c";
 const PAPER_INK = "#1d232c";
 
 // The daily reset's ring, clockwise from just under the right round to the top, stroked twice,
-// dark under light, for an outline that holds over the game.
-const DAILY_ARC = "M18.89 13.22A7 7 0 1 1 11.03 5.07";
+// dark under light, for an outline that holds over the game. Centred a unit below the middle:
+// the head stands above the ring, and ring and head together are what has to sit centred.
+const DAILY_ARC = "M18.89 14.22A7 7 0 1 1 11.03 6.07";
 const VORTEX_INK = "#15171c";
 
 const ICONS: Record<TimerIconName, readonly IconLayer[]> = {
@@ -130,9 +131,9 @@ const ICONS: Record<TimerIconName, readonly IconLayer[]> = {
   // 26 px it is drawn at on a 4K screen it merges into the ring, which then reads as a "C".
   daily: [
     { d: DAILY_ARC, stroke: PAPER_INK, width: 4.6 },
-    { d: "M18.6 4.9L11.2 1L11.2 8.8Z", fill: "#d4d9e0", stroke: PAPER_INK, width: 0.9 },
+    { d: "M18.6 5.9L11.2 2L11.2 9.8Z", fill: "#d4d9e0", stroke: PAPER_INK, width: 0.9 },
     { d: DAILY_ARC, stroke: "#d4d9e0", width: 3 },
-    { d: circle(12, 12, 2.5), fill: "#f8c13a", stroke: PAPER_INK, width: 0.9 },
+    { d: circle(12, 13, 2.5), fill: "#f8c13a", stroke: PAPER_INK, width: 0.9 },
   ],
   // the weekly reset: a calendar page, its red header and the week's last day marked
   weekly: [
