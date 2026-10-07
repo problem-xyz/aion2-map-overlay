@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-07
+
 ### Added
 
 - Timers, the panel's second tool: every recurring Aion 2 event, counting down in your own time.
