@@ -37,9 +37,9 @@ const FOX_INK = "#2b1a1e";
 const STONE_INK = "#102a3c";
 const PAPER_INK = "#1d232c";
 
-// Three quarters of a circle round the centre, clockwise from the right to the top left: the
-// daily reset's arrow, stroked twice, dark under light, for an outline that holds over the game.
-const DAILY_ARC = "M18.77 9.54A7.2 7.2 0 1 1 8.4 5.76";
+// The daily reset's ring, clockwise from just under the right round to the top, stroked twice,
+// dark under light, for an outline that holds over the game.
+const DAILY_ARC = "M18.89 13.22A7 7 0 1 1 11.03 5.07";
 const VORTEX_INK = "#15171c";
 
 const ICONS: Record<TimerIconName, readonly IconLayer[]> = {
@@ -125,13 +125,14 @@ const ICONS: Record<TimerIconName, readonly IconLayer[]> = {
     { d: "M9.4 22.4v-5.2c0-1.6 1.1-2.6 2.6-2.6s2.6 1 2.6 2.6v5.2Z", fill: STONE_INK },
     { d: "M6.4 16.2h1.5v2.4H6.4ZM16.1 16.2h1.5v2.4h-1.5Z", fill: "#23405a" },
   ],
-  // the daily reset: an arrow coming round a sun, drawn as a stroke with a broad head so it
-  // still reads as one at 20 px, where the earlier filled ring with a small head read as a "C"
+  // the daily reset: the refresh arrow round a sun, its head at the top pointing on into the
+  // gap. The head is wider than the ring by half again on each side: any less and at the
+  // 26 px it is drawn at on a 4K screen it merges into the ring, which then reads as a "C".
   daily: [
-    { d: DAILY_ARC, stroke: PAPER_INK, width: 4.8 },
-    { d: "M12.56 3.36L5.84 2.53L9.92 9.6Z", fill: "#d4d9e0", stroke: PAPER_INK, width: 0.9 },
-    { d: DAILY_ARC, stroke: "#d4d9e0", width: 3.2 },
-    { d: circle(12, 12, 3), fill: "#f8c13a", stroke: PAPER_INK, width: 0.9 },
+    { d: DAILY_ARC, stroke: PAPER_INK, width: 4.6 },
+    { d: "M18.6 4.9L11.2 1L11.2 8.8Z", fill: "#d4d9e0", stroke: PAPER_INK, width: 0.9 },
+    { d: DAILY_ARC, stroke: "#d4d9e0", width: 3 },
+    { d: circle(12, 12, 2.5), fill: "#f8c13a", stroke: PAPER_INK, width: 0.9 },
   ],
   // the weekly reset: a calendar page, its red header and the week's last day marked
   weekly: [
