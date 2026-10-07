@@ -6,9 +6,10 @@
 
 The message is plain text, not an embed, with the downloads as link buttons under it. The
 release workflow posts it once the release is published, to the English and the Russian
-download channel. The CHANGELOG is English; `--lang ru` takes the section from
-`.github/discord/<version>.ru.md` instead, written by hand before the release in the same shape
-as a CHANGELOG section, and falls back to the English one with a warning when there is none.
+download channel. Each channel reads `.github/discord/<version>.<lang>.md` when there is one:
+a short announcement written by hand before the release, shorter and plainer than the
+CHANGELOG, in the same shape as a section of it. Without one, the English channel takes the
+CHANGELOG section, and any other falls back to the English text with a warning.
 The buttons are file names, so the message has no other words. The section is the one
 scripts/release_notes.py takes, without the install notes the release page carries: the GitHub
 button leads there. The downloads themselves are not attached: the installer is far past the
@@ -300,7 +301,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--lang",
         choices=sorted(FULL_NOTES),
         default="en",
-        help="the channel's language; any but en reads .github/discord/<version>.<lang>.md",
+        help="the channel's language: reads .github/discord/<version>.<lang>.md when there is one",
     )
     where = parser.add_mutually_exclusive_group()
     where.add_argument("--output", "-o", type=Path, help="write here instead of to stdout")
@@ -319,15 +320,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.post and not webhook:
         print("refused: --post needs the webhook in DISCORD_WEBHOOK", file=sys.stderr)
         return 1
-    translation = None
-    if args.lang != "en":
-        translation = translated_section(args.version, args.lang)
-        if translation is None:
-            print(
-                f"warning: no .github/discord/{args.version}.{args.lang}.md, "
-                f"so the {args.lang} channel gets the English notes",
-                file=sys.stderr,
-            )
+    # A channel reads its own <version>.<lang>.md, then the short English one, then the CHANGELOG.
+    lang = args.lang
+    translation = translated_section(args.version, lang)
+    if translation is None and lang != "en":
+        print(
+            f"warning: no .github/discord/{args.version}.{lang}.md, "
+            f"so the {lang} channel gets the English notes",
+            file=sys.stderr,
+        )
+        lang = "en"
+        translation = translated_section(args.version, lang)
     try:
         changelog = CHANGELOG.read_text(encoding="utf-8")
         message = announcement(
@@ -335,7 +338,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.version,
             role=role,
             dry_run=args.dry_run,
-            lang=args.lang,
+            lang=lang,
             translation=translation,
         )
     except release_notes.NotesError as error:
