@@ -80,7 +80,9 @@
   font-size: var(--text-xs);
   color: var(--color-text-muted);
 }
-.tm-hero-resets span {
+/* only the row's own items: the marks inside them are spans too, and a mark made a flex box
+   instead of its grid leaves its drawing against the left of its disc */
+.tm-hero-resets > span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
