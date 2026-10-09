@@ -184,11 +184,11 @@ def _image_of(path: Path, size: tuple[int, int], invalid: Callable[[str], MapErr
 
 
 class ThumbCache:
-    """Decoded map thumbnails and rendered route thumbnails, keyed by path and mtime.
+    """Decoded map thumbnails, rendered route thumbnails and read route files, by path and mtime.
 
     Owned by the caller rather than kept at module scope, so that tests and any second
     consumer never share one cache. Decoding a map thumbnail costs enough to be worth
-    holding on to; only the newest is kept, because the panel shows one map at a time.
+    holding on to; one per map, since every state rebuild lists all of them.
     """
 
     def __init__(self, route_slots: int = 64) -> None:
@@ -196,6 +196,8 @@ class ThumbCache:
         self._maps = {}  # (path, mtime) -> ndarray
         self._backdrops = {}  # (path, mtime) -> ndarray
         self._routes = {}  # (path, mtime) -> data URL
+        # route file -> ((mtime, size), doc, official), kept by store.routes.list_routes
+        self.listed: dict[Any, tuple[Any, dict[str, Any], bool]] = {}
 
     def backdrop(self, key: tuple[str, int], build: Callable[[], Any]) -> Any:
         """A map's backdrop, kept for every map: the route tiles of both maps are drawn in turn."""
@@ -205,8 +207,10 @@ class ThumbCache:
         return self._backdrops[key]
 
     def map_image(self, key: tuple[str, int], build: Callable[[], Any]) -> Any:
+        # Kept per path: with a single slot, listing two maps evicted each in turn and every
+        # state rebuild decoded both thumbnails from disk again.
         if key not in self._maps:
-            self._maps.clear()
+            self._maps = {k: v for k, v in self._maps.items() if k[0] != key[0]}
             self._maps[key] = build()
         return self._maps[key]
 
