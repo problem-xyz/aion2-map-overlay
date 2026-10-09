@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useLayoutEffect, useRef, useState } from "react";
+import { type KeyboardEvent, memo, useLayoutEffect, useRef, useState } from "react";
 
 import type { RouteInfo } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
@@ -29,7 +29,7 @@ export interface RoutesListProps {
  * The routes, and the way into the editor that draws them: the Editor tile used to stand in the
  * menu beside the sections, one more tile for a window that is only ever about a route.
  */
-export default function RoutesList({
+function RoutesList({
   routes,
   active,
   onSelect,
@@ -218,3 +218,6 @@ export default function RoutesList({
     </section>
   );
 }
+
+// Its thumbnails make it the panel's heaviest part, and a slider drag re-renders the panel per frame.
+export default memo(RoutesList);

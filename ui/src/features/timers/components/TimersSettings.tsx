@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { memo, useId } from "react";
 
 import type { BackendApi } from "@/shared/backend/api";
 import type { Settings, TimersState, TimerSignal } from "@/shared/backend/contract";
@@ -43,13 +43,7 @@ function Heads() {
  * choices, grouped as the schedule's filters group them, and the world bosses as one row for all
  * of them with the bosses to put on the plaque below it.
  */
-export default function TimersSettings({
-  timers,
-  settings,
-  schema,
-  api,
-  onChange,
-}: TimersSettingsProps) {
+function TimersSettings({ timers, settings, schema, api, onChange }: TimersSettingsProps) {
   const { t, locale } = useI18n();
   const serverId = useId();
   const region = timers.regions.find((r) => r.id === timers.region);
@@ -264,3 +258,6 @@ export default function TimersSettings({
     </div>
   );
 }
+
+// The page re-renders every second for its countdowns, which nothing here shows.
+export default memo(TimersSettings);

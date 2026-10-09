@@ -184,7 +184,7 @@ def _image_of(path: Path, size: tuple[int, int], invalid: Callable[[str], MapErr
 
 
 class ThumbCache:
-    """Decoded map thumbnails and rendered route thumbnails, keyed by path and mtime.
+    """Decoded map thumbnails, rendered route thumbnails and read route files, by path and mtime.
 
     Owned by the caller rather than kept at module scope, so that tests and any second
     consumer never share one cache. Decoding a map thumbnail costs enough to be worth
@@ -196,6 +196,8 @@ class ThumbCache:
         self._maps = {}  # (path, mtime) -> ndarray
         self._backdrops = {}  # (path, mtime) -> ndarray
         self._routes = {}  # (path, mtime) -> data URL
+        # route file -> ((mtime, size), doc, official), kept by store.routes.list_routes
+        self.listed: dict[Any, tuple[Any, dict[str, Any], bool]] = {}
 
     def backdrop(self, key: tuple[str, int], build: Callable[[], Any]) -> Any:
         """A map's backdrop, kept for every map: the route tiles of both maps are drawn in turn."""
