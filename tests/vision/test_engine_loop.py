@@ -534,3 +534,24 @@ def test_a_still_screen_is_polled_at_the_frame_rate_not_spun_on(monkeypatch) -> 
     threading.Timer(0.5, made.request_stop).start()
     made.run()
     assert 5 <= len(grabs) <= 25  # ~15 at 30 fps; a 1 ms spin made it hundreds
+
+
+def test_a_lost_map_is_looked_for_once_a_second_not_back_to_back(engine: Engine) -> None:
+    from map_overlay.vision.engine import LOST_DETECT_INTERVAL_S  # noqa: PLC0415
+
+    engine._detector.set_tracker(FakeTracker())
+    frame = np.zeros((8, 8, 4), np.uint8)
+    settings = loop_settings()
+
+    def submits_at(t0: float) -> bool:
+        engine._detector._busy = False
+        before = engine._state.last_submit
+        engine._maybe_submit(frame, settings, True, t0)
+        return engine._state.last_submit != before
+
+    engine._state.last_submit = 100.0
+    assert not submits_at(100.0 + LOST_DETECT_INTERVAL_S / 2)
+    assert submits_at(100.0 + LOST_DETECT_INTERVAL_S)
+    # found and held by flow: the setting's own interval, shorter
+    engine._state.found = engine._state.anchored = True
+    assert submits_at(engine._state.last_submit + settings["detect_interval"])

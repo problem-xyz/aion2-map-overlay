@@ -41,6 +41,10 @@ log = logging.getLogger(__name__)
 REBUILD_AFTER_FAILURES = 3
 GIVE_UP_AFTER_FAILURES = 8
 FAILURE_NOTICE_INTERVAL = 5.0
+# How often to look for a map that is not on the screen. Back to back, a search over every map
+# kept 1.5 to 2.5 cores busy for as long as the in-game map stayed closed; the price is that an
+# opened map can take up to this long to be found.
+LOST_DETECT_INTERVAL_S = 1.0
 
 
 class VisionError(RuntimeError):
@@ -321,7 +325,9 @@ class Engine(QThread):
     def _track_flow(self, gray, use_flow) -> None:
         """Carry the map by its own movement: cheap, and with almost no lag."""
         st = self._state
-        if not use_flow:
+        # Nothing placed, nothing to carry: tracking the game world behind a closed map cost
+        # several ms a frame, more on each reseed.
+        if not use_flow or st.current is None:
             self._flow.reset()
             st.flow_valid = False
             return
@@ -408,7 +414,12 @@ class Engine(QThread):
     def _maybe_submit(self, frame, settings, use_flow, t0) -> None:
         """Ask for the next detection; less often while the binding is holding."""
         st = self._state
-        interval = float(settings["detect_interval"]) if (use_flow and st.anchored) else 0.0
+        if not st.found:
+            interval = LOST_DETECT_INTERVAL_S
+        elif use_flow and st.anchored:
+            interval = float(settings["detect_interval"])
+        else:
+            interval = 0.0
         if not (self._detector.idle and (t0 - st.last_submit) >= interval):
             return
         job = DetectJob(frame.copy(), TrackerParams.from_mapping(settings))
