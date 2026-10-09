@@ -415,6 +415,11 @@ function Scene({ bounds }: SceneProps) {
       overlay.remove();
       overlayRef.current = null;
       report(null);
+      // The fade layers are viewport-sized bitmaps, tens of MB each: give them back with the map.
+      for (const key of ["far", "near"] as const) {
+        const c = layerCanvases[key];
+        if (c) c.width = c.height = 0;
+      }
     };
   }, [map, setMapRef]);
 

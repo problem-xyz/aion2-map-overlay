@@ -311,12 +311,10 @@ class Engine(QThread):
         # _apply_config opens the capture before the loop first grabs.
         frame = self._capture.grab()  # pyright: ignore[reportOptionalMemberAccess]
         if frame is None:  # dxcam: no new frame
-            time.sleep(0.001)
             return None
         probe = frame[::FRAME_CHANGE_PROBE_STRIDE, ::FRAME_CHANGE_PROBE_STRIDE]
         if st.prev_small is not None and np.array_equal(probe, st.prev_small):
-            time.sleep(0.001)  # same picture, nothing to compute
-            return None
+            return None  # same picture, nothing to compute
         st.prev_small = probe.copy()
         return frame
 
@@ -510,6 +508,9 @@ class Engine(QThread):
                 t0 = time.perf_counter()
                 frame = self._grab()
                 if frame is None:
+                    # Paced like a real frame. A 1 ms sleep here polled capture ~1000 times a
+                    # second on a still map -- a full screen grab each time on mss.
+                    self._throttle(t0, settings)
                     continue
 
                 use_flow = settings["tracking"] == "flow"

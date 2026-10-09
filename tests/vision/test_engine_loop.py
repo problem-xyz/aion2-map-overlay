@@ -497,3 +497,40 @@ def test_one_map_alone_announces_nothing(engine: Engine) -> None:
     engine._absorb_detection(loop_settings(), use_flow=False)
 
     assert found == []
+
+
+def test_a_still_screen_is_polled_at_the_frame_rate_not_spun_on(monkeypatch) -> None:
+    # dxcam answers "no new frame" at once, and on a still map that is every call: the loop must
+    # wait out the frame like any other, not come straight back for another grab.
+    import threading  # noqa: PLC0415
+
+    from map_overlay.vision import engine as engine_mod  # noqa: PLC0415
+
+    grabs = []
+
+    class StillCapture:
+        backend = "fake"
+
+        def __init__(self, region, _screen_size=None) -> None:
+            self.region = dict(region)
+
+        def grab(self):
+            grabs.append(1)
+
+        def close(self) -> None:
+            pass
+
+    def build(self, *_args, **_kwargs) -> None:
+        self._tracker = FakeTracker()
+
+    monkeypatch.setattr(engine_mod, "Capture", StillCapture)
+    monkeypatch.setattr(Engine, "_build_tracker", build)
+    made = Engine()
+    made.configure(
+        settings={"fps": 30},
+        region={"left": 0, "top": 0, "width": 8, "height": 8},
+        reference="reference.png",
+    )
+    threading.Timer(0.5, made.request_stop).start()
+    made.run()
+    assert 5 <= len(grabs) <= 25  # ~15 at 30 fps; a 1 ms spin made it hundreds

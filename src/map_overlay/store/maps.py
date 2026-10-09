@@ -188,7 +188,7 @@ class ThumbCache:
 
     Owned by the caller rather than kept at module scope, so that tests and any second
     consumer never share one cache. Decoding a map thumbnail costs enough to be worth
-    holding on to; only the newest is kept, because the panel shows one map at a time.
+    holding on to; one per map, since every state rebuild lists all of them.
     """
 
     def __init__(self, route_slots: int = 64) -> None:
@@ -205,8 +205,10 @@ class ThumbCache:
         return self._backdrops[key]
 
     def map_image(self, key: tuple[str, int], build: Callable[[], Any]) -> Any:
+        # Kept per path: with a single slot, listing two maps evicted each in turn and every
+        # state rebuild decoded both thumbnails from disk again.
         if key not in self._maps:
-            self._maps.clear()
+            self._maps = {k: v for k, v in self._maps.items() if k[0] != key[0]}
             self._maps[key] = build()
         return self._maps[key]
 
