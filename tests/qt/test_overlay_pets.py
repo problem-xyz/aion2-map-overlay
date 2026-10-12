@@ -15,7 +15,15 @@ from PySide6.QtCore import QPoint
 from PySide6.QtGui import QColor, QImage, QPainter
 from PySide6.QtWidgets import QApplication
 
-from map_overlay.qt.overlay import PET_COLORS, PET_HALF, PET_PAW, OverlayWindow
+from map_overlay.qt.overlay import (
+    PET_BEST_HALF,
+    PET_COLORS,
+    PET_HALF,
+    PET_PAW,
+    PET_STAR,
+    PET_STAR_FILL,
+    OverlayWindow,
+)
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -101,3 +109,24 @@ def test_a_pet_with_a_portrait_shows_it_inside_its_ring(overlay: OverlayWindow) 
     middle = image.pixelColor(int(FIRST[0]), int(FIRST[1]))
     assert not near(middle, PET_COLORS[0])
     assert not near(middle, PET_PAW)
+
+
+def test_a_best_spot_is_drawn_larger_with_a_gold_star(overlay: OverlayWindow) -> None:
+    best = (100.0, 140.0)
+    overlay.set_pets({"a": [FIRST]}, {"a": best})
+
+    image = frame(overlay)
+
+    # larger than a spot: lit past where a spot's disc ends
+    assert lit(image, best[0] - PET_BEST_HALF + 3, best[1])
+    assert not lit(image, FIRST[0] - PET_HALF - 3, FIRST[1])
+    # the star at its top right, in gold: its middle half its size in from the disc's corner
+    off = PET_BEST_HALF - PET_STAR / 2
+    star = image.pixelColor(int(best[0] + off), int(best[1] - off))
+    assert near(star, PET_STAR_FILL)
+
+
+def test_no_best_spot_without_one(overlay: OverlayWindow) -> None:
+    overlay.set_pets({"a": [FIRST]})
+
+    assert overlay._pet_best == [None]

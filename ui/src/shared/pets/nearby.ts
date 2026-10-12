@@ -8,7 +8,8 @@
  * the 40 world units a spot gathers its monsters in (scripts/import_pets.py).
  *
  * Every map's spots are filed by grid cell the first time it is asked, each then measured against
- * the cells about it: a map has some two thousand spots.
+ * the cells about it: a map has some two thousand spots. The overlay works the best spot out the
+ * same way, in store/pets.py best_spot: a change to the one is a change to the other.
  */
 
 import { type Pet, petsOf } from "./pets";

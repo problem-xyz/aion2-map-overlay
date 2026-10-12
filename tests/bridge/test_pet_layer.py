@@ -15,7 +15,7 @@ from PySide6.QtWidgets import QApplication
 from map_overlay.bridge.backend import Backend
 from map_overlay.core.paths import DataDirs
 from map_overlay.store import routes
-from map_overlay.store.pets import pets_of
+from map_overlay.store.pets import best_spot, pets_of
 
 ROUTE = "souls"
 
@@ -73,13 +73,35 @@ def test_the_switch_brings_the_spots_of_the_pets_picked(backend: Backend) -> Non
     assert backend.settings.pets == [pet("altgard", 1), pet("altgard", 0)]  # kept for next time
 
 
-def test_a_level_set_does_not_redraw_the_spots(backend: Backend) -> None:
+def test_each_pet_picked_is_drawn_with_its_best_spot(backend: Backend) -> None:
+    first, second = pet("altgard", 0), pet("altgard", 1)
+    backend.updateSettings(json.dumps({"show_pets": True, "pets": [first, second]}))
+
+    meta = backend._map_meta("altgard")
+    assert meta is not None
+    w, h = meta["size"]
+    found = best_spot("altgard", first, {})
+    assert found is not None
+    drawn = backend.overlay._pet_best[0]
+    assert drawn is not None
+    assert drawn.ravel().tolist() == pytest.approx([found[0] / 100 * w, found[1] / 100 * h])
+    assert backend.overlay._pet_best[1] is not None
+
+
+def test_a_level_set_draws_the_best_spots_again(backend: Backend) -> None:
+    """A pet brought to the last level no longer counts toward another's best spot."""
     backend.updateSettings(json.dumps({"show_pets": True, "pets": [pet("altgard", 0)]}))
-    before = backend.overlay._pets
+    before = backend.overlay._pet_best
 
-    backend.updateSettings(json.dumps({"pet_levels": {f"altgard:{pet('altgard', 0)}": 2}}))
+    backend.updateSettings(json.dumps({"pet_levels": {f"altgard:{pet('altgard', 1)}": 3}}))
 
-    assert backend.overlay._pets is before
+    assert backend.overlay._pet_best is not before
+
+
+def test_with_the_switch_off_no_best_spot_is_drawn(backend: Backend) -> None:
+    backend.updateSettings(json.dumps({"pets": [pet("altgard", 0)]}))
+
+    assert backend.overlay._pet_best == []
 
 
 def test_a_pet_the_map_has_none_of_draws_nothing(backend: Backend) -> None:

@@ -15,7 +15,8 @@ picked by id in settings.pets; more, and the map is all marks.
 import functools
 import json
 import logging
-from collections.abc import Iterable, Sequence
+import math
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
 import cv2
@@ -107,3 +108,67 @@ def portrait(pet_id: str) -> np.ndarray | None:
     x, y = (at % cols) * cell, (at // cols) * cell
     found = sheet[y : y + cell, x : x + cell]
     return found if found.shape[:2] == (cell, cell) else None
+
+
+# Where a pet is best farmed, as the panel's map works it out (ui/src/shared/pets/nearby.ts, which
+# this mirrors): the spot with the most of its monsters within one round of farming, BEST_AREA world
+# units about it; among the places with no fewer than BEST_OWN_SHARE of the most, the one where the
+# monsters of the other pets still to collect add the most, each worth BEST_OTHERS_WEIGHT of one of
+# its own. The world is 8160 units to its side; spots are in percent of it.
+_UNIT = 100 / 8160
+BEST_AREA = 80 * _UNIT
+BEST_OWN_SHARE = 0.75
+BEST_OTHERS_WEIGHT = 0.5
+
+
+def best_spot(
+    map_id: str, pet_id: str, levels: Mapping[str, int] | None = None
+) -> tuple[float, float] | None:
+    """The middle of a pet's best place, in percent of the map; None for a pet the map has not.
+
+    `levels` is settings.pet_levels: a pet at the last level has nothing left to collect, and its
+    monsters do not count toward another's place.
+    """
+    pets = pets_of(map_id)
+    pet = next((p for p in pets if p["id"] == pet_id), None)
+    if pet is None or not pet.get("spots"):
+        return None
+    levels = levels or {}
+    wanted = {p["id"] for p in pets if levels.get(level_key(map_id, p["id"]), 0) < MAX_LEVEL} - {
+        pet_id
+    }
+    near = [(float(x), float(y), int(n), p["id"]) for p in pets for x, y, n in p["spots"]]
+    places: list[tuple[int, float, float, float]] = []  # own monsters, x, y, others' monsters
+    for spot in pet["spots"]:
+        x0, y0 = float(spot[0]), float(spot[1])
+        own = others = 0
+        sx = sy = 0.0
+        for x, y, n, pid in near:
+            if math.hypot(x - x0, y - y0) > BEST_AREA:
+                continue
+            if pid == pet_id:
+                own += n
+                sx += x * n
+                sy += y * n
+            elif pid in wanted:
+                others += n
+        places.append((own, sx / own, sy / own, others))
+    most = max(own for own, *_ in places)
+    best = max(
+        (p for p in places if p[0] >= BEST_OWN_SHARE * most),
+        key=lambda p: p[0] + BEST_OTHERS_WEIGHT * p[3],
+    )
+    return best[1], best[2]
+
+
+def best_points(
+    map_id: str, size: Sequence[float], pet_ids: Iterable[str], levels: Mapping[str, int]
+) -> dict[str, tuple[float, float]]:
+    """The best spot of each pet given that the map has, in map pixels of `size`, by pet id."""
+    w, h = float(size[0]), float(size[1])
+    out: dict[str, tuple[float, float]] = {}
+    for pid in pet_ids:
+        found = best_spot(map_id, pid, levels)
+        if found is not None:
+            out[pid] = (found[0] / 100 * w, found[1] / 100 * h)
+    return out

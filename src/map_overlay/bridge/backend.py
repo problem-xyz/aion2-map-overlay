@@ -107,7 +107,7 @@ from map_overlay.store import legacy
 from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import cube_points, icons_under
-from map_overlay.store.pets import pet_points
+from map_overlay.store.pets import best_points, pet_points
 from map_overlay.store.resources import MAX_PICKED, resource_points
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
 from map_overlay.updater.service import UpdatePayload, UpdaterService
@@ -469,8 +469,14 @@ class Backend(QObject):
         self._sync_overlay()
 
     def _apply_pets(self) -> None:
-        """The spots of the pets picked, while the Pets switch is on."""
-        self.overlay.set_pets(self._picked_pets() if self.settings.show_pets else {})
+        """The spots of the pets picked, and each one's best, while the Pets switch is on."""
+        groups = self._picked_pets() if self.settings.show_pets else {}
+        best = (
+            best_points(*self._pets_map, groups, self.settings.pet_levels)
+            if groups and self._pets_map
+            else {}
+        )
+        self.overlay.set_pets(groups, best)
         self._sync_overlay()
 
     def _picked_pets(self) -> dict[str, list[tuple[float, float]]]:
@@ -933,7 +939,12 @@ class Backend(QObject):
                 self._apply_cubes()
             if (before.show_resources, before.resources) != (after.show_resources, after.resources):
                 self._apply_resources()
-            if (before.show_pets, before.pets) != (after.show_pets, after.pets):
+            # a level set moves a best spot: the pets at the last one no longer count there
+            if (before.show_pets, before.pets, before.pet_levels) != (
+                after.show_pets,
+                after.pets,
+                after.pet_levels,
+            ):
                 self._apply_pets()
         if before.route_far_notice and not after.route_far_notice:
             self._set_off_route(None)

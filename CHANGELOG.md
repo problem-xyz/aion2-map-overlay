@@ -21,7 +21,8 @@ changes are left out unless they change how the app is installed, run or updated
   beside the map of those spots, to look at before you go.
 - The pets' map marks each picked pet's best spot with a star: the most of its monsters within
   a round, and among places with nearly as many, the one where other pets still to collect stand
-  too. The Best spots card flies the map to each.
+  too. The Best spots card flies the map to each, and the overlay marks the same spot over the
+  game.
 - A pet you picked says how many monsters its best spot has and names the other pets farmed in
   that one place, a click from showing them too. A spot on the map names them as well.
 - A pet whose monsters are many more on the other side says so, with both counts: its souls come

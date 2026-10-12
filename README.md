@@ -76,9 +76,9 @@ Altgard, 113 on Verteron, each with the monsters that drop it.
 - **On the map.** Click up to five portraits and the overlay shows where those monsters stand,
   each pet in its own colour. **Pets** under Start turns them on and off, and **Map** in the tool
   opens a large window with the same spots, to look at before you go.
-- **Best spots.** The map marks with a star where each picked pet is best farmed, and names the
-  other pets farmed in that place. A pet with many more monsters on the other side says it is
-  better farmed there, through a rift.
+- **Best spots.** The map, and the overlay over the game, mark with a star where each picked pet
+  is best farmed, and name the other pets farmed in that place. A pet with many more monsters on
+  the other side says it is better farmed there, through a rift.
 
 ## Updates
 
