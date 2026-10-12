@@ -6,8 +6,8 @@
 
 import type { CSSProperties } from "react";
 
-import index from "../../../../../assets/pets/portraits.json";
-import sheet from "../../../../../assets/pets/portraits.webp";
+import index from "../../../../assets/pets/portraits.json";
+import sheet from "../../../../assets/pets/portraits.webp";
 
 const CELLS: ReadonlyMap<string, number> = new Map(index.ids.map((id, i) => [id, i]));
 const ROWS = Math.max(1, Math.ceil(index.ids.length / index.cols));

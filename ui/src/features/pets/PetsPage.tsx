@@ -4,12 +4,7 @@ import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { useRemembered } from "@/shared/hooks/useRemembered";
-import { useT } from "@/shared/i18n";
-import Icon from "@/shared/ui/Icon";
-import IconButton from "@/shared/ui/IconButton";
-import Segmented from "@/shared/ui/Segmented";
-
-import PetRow from "./components/PetRow";
+import { type MessageKey, useT } from "@/shared/i18n";
 import {
   levelOf,
   MAX_LEVEL,
@@ -21,11 +16,23 @@ import {
   petsOf,
   SOULS,
   withLevel,
-} from "./lib/pets";
+} from "@/shared/pets/pets";
+import Icon, { type IconName } from "@/shared/ui/Icon";
+import IconButton from "@/shared/ui/IconButton";
+import Segmented from "@/shared/ui/Segmented";
+import Sheen from "@/shared/ui/Sheen";
+
+import PetRow from "./components/PetRow";
+import PetsMap from "./components/PetsMap";
 import "./pets.css";
 
 type Show = "all" | "todo" | "done";
 const SHOWS: readonly Show[] = ["all", "todo", "done"];
+type View = "list" | "map";
+const VIEWS: readonly { id: View; label: MessageKey; icon: IconName }[] = [
+  { id: "list", label: "pets.tabs.list", icon: "list" },
+  { id: "map", label: "pets.tabs.map", icon: "map" },
+];
 const ALL_SOULS = SOULS.reduce((a, b) => a + b, 0);
 
 function matches(pet: Pet, query: string): boolean {
@@ -60,6 +67,7 @@ export default function PetsPage() {
     routeMap && PET_MAPS.includes(routeMap) ? routeMap : (PET_MAPS[0] ?? ""),
   );
   const [show, setShow] = useRemembered<Show>("mo.pets.show", SHOWS, "all");
+  const [view, setView] = useRemembered<View>("mo.pets.view", ["list", "map"], "list");
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement | null>(null);
 
@@ -68,6 +76,19 @@ export default function PetsPage() {
   const picked = useMemo(() => settings?.pets ?? [], [settings?.pets]);
   const drawn = pickedOn(picked, mapId);
   const full = drawn.length >= MAX_PICKED_PETS;
+  // keyed on the ids: `drawn` is a new array every render, and the map refits to what it shows
+  const drawnKey = drawn.join(",");
+  const shown = useMemo(
+    () =>
+      drawnKey
+        .split(",")
+        .filter(Boolean)
+        .flatMap((id, i) => {
+          const pet = pets.find((p) => p.id === id);
+          return pet ? [{ pet, color: PET_COLORS[i] ?? "#ffffff" }] : [];
+        }),
+    [drawnKey, pets],
+  );
 
   const onLevel = useCallback(
     (pet: Pet, level: number) => {
@@ -109,6 +130,82 @@ export default function PetsPage() {
       (show === "all" || (show === "done" ? level(p) >= MAX_LEVEL : level(p) < MAX_LEVEL)),
   );
   const mapLabel = (id: string) => maps?.find((m) => m.id === id)?.label ?? id;
+  const mapInfo = maps?.find((m) => m.id === mapId) ?? null;
+  const mapView = mapInfo ? (
+    <PetsMap map={mapInfo} shown={shown} />
+  ) : (
+    <p className="muted pe-map-note">{t("pets.mapPreparing")}</p>
+  );
+  const listView = (
+    <div className="pe-list-view">
+      <div className="pe-tools">
+        <div className="pe-search">
+          <label className="pe-search-field">
+            <Icon name="search" />
+            <span className="ui-sr-only">{t("pets.search")}</span>
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              placeholder={t("pets.search")}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape" && query) {
+                  e.stopPropagation();
+                  setQuery("");
+                }
+              }}
+            />
+          </label>
+          {query ? (
+            <IconButton
+              className="pe-search-clear"
+              icon={<Icon name="close" />}
+              label={t("pets.clearSearch")}
+              onClick={() => {
+                setQuery("");
+                searchRef.current?.focus();
+              }}
+            />
+          ) : null}
+        </div>
+        <Segmented
+          label={t("pets.filter.label")}
+          labelHidden
+          value={show}
+          options={[
+            { value: "all", label: t("pets.filter.all") },
+            { value: "todo", label: t("pets.filter.todo") },
+            { value: "done", label: t("pets.filter.done") },
+          ]}
+          onChange={setShow}
+        />
+      </div>
+
+      <div className="ui-frame pe-list-card">
+        {rows.length ? (
+          <ul className="pe-list" aria-label={t("pets.list", { map: mapLabel(mapId) })}>
+            {rows.map((pet) => {
+              const at = drawn.indexOf(pet.id);
+              return (
+                <PetRow
+                  key={pet.id}
+                  pet={pet}
+                  level={level(pet)}
+                  color={at >= 0 ? (PET_COLORS[at] ?? null) : null}
+                  full={full}
+                  onLevel={onLevel}
+                  onPick={onPick}
+                />
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="muted pe-none">{t("pets.none")}</p>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="pe-page">
@@ -179,71 +276,39 @@ export default function PetsPage() {
         />
       ) : null}
 
-      <div className="pe-tools">
-        <div className="pe-search">
-          <label className="pe-search-field">
-            <Icon name="search" />
-            <span className="ui-sr-only">{t("pets.search")}</span>
-            <input
-              ref={searchRef}
-              type="search"
-              value={query}
-              placeholder={t("pets.search")}
-              onChange={(e) => setQuery(e.target.value)}
+      <div role="tablist" aria-label={t("pets.label")} className="pn-menu pe-menu">
+        {VIEWS.map(({ id, label, icon }) => {
+          const on = id === view;
+          return (
+            <button
+              key={id}
+              id={`pe-tab-${id}`}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              aria-controls={`pe-view-${id}`}
+              tabIndex={on ? 0 : -1}
+              className={on ? "pn-tile on" : "pn-tile"}
+              onClick={() => setView(id)}
               onKeyDown={(e) => {
-                if (e.key === "Escape" && query) {
-                  e.stopPropagation();
-                  setQuery("");
+                if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+                  e.preventDefault();
+                  const next = id === "list" ? "map" : "list";
+                  setView(next);
+                  document.getElementById(`pe-tab-${next}`)?.focus();
                 }
               }}
-            />
-          </label>
-          {query ? (
-            <IconButton
-              className="pe-search-clear"
-              icon={<Icon name="close" />}
-              label={t("pets.clearSearch")}
-              onClick={() => {
-                setQuery("");
-                searchRef.current?.focus();
-              }}
-            />
-          ) : null}
-        </div>
-        <Segmented
-          label={t("pets.filter.label")}
-          labelHidden
-          value={show}
-          options={[
-            { value: "all", label: t("pets.filter.all") },
-            { value: "todo", label: t("pets.filter.todo") },
-            { value: "done", label: t("pets.filter.done") },
-          ]}
-          onChange={setShow}
-        />
+            >
+              {on ? <Sheen /> : null}
+              <Icon name={icon} className="pn-tile-icon" />
+              <span className="pn-tile-label">{t(label)}</span>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="ui-frame pe-list-card">
-        {rows.length ? (
-          <ul className="pe-list" aria-label={t("pets.list", { map: mapLabel(mapId) })}>
-            {rows.map((pet) => {
-              const at = drawn.indexOf(pet.id);
-              return (
-                <PetRow
-                  key={pet.id}
-                  pet={pet}
-                  level={level(pet)}
-                  color={at >= 0 ? (PET_COLORS[at] ?? null) : null}
-                  full={full}
-                  onLevel={onLevel}
-                  onPick={onPick}
-                />
-              );
-            })}
-          </ul>
-        ) : (
-          <p className="muted pe-none">{t("pets.none")}</p>
-        )}
+      <div id={`pe-view-${view}`} role="tabpanel" aria-labelledby={`pe-tab-${view}`}>
+        {view === "map" ? mapView : listView}
       </div>
     </div>
   );

@@ -55,7 +55,7 @@ describe("the pets picked", () => {
 
 describe("the levels of a pet's monsters", () => {
   it("read as one level or the lowest to the highest", () => {
-    const pet = { id: "1", name: "Airon", genus: "fera" as const, monsters: [] };
+    const pet = { id: "1", name: "Airon", genus: "fera" as const, monsters: [], spots: [] };
 
     expect(levelRange({ ...pet, monsters: [{ name: "A", level: 18 }] })).toBe("18");
     expect(

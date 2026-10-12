@@ -1,4 +1,4 @@
-import { type CSSProperties, Fragment, memo, useMemo } from "react";
+import { type CSSProperties, Fragment, memo, useCallback, useMemo, useState } from "react";
 
 import type { MapInfo } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
@@ -17,6 +17,41 @@ function dotStyle(color: string): CSSProperties {
   return { "--obj-color": color };
 }
 
+/** Which groups are folded, by category id: remembered per map, as which are shown is. */
+type Folded = Record<string, boolean>;
+
+const foldedKey = (mapId: string) => `mo.objects.folded.${mapId}`;
+
+function loadFolded(mapId: string): Folded {
+  try {
+    const parsed: unknown = JSON.parse(window.localStorage.getItem(foldedKey(mapId)) || "null");
+    if (parsed && typeof parsed === "object") return parsed as Folded;
+  } catch {
+    /* unreadable or forbidden: every group open, as the first time */
+  }
+  return {};
+}
+
+function useFolded(mapId: string) {
+  const [state, setState] = useState(() => ({ mapId, folded: loadFolded(mapId) }));
+  // another map opened: its own folds, read once as it opens rather than in an effect after
+  const folded = state.mapId === mapId ? state.folded : loadFolded(mapId);
+  if (state.mapId !== mapId) setState({ mapId, folded });
+  const toggle = useCallback(
+    (id: string) => {
+      const next = { ...folded, [id]: !folded[id] };
+      try {
+        window.localStorage.setItem(foldedKey(mapId), JSON.stringify(next));
+      } catch {
+        /* private mode: the folds last until the editor closes */
+      }
+      setState({ mapId, folded: next });
+    },
+    [folded, mapId],
+  );
+  return [folded, toggle] as const;
+}
+
 /** A tree row: a root one comes with its children, a child one stands on its own. */
 interface RowCategory extends IndexCategory {
   total?: number;
@@ -28,6 +63,9 @@ interface RowProps {
   visible: Visibility;
   onToggle: (ids: string[], value: boolean) => void;
   level: number;
+  /** A group's fold: whether its children are hidden, and the switch; absent on a leaf. */
+  folded?: boolean;
+  onFold?: (id: string) => void;
 }
 
 /**
@@ -43,12 +81,32 @@ function Mark({ cat }: { cat: RowCategory }) {
   return <MarkIcon name={cat.icon} className="obj-icon" />;
 }
 
-/** An eye, as the client shows and hides its map filters: pressed means the dots are drawn. */
-function Row({ cat, visible, onToggle, level }: RowProps) {
+/**
+ * An eye, as the client shows and hides its map filters: pressed means the dots are drawn. A group
+ * has a chevron before it that folds its children away and back.
+ */
+function Row({ cat, visible, onToggle, level, folded, onFold }: RowProps) {
+  const t = useT();
   const ids = [cat.id, ...(cat.children || []).map((c) => c.id)];
   const on = ids.some((id) => visible[id]);
   return (
     <li className={`obj-row level-${level}`}>
+      {onFold ? (
+        <button
+          type="button"
+          className={folded ? "obj-fold folded" : "obj-fold"}
+          aria-expanded={!folded}
+          aria-label={t(folded ? "editor.objects.unfold" : "editor.objects.fold", {
+            name: cat.name,
+          })}
+          title={t(folded ? "editor.objects.unfold" : "editor.objects.fold", { name: cat.name })}
+          onClick={() => onFold(cat.id)}
+        >
+          <Icon name="chevronDown" />
+        </button>
+      ) : level === 0 ? (
+        <span className="obj-fold-none" aria-hidden="true" />
+      ) : null}
       <button
         type="button"
         className={on ? "obj-toggle on" : "obj-toggle"}
@@ -85,6 +143,7 @@ const ObjectsBody = memo(function ObjectsBody({
   const t = useT();
   const sets = mapMeta ? mapMeta.objects : [];
   const tree = useMemo(() => (objects ? categoryTree(objects) : []), [objects]);
+  const [folded, fold] = useFolded(mapMeta?.id ?? "");
   const allIds = useMemo(() => (objects ? objects.categories.map((c) => c.id) : []), [objects]);
 
   if (sets.length === 0 || tree.length === 0) {
@@ -115,8 +174,14 @@ const ObjectsBody = memo(function ObjectsBody({
         <ul className="obj-tree">
           {tree.map((cat) => (
             <Fragment key={cat.id}>
-              <Row cat={cat} visible={visibleCats} onToggle={actions.toggleCats} level={0} />
-              {(cat.children || []).map((child) => (
+              <Row
+                cat={cat}
+                visible={visibleCats}
+                onToggle={actions.toggleCats}
+                level={0}
+                {...(cat.children.length ? { folded: Boolean(folded[cat.id]), onFold: fold } : {})}
+              />
+              {(folded[cat.id] ? [] : cat.children).map((child) => (
                 <Row
                   key={child.id}
                   cat={child}

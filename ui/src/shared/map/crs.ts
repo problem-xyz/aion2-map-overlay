@@ -1,9 +1,14 @@
 import L from "leaflet";
 
-import type { Point } from "./geometry";
+/** A point in map pixels. */
+export interface Point {
+  x: number;
+  y: number;
+}
 
 /**
- * The coordinate system: Leaflet latitude/longitude = reference-map pixels.
+ * The coordinate system of the maps the app shows -- the route editor's and the pets tool's:
+ * Leaflet latitude/longitude = reference-map pixels.
  *
  * At tile level zMax the map lies at its original resolution, so the transformation scale is
  * 1/2^zMax: then latLng(y, x) is exactly pixel (x, y) of the map, and route coordinates never

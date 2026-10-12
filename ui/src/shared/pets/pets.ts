@@ -1,15 +1,16 @@
 /**
  * The pets of each map, out of assets/pets/<map>.json -- the files the overlay draws their spots
  * by too (store/pets.py). A pet is the id of its soul item, its name and genus as the game gives
- * them, and the monsters its souls drop from.
+ * them, the monsters its souls drop from, and its spots: [x, y, count] in percent of the map, each
+ * a camp of `count` of those monsters.
  *
  * What the player has of a pet is a level, 1 to 3, in settings.pet_levels under "<map>:<id>";
  * a pet not named there is at 0. Up to MAX_PICKED_PETS of a map's pets are drawn over the game,
  * picked by id in settings.pets, each in the colour of its place among them.
  */
 
-import altgard from "../../../../../assets/pets/altgard.json";
-import verteron from "../../../../../assets/pets/verteron.json";
+import altgard from "../../../../assets/pets/altgard.json";
+import verteron from "../../../../assets/pets/verteron.json";
 
 export type Genus = "cogni" | "fera" | "natura" | "varian";
 export const GENERA: readonly Genus[] = ["cogni", "fera", "natura", "varian"];
@@ -24,6 +25,7 @@ export interface Pet {
   name: string;
   genus: Genus;
   monsters: readonly PetMonster[];
+  spots: readonly (readonly number[])[];
 }
 
 /** How many of a map's pets are drawn at once (MAX_PICKED in store/pets.py). */
@@ -43,15 +45,22 @@ export const SOULS: readonly number[] = [5, 25, 75];
 export const MAX_LEVEL = SOULS.length;
 
 interface PetsFile {
-  pets: readonly { id: string; name: string; genus: string; monsters: readonly PetMonster[] }[];
+  pets: readonly {
+    id: string;
+    name: string;
+    genus: string;
+    monsters: readonly PetMonster[];
+    spots: readonly (readonly number[])[];
+  }[];
 }
 
 function read(file: PetsFile): Pet[] {
-  return file.pets.map(({ id, name, genus, monsters }) => ({
+  return file.pets.map(({ id, name, genus, monsters, spots }) => ({
     id,
     name,
     genus: (GENERA as readonly string[]).includes(genus) ? (genus as Genus) : "fera",
     monsters,
+    spots,
   }));
 }
 

@@ -107,7 +107,9 @@
       "empty": "This map has no objects to show.",
       "showAll": "All",
       "showNone": "None",
-      "title": "Map objects"
+      "title": "Map objects",
+      "fold": "Fold {name}",
+      "unfold": "Unfold {name}"
     },
     "route": {
       "nameLabel": "Route name",
@@ -786,6 +788,12 @@
       "levels": "lv. {range}",
       "levelLabel": "Pet level",
       "level": "Level {level}: {souls} souls"
-    }
+    },
+    "tabs": {
+      "list": "Checklist",
+      "map": "Map"
+    },
+    "mapPreparing": "Preparing the map…",
+    "mapHint": "Tap portraits in the checklist to see where their monsters stand."
   }
 }

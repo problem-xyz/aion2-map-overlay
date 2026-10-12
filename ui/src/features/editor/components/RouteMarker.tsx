@@ -2,8 +2,9 @@ import L, { type LeafletEventHandlerFnMap, type Marker as LeafletMarker } from "
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Marker } from "react-leaflet";
 
+import { toLatLng, toPoint } from "@/shared/map/crs";
+
 import { useEditorActions } from "../EditorContext";
-import { toLatLng, toPoint } from "../lib/crs";
 import type { Point } from "../lib/geometry";
 import type { EditorMarker } from "../lib/routeDoc";
 

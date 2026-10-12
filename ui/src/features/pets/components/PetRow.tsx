@@ -1,10 +1,9 @@
 import { type CSSProperties, memo } from "react";
 
 import { type MessageKey, useT } from "@/shared/i18n";
+import { levelRange, MAX_PICKED_PETS, type Pet, SOULS } from "@/shared/pets/pets";
+import { portraitStyle } from "@/shared/pets/portraits";
 import Icon from "@/shared/ui/Icon";
-
-import { levelRange, MAX_PICKED_PETS, type Pet, SOULS } from "../lib/pets";
-import { portraitStyle } from "../lib/portraits";
 
 /** The portrait's side inside the switch's ring, in CSS pixels (.pe-pick in pets.css). */
 const PORTRAIT_PX = 28;

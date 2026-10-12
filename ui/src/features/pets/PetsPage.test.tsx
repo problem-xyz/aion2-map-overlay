@@ -8,8 +8,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { Settings } from "@/shared/backend/contract";
 import { I18nProvider } from "@/shared/i18n";
+import { petsOf } from "@/shared/pets/pets";
 
-import { petsOf } from "./lib/pets";
 import PetsPage from "./PetsPage";
 
 const change = vi.hoisted(() => vi.fn());
@@ -31,8 +31,18 @@ function mount(settings: Partial<Settings> = {}) {
   state.current = {
     settings: { show_pets: false, pets: [], pet_levels: {}, ...settings },
     maps: [
-      { id: "altgard", label: "Altgard" },
-      { id: "verteron", label: "Verteron" },
+      {
+        id: "altgard",
+        label: "Altgard",
+        size: [4096, 4096],
+        tiles: { ready: false, zMax: 4, tile: 256 },
+      },
+      {
+        id: "verteron",
+        label: "Verteron",
+        size: [4096, 4096],
+        tiles: { ready: false, zMax: 4, tile: 256 },
+      },
     ],
     routes: [{ id: "r", map: "altgard" }],
     route: "r",
@@ -132,5 +142,14 @@ describe("PetsPage", () => {
     expect(
       within(screen.getByRole("list", { name: "Pets on Verteron" })).getAllByRole("listitem"),
     ).toHaveLength(113);
+  });
+
+  it("shows the map in place of the checklist, saying so while it is being prepared", () => {
+    mount({ pets: [first.id] });
+
+    fireEvent.click(screen.getByRole("tab", { name: "Map" }));
+
+    expect(screen.queryByRole("list", { name: "Pets on Altgard" })).toBeNull();
+    expect(screen.getByText("Preparing the map…")).toBeTruthy();
   });
 });
