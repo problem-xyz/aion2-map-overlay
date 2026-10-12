@@ -763,8 +763,8 @@
       "souls": "Souls collected toward level 3"
     },
     "show": "Show the spots of the pets picked below over the game",
-    "showShort": "On map {count}/{max}",
-    "picked": "Pets shown on the map",
+    "showShort": "On map",
+    "picked": "Pets shown on the map: {count} of {max}",
     "pickHint": "Tap a paw to show where that pet's monsters stand, up to {count} at a time",
     "search": "Find a pet or monster",
     "clearSearch": "Clear the search",

@@ -74,38 +74,90 @@
 /* ---------- the switch over the game, and the pets it draws ---------- */
 .pe-quick {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: stretch;
 }
-.pe-picked {
+/* the five places the pets drawn take: a strip as tall as the slots beside it */
+.pe-slots {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  gap: 4px 12px;
-  margin: 0;
-  padding: 6px 4px;
-  list-style: none;
-  font-size: var(--text-xs);
-  color: var(--color-text-secondary);
-}
-.pe-picked li {
-  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-width: 0;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0 10px;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel-deep);
 }
-.pe-picked .pe-picked-none {
-  color: var(--color-text-muted);
+.pe-slots li {
+  display: grid;
 }
-.pe-dot {
-  flex: none;
-  width: 9px;
-  height: 9px;
+/* switched off: kept as they are, drawn nowhere */
+.pe-slots.off .pe-slot {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+.pe-slot,
+.pe-slot-free {
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
+}
+.pe-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
   background: var(--pe-color);
-  box-shadow: 0 0 0 1px var(--color-outline);
+  box-shadow:
+    0 0 0 1px var(--color-outline),
+    0 0 8px rgb(from var(--pe-color) r g b / 35%);
+  color: var(--color-on-badge);
+}
+.pe-slot-face {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-slot-paw {
+  width: 16px;
+  height: 16px;
+}
+/* the cross that says a click takes the pet off the map, over its portrait */
+.pe-slot-x {
+  position: absolute;
+  inset: 2px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(7 11 18 / 70%);
+  color: var(--color-text);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+.pe-slot-x svg {
+  width: 12px;
+  height: 12px;
+}
+.pe-slot:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-slot:focus-visible .pe-slot-x {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .pe-slot:hover .pe-slot-x {
+    opacity: 1;
+  }
+}
+.pe-slot-free {
+  border: 1px dashed rgb(from var(--color-text-muted) r g b / 45%);
 }
 
 /* ---------- the search and the filter ---------- */

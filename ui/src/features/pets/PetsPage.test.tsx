@@ -123,7 +123,8 @@ describe("PetsPage", () => {
       name: /Up to 5 pets at a time/,
     });
     expect(button.disabled).toBe(true);
-    expect(screen.getByRole("list", { name: "Pets shown on the map" }).children).toHaveLength(5);
+    const slots = screen.getByRole("list", { name: "Pets shown on the map: 5 of 5" });
+    expect(within(slots).getAllByRole("button")).toHaveLength(5);
   });
 
   it("finds a pet by the name of one of its monsters", () => {
@@ -156,5 +157,18 @@ describe("PetsPage", () => {
     fireEvent.click(screen.getByRole("button", { name: "Map" }));
 
     expect(api.openPetsMap).toHaveBeenCalled();
+  });
+
+  it("shows the free places beside the pets picked, and takes one off the map from there", () => {
+    mount({ show_pets: true, pets: [first.id, second.id] });
+
+    const slots = screen.getByRole("list", { name: "Pets shown on the map: 2 of 5" });
+    expect(slots.children).toHaveLength(5); // the three free ones are not read out
+
+    fireEvent.click(
+      within(slots).getByRole("button", { name: `Stop showing ${first.name} on the map` }),
+    );
+
+    expect(change).toHaveBeenCalledWith("pets", [second.id]);
   });
 });

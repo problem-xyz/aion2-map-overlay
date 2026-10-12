@@ -49,6 +49,7 @@ export default function PetsMapPage() {
             shown={p.shown}
             on={p.settings.show_pets}
             onToggle={(on) => p.changeSetting("show_pets", on)}
+            onRemove={(pet) => p.onPick(pet, false)}
           />
         </div>
         <PetsChecklist

@@ -66,6 +66,7 @@ export default function PetsPage() {
           shown={p.shown}
           on={p.settings.show_pets}
           onToggle={(on) => p.changeSetting("show_pets", on)}
+          onRemove={(pet) => p.onPick(pet, false)}
         />
         <button type="button" className="pn-chip" onClick={() => api.openPetsMap()}>
           <Icon name="map" className="pn-chip-icon" />
