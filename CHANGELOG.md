@@ -10,6 +10,11 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Fixed
+
+- Artifact Siege, Siege Bosses and Guardian General Nahma on the Global servers counted down to
+  21:00 UTC; they start at 21:00 on your region's clock, two hours earlier in Europe in summer.
+
 ## [1.6.0] - 2026-10-07
 
 ### Added
