@@ -4,6 +4,7 @@ import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { useRemembered } from "@/shared/hooks/useRemembered";
+import { type BestSpot, bestSpot } from "@/shared/pets/nearby";
 import {
   levelOf,
   MAX_LEVEL,
@@ -20,6 +21,8 @@ import {
 export interface ShownPet {
   pet: Pet;
   color: string;
+  /** Where it is best farmed, the other pets still to collect counted in; null with no spots. */
+  best: BestSpot | null;
 }
 
 /**
@@ -50,14 +53,14 @@ export function usePets() {
   // keyed on the ids: pickedOn makes a new array every render, and the map refits to what it shows
   const drawnKey = pickedOn(picked, mapId).join(",");
   const drawn = useMemo(() => drawnKey.split(",").filter(Boolean), [drawnKey]);
-  const shown = useMemo<ShownPet[]>(
-    () =>
-      drawn.flatMap((id, i) => {
-        const pet = pets.find((p) => p.id === id);
-        return pet ? [{ pet, color: PET_COLORS[i] ?? "#ffffff" }] : [];
-      }),
-    [drawn, pets],
-  );
+  const shown = useMemo<ShownPet[]>(() => {
+    const toCollect = (other: Pet) => levelOf(levels, mapId, other.id) < MAX_LEVEL;
+    return drawn.flatMap((id, i) => {
+      const pet = pets.find((p) => p.id === id);
+      if (!pet) return [];
+      return [{ pet, color: PET_COLORS[i] ?? "#ffffff", best: bestSpot(mapId, pet, toCollect) }];
+    });
+  }, [drawn, pets, levels, mapId]);
 
   const level = useCallback((pet: Pet) => levelOf(levels, mapId, pet.id), [levels, mapId]);
   const onLevel = useCallback(
@@ -83,8 +86,11 @@ export function usePets() {
 
   const mapLabel = useCallback((id: string) => maps?.find((m) => m.id === id)?.label ?? id, [maps]);
 
+  const bests = useMemo(() => new Map(shown.map((s) => [s.pet.id, s.best])), [shown]);
+
   return {
     settings,
+    bests,
     changeSetting,
     mapId,
     setMapId,

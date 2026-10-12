@@ -55,6 +55,7 @@ export default function PetsMapPage() {
         <PetsChecklist
           mapId={p.mapId}
           mapLabel={p.mapLabel}
+          bests={p.bests}
           pets={p.pets}
           level={p.level}
           drawn={p.drawn}

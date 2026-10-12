@@ -540,3 +540,124 @@
   height: 12px;
   margin-top: 1px;
 }
+
+/* the best spot's count, before the pets farmed there with it */
+.pe-near-best {
+  flex: none;
+  font: 600 var(--text-2xs) / 1 var(--font-display);
+  color: var(--color-drop);
+  font-variant-numeric: tabular-nums;
+}
+.pe-near-count {
+  flex: none;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- the best spots on the map ---------- */
+.leaflet-marker-icon.pe-best {
+  display: grid;
+  place-items: center;
+}
+.pe-best .pe-spot-face {
+  width: 34px;
+  height: 34px;
+  box-shadow:
+    0 0 0 3px var(--pe-color),
+    0 0 0 4px var(--color-outline),
+    0 0 14px 4px rgb(from var(--pe-color) r g b / 55%);
+}
+.pe-best .pe-spot-dot {
+  width: 20px;
+  height: 20px;
+}
+.pe-best-star {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-drop);
+  box-shadow: 0 0 0 1.5px var(--color-outline);
+  color: var(--color-on-badge);
+  font-size: 12px;
+  line-height: 1;
+}
+/* the card of best spots, over the top right of the map */
+.pe-best-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 800;
+  width: 270px;
+  padding: 8px;
+  border: 1px solid var(--color-frame);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel);
+  box-shadow: var(--shadow-raised);
+}
+.pe-best-title {
+  margin: 2px 6px 6px;
+  font: 600 var(--text-xs) / 1.2 var(--font-display);
+  color: var(--color-text-bronze);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.pe-best-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-best-go {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+}
+.pe-best-go:hover {
+  background: var(--color-veil-hover);
+}
+.pe-best-go:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-best-face {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  box-shadow:
+    0 0 0 2px var(--pe-color),
+    0 0 0 3px var(--color-outline);
+}
+.pe-best-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pe-best-name {
+  font: 600 var(--text-sm) / 1.2 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-best-meta {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

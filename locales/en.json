@@ -791,12 +791,19 @@
       "levelLabel": "Pet level",
       "level": "Level {level}: {souls} souls",
       "nearby": "Also here:",
-      "nearbyTip": "{name}: at {shared} of {total} spots",
-      "elsewhere": "{map}: {there} monsters against {here} here. Farm it there, through a rift"
+      "nearbyTip": "{name}: {monsters} monsters at the best spot",
+      "elsewhere": "{map}: {there} monsters against {here} here. Farm it there, through a rift",
+      "bestTip": "Best spot: {monsters} monsters in {spots} camps"
     },
     "mapPreparing": "Preparing the map…",
     "mapHint": "Tap portraits in the checklist to see where their monsters stand.",
     "openMap": "Map",
-    "mapAlso": "Also here: {names}"
+    "mapAlso": "Also here: {names}",
+    "best": {
+      "title": "Best spots",
+      "of": "Best spot of {name}",
+      "here": "{monsters} monsters, {spots} camps",
+      "go": "Fly to the best spot of {name}"
+    }
   }
 }

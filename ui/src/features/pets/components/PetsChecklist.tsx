@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 
 import { useRemembered } from "@/shared/hooks/useRemembered";
 import { type MessageKey, useT } from "@/shared/i18n";
-import { farmedWith } from "@/shared/pets/nearby";
+import type { BestSpot } from "@/shared/pets/nearby";
 import { elsewhere, GENERA, type Genus, MAX_LEVEL, type Pet, PET_COLORS } from "@/shared/pets/pets";
 import Icon from "@/shared/ui/Icon";
 import IconButton from "@/shared/ui/IconButton";
@@ -26,6 +26,8 @@ function matches(pet: Pet, query: string): boolean {
 
 export interface PetsChecklistProps {
   mapId: string;
+  /** The best spot of each pet drawn, by its id. */
+  bests: ReadonlyMap<string, BestSpot | null>;
   mapLabel: (mapId: string) => string;
   pets: readonly Pet[];
   level: (pet: Pet) => number;
@@ -45,6 +47,7 @@ export interface PetsChecklistProps {
  */
 export default function PetsChecklist({
   mapId,
+  bests,
   mapLabel,
   pets,
   level,
@@ -131,14 +134,12 @@ export default function PetsChecklist({
           <ul className="pe-list" aria-label={label}>
             {rows.map((pet) => {
               const at = drawn.indexOf(pet.id);
-              // only a pet drawn names those farmed with it: the hint is about the trip it is on
-              const nearby =
-                at >= 0
-                  ? farmedWith(mapId, pet, (other) => level(other) < MAX_LEVEL).map((n) => {
-                      const theirs = drawn.indexOf(n.pet.id);
-                      return { ...n, color: theirs >= 0 ? (PET_COLORS[theirs] ?? null) : null };
-                    })
-                  : undefined;
+              // only a pet drawn names those farmed with it: the hint is about the round it is on
+              const best = at >= 0 ? (bests.get(pet.id) ?? null) : null;
+              const nearby = best?.others.slice(0, 3).map((n) => {
+                const theirs = drawn.indexOf(n.pet.id);
+                return { ...n, color: theirs >= 0 ? (PET_COLORS[theirs] ?? null) : null };
+              });
               const better = elsewhere(mapId, pet);
               return (
                 <PetRow
@@ -149,6 +150,7 @@ export default function PetsChecklist({
                   full={full}
                   onLevel={onLevel}
                   onPick={onPick}
+                  best={best}
                   nearby={nearby}
                   elsewhere={better && { ...better, map: mapLabel(better.mapId) }}
                 />

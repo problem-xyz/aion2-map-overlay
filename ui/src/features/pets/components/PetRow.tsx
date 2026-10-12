@@ -1,7 +1,7 @@
 import { type CSSProperties, memo } from "react";
 
 import { type MessageKey, useT } from "@/shared/i18n";
-import type { NearbyPet } from "@/shared/pets/nearby";
+import type { BestSpot, PetHere } from "@/shared/pets/nearby";
 import { levelRange, MAX_PICKED_PETS, type Pet, SOULS } from "@/shared/pets/pets";
 import { portraitStyle } from "@/shared/pets/portraits";
 import Icon from "@/shared/ui/Icon";
@@ -11,8 +11,8 @@ const PORTRAIT_PX = 28;
 /** A pet farmed with it, as its row names it (.pe-near-face). */
 const NEAR_PX = 18;
 
-/** A pet farmed at the same spots, and its colour if it is drawn already. */
-export interface RowNearby extends NearbyPet {
+/** A pet farmed at its best spot, and its colour if it is drawn already. */
+export interface RowNearby extends PetHere {
   color: string | null;
 }
 
@@ -25,7 +25,8 @@ export interface PetRowProps {
   full: boolean;
   onLevel: (pet: Pet, level: number) => void;
   onPick: (pet: Pet, on: boolean) => void;
-  /** The pets farmed at its spots, named under it while it is picked. */
+  /** Its best spot, and the pets farmed there with it, named under it while it is picked. */
+  best?: BestSpot | null;
   nearby?: readonly RowNearby[];
   /** The other side, where its monsters are many more: the map's name and both counts. */
   elsewhere?: { map: string; here: number; there: number } | null;
@@ -37,8 +38,9 @@ export interface PetRowProps {
  * levels, each marked with the souls it takes. A level clicked is reached, and every one before it;
  * the level it is at, clicked again, is taken back.
  *
- * While it is picked the row names the pets farmed at the same spots, each a click from being
- * drawn as well: their souls drop on the same trip. A pet whose monsters are many more on the other
+ * While it is picked the row says how many of its monsters its best spot has, and names the other
+ * pets farmed in that one place, each a click from being drawn as well: their souls drop on the
+ * same round. A pet whose monsters are many more on the other
  * side says so, with both counts: there, through a rift, its souls come faster.
  */
 function PetRow({
@@ -48,6 +50,7 @@ function PetRow({
   full,
   onLevel,
   onPick,
+  best = null,
   nearby = [],
   elsewhere = null,
 }: PetRowProps) {
@@ -98,16 +101,18 @@ function PetRow({
             })}
           </span>
         ) : null}
-        {picked && nearby.length ? (
+        {picked && best ? (
           <span className="pe-near">
-            <span className="pe-near-label">{t("pets.row.nearby")}</span>
+            <span
+              className="pe-near-best"
+              title={t("pets.row.bestTip", { monsters: best.monsters, spots: best.spots })}
+            >
+              ★ {best.monsters}
+            </span>
+            {nearby.length ? <span className="pe-near-label">{t("pets.row.nearby")}</span> : null}
             {nearby.map((n) => {
               const nearFace = portraitStyle(n.pet.id, NEAR_PX);
-              const tip = t("pets.row.nearbyTip", {
-                name: n.pet.name,
-                shared: n.shared,
-                total: pet.spots.length,
-              });
+              const tip = t("pets.row.nearbyTip", { name: n.pet.name, monsters: n.monsters });
               return (
                 <button
                   key={n.pet.id}
@@ -125,6 +130,7 @@ function PetRow({
                     <Icon name="paw" className="pe-near-face" />
                   )}
                   <span className="pe-near-name">{n.pet.name}</span>
+                  <span className="pe-near-count">{n.monsters}</span>
                 </button>
               );
             })}

@@ -19,8 +19,11 @@ changes are left out unless they change how the app is installed, run or updated
   pet's portrait in its own colour. **Pets** beside Cubes and Resources turns them on and off.
   **Map** in the Pets tool opens a large window, like the route editor's, with the checklist
   beside the map of those spots, to look at before you go.
-- A pet you picked names the pets whose monsters stand at the same spots, a click from showing
-  them too: their souls drop on the same trip. A spot on the map names them as well.
+- The pets' map marks each picked pet's best spot with a star: the most of its monsters within
+  a round, and among places with nearly as many, the one where other pets still to collect stand
+  too. The Best spots card flies the map to each.
+- A pet you picked says how many monsters its best spot has and names the other pets farmed in
+  that one place, a click from showing them too. A spot on the map names them as well.
 - A pet whose monsters are many more on the other side says so, with both counts: its souls come
   faster there, through a rift.
 - The route editor's Map objects fold: the arrow beside a group hides its categories, and each map

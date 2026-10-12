@@ -807,12 +807,19 @@
       "levelLabel": "Уровень питомца",
       "level": "Уровень {level}: {souls} душ",
       "nearby": "Здесь же:",
-      "nearbyTip": "{name}: на {shared} из {total} спотов",
-      "elsewhere": "{map}: {there} мобов против {here} здесь. Лучше фармить там, через рифт"
+      "nearbyTip": "{name}: мобов на лучшем споте — {monsters}",
+      "elsewhere": "{map}: {there} мобов против {here} здесь. Лучше фармить там, через рифт",
+      "bestTip": "Лучший спот: мобов — {monsters}, лагерей — {spots}"
     },
     "mapPreparing": "Готовлю карту…",
     "mapHint": "Нажмите на портреты в чек-листе, чтобы увидеть, где стоят их мобы.",
     "openMap": "Карта",
-    "mapAlso": "Здесь же: {names}"
+    "mapAlso": "Здесь же: {names}",
+    "best": {
+      "title": "Лучшие места",
+      "of": "Лучший спот: {name}",
+      "here": "мобов — {monsters}, лагерей — {spots}",
+      "go": "Показать лучшее место: {name}"
+    }
   }
 }
