@@ -789,10 +789,14 @@
       "full": "Up to {count} pets at a time, so the map stays readable",
       "levels": "lv. {range}",
       "levelLabel": "Pet level",
-      "level": "Level {level}: {souls} souls"
+      "level": "Level {level}: {souls} souls",
+      "nearby": "Also here:",
+      "nearbyTip": "{name}: at {shared} of {total} spots",
+      "elsewhere": "{map}: {there} monsters against {here} here. Farm it there, through a rift"
     },
     "mapPreparing": "Preparing the map…",
     "mapHint": "Tap portraits in the checklist to see where their monsters stand.",
-    "openMap": "Map"
+    "openMap": "Map",
+    "mapAlso": "Also here: {names}"
   }
 }

@@ -113,3 +113,34 @@ export function levelRange(pet: Pet): string {
   const hi = Math.max(...levels);
   return lo === hi ? String(lo) : `${lo}–${hi}`;
 }
+
+/** How many of a pet's monsters stand on a map: every spot's count, added up. */
+export function monstersOf(pet: Pet): number {
+  return pet.spots.reduce((sum, [, , count = 1]) => sum + count, 0);
+}
+
+/** Where a pet's monsters are to be found in plenty rather than here. */
+export interface Elsewhere {
+  mapId: string;
+  here: number;
+  there: number;
+}
+
+/**
+ * The other map, when it has at least twice as many of the pet's monsters as this one, and five
+ * more at the least: then its souls come faster on the other side, through a rift. A pet only
+ * this map has, or about as many on either, has nowhere better.
+ */
+export function elsewhere(mapId: string, pet: Pet): Elsewhere | null {
+  const here = monstersOf(pet);
+  let best: Elsewhere | null = null;
+  for (const other of PET_MAPS) {
+    if (other === mapId) continue;
+    const theirs = petsOf(other).find((p) => p.id === pet.id);
+    const there = theirs ? monstersOf(theirs) : 0;
+    if (there >= 2 * here && there - here >= 5 && (!best || there > best.there)) {
+      best = { mapId: other, here, there };
+    }
+  }
+  return best;
+}

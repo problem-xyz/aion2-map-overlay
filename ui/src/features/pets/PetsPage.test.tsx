@@ -183,4 +183,23 @@ describe("PetsPage", () => {
     expect(rows).toHaveLength(ALTGARD.filter((p) => p.genus === "fera").length);
     expect(rows.length).toBeLessThan(108);
   });
+
+  it("names under a picked pet the pets farmed at the same spots, a click from being drawn", () => {
+    const armadon = ALTGARD.find((p) => p.name === "Armadon")!;
+    const partner = ALTGARD.find((p) => p.name === "Decomposed Lupyllini")!;
+    mount({ show_pets: true, pets: [armadon.id] });
+
+    const here = within(row("Armadon")).getByRole("button", {
+      name: `Show ${partner.name} on the map`,
+    });
+    fireEvent.click(here);
+
+    expect(change).toHaveBeenCalledWith("pets", [armadon.id, partner.id]);
+  });
+
+  it("says where a pet's monsters are many more, on the other side", () => {
+    mount();
+
+    expect(within(row("Biruta")).getByText(/Verteron: \d+ monsters against \d+ here/)).toBeTruthy();
+  });
 });

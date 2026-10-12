@@ -1,12 +1,20 @@
 import { type CSSProperties, memo } from "react";
 
 import { type MessageKey, useT } from "@/shared/i18n";
+import type { NearbyPet } from "@/shared/pets/nearby";
 import { levelRange, MAX_PICKED_PETS, type Pet, SOULS } from "@/shared/pets/pets";
 import { portraitStyle } from "@/shared/pets/portraits";
 import Icon from "@/shared/ui/Icon";
 
 /** The portrait's side inside the switch's ring, in CSS pixels (.pe-pick in pets.css). */
 const PORTRAIT_PX = 28;
+/** A pet farmed with it, as its row names it (.pe-near-face). */
+const NEAR_PX = 18;
+
+/** A pet farmed at the same spots, and its colour if it is drawn already. */
+export interface RowNearby extends NearbyPet {
+  color: string | null;
+}
 
 export interface PetRowProps {
   pet: Pet;
@@ -17,15 +25,32 @@ export interface PetRowProps {
   full: boolean;
   onLevel: (pet: Pet, level: number) => void;
   onPick: (pet: Pet, on: boolean) => void;
+  /** The pets farmed at its spots, named under it while it is picked. */
+  nearby?: readonly RowNearby[];
+  /** The other side, where its monsters are many more: the map's name and both counts. */
+  elsewhere?: { map: string; here: number; there: number } | null;
 }
 
 /**
  * One pet in the checklist: its portrait, which is the switch that draws its monsters' spots over
- * the game, ringed in its colour while it does; its name, genus and monsters; and its three levels, each marked with the souls it
- * takes. A level clicked is reached, and every one before it; the level it is at, clicked again,
- * is taken back.
+ * the game, ringed in its colour while it does; its name, genus and monsters; and its three
+ * levels, each marked with the souls it takes. A level clicked is reached, and every one before it;
+ * the level it is at, clicked again, is taken back.
+ *
+ * While it is picked the row names the pets farmed at the same spots, each a click from being
+ * drawn as well: their souls drop on the same trip. A pet whose monsters are many more on the other
+ * side says so, with both counts: there, through a rift, its souls come faster.
  */
-function PetRow({ pet, level, color, full, onLevel, onPick }: PetRowProps) {
+function PetRow({
+  pet,
+  level,
+  color,
+  full,
+  onLevel,
+  onPick,
+  nearby = [],
+  elsewhere = null,
+}: PetRowProps) {
   const t = useT();
   const picked = color !== null;
   const face = portraitStyle(pet.id, PORTRAIT_PX);
@@ -63,6 +88,48 @@ function PetRow({ pet, level, color, full, onLevel, onPick }: PetRowProps) {
         <span className="pe-row-sub" title={sub}>
           {sub}
         </span>
+        {elsewhere && level < SOULS.length ? (
+          <span className="pe-elsewhere">
+            <Icon name="map" className="pe-elsewhere-icon" />
+            {t("pets.row.elsewhere", {
+              map: elsewhere.map,
+              there: elsewhere.there,
+              here: elsewhere.here,
+            })}
+          </span>
+        ) : null}
+        {picked && nearby.length ? (
+          <span className="pe-near">
+            <span className="pe-near-label">{t("pets.row.nearby")}</span>
+            {nearby.map((n) => {
+              const nearFace = portraitStyle(n.pet.id, NEAR_PX);
+              const tip = t("pets.row.nearbyTip", {
+                name: n.pet.name,
+                shared: n.shared,
+                total: pet.spots.length,
+              });
+              return (
+                <button
+                  key={n.pet.id}
+                  type="button"
+                  className={n.color ? "pe-near-pet on" : "pe-near-pet"}
+                  style={n.color ? { "--pe-color": n.color } : undefined}
+                  title={tip}
+                  aria-label={n.color ? tip : t("pets.row.pick", { name: n.pet.name })}
+                  disabled={Boolean(n.color) || full}
+                  onClick={() => onPick(n.pet, true)}
+                >
+                  {nearFace ? (
+                    <span className="pe-near-face" style={nearFace} />
+                  ) : (
+                    <Icon name="paw" className="pe-near-face" />
+                  )}
+                  <span className="pe-near-name">{n.pet.name}</span>
+                </button>
+              );
+            })}
+          </span>
+        ) : null}
       </span>
       <span className="pe-levels" role="group" aria-label={t("pets.row.levelLabel")}>
         {SOULS.map((souls, i) => {

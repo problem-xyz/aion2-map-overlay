@@ -2,7 +2,8 @@ import { useRef, useState } from "react";
 
 import { useRemembered } from "@/shared/hooks/useRemembered";
 import { type MessageKey, useT } from "@/shared/i18n";
-import { GENERA, type Genus, MAX_LEVEL, type Pet, PET_COLORS } from "@/shared/pets/pets";
+import { farmedWith } from "@/shared/pets/nearby";
+import { elsewhere, GENERA, type Genus, MAX_LEVEL, type Pet, PET_COLORS } from "@/shared/pets/pets";
 import Icon from "@/shared/ui/Icon";
 import IconButton from "@/shared/ui/IconButton";
 import Segmented from "@/shared/ui/Segmented";
@@ -24,6 +25,8 @@ function matches(pet: Pet, query: string): boolean {
 }
 
 export interface PetsChecklistProps {
+  mapId: string;
+  mapLabel: (mapId: string) => string;
   pets: readonly Pet[];
   level: (pet: Pet) => number;
   /** The pets drawn over the game, in the order that gives them their colours. */
@@ -41,6 +44,8 @@ export interface PetsChecklistProps {
  * its levels. The list scrolls within itself, under the search and the filters, which stay.
  */
 export default function PetsChecklist({
+  mapId,
+  mapLabel,
   pets,
   level,
   drawn,
@@ -126,6 +131,15 @@ export default function PetsChecklist({
           <ul className="pe-list" aria-label={label}>
             {rows.map((pet) => {
               const at = drawn.indexOf(pet.id);
+              // only a pet drawn names those farmed with it: the hint is about the trip it is on
+              const nearby =
+                at >= 0
+                  ? farmedWith(mapId, pet, (other) => level(other) < MAX_LEVEL).map((n) => {
+                      const theirs = drawn.indexOf(n.pet.id);
+                      return { ...n, color: theirs >= 0 ? (PET_COLORS[theirs] ?? null) : null };
+                    })
+                  : undefined;
+              const better = elsewhere(mapId, pet);
               return (
                 <PetRow
                   key={pet.id}
@@ -135,6 +149,8 @@ export default function PetsChecklist({
                   full={full}
                   onLevel={onLevel}
                   onPick={onPick}
+                  nearby={nearby}
+                  elsewhere={better && { ...better, map: mapLabel(better.mapId) }}
                 />
               );
             })}

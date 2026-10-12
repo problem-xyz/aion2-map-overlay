@@ -805,10 +805,14 @@
       "full": "Не больше {count} питомцев сразу, чтобы карта читалась",
       "levels": "ур. {range}",
       "levelLabel": "Уровень питомца",
-      "level": "Уровень {level}: {souls} душ"
+      "level": "Уровень {level}: {souls} душ",
+      "nearby": "Здесь же:",
+      "nearbyTip": "{name}: на {shared} из {total} спотов",
+      "elsewhere": "{map}: {there} мобов против {here} здесь. Лучше фармить там, через рифт"
     },
     "mapPreparing": "Готовлю карту…",
     "mapHint": "Нажмите на портреты в чек-листе, чтобы увидеть, где стоят их мобы.",
-    "openMap": "Карта"
+    "openMap": "Карта",
+    "mapAlso": "Здесь же: {names}"
   }
 }

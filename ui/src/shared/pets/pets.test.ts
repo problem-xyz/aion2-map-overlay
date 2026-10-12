@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  elsewhere,
   levelOf,
   levelRange,
   MAX_PICKED_PETS,
+  monstersOf,
   PET_MAPS,
   pickedOn,
   petsOf,
@@ -79,5 +81,24 @@ describe("a pet's portrait", () => {
     expect(style?.backgroundImage).toMatch(/^url\(/);
     expect(style?.backgroundSize).toMatch(/^160px \d+0px$/); // 16 cells of 10 px to a row
     expect(portraitStyle("no-such-pet", 10)).toBeNull();
+  });
+});
+
+describe("the other side", () => {
+  const biruta = petsOf("altgard").find((p) => p.name === "Biruta")!;
+
+  it("is named where a pet's monsters are at least twice as many", () => {
+    expect(elsewhere("altgard", biruta)).toEqual({
+      mapId: "verteron",
+      here: monstersOf(biruta),
+      there: monstersOf(petsOf("verteron").find((p) => p.id === biruta.id)!),
+    });
+  });
+
+  it("is not named from the side that has more, nor for a pet one side alone has", () => {
+    const there = petsOf("verteron").find((p) => p.id === biruta.id)!;
+    expect(elsewhere("verteron", there)).toBeNull();
+    const own = petsOf("altgard").find((p) => !petsOf("verteron").some((q) => q.id === p.id))!;
+    expect(elsewhere("altgard", own)).toBeNull();
   });
 });

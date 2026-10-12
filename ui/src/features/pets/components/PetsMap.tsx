@@ -7,6 +7,7 @@ import { MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet"
 import type { MapInfo } from "@/shared/backend/contract";
 import { useT } from "@/shared/i18n";
 import { mapBounds, pixelCRS, toLatLng } from "@/shared/map/crs";
+import { petsAtSpots } from "@/shared/pets/nearby";
 import type { Pet } from "@/shared/pets/pets";
 import { portraitStyle } from "@/shared/pets/portraits";
 
@@ -60,7 +61,7 @@ function Frame({ points, whole }: { points: L.LatLng[]; whole: L.LatLngBounds })
 /**
  * The map of the pets tool: the map the list is of, with the spots of the pets picked -- what the
  * overlay draws over the game, here to be looked at before going. A spot names its pet, its
- * monsters and how many of them stand there.
+ * monsters and how many of them stand there, and the other pets whose monsters stand there too.
  */
 export default function PetsMap({ map, shown }: PetsMapProps) {
   const t = useT();
@@ -75,6 +76,7 @@ export default function PetsMap({ map, shown }: PetsMapProps) {
       shown.flatMap(({ pet, color }) => {
         const icon = spotIcon(pet, color);
         const monsters = [...new Set(pet.monsters.map((m) => m.name))].join(", ");
+        const others = petsAtSpots(map.id, pet.id);
         return pet.spots.map(([x = 0, y = 0, count = 1], i) => ({
           key: `${pet.id}:${i}`,
           at: toLatLng((x / 100) * width, (y / 100) * height),
@@ -82,9 +84,10 @@ export default function PetsMap({ map, shown }: PetsMapProps) {
           name: pet.name,
           monsters,
           count,
+          also: (others[i] ?? []).map((o) => o.name).join(", "),
         }));
       }),
-    [shown, width, height],
+    [shown, width, height, map.id],
   );
   const points = useMemo(() => spots.map((s) => s.at), [spots]);
 
@@ -122,6 +125,12 @@ export default function PetsMap({ map, shown }: PetsMapProps) {
               <b>{s.name}</b> · {s.count}
               <br />
               {s.monsters}
+              {s.also ? (
+                <>
+                  <br />
+                  <span className="pe-tip-also">{t("pets.mapAlso", { names: s.also })}</span>
+                </>
+              ) : null}
             </Tooltip>
           </Marker>
         ))}

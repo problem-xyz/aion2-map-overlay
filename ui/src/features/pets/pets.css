@@ -460,3 +460,83 @@
 .pe-window-side .pe-tools {
   grid-template-columns: 1fr;
 }
+
+/* ---------- the pets farmed at the same spots, under a picked one ---------- */
+.pe-near {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 5px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+.pe-near-label {
+  flex: none;
+}
+.pe-near-pet {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 150px;
+  height: 22px;
+  padding: 0 8px 0 2px;
+  border: 1px dashed rgb(from var(--color-text-muted) r g b / 55%);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+}
+/* drawn already: in its colour, and nothing to click */
+.pe-near-pet.on {
+  border: 1px solid var(--pe-color);
+  cursor: default;
+}
+.pe-near-pet:disabled:not(.on) {
+  opacity: 0.5;
+  cursor: default;
+}
+@media (hover: hover) {
+  .pe-near-pet:hover:not(:disabled) {
+    border-style: solid;
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+.pe-near-pet:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-near-face {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-near-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-tip-also {
+  opacity: 0.8;
+}
+
+/* a pet whose monsters are many more on the other side: where to farm it instead */
+.pe-elsewhere {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: var(--text-2xs);
+  line-height: 1.3;
+  color: var(--color-warning);
+}
+.pe-elsewhere-icon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 1px;
+}

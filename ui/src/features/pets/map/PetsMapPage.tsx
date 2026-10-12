@@ -53,6 +53,8 @@ export default function PetsMapPage() {
           />
         </div>
         <PetsChecklist
+          mapId={p.mapId}
+          mapLabel={p.mapLabel}
           pets={p.pets}
           level={p.level}
           drawn={p.drawn}
