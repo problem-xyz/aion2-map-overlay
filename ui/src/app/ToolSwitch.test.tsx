@@ -22,11 +22,17 @@ function mount(active: Tool = "map", updateWaiting = false) {
 }
 
 describe("ToolSwitch", () => {
-  it("is a named tablist of the map, the timers and the app's settings", () => {
+  it("is a named tablist of the map, the timers, the pets and the app's settings", () => {
     mount("timers");
     expect(screen.getByRole("tablist", { name: "Tools" })).toBeDefined();
     const tabs = screen.getAllByRole("tab");
-    expect(tabs.map((t) => t.getAttribute("aria-selected"))).toEqual(["false", "true", "false"]);
+    expect(tabs.map((t) => t.getAttribute("aria-selected"))).toEqual([
+      "false",
+      "true",
+      "false",
+      "false",
+    ]);
+    expect(screen.getByRole("tab", { name: "Pets" })).toBeDefined();
     expect(screen.getByRole("tab", { name: "App settings" })).toBeDefined();
   });
 

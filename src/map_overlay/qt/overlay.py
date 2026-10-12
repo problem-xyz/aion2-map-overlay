@@ -25,6 +25,7 @@ from map_overlay.qt.win32 import (
     WS_EX_TRANSPARENT,
     set_capture_affinity,
 )
+from map_overlay.store.pets import portrait
 from map_overlay.store.resources import resource_svg
 
 LINE_DARK = QColor(15, 17, 22, 200)  # outline under the coloured line, readable on any map
@@ -60,6 +61,14 @@ LEVEL_FILL = QColor("#f2f4f8")
 # keeps it apart from the game's own map. RESOURCE_HALF is half its side at 100% Windows scale.
 RESOURCE_HALF = 13.5
 RESOURCE_DISC = QColor(15, 17, 22, 130)
+# A pet's spot: the pet's portrait in a ring of its colour, the colour of its place among the pets
+# picked (PET_COLORS in ui/src/features/pets/lib/pets.ts, which the checklist shows beside the
+# pet); a paw on a disc of that colour for a pet the game has no portrait of. PET_HALF is half the
+# disc's side, PET_RING the ring's width, at 100% Windows scale.
+PET_HALF = 12
+PET_RING = 2.5
+PET_COLORS = tuple(QColor(c) for c in ("#f5c542", "#5cc8ff", "#ff7eb6", "#86e07a", "#b48cff"))
+PET_PAW = QColor(18, 20, 26, 235)
 # The strip along the bottom of the map area that tells the player what the overlay is doing. A
 # map lost for less than NOTICE_DELAY_S goes unannounced: detection drops it for a frame or two all
 # the time, and a strip blinking over the map is worse than none. Past HINT_DELAY_S it says what to
@@ -200,6 +209,10 @@ class OverlayWindow(ClickThroughWindow):
         # gathering points by resource, in reference-map pixels, (N, 1, 2) float32 each
         self._resources: dict[str, np.ndarray] = {}
         self._resource_sprites: dict[str, QImage | None] = {}  # one per resource, as the cube's
+        # the pets picked and their spots, in reference-map pixels, (N, 1, 2) float32 each, in the
+        # order picked: a pet's colour is its place in it
+        self._pets: list[tuple[str, np.ndarray]] = []
+        self._pet_sprites: dict[tuple[int, str], QImage] = {}  # by colour and pet, as the cube's
         self._done = 0  # markers already passed, counted from the start of the route
         self._radius = 0.0  # arrival radius in route coordinates; 0 draws no ring
         self._faded = None  # QImage the faded part is drawn into, kept between frames
@@ -310,6 +323,18 @@ class OverlayWindow(ClickThroughWindow):
         }
         self.update()
 
+    def set_pets(self, groups) -> None:
+        """The pets' spots to draw: pet id -> points in reference-map pixels, in the order picked.
+
+        Each pet is drawn in the colour of its place in that order; one with no spots keeps its
+        place, so the colours stay those the panel shows.
+        """
+        self._pets = [
+            (str(pid), np.array(points, dtype=np.float32).reshape(-1, 1, 2))
+            for pid, points in (groups or {}).items()
+        ]
+        self.update()
+
     def set_route(self, doc, ref_size=None, arrive_radius=0.0) -> None:
         """Replace the drawn route.
 
@@ -370,6 +395,7 @@ class OverlayWindow(ClickThroughWindow):
         if self._T is not None:
             # Under the route: where a step stands on a cube, its number stays readable.
             self._paint_resources(p)
+            self._paint_pets(p)
             self._paint_cubes(p)
             if self._route_on:
                 self._paint_route(p)
@@ -555,6 +581,60 @@ class OverlayWindow(ClickThroughWindow):
         QSvgRenderer(QByteArray(svg.encode())).render(q, QRectF(1, 1, side - 2, side - 2))
         q.end()
         self._resource_sprites[rid] = image
+        return image
+
+    def _paint_pets(self, p) -> None:
+        if not self._pets:
+            return
+        p.setOpacity(self._opacity)
+        half = PET_HALF * self._ui_scale
+        for index, (pid, points) in enumerate(self._pets):
+            if not len(points):
+                continue
+            sprite = self._pet_image(index % len(PET_COLORS), pid)
+            for x, y in self._on_screen(points, half):
+                p.drawImage(QPointF(x - half, y - half), sprite)
+
+    def _pet_image(self, index, pid):
+        """The pet's mark in the index'th colour, drawn once per device pixel ratio."""
+        ratio = self.devicePixelRatioF()
+        known = self._pet_sprites.get((index, pid))
+        if known is not None and known.devicePixelRatio() == ratio:
+            return known
+        side = PET_HALF * 2 * self._ui_scale
+        image = QImage(
+            int(side * ratio), int(side * ratio), QImage.Format.Format_ARGB32_Premultiplied
+        )
+        image.setDevicePixelRatio(ratio)
+        image.fill(Qt.GlobalColor.transparent)
+        q = QPainter(image)
+        q.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        q.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform, True)
+        q.setPen(QPen(LINE_DARK, 1.5 * self._ui_scale))
+        q.setBrush(PET_COLORS[index])
+        inset = 0.75 * self._ui_scale
+        q.drawEllipse(QRectF(inset, inset, side - 2 * inset, side - 2 * inset))
+        face = portrait(pid)
+        if face is not None:
+            ring = PET_RING * self._ui_scale + inset
+            inner = QRectF(ring, ring, side - 2 * ring, side - 2 * ring)
+            rgb = np.ascontiguousarray(face[:, :, ::-1])
+            h, w = rgb.shape[:2]
+            picture = QImage(rgb.data, w, h, 3 * w, QImage.Format.Format_RGB888)
+            clip = QPainterPath()
+            clip.addEllipse(inner)
+            q.setClipPath(clip)
+            q.drawImage(inner, picture)
+        else:
+            # the paw on a 20 unit grid: the pad, and four toes above it
+            k = side / 20
+            q.setPen(Qt.PenStyle.NoPen)
+            q.setBrush(PET_PAW)
+            q.drawEllipse(QRectF(6.2 * k, 9.6 * k, 7.6 * k, 6.0 * k))
+            for cx, cy in ((5.2, 8.6), (8.3, 5.9), (11.7, 5.9), (14.8, 8.6)):
+                q.drawEllipse(QPointF(cx * k, cy * k), 1.6 * k, 1.9 * k)
+        q.end()
+        self._pet_sprites[(index, pid)] = image
         return image
 
     def _paint_cubes(self, p) -> None:

@@ -4,6 +4,7 @@
       "label": "Tools",
       "map": "Map",
       "timers": "Timers",
+      "pets": "Pets",
       "settings": "App settings"
     }
   },
@@ -438,6 +439,8 @@
       "resourcesNone": "This map has no gathering points.",
       "resourcesMax": "Up to {count} at a time, so the map stays readable",
       "resourcesClear": "Clear all",
+      "pets": "Show the spots of the pets picked in the Pets tool over the game",
+      "petsShort": "Pets",
       "traces": "Feather points in the route. Turn off to leave them out of the map, the checklist and the step count",
       "tracesShort": "Feathers",
       "seals": "Sealed dungeon points in the route. Turn off to leave them out of the map, the checklist and the step count",
@@ -747,6 +750,42 @@
       "off": "switched off",
       "noneOn": "Nothing here is switched on. Pick the timers you follow in Settings.",
       "toSettings": "Open Settings"
+    }
+  },
+  "pets": {
+    "label": "Pets",
+    "map": "Map",
+    "hero": {
+      "levels": "Level 2: {two} · Level 3: {three} of {total}",
+      "souls": "Souls collected toward level 3"
+    },
+    "show": "Show the spots of the pets picked below over the game",
+    "showShort": "On map {count}/{max}",
+    "picked": "Pets shown on the map",
+    "pickHint": "Tap a paw to show where that pet's monsters stand, up to {count} at a time",
+    "search": "Find a pet or monster",
+    "clearSearch": "Clear the search",
+    "filter": {
+      "label": "Which pets",
+      "all": "All",
+      "todo": "To collect",
+      "done": "Done"
+    },
+    "list": "Pets on {map}",
+    "none": "No pet here matches.",
+    "genus": {
+      "cogni": "Cogni",
+      "fera": "Fera",
+      "natura": "Natura",
+      "varian": "Varian"
+    },
+    "row": {
+      "pick": "Show {name} on the map",
+      "unpick": "Stop showing {name} on the map",
+      "full": "Up to {count} pets at a time, so the map stays readable",
+      "levels": "lv. {range}",
+      "levelLabel": "Pet level",
+      "level": "Level {level}: {souls} souls"
     }
   }
 }

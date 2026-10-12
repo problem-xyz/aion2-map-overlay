@@ -421,7 +421,7 @@ html:has(.pn-app) {
   position: relative;
 }
 .pn-chip-group {
-  flex: 1.2 1 0;
+  flex: 1.5 1 0;
   min-width: 0;
   display: flex;
 }
@@ -624,11 +624,11 @@ html:has(.pn-app) {
 
 /* ---------- the menu: tiles like the client's main menu ---------- */
 /* ---------- the switch between the panel's tools, over everything else (app/ToolSwitch.tsx) ----------
-   The map and the timers as two wide tabs, the gear for what both share as a square one beside
-   them: the menu tile's look, one step larger, since it ranks above the sections. */
+   The map, the timers and the pets as wide tabs, the gear for what they share as a square one
+   beside them: the menu tile's look, one step larger, since it ranks above the sections. */
 .pn-tools {
   display: grid;
-  grid-template-columns: 1fr 1fr 46px;
+  grid-template-columns: 1fr 1fr 1fr 46px;
   gap: 6px;
 }
 .pn-tool {

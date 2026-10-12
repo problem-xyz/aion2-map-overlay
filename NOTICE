@@ -104,3 +104,25 @@ Changes   The reference.webp files and altgard/detail.webp are used byte for byt
           90. The app cuts each detail.webp into a tile pyramid, and each reference.webp into a
           thumbnail, at run time in the user's data directory; nothing derived from them is in
           this repository.
+
+
+assets/pets/altgard.json
+assets/pets/verteron.json
+assets/pets/portraits.webp
+assets/pets/portraits.json
+-------------------------------------------------------------------------------------------------
+
+Source    Aion 2's own data, as extracted from the Global game client (A2_WW_L_GA_PURPLE,
+          patcher 20): the pets' soul items, the monsters each drops from and where those
+          monsters spawn, and the game's portraits of those monsters. No other project's work
+          is in these files.
+
+Licence   None from this project: the pets, their names, the monsters and the portraits are
+          NCSOFT's game content, as said at the top of this file. LICENSE does not cover them.
+
+Changes   Made by scripts/import_pets.py and scripts/import_pet_portraits.py.
+          - A pet is a soul item; its genus is that of its monsters.
+          - Spawns were converted from world coordinates to percentages of the map layer, and
+            spawns within 40 world units of a spot's middle joined into it, with their count.
+          - Each pet's portrait is the portrait of the first of its monsters the game has its
+            own portrait of, scaled from 128 to 64 pixels and set in one sheet.

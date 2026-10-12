@@ -105,6 +105,7 @@ from map_overlay.store import legacy
 from map_overlay.store.banner import Banner, load_banner
 from map_overlay.store.maps import MapSpec
 from map_overlay.store.objects import cube_points, icons_under
+from map_overlay.store.pets import pet_points
 from map_overlay.store.resources import MAX_PICKED, resource_points
 from map_overlay.updater.manager import ManagerFactory, velopack_manager
 from map_overlay.updater.service import UpdatePayload, UpdaterService
@@ -159,9 +160,12 @@ class Backend(QObject):
     _rejoin: int | None = None
     _rejoin_declined: int | None = None
     # On a Start with no route: the maps the engine looks among, and the one it found open, whose
-    # cubes and resources are drawn. A route's map wins. Class defaults for the same reason.
+    # cubes, resources and pets are drawn. A route's map wins. Class defaults for the same reason.
     _free_ids: tuple[str, ...] = ()
     _free_map: str | None = None
+    # The map whose pets are drawn, and its size, as the cubes' map; None with no map at all.
+    # A class default for the same reason.
+    _pets_map: tuple[str, list[int]] | None = None
 
     def __init__(
         self,
@@ -408,6 +412,7 @@ class Backend(QObject):
         meta = self._map_meta(map_id) if map_id else None
         self._cubes = cube_points(sets, meta["size"]) if meta else []
         self._resources = resource_points(sets, meta["size"]) if meta else {}
+        self._pets_map = (map_id, meta["size"]) if map_id and meta else None
         # The ring shows where a point ticks itself off. With auto marking off nothing does, so
         # it is left out, like the crosshair in the preview; updateSettings redraws on the switch.
         radius = self.settings.arrive_radius if self.settings.auto_progress else 0.0
@@ -422,6 +427,7 @@ class Backend(QObject):
         self._set_off_route(None)
         self._apply_cubes()
         self._apply_resources()
+        self._apply_pets()
         self._sync_steps()
 
     def _shown_part(self, doc, objects):
@@ -460,12 +466,24 @@ class Backend(QObject):
         self.overlay.set_resources({r: self._resources[r] for r in picked})
         self._sync_overlay()
 
+    def _apply_pets(self) -> None:
+        """The spots of the pets picked, while the Pets switch is on."""
+        self.overlay.set_pets(self._picked_pets() if self.settings.show_pets else {})
+        self._sync_overlay()
+
+    def _picked_pets(self) -> dict[str, list[tuple[float, float]]]:
+        """The spots of the pets picked that the map has, by pet, in the order picked."""
+        if self._pets_map is None:
+            return {}
+        return pet_points(*self._pets_map, self.settings.pets)
+
     def _overlay_wanted(self) -> bool:
-        """The route, the cubes and the resources share the one window: it is up while any is."""
+        """The route and the map's layers share the one window: it is up while any is."""
         return (
             self.overlay_visible
             or (self.settings.show_cubes and bool(self._cubes))
             or (self.settings.show_resources and bool(self._picked_resources()))
+            or (self.settings.show_pets and bool(self._picked_pets()))
         )
 
     def _picked_resources(self) -> list[str]:
@@ -474,8 +492,10 @@ class Backend(QObject):
 
     def _map_layers_on(self) -> bool:
         """Whether something of the map's own is to be drawn: then a Start needs no route."""
-        return self.settings.show_cubes or (
-            self.settings.show_resources and bool(self.settings.resources)
+        return (
+            self.settings.show_cubes
+            or (self.settings.show_resources and bool(self.settings.resources))
+            or (self.settings.show_pets and bool(self.settings.pets))
         )
 
     def _sync_overlay(self) -> None:
@@ -670,7 +690,7 @@ class Backend(QObject):
         # The layout may have changed less than a settle interval ago, before the watcher fired.
         if self._revalidate_screens():
             return
-        # With the cubes or resources on there is something to draw without a route: the map's
+        # With the cubes, resources or pets on there is something to draw without a route: the map's
         # own. Which map that is the engine finds out, matching every map against the screen.
         free = not self._route_followed() and self._map_layers_on()
         doc, ref, maps = None, None, []
@@ -896,7 +916,7 @@ class Backend(QObject):
         self.engine.reconfigure(settings=asdict(after))
 
     def _apply_overlay_settings(self, before: Settings, after: Settings) -> None:
-        """What the overlay draws: the route, the cubes, the resources and the notices."""
+        """What the overlay draws: the route, the cubes, the resources, the pets and the notices."""
         if (
             before.auto_progress,
             before.arrive_radius,
@@ -911,6 +931,8 @@ class Backend(QObject):
                 self._apply_cubes()
             if (before.show_resources, before.resources) != (after.show_resources, after.resources):
                 self._apply_resources()
+            if (before.show_pets, before.pets) != (after.show_pets, after.pets):
+                self._apply_pets()
         if before.route_far_notice and not after.route_far_notice:
             self._set_off_route(None)
 

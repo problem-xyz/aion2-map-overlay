@@ -10,6 +10,14 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- Pets, the panel's third tool: a checklist of every pet whose souls drop on your map, 108 on
+  Altgard and 113 on Verteron, with the monsters that drop them. Mark each pet's level as you
+  collect it: 5 souls for the first, 25 for the second, 75 for the third.
+- Pick up to five pets and the overlay shows where their monsters stand on the game map, each
+  pet's portrait in its own colour. **Pets** beside Cubes and Resources turns them on and off.
+
 ### Fixed
 
 - Artifact Siege, Siege Bosses and Guardian General Nahma on the Global servers counted down to

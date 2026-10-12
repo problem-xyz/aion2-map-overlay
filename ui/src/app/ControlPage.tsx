@@ -4,6 +4,7 @@ import AppSettings from "@/features/panel/AppSettings";
 import SupportBlock from "@/features/panel/components/SupportBlock";
 import UpdateBanner from "@/features/panel/components/UpdateBanner";
 import PanelPage from "@/features/panel/PanelPage";
+import PetsPage from "@/features/pets/PetsPage";
 import TimersPage from "@/features/timers/TimersPage";
 import { useBackendSignal, useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState, NotifyPayload } from "@/shared/backend/contract";
@@ -15,7 +16,7 @@ import Toasts from "@/shared/ui/Toasts";
 import ToolSwitch, { type Tool, toolPanelId } from "./ToolSwitch";
 
 const TOOL_KEY = "mo.panel.tool";
-const TOOLS: readonly Tool[] = ["map", "timers", "app"];
+const TOOLS: readonly Tool[] = ["map", "timers", "pets", "app"];
 
 function loadTool(): Tool {
   try {
@@ -27,9 +28,9 @@ function loadTool(): Tool {
 }
 
 /**
- * The control panel: the switch between its two tools, the map and the timers, and what both
- * share -- the update banner over them, the app's own settings behind the gear, the support links
- * and the toasts. Each tool is a feature of its own; this page is where they meet, since a feature
+ * The control panel: the switch between its tools, the map, the timers and the pets, and what
+ * they share -- the update banner over them, the app's own settings behind the gear, the support
+ * links and the toasts. Each tool is a feature of its own; this page is where they meet, since a feature
  * does not import another.
  */
 export default function ControlPage() {
@@ -73,7 +74,15 @@ export default function ControlPage() {
         aria-labelledby={`pn-tool-tab-${tool}`}
         className="pn-tool-panel"
       >
-        {tool === "map" ? <PanelPage /> : tool === "timers" ? <TimersPage /> : <AppSettings />}
+        {tool === "map" ? (
+          <PanelPage />
+        ) : tool === "timers" ? (
+          <TimersPage />
+        ) : tool === "pets" ? (
+          <PetsPage />
+        ) : (
+          <AppSettings />
+        )}
       </div>
 
       <SupportBlock

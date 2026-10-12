@@ -1,4 +1,5 @@
 import { useI18n, type MessageKey } from "@/shared/i18n";
+import Icon from "@/shared/ui/Icon";
 import MarkIcon from "@/shared/ui/MarkIcon";
 import type { ObjectIconName } from "@/shared/ui/markIcons";
 
@@ -13,6 +14,8 @@ export interface OverlayFiltersProps {
   picked: readonly string[];
   /** The resources the list offers. */
   available: readonly string[];
+  /** The spots of the pets picked in the pets tool over the game: settings.show_pets. */
+  pets: boolean;
   /** The route's points on Empyrean Traces, the feathers: settings.route_traces. */
   traces: boolean;
   /** The route's points on sealed dungeons: settings.route_seals. */
@@ -20,6 +23,7 @@ export interface OverlayFiltersProps {
   onCubes: (on: boolean) => void;
   onResources: (on: boolean) => void;
   onPick: (ids: string[]) => void;
+  onPets: (on: boolean) => void;
   onTraces: (on: boolean) => void;
   onSeals: (on: boolean) => void;
 }
@@ -51,8 +55,9 @@ function Chip({ filter }: { filter: Filter }) {
 }
 
 /**
- * What of the map's objects the overlay deals with, in a row of its own under Start: the cubes and
- * the resources it draws, and the feathers and the sealed dungeons a route may pass through. The
+ * What of the map's objects the overlay deals with, in a row of its own under Start: the cubes, the
+ * resources and the pets it draws, and the feathers and the sealed dungeons a route may pass
+ * through. Which pets is picked in the pets tool; here they are only switched on and off. The
  * same quick slots as the run row, each with the game's own mark for what it switches.
  */
 export default function OverlayFilters({
@@ -60,11 +65,13 @@ export default function OverlayFilters({
   resources,
   picked,
   available,
+  pets,
   traces,
   seals,
   onCubes,
   onResources,
   onPick,
+  onPets,
   onTraces,
   onSeals,
 }: OverlayFiltersProps) {
@@ -103,6 +110,18 @@ export default function OverlayFilters({
         onToggle={onResources}
         onPick={onPick}
       />
+      <label className="pn-chip" title={t("panel.filters.pets")}>
+        <input
+          type="checkbox"
+          checked={pets}
+          onChange={(e) => onPets(e.target.checked)}
+          aria-label={t("panel.filters.pets")}
+        />
+        <Icon name="paw" className="pn-chip-icon" />
+        <span className="pn-chip-label" aria-hidden="true">
+          {t("panel.filters.petsShort")}
+        </span>
+      </label>
       {route.map((f) => (
         <Chip key={f.icon} filter={f} />
       ))}

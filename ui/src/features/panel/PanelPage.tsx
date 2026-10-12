@@ -210,7 +210,8 @@ export default function PanelPage() {
         canStart={
           (Boolean(route) && state.settings.route_mode) ||
           state.settings.show_cubes ||
-          (state.settings.show_resources && state.settings.resources.length > 0)
+          (state.settings.show_resources && state.settings.resources.length > 0) ||
+          (state.settings.show_pets && state.settings.pets.length > 0)
         }
         checklistVisible={state.steps.visible}
         routeMode={state.settings.route_mode}
@@ -227,11 +228,13 @@ export default function PanelPage() {
         resources={state.settings.show_resources}
         picked={state.settings.resources}
         available={mapResources(state.maps, state.settings.route_mode ? route?.map : undefined)}
+        pets={state.settings.show_pets}
         traces={state.settings.route_traces}
         seals={state.settings.route_seals}
         onCubes={(on) => changeSetting("show_cubes", on)}
         onResources={(on) => changeSetting("show_resources", on)}
         onPick={(ids) => changeSetting("resources", ids)}
+        onPets={(on) => changeSetting("show_pets", on)}
         onTraces={(on) => changeSetting("route_traces", on)}
         onSeals={(on) => changeSetting("route_seals", on)}
       />

@@ -1,0 +1,305 @@
+/* The pets tool: the card with the map's tally, the switch over the game with the pets picked,
+   then the checklist. The chip is the map's quick slot (panel.css), shared as the timers do. */
+
+.pe-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ---------- the tally ---------- */
+.pe-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--fill-panel-deep);
+}
+.pe-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 14px 16px;
+}
+.pe-hero-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-frame);
+  border-radius: 50%;
+  color: var(--color-icon-warm);
+}
+.pe-hero-mark svg {
+  width: 22px;
+  height: 22px;
+}
+.pe-hero-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.pe-hero-kicker {
+  font: 600 var(--text-xl) / 1.15 var(--font-display);
+}
+.pe-hero-meta {
+  margin-top: 3px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.pe-hero-count {
+  font: 600 30px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.pe-hero-count span {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+.pe-hero-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgb(from var(--color-icon-warm) r g b / 15%);
+}
+.pe-hero-prog::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--pe-p, 0) * 100%);
+  background: var(--color-icon-warm);
+}
+
+/* ---------- the switch over the game, and the pets it draws ---------- */
+.pe-quick {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.pe-picked {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 6px 4px;
+  list-style: none;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+.pe-picked li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.pe-picked .pe-picked-none {
+  color: var(--color-text-muted);
+}
+.pe-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--pe-color);
+  box-shadow: 0 0 0 1px var(--color-outline);
+}
+
+/* ---------- the search and the filter ---------- */
+.pe-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.pe-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  color: var(--color-text-muted);
+}
+.pe-search:has(input:focus) {
+  border-color: var(--color-focus);
+}
+.pe-search-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 100%;
+}
+.pe-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  outline: none;
+}
+.pe-search input::placeholder {
+  color: var(--color-text-placeholder);
+}
+/* Chromium's own clear button, replaced by .pe-search-clear */
+.pe-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.pe-search-clear {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-inline-end: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.pe-search-clear:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-text);
+}
+
+/* ---------- the checklist ---------- */
+.pe-list-card {
+  overflow: hidden;
+  background: var(--fill-panel);
+}
+.pe-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pe-none {
+  margin: 0;
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+}
+.pe-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 10px;
+}
+.pe-row + .pe-row {
+  border-top: 1px solid var(--color-veil-line);
+}
+/* picked: drawn over the game in this colour, which the row carries down its edge */
+.pe-row.picked {
+  background: linear-gradient(90deg, rgb(from var(--pe-color) r g b / 12%), transparent 60%);
+  box-shadow: inset 2px 0 0 var(--pe-color);
+}
+.pe-row-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pe-row-name {
+  font: 600 var(--text-md) / 1.25 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-row.done .pe-row-name {
+  color: var(--color-text-secondary);
+}
+.pe-row-sub {
+  margin-top: 2px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* the switch that draws the pet over the game: its portrait, or a paw for a pet with none, ringed
+   in the pet's colour while it is drawn */
+.pe-pick {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.pe-pick svg {
+  width: 16px;
+  height: 16px;
+}
+.pe-pick.on {
+  border-color: var(--color-outline);
+  background: var(--pe-color);
+  color: var(--color-on-badge);
+}
+/* the portrait fills the ring but for 2px of it: the pet's colour, or the plain border */
+.pe-face {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-pick.face:not(.on) {
+  border-color: var(--color-border-control);
+}
+.pe-pick.face:not(.on, :disabled) .pe-face {
+  opacity: 0.85;
+}
+.pe-pick.face:disabled .pe-face {
+  filter: grayscale(1);
+}
+.pe-pick:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pe-pick:focus-visible,
+.pe-level:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+@media (hover: hover) {
+  .pe-pick:hover:not(:disabled, .on) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+  .pe-level:hover:not(.on) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+
+/* the three levels, each marked with the souls it takes */
+.pe-levels {
+  display: flex;
+  gap: 3px;
+}
+.pe-level {
+  min-width: 30px;
+  height: 24px;
+  padding: 0 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: 600 var(--text-2xs) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.pe-level.on {
+  border-color: var(--color-frame-strong);
+  background: var(--fill-check);
+  color: var(--color-on-badge);
+}
