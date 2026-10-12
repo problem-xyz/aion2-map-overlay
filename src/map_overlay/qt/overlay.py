@@ -779,8 +779,22 @@ class OverlayWindow(ClickThroughWindow):
         leg for later hid the one being walked.
         """
         p.setBrush(Qt.BrushStyle.NoBrush)
+        # A leg with both ends past the same edge cannot cross the window. Zoomed in on a long
+        # route, nearly all of them are, and drawing them anyway made a paint 4-8x dearer.
+        m = self._width + ARROW_W
+        x, y = pts[:, 0], pts[:, 1]
+        below_x, above_x = x < -m, x > self.width() + m
+        below_y, above_y = y < -m, y > self.height() + m
+        off = (
+            (below_x[:-1] & below_x[1:])
+            | (above_x[:-1] & above_x[1:])
+            | (below_y[:-1] & below_y[1:])
+            | (above_y[:-1] & above_y[1:])
+        )
         legs = list(enumerate(itertools.pairwise(pts)))
         for leg, (a, b) in reversed(legs):
+            if off[leg]:
+                continue
             color = self.leg_color(first_leg + leg)
             line = QPainterPath(QPointF(*a))
             line.lineTo(QPointF(*b))
@@ -826,8 +840,12 @@ class OverlayWindow(ClickThroughWindow):
         font.setBold(True)
         # Last to first, like the legs: of two points on one spot -- a teleport the route comes
         # back to -- the one due first is on top.
+        outline = QPen(LINE_DARK, 2)
+        w, h = self.width() + MARKER_R, self.height() + MARKER_R
         for i, (x, y) in reversed(list(enumerate(pts))):
-            p.setPen(QPen(LINE_DARK, 2))
+            if not (-MARKER_R < x < w and -MARKER_R < y < h):
+                continue  # off the window: nothing of it would show
+            p.setPen(outline)
             p.setBrush(self._color_at(offset + i))
             p.drawEllipse(QPointF(x, y), MARKER_R, MARKER_R)
             # Numbering does not shift as the route shortens: the fifth marker stays "5".

@@ -50,6 +50,7 @@ export function clock(ms: number, locale: string, twelve: boolean): string {
 }
 
 const weekdays = new Map<string, Intl.DateTimeFormat>();
+const dates = new Map<string, Intl.DateTimeFormat>();
 
 function weekday(ms: number, locale: string): string {
   let f = weekdays.get(locale);
@@ -112,5 +113,10 @@ export function scheduleDate(iso: string, locale: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   if (!m) return iso;
   const at = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" }).format(at);
+  let f = dates.get(locale);
+  if (!f) {
+    f = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+    dates.set(locale, f);
+  }
+  return f.format(at);
 }

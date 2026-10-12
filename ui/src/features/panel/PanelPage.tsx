@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { useBackendState } from "@/shared/backend/BackendProvider";
-import type { AppState, MapInfo, ProgressState } from "@/shared/backend/contract";
+import type { AppState, MapInfo, ProgressState, RouteInfo } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
 import { useConfirm } from "@/shared/hooks/useConfirm";
@@ -39,6 +39,17 @@ function mapResources(maps: readonly MapInfo[], mapId: string | undefined): stri
   return [...new Set(on.flatMap((m) => m.resources ?? []))];
 }
 
+// The map tool shows neither the updater nor the timers, and a download in progress changes the
+// first several times a second: the state is kept as it was when only those moved.
+const NOT_SHOWN: ReadonlySet<string> = new Set(["update", "timers", "timersPlaque"]);
+
+export function sameForPanel(a: AppState, b: AppState): boolean {
+  const keys = Object.keys(b) as (keyof AppState)[];
+  return (
+    keys.length === Object.keys(a).length && keys.every((k) => NOT_SHOWN.has(k) || a[k] === b[k])
+  );
+}
+
 function loadSection(): PanelSection {
   try {
     const stored = window.localStorage.getItem(SECTION_KEY) ?? "";
@@ -55,7 +66,7 @@ function loadSection(): PanelSection {
  * tick at 10 Hz re-renders the status strip and nothing else. What it does own is the one piece
  * of state the backend has no opinion about: whether the preview is switched on.
  */
-export default function PanelPage() {
+function PanelPage() {
   const api = useApi();
   const t = useT();
   const confirm = useConfirm();
@@ -72,7 +83,11 @@ export default function PanelPage() {
     }
   }, []);
 
-  const state = useBackendState<AppState, AppState | null>((s) => s);
+  const shown = useRef<AppState | null>(null);
+  const state = useBackendState<AppState, AppState | null>((s) => {
+    if (s && shown.current && sameForPanel(shown.current, s)) return shown.current;
+    return (shown.current = s);
+  });
 
   const togglePreview = useCallback(
     (on: boolean) => {
@@ -93,6 +108,30 @@ export default function PanelPage() {
     [],
   );
 
+  // Stable, so that the route list -- thumbnails and all -- sits out a slider drag.
+  const activeRoute = state?.route ?? null;
+  const routeActions = useMemo(
+    () => ({
+      onSelect: (id: string) => api?.setRoute(id),
+      onEditor: () => api?.openEditor(activeRoute ?? ""),
+      onNew: () => api?.openEditor(""),
+      onEdit: (id: string) => api?.openEditor(id),
+      onDelete: (r: RouteInfo) => {
+        void confirm(t("panel.routes.confirmDelete", { label: r.label }), {
+          confirmLabel: t("panel.routes.deleteTip"),
+          danger: true,
+        }).then((ok) => {
+          if (ok) api?.deleteRoute(r.id);
+        });
+      },
+      onReorder: (ids: string[]) => api?.reorderRoutes(ids),
+      onImport: () => api?.importRouteFile(),
+      onPaste: () => api?.pasteRouteCode(),
+      onOpenFolder: () => api?.openRoutesFolder(),
+    }),
+    [api, activeRoute, confirm, t],
+  );
+
   const route = state?.routes.find((r) => r.id === state.route);
   const pointIcons = usePointIcons(route?.map, state?.progress ?? NO_PROGRESS);
 
@@ -109,26 +148,7 @@ export default function PanelPage() {
   const content: Record<PanelSection, ReactNode> = {
     routes: (
       <>
-        <RoutesList
-          routes={state.routes}
-          active={state.route}
-          onSelect={(id) => api.setRoute(id)}
-          onEditor={() => api.openEditor(state.route ?? "")}
-          onNew={() => api.openEditor("")}
-          onEdit={(id) => api.openEditor(id)}
-          onDelete={(r) => {
-            void confirm(t("panel.routes.confirmDelete", { label: r.label }), {
-              confirmLabel: t("panel.routes.deleteTip"),
-              danger: true,
-            }).then((ok) => {
-              if (ok) api.deleteRoute(r.id);
-            });
-          }}
-          onReorder={(ids) => api.reorderRoutes(ids)}
-          onImport={() => api.importRouteFile()}
-          onPaste={() => api.pasteRouteCode()}
-          onOpenFolder={() => api.openRoutesFolder()}
-        />
+        <RoutesList routes={state.routes} active={state.route} {...routeActions} />
       </>
     ),
     // The short card first: under the list of points, however long, it went unseen
@@ -257,3 +277,6 @@ export default function PanelPage() {
     </>
   );
 }
+
+// The control page around it re-renders for the update banner, which is not in here.
+export default memo(PanelPage);

@@ -772,3 +772,18 @@ def test_a_tile_never_shows_past_the_edge_of_the_map(pts: list[list[float]]) -> 
     assert top >= 0
     assert left + w / scale <= 1536 + 1e-6
     assert top + h / scale <= 1536 + 1e-6
+
+
+def test_a_cached_listing_still_sees_an_edit_and_a_delete(dirs: DataDirs) -> None:
+    cache = ThumbCache()
+
+    def labels() -> dict[str, str]:
+        return {r["id"]: r["label"] for r in list_routes(dirs, {}, cache, SkippedRoutes())}
+
+    save_route(dirs, "a", make_route(name="First"))
+    save_route(dirs, "b", make_route(name="Other"))
+    assert labels() == {"a": "First", "b": "Other"}
+    save_route(dirs, "a", make_route(name="Renamed"))
+    delete_route(dirs, "b")
+    assert labels() == {"a": "Renamed"}
+    assert list(cache.listed) == [route_path(dirs, "a")]  # nothing kept for the deleted one

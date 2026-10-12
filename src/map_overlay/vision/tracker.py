@@ -112,6 +112,11 @@ class Tracker:
             )
             self.global_matcher.add([self.des_ref])
             self.global_matcher.train()
+            # FLANN keeps its own float copy. SIFT's values are whole bytes, so ours can be a
+            # quarter of the size (~33 MB less per map); the local search widens what it takes.
+            small = des_ref.astype(np.uint8)
+            if np.array_equal(small, des_ref):
+                self.des_ref = small
         else:
             self.global_matcher = cv2.BFMatcher(self.norm, crossCheck=False)
         self.local_matcher = cv2.BFMatcher(self.norm, crossCheck=False)
@@ -138,7 +143,8 @@ class Tracker:
             if self.norm == cv2.NORM_L2:
                 return self.global_matcher.knnMatch(des, k=2)
             return self.global_matcher.knnMatch(des, self.des_ref, k=2)
-        return self.local_matcher.knnMatch(des, self.des_ref[subset], k=2)
+        ref = self.des_ref[subset].astype(des.dtype, copy=False)  # SIFT's are kept as bytes
+        return self.local_matcher.knnMatch(des, ref, k=2)
 
     def _solve(self, kp, des, scale, subset, info, *, params):
         """Match, then fit the transform with RANSAC. subset = reference indices (None = all)."""
@@ -324,16 +330,16 @@ def _cache_file(cache_dir, reference_path, build, coords_size) -> Path | None:
         return None
     image = Path(reference_path)
     try:
-        st = image.stat()
+        # By content, not by place and date: an app update unpacks the same image into a new
+        # folder with new dates, and keyed on those every update cost ~13 s per map to redo.
+        content = hashlib.sha1(image.read_bytes()).hexdigest()
     except OSError:
         return None
     key = "|".join(
         map(
             str,
             (
-                image.resolve(),
-                st.st_size,
-                st.st_mtime_ns,
+                content,
                 build.detector,
                 build.ref_features,
                 coords_size,

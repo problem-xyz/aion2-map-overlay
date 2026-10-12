@@ -41,6 +41,10 @@ log = logging.getLogger(__name__)
 REBUILD_AFTER_FAILURES = 3
 GIVE_UP_AFTER_FAILURES = 8
 FAILURE_NOTICE_INTERVAL = 5.0
+# How often to look for a map that is not on the screen. Back to back, a search over every map
+# kept 1.5 to 2.5 cores busy for as long as the in-game map stayed closed; the price is that an
+# opened map can take up to this long to be found.
+LOST_DETECT_INTERVAL_S = 1.0
 
 
 class VisionError(RuntimeError):
@@ -311,19 +315,19 @@ class Engine(QThread):
         # _apply_config opens the capture before the loop first grabs.
         frame = self._capture.grab()  # pyright: ignore[reportOptionalMemberAccess]
         if frame is None:  # dxcam: no new frame
-            time.sleep(0.001)
             return None
         probe = frame[::FRAME_CHANGE_PROBE_STRIDE, ::FRAME_CHANGE_PROBE_STRIDE]
         if st.prev_small is not None and np.array_equal(probe, st.prev_small):
-            time.sleep(0.001)  # same picture, nothing to compute
-            return None
+            return None  # same picture, nothing to compute
         st.prev_small = probe.copy()
         return frame
 
     def _track_flow(self, gray, use_flow) -> None:
         """Carry the map by its own movement: cheap, and with almost no lag."""
         st = self._state
-        if not use_flow:
+        # Nothing placed, nothing to carry: tracking the game world behind a closed map cost
+        # several ms a frame, more on each reseed.
+        if not use_flow or st.current is None:
             self._flow.reset()
             st.flow_valid = False
             return
@@ -410,7 +414,12 @@ class Engine(QThread):
     def _maybe_submit(self, frame, settings, use_flow, t0) -> None:
         """Ask for the next detection; less often while the binding is holding."""
         st = self._state
-        interval = float(settings["detect_interval"]) if (use_flow and st.anchored) else 0.0
+        if not st.found:
+            interval = LOST_DETECT_INTERVAL_S
+        elif use_flow and st.anchored:
+            interval = float(settings["detect_interval"])
+        else:
+            interval = 0.0
         if not (self._detector.idle and (t0 - st.last_submit) >= interval):
             return
         job = DetectJob(frame.copy(), TrackerParams.from_mapping(settings))
@@ -510,6 +519,9 @@ class Engine(QThread):
                 t0 = time.perf_counter()
                 frame = self._grab()
                 if frame is None:
+                    # Paced like a real frame. A 1 ms sleep here polled capture ~1000 times a
+                    # second on a still map -- a full screen grab each time on mss.
+                    self._throttle(t0, settings)
                     continue
 
                 use_flow = settings["tracking"] == "flow"

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
@@ -28,7 +28,7 @@ const VIEWS: readonly { id: View; label: MessageKey; icon: IconName }[] = [
  * The countdowns tick here, once a second, from the moments Python sent; Python itself only
  * sends again when what it says changes.
  */
-export default function TimersPage() {
+function TimersPage() {
   const api = useApi();
   const { t } = useI18n();
   const changeSetting = useSettingsPatch();
@@ -167,3 +167,6 @@ export default function TimersPage() {
     </div>
   );
 }
+
+// The control page around it re-renders for the update banner, which is not in here.
+export default memo(TimersPage);

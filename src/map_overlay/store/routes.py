@@ -632,11 +632,24 @@ def list_routes(
     out = []
     if not dirs.routes.exists():
         return out
+    listed = {}
     for path in sorted(dirs.routes.glob("*.json"), key=lambda p: p.name.lower()):
         route_id = path.stem
-        doc = _read_listed(path, skipped)
-        if doc is None:
-            continue
+        # Every state rebuild lists the routes; reading and validating each file again was
+        # ~40 ms on the GUI thread each time. A file is read again only once it changed.
+        try:
+            st = path.stat()
+            version = (st.st_mtime_ns, st.st_size)
+        except OSError:
+            version = None
+        hit = cache.listed.get(path)
+        if hit is None or version is None or hit[0] != version:
+            doc = _read_listed(path, skipped)
+            if doc is None:
+                continue
+            hit = (version, doc, _is_official(path, starters or {}))
+        listed[path] = hit
+        _version, doc, official = hit
         meta = maps_by_id.get(doc["map"])
         out.append(
             {
@@ -648,9 +661,10 @@ def list_routes(
                 "steps": sum(1 for m in doc["markers"] if m["text"].strip()),
                 "thumb": route_thumb(dirs, route_id, doc, maps_by_id, cache),
                 "faction": meta.get("faction") if meta else None,
-                "official": _is_official(path, starters or {}),
+                "official": official,
             }
         )
+    cache.listed = listed  # only the files there now: a deleted route is not kept
     return in_order(out, order)
 
 
