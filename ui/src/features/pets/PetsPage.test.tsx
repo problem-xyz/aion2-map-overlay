@@ -171,4 +171,16 @@ describe("PetsPage", () => {
 
     expect(change).toHaveBeenCalledWith("pets", [second.id]);
   });
+
+  it("narrows the list to one genus", () => {
+    mount();
+
+    fireEvent.click(screen.getByRole("radio", { name: "Fera" }));
+
+    const rows = within(screen.getByRole("list", { name: "Pets on Altgard" })).getAllByRole(
+      "listitem",
+    );
+    expect(rows).toHaveLength(ALTGARD.filter((p) => p.genus === "fera").length);
+    expect(rows.length).toBeLessThan(108);
+  });
 });

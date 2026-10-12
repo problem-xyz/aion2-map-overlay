@@ -777,6 +777,7 @@
     "list": "Pets on {map}",
     "none": "No pet here matches.",
     "genus": {
+      "label": "Genus",
       "cogni": "Cogni",
       "fera": "Fera",
       "natura": "Natura",

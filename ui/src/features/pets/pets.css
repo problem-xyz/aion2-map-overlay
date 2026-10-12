@@ -224,8 +224,11 @@
 }
 
 /* ---------- the checklist ---------- */
+/* the list scrolls within itself, so the search and the filters above it stay in reach */
 .pe-list-card {
-  overflow: hidden;
+  max-height: min(560px, 62vh);
+  overflow: hidden auto;
+  overscroll-behavior: contain;
   background: var(--fill-panel);
 }
 .pe-list {
@@ -387,6 +390,7 @@
 .pe-window-side .pe-list-card {
   flex: 1;
   min-height: 0;
+  max-height: none;
   overflow-y: auto;
 }
 .pe-window-map {

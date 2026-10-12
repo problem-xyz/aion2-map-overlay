@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 
 import { useRemembered } from "@/shared/hooks/useRemembered";
-import { useT } from "@/shared/i18n";
-import { MAX_LEVEL, type Pet, PET_COLORS } from "@/shared/pets/pets";
+import { type MessageKey, useT } from "@/shared/i18n";
+import { GENERA, type Genus, MAX_LEVEL, type Pet, PET_COLORS } from "@/shared/pets/pets";
 import Icon from "@/shared/ui/Icon";
 import IconButton from "@/shared/ui/IconButton";
 import Segmented from "@/shared/ui/Segmented";
@@ -11,6 +11,8 @@ import PetRow from "./PetRow";
 
 type Show = "all" | "todo" | "done";
 const SHOWS: readonly Show[] = ["all", "todo", "done"];
+type GenusFilter = "all" | Genus;
+const GENUS_FILTERS: readonly GenusFilter[] = ["all", ...GENERA];
 
 function matches(pet: Pet, query: string): boolean {
   if (!query) return true;
@@ -34,8 +36,9 @@ export interface PetsChecklistProps {
 }
 
 /**
- * A map's pets as a checklist: found by their name or a monster's, narrowed to those still to
- * collect or those done, each row with its portrait to draw it over the game and its levels.
+ * A map's pets as a checklist: found by their name or a monster's, narrowed to a genus and to
+ * those still to collect or those done, each row with its portrait to draw it over the game and
+ * its levels. The list scrolls within itself, under the search and the filters, which stay.
  */
 export default function PetsChecklist({
   pets,
@@ -48,12 +51,14 @@ export default function PetsChecklist({
 }: PetsChecklistProps) {
   const t = useT();
   const [show, setShow] = useRemembered<Show>("mo.pets.show", SHOWS, "all");
+  const [genus, setGenus] = useRemembered<GenusFilter>("mo.pets.genus", GENUS_FILTERS, "all");
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   const rows = pets.filter(
     (p) =>
       matches(p, query.trim()) &&
+      (genus === "all" || p.genus === genus) &&
       (show === "all" || (show === "done" ? level(p) >= MAX_LEVEL : level(p) < MAX_LEVEL)),
   );
 
@@ -104,6 +109,17 @@ export default function PetsChecklist({
           onChange={setShow}
         />
       </div>
+
+      <Segmented
+        label={t("pets.genus.label")}
+        labelHidden
+        value={genus}
+        options={GENUS_FILTERS.map((g) => ({
+          value: g,
+          label: t(g === "all" ? "pets.filter.all" : (`pets.genus.${g}` as MessageKey)),
+        }))}
+        onChange={setGenus}
+      />
 
       <div className="ui-frame pe-list-card">
         {rows.length ? (
