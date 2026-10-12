@@ -77,12 +77,21 @@ def test_the_shugo_festival_runs_ten_minutes_every_hour(schedule: Schedule) -> N
 
 
 def test_a_utc_event_moves_an_hour_in_berlin_when_summer_time_ends(schedule: Schedule) -> None:
+    rift, eu = ev(schedule, "rift"), reg(schedule, "global-eu")
+    before = event_state(rift, eu, at(2026, 10, 24, 20, 30)).next
+    after = event_state(rift, eu, at(2026, 10, 25, 20, 30)).next
+    # 21:00 UTC both nights: 23:00 in Berlin on Saturday, 22:00 on Sunday
+    assert before and after
+    assert (before.start, after.start) == (at(2026, 10, 24, 21), at(2026, 10, 25, 21))
+    assert [s.astimezone(BERLIN).hour for s in (before.start, after.start)] == [23, 22]
+
+
+def test_the_siege_keeps_21_00_in_berlin_across_the_change(schedule: Schedule) -> None:
     siege, eu = ev(schedule, "artifact-siege"), reg(schedule, "global-eu")
     starts = [o.start for o in occurrences(siege, eu, at(2026, 10, 22), at(2026, 10, 27))]
-    # Thu 22, Sat 24, Mon 26 at 21:00 UTC
-    assert starts == [at(2026, 10, 22, 21), at(2026, 10, 24, 21), at(2026, 10, 26, 21)]
-    local = [s.astimezone(BERLIN).hour for s in starts]
-    assert local == [23, 23, 22]
+    # Thu 22, Sat 24, Mon 26 at 21:00 Berlin
+    assert starts == [at(2026, 10, 22, 19), at(2026, 10, 24, 19), at(2026, 10, 26, 20)]
+    assert {s.astimezone(BERLIN).hour for s in starts} == {21}
 
 
 def test_a_regional_reset_keeps_its_local_hour_across_the_change(schedule: Schedule) -> None:
@@ -110,7 +119,7 @@ def test_the_weekly_reset_is_found_across_the_week(schedule: Schedule) -> None:
 def test_nahma_after_sunday_night_is_on_friday(schedule: Schedule) -> None:
     nahma, eu = ev(schedule, "guardian-nahma"), reg(schedule, "global-eu")
     s = event_state(nahma, eu, at(2026, 10, 11, 21, 40))
-    assert s.live is None and s.next and s.next.start == at(2026, 10, 16, 21)
+    assert s.live is None and s.next and s.next.start == at(2026, 10, 16, 19)
 
 
 def test_a_server_group_keeps_only_its_own_times(schedule: Schedule) -> None:
