@@ -17,7 +17,8 @@ changes are left out unless they change how the app is installed, run or updated
   collect it: 5 souls for the first, 25 for the second, 75 for the third.
 - Pick up to five pets and the overlay shows where their monsters stand on the game map, each
   pet's portrait in its own colour. **Pets** beside Cubes and Resources turns them on and off.
-  The Map view of the Pets tool shows the same spots on the map before you go.
+  **Map** in the Pets tool opens a large window, like the route editor's, with the checklist
+  beside the map of those spots, to look at before you go.
 - The route editor's Map objects fold: the arrow beside a group hides its categories, and each map
   remembers which groups you folded.
 

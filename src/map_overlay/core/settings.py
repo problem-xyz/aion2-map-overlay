@@ -202,6 +202,8 @@ class State:
     timers_plaque_visible: bool = False
     # The day timeline's window, where it was left.
     timers_timeline_region: Region | None = None
+    # The pets' map window, where it was left.
+    pets_map_region: Region | None = None
 
 
 # --------------------------------------------------------------------------- schema export
@@ -364,6 +366,7 @@ _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "timers_world_shown": _coerce_ids,
     "timers_plaque_region": _coerce_region,
     "timers_timeline_region": _coerce_region,
+    "pets_map_region": _coerce_region,
 }
 
 

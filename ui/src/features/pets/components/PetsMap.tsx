@@ -10,14 +10,11 @@ import { mapBounds, pixelCRS, toLatLng } from "@/shared/map/crs";
 import type { Pet } from "@/shared/pets/pets";
 import { portraitStyle } from "@/shared/pets/portraits";
 
+import type { ShownPet } from "../hooks/usePets";
+
 /** A spot's mark, in CSS pixels: the portrait and the ring of the pet's colour round it. */
 const SPOT_PX = 26;
 const FACE_PX = 20;
-
-export interface ShownPet {
-  pet: Pet;
-  color: string;
-}
 
 export interface PetsMapProps {
   map: MapInfo;
@@ -97,7 +94,7 @@ export default function PetsMap({ map, shown }: PetsMapProps) {
   const url = `${map.tilesUrl}/{z}/{x}/{y}.jpg`;
 
   return (
-    <div className="ui-frame pe-map">
+    <div className="pe-map">
       <MapContainer
         key={`${map.id}:${zMax}`}
         className="pe-map-canvas"

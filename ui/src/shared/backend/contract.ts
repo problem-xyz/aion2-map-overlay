@@ -627,6 +627,9 @@ export interface BackendSlots {
   /** The day timeline in a window of its own; a second call raises it. Api 32. */
   openTimersTimeline(): void;
   closeTimersTimeline(): void;
+  /** The pets' map in a window of its own; a second call raises it. Api 36. */
+  openPetsMap(): void;
+  closePetsMap(): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {

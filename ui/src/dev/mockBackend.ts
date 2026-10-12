@@ -545,6 +545,11 @@ function backendObject(rt: MockRuntime) {
       window.open(url, "mo-timeline", "width=1200,height=640")?.focus();
     },
     closeTimersTimeline: () => window.close(),
+    openPetsMap: () => {
+      const url = `${window.location.pathname}${window.location.search}#pets-map`;
+      window.open(url, "mo-pets-map", "width=1280,height=820")?.focus();
+    },
+    closePetsMap: () => window.close(),
     refreshTimersData: () => {
       // a fetch that finds nothing newer, after a moment
       pushTimers(rt, true);

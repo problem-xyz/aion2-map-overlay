@@ -1,7 +1,8 @@
 """The day timeline: the built page again, opened in its `#timeline` mode, in a window of its own.
 
 An ordinary application window, not one over the game: a wide view of the day is read before a
-session, not during a fight, and the panel is too narrow for it.
+session, not during a fight, and the panel is too narrow for it. The pets' map is the same kind of
+window over the page's `#pets-map` mode, for the same reason: PetsMapWindow.
 """
 
 import logging
@@ -37,12 +38,16 @@ class TimelineWindow(QMainWindow):
     The page closes it on Esc through `closeTimersTimeline()`.
     """
 
+    TITLE = "native.window.timeline"
+    SIZE = (WIDTH, HEIGHT)
+    MIN_SIZE = (MIN_WIDTH, MIN_HEIGHT)
+
     def __init__(
         self, backend, url, scale: float, region: Region | None, on_moved: Callable[[Region], None]
     ) -> None:
         super().__init__()
-        self.setWindowTitle(t("native.window.timeline"))
-        self.setMinimumSize(int(MIN_WIDTH * scale), int(MIN_HEIGHT * scale))
+        self.setWindowTitle(t(self.TITLE))
+        self.setMinimumSize(int(self.MIN_SIZE[0] * scale), int(self.MIN_SIZE[1] * scale))
         self._on_moved = on_moved
         self._place(region, scale)
 
@@ -58,7 +63,7 @@ class TimelineWindow(QMainWindow):
             if _on_a_screen(rect):
                 self.setGeometry(rect)
                 return
-        self.resize(int(WIDTH * scale), int(HEIGHT * scale))
+        self.resize(int(self.SIZE[0] * scale), int(self.SIZE[1] * scale))
         screen = QGuiApplication.primaryScreen()
         if screen is not None:
             frame = self.frameGeometry()
@@ -89,4 +94,15 @@ class TimelineWindow(QMainWindow):
         QTimer.singleShot(0, self.deleteLater)
 
     def retitle(self) -> None:
-        self.setWindowTitle(t("native.window.timeline"))
+        self.setWindowTitle(t(self.TITLE))
+
+
+class PetsMapWindow(TimelineWindow):
+    """The pets' map, large as the route editor: the checklist beside the map of their spots.
+
+    The page closes it on Esc through `closePetsMap()`.
+    """
+
+    TITLE = "native.window.petsMap"
+    SIZE = (1280, 820)
+    MIN_SIZE = (760, 480)

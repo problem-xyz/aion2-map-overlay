@@ -242,7 +242,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 34: an object node may carry "l", a hidden cube above (1) or below (-1) the ground about it.
 # 35: settings has show_pets, pets and pet_levels: the spots of the pets picked over the game, and
 #     each pet's level in the pets' checklist.
-API_VERSION = 35
+# 36: openPetsMap and closePetsMap, the pets' map in a window of its own.
+API_VERSION = 36
 
 
 def build_state(

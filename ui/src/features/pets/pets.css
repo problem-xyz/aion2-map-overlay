@@ -304,24 +304,55 @@
   color: var(--color-on-badge);
 }
 
-/* ---------- the two views: the checklist and the map ---------- */
-.pe-menu {
-  grid-template-columns: repeat(2, 1fr);
-}
-.pe-list-view {
+/* the checklist: the search and the filter over the list */
+.pe-checklist {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  min-height: 0;
+}
+
+/* ---------- the map's window: the checklist down the side, the map filling the rest ---------- */
+.pe-window {
+  display: grid;
+  grid-template-columns: minmax(360px, 420px) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+.pe-window-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  padding: var(--space-3);
+  border-right: 1px solid var(--color-veil-line);
+  background: var(--fill-panel-deep);
+}
+.pe-window-side .pe-checklist {
+  flex: 1;
+}
+/* the list scrolls inside the side, under the search, which stays */
+.pe-window-side .pe-list-card {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.pe-window-map {
+  position: relative;
+  min-width: 0;
+}
+.pe-window-map .pe-map {
+  position: absolute;
+  inset: 0;
 }
 
 /* ---------- the map ---------- */
 .pe-map {
-  position: relative;
   overflow: hidden;
   background: var(--color-bg-sunken);
 }
 .pe-map-canvas {
-  height: 440px;
+  height: 100%;
   background: var(--color-bg-sunken);
 }
 .pe-map-note {
@@ -345,7 +376,9 @@
   pointer-events: none;
 }
 /* a spot: the pet's portrait in a ring of its colour, or a dot of it for a pet with none */
-.pe-spot {
+/* with Leaflet's class: its own rule makes a marker a block, and which stylesheet comes last
+   differs from window to window */
+.leaflet-marker-icon.pe-spot {
   display: grid;
   place-items: center;
 }
@@ -365,4 +398,9 @@
   width: 12px;
   height: 12px;
   background: var(--pe-color);
+}
+/* in the side of the map's window the search and the filter are stacked: side by side, the
+   filter's names were cut short */
+.pe-window-side .pe-tools {
+  grid-template-columns: 1fr;
 }

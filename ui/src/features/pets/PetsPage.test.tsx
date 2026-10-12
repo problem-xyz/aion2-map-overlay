@@ -19,6 +19,12 @@ vi.mock("@/shared/backend/BackendProvider", () => ({
   useBackendState: (select: (s: unknown) => unknown) => select(state.current),
 }));
 
+const api = vi.hoisted(() => ({ openPetsMap: vi.fn() }));
+
+vi.mock("@/shared/backend/hooks", () => ({
+  useApi: () => api,
+}));
+
 vi.mock("@/shared/backend/useSettingsPatch", () => ({
   useSettingsPatch: () => change,
 }));
@@ -144,12 +150,11 @@ describe("PetsPage", () => {
     ).toHaveLength(113);
   });
 
-  it("shows the map in place of the checklist, saying so while it is being prepared", () => {
-    mount({ pets: [first.id] });
+  it("opens the map in a window of its own", () => {
+    mount();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Map" }));
+    fireEvent.click(screen.getByRole("button", { name: "Map" }));
 
-    expect(screen.queryByRole("list", { name: "Pets on Altgard" })).toBeNull();
-    expect(screen.getByText("Preparing the map…")).toBeTruthy();
+    expect(api.openPetsMap).toHaveBeenCalled();
   });
 });

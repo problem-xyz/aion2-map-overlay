@@ -81,6 +81,8 @@ export interface BackendApi {
   setTimersPlaquePinned(pinned: boolean): void;
   openTimersTimeline(): void;
   closeTimersTimeline(): void;
+  openPetsMap(): void;
+  closePetsMap(): void;
 }
 
 export function createBackendApi(object: BackendObject): BackendApi {
@@ -147,6 +149,8 @@ export function createBackendApi(object: BackendObject): BackendApi {
     setTimersPlaquePinned: (pinned) => object.setTimersPlaquePinned(pinned),
     openTimersTimeline: () => object.openTimersTimeline(),
     closeTimersTimeline: () => object.closeTimersTimeline(),
+    openPetsMap: () => object.openPetsMap(),
+    closePetsMap: () => object.closePetsMap(),
   };
 }
 

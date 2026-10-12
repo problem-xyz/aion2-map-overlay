@@ -74,8 +74,8 @@ Altgard, 113 on Verteron, each with the monsters that drop it.
 
 - **Levels.** Mark how far you have each pet: 5 souls for level 1, 25 for level 2, 75 for level 3.
 - **On the map.** Click up to five portraits and the overlay shows where those monsters stand,
-  each pet in its own colour. **Pets** under Start turns them on and off, and the tool's **Map**
-  view shows the same spots before you go.
+  each pet in its own colour. **Pets** under Start turns them on and off, and **Map** in the tool
+  opens a large window with the same spots, to look at before you go.
 
 ## Updates
 

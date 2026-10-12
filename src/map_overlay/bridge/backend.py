@@ -12,9 +12,10 @@ in getState(); it never means editing one of these.
     signals: stateChanged, statsChanged, previewChanged, notify, editorRequest,
              progressChanged, stepsChanged, updateChanged, timersChanged
 
-    slots (46):
+    slots (48):
       checkForUpdates()
       closeEditor()
+      closePetsMap()
       closeTimersTimeline()
       copyRouteCode(route_id)
       copyText(text)
@@ -29,6 +30,7 @@ in getState(); it never means editing one of these.
       openEditor(route_id)
       openLogsFolder()
       openMapsFolder()
+      openPetsMap()
       openRoutesFolder()
       openTimersTimeline()
       openUrl(url)
@@ -1481,6 +1483,21 @@ class Backend(QObject):
         self._windows.close_timeline()
 
     @Slot()
+    def openPetsMap(self) -> None:
+        """The pets' map in a large window of its own, raised if it is already open."""
+        self._windows.raise_pets_map(
+            self,
+            ui_url(self.dev, "pets-map"),
+            system_dpi_scale(),
+            self.state.pets_map_region,
+            lambda region: self._store.set_state(pets_map_region=region),
+        )
+
+    @Slot()
+    def closePetsMap(self) -> None:
+        self._windows.close_pets_map()
+
+    @Slot()
     def refreshTimersData(self) -> None:
         """Fetch the schedule and the world bosses now, rather than at the next check."""
         self._timers.refresh()
@@ -1490,8 +1507,9 @@ class Backend(QObject):
         self._updates.hand_over()
 
     def shutdown(self) -> None:
-        # Hidden first, so where it was left is in state before the write below
+        # Hidden first, so where they were left is in state before the write below
         self._windows.close_timeline()
+        self._windows.close_pets_map()
         # Before anything else: a debounced write that never lands is a lost setting.
         self._store.flush()
         self._screens.close()

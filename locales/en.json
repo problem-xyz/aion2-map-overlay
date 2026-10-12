@@ -246,7 +246,8 @@
       "steps": "Checklist",
       "prompt": "Route question",
       "timers": "Timers",
-      "timeline": "Day timeline"
+      "timeline": "Day timeline",
+      "petsMap": "Pets map"
     }
   },
   "notify": {
@@ -789,11 +790,8 @@
       "levelLabel": "Pet level",
       "level": "Level {level}: {souls} souls"
     },
-    "tabs": {
-      "list": "Checklist",
-      "map": "Map"
-    },
     "mapPreparing": "Preparing the map…",
-    "mapHint": "Tap portraits in the checklist to see where their monsters stand."
+    "mapHint": "Tap portraits in the checklist to see where their monsters stand.",
+    "openMap": "Map"
   }
 }
