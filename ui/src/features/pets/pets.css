@@ -1,0 +1,663 @@
+/* The pets tool: the card with the map's tally, the switch over the game with the pets picked,
+   then the checklist. The chip is the map's quick slot (panel.css), shared as the timers do. */
+
+.pe-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ---------- the tally ---------- */
+.pe-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--fill-panel-deep);
+}
+.pe-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 14px 16px;
+}
+.pe-hero-mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-frame);
+  border-radius: 50%;
+  color: var(--color-icon-warm);
+}
+.pe-hero-mark svg {
+  width: 22px;
+  height: 22px;
+}
+.pe-hero-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.pe-hero-kicker {
+  font: 600 var(--text-xl) / 1.15 var(--font-display);
+}
+.pe-hero-meta {
+  margin-top: 3px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.pe-hero-count {
+  font: 600 30px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.pe-hero-count span {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+.pe-hero-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: rgb(from var(--color-icon-warm) r g b / 15%);
+}
+.pe-hero-prog::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--pe-p, 0) * 100%);
+  background: var(--color-icon-warm);
+}
+
+/* ---------- the switch over the game, and the pets it draws ---------- */
+.pe-quick {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+/* the five places the pets drawn take: a strip as tall as the slots beside it */
+.pe-slots {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0 10px;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel-deep);
+}
+.pe-slots li {
+  display: grid;
+}
+/* switched off: kept as they are, drawn nowhere */
+.pe-slots.off .pe-slot {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+.pe-slot,
+.pe-slot-free {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+.pe-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: var(--pe-color);
+  box-shadow:
+    0 0 0 1px var(--color-outline),
+    0 0 8px rgb(from var(--pe-color) r g b / 35%);
+  color: var(--color-on-badge);
+}
+.pe-slot-face {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-slot-paw {
+  width: 16px;
+  height: 16px;
+}
+/* the cross that says a click takes the pet off the map, over its portrait */
+.pe-slot-x {
+  position: absolute;
+  inset: 2px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(7 11 18 / 70%);
+  color: var(--color-text);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+.pe-slot-x svg {
+  width: 12px;
+  height: 12px;
+}
+.pe-slot:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-slot:focus-visible .pe-slot-x {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .pe-slot:hover .pe-slot-x {
+    opacity: 1;
+  }
+}
+.pe-slot-free {
+  border: 1px dashed rgb(from var(--color-text-muted) r g b / 45%);
+}
+
+/* ---------- the search and the filter ---------- */
+.pe-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+.pe-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border-control);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-sunken);
+  color: var(--color-text-muted);
+}
+.pe-search:has(input:focus) {
+  border-color: var(--color-focus);
+}
+.pe-search-field {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 100%;
+}
+.pe-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  outline: none;
+}
+.pe-search input::placeholder {
+  color: var(--color-text-placeholder);
+}
+/* Chromium's own clear button, replaced by .pe-search-clear */
+.pe-search input::-webkit-search-cancel-button {
+  display: none;
+}
+.pe-search-clear {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-inline-end: -4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.pe-search-clear:hover {
+  background: var(--color-veil-hover);
+  color: var(--color-text);
+}
+
+/* ---------- the checklist ---------- */
+/* the list scrolls within itself, so the search and the filters above it stay in reach */
+.pe-list-card {
+  max-height: min(560px, 62vh);
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  background: var(--fill-panel);
+}
+.pe-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pe-none {
+  margin: 0;
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+}
+.pe-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 10px;
+}
+.pe-row + .pe-row {
+  border-top: 1px solid var(--color-veil-line);
+}
+/* picked: drawn over the game in this colour, which the row carries down its edge */
+.pe-row.picked {
+  background: linear-gradient(90deg, rgb(from var(--pe-color) r g b / 12%), transparent 60%);
+  box-shadow: inset 2px 0 0 var(--pe-color);
+}
+.pe-row-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pe-row-name {
+  font: 600 var(--text-md) / 1.25 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-row.done .pe-row-name {
+  color: var(--color-text-secondary);
+}
+.pe-row-sub {
+  margin-top: 2px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* the switch that draws the pet over the game: its portrait, or a paw for a pet with none, ringed
+   in the pet's colour while it is drawn */
+.pe-pick {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.pe-pick svg {
+  width: 16px;
+  height: 16px;
+}
+.pe-pick.on {
+  border-color: var(--color-outline);
+  background: var(--pe-color);
+  color: var(--color-on-badge);
+}
+/* the portrait fills the ring but for 2px of it: the pet's colour, or the plain border */
+.pe-face {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-pick.face:not(.on) {
+  border-color: var(--color-border-control);
+}
+.pe-pick.face:not(.on, :disabled) .pe-face {
+  opacity: 0.85;
+}
+.pe-pick.face:disabled .pe-face {
+  filter: grayscale(1);
+}
+.pe-pick:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pe-pick:focus-visible,
+.pe-level:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+@media (hover: hover) {
+  .pe-pick:hover:not(:disabled, .on) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+  .pe-level:hover:not(.on) {
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+
+/* the three levels, each marked with the souls it takes */
+.pe-levels {
+  display: flex;
+  gap: 3px;
+}
+.pe-level {
+  min-width: 30px;
+  height: 24px;
+  padding: 0 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: 600 var(--text-2xs) / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.pe-level.on {
+  border-color: var(--color-frame-strong);
+  background: var(--fill-check);
+  color: var(--color-on-badge);
+}
+
+/* the checklist: the search and the filter over the list */
+.pe-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+}
+
+/* ---------- the map's window: the checklist down the side, the map filling the rest ---------- */
+.pe-window {
+  display: grid;
+  grid-template-columns: minmax(360px, 420px) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+.pe-window-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  padding: var(--space-3);
+  border-right: 1px solid var(--color-veil-line);
+  background: var(--fill-panel-deep);
+}
+.pe-window-side .pe-checklist {
+  flex: 1;
+}
+/* the list scrolls inside the side, under the search, which stays */
+.pe-window-side .pe-list-card {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+}
+.pe-window-map {
+  position: relative;
+  min-width: 0;
+}
+.pe-window-map .pe-map {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- the map ---------- */
+.pe-map {
+  overflow: hidden;
+  background: var(--color-bg-sunken);
+}
+.pe-map-canvas {
+  height: 100%;
+  background: var(--color-bg-sunken);
+}
+.pe-map-note {
+  margin: 0;
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+}
+.pe-map-hint {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 500;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-scrim);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+  pointer-events: none;
+}
+/* a spot: the pet's portrait in a ring of its colour, or a dot of it for a pet with none */
+/* with Leaflet's class: its own rule makes a marker a block, and which stylesheet comes last
+   differs from window to window */
+.leaflet-marker-icon.pe-spot {
+  display: grid;
+  place-items: center;
+}
+.pe-spot-face,
+.pe-spot-dot {
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 2px var(--pe-color),
+    0 0 0 3px var(--color-outline);
+}
+.pe-spot-face {
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+}
+.pe-spot-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--pe-color);
+}
+/* in the side of the map's window the search and the filter are stacked: side by side, the
+   filter's names were cut short */
+.pe-window-side .pe-tools {
+  grid-template-columns: 1fr;
+}
+
+/* ---------- the pets farmed at the same spots, under a picked one ---------- */
+.pe-near {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-top: 5px;
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+}
+.pe-near-label {
+  flex: none;
+}
+.pe-near-pet {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 150px;
+  height: 22px;
+  padding: 0 8px 0 2px;
+  border: 1px dashed rgb(from var(--color-text-muted) r g b / 55%);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font: inherit;
+}
+/* drawn already: in its colour, and nothing to click */
+.pe-near-pet.on {
+  border: 1px solid var(--pe-color);
+  cursor: default;
+}
+.pe-near-pet:disabled:not(.on) {
+  opacity: 0.5;
+  cursor: default;
+}
+@media (hover: hover) {
+  .pe-near-pet:hover:not(:disabled) {
+    border-style: solid;
+    border-color: var(--color-frame-strong);
+    color: var(--color-text);
+  }
+}
+.pe-near-pet:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-near-face {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+}
+.pe-near-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-tip-also {
+  opacity: 0.8;
+}
+
+/* a pet whose monsters are many more on the other side: where to farm it instead */
+.pe-elsewhere {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: var(--text-2xs);
+  line-height: 1.3;
+  color: var(--color-warning);
+}
+.pe-elsewhere-icon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  margin-top: 1px;
+}
+
+/* the best spot's count, before the pets farmed there with it */
+.pe-near-best {
+  flex: none;
+  font: 600 var(--text-2xs) / 1 var(--font-display);
+  color: var(--color-drop);
+  font-variant-numeric: tabular-nums;
+}
+.pe-near-count {
+  flex: none;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- the best spots on the map ---------- */
+.leaflet-marker-icon.pe-best {
+  display: grid;
+  place-items: center;
+}
+.pe-best .pe-spot-face {
+  width: 34px;
+  height: 34px;
+  box-shadow:
+    0 0 0 3px var(--pe-color),
+    0 0 0 4px var(--color-outline),
+    0 0 14px 4px rgb(from var(--pe-color) r g b / 55%);
+}
+.pe-best .pe-spot-dot {
+  width: 20px;
+  height: 20px;
+}
+.pe-best-star {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-drop);
+  box-shadow: 0 0 0 1.5px var(--color-outline);
+  color: var(--color-on-badge);
+  font-size: 12px;
+  line-height: 1;
+}
+/* the card of best spots, over the top right of the map */
+.pe-best-card {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 800;
+  width: 270px;
+  padding: 8px;
+  border: 1px solid var(--color-frame);
+  border-radius: var(--radius-md);
+  background: var(--fill-panel);
+  box-shadow: var(--shadow-raised);
+}
+.pe-best-title {
+  margin: 2px 6px 6px;
+  font: 600 var(--text-xs) / 1.2 var(--font-display);
+  color: var(--color-text-bronze);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.pe-best-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-best-go {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  text-align: left;
+}
+.pe-best-go:hover {
+  background: var(--color-veil-hover);
+}
+.pe-best-go:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.pe-best-face {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  box-shadow:
+    0 0 0 2px var(--pe-color),
+    0 0 0 3px var(--color-outline);
+}
+.pe-best-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.pe-best-name {
+  font: 600 var(--text-sm) / 1.2 var(--font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pe-best-meta {
+  font-size: var(--text-2xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

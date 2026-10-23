@@ -324,8 +324,13 @@ function backendObject(rt: MockRuntime) {
     resetSettings: () => {
       // Defaults come from the schema, the way Python's come from the dataclass; the updater's
       // fields survive, as they do in SettingsStore.reset_settings.
-      const { updates_auto_check, updates_auto_download, updates_skipped_version } =
-        rt.state.settings;
+      const {
+        updates_auto_check,
+        updates_auto_download,
+        updates_skipped_version,
+        pets,
+        pet_levels,
+      } = rt.state.settings;
       const defaults = Object.fromEntries(
         Object.entries(MOCK_SETTINGS_SCHEMA).map(([key, field]) => [key, field.default]),
       ) as unknown as Settings;
@@ -334,6 +339,8 @@ function backendObject(rt: MockRuntime) {
         updates_auto_check,
         updates_auto_download,
         updates_skipped_version,
+        pets,
+        pet_levels,
       };
       rt.state.captureVisible = rt.state.settings.capture_visible;
       rt.state.steps.pinned = rt.state.settings.steps_pinned;
@@ -538,6 +545,11 @@ function backendObject(rt: MockRuntime) {
       window.open(url, "mo-timeline", "width=1200,height=640")?.focus();
     },
     closeTimersTimeline: () => window.close(),
+    openPetsMap: () => {
+      const url = `${window.location.pathname}${window.location.search}#pets-map`;
+      window.open(url, "mo-pets-map", "width=1280,height=820")?.focus();
+    },
+    closePetsMap: () => window.close(),
     refreshTimersData: () => {
       // a fetch that finds nothing newer, after a moment
       pushTimers(rt, true);

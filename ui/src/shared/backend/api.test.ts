@@ -110,6 +110,8 @@ function makeBackendDouble(replies: Replies) {
     setTimersPlaquePinned: vi.fn(),
     openTimersTimeline: vi.fn(),
     closeTimersTimeline: vi.fn(),
+    openPetsMap: vi.fn(),
+    closePetsMap: vi.fn(),
 
     stateChanged: qtSignal(),
     statsChanged: qtSignal(),
@@ -189,6 +191,8 @@ describe("createBackendApi", () => {
     "refreshTimersData",
     "openTimersTimeline",
     "closeTimersTimeline",
+    "openPetsMap",
+    "closePetsMap",
   ] as const;
 
   it.each(NO_ARGUMENT_METHODS)("calls the %s slot, and no other", (name) => {

@@ -69,6 +69,14 @@ export interface Settings {
   show_resources: boolean;
   resources: string[];
   /**
+   * Since api 35: the spots of the pets `pets` lists (soul item ids from assets/pets/) over the
+   * game, no more than five of a map's; the list is kept while the switch is off. `pet_levels`
+   * is the pets' checklist, each pet's level 1 to 3 under "<map>:<pet id>"; 0 is not kept.
+   */
+  show_pets: boolean;
+  pets: string[];
+  pet_levels: Record<string, number>;
+  /**
    * Since api 13: the same in the route editor, which always draws every point. "dim" fades the
    * route away from the selected point and `editor_route_ahead` steps from it; "all" draws it
    * all in full. `editor_opacity` is the lines' and arrows' opacity there.
@@ -619,6 +627,9 @@ export interface BackendSlots {
   /** The day timeline in a window of its own; a second call raises it. Api 32. */
   openTimersTimeline(): void;
   closeTimersTimeline(): void;
+  /** The pets' map in a window of its own; a second call raises it. Api 36. */
+  openPetsMap(): void;
+  closePetsMap(): void;
 }
 
 export interface QtSignal<T extends unknown[] = [string]> {

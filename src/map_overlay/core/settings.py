@@ -95,7 +95,7 @@ class Settings:
     route_view: str = field(default="steps", metadata=choices("steps", "dim", "all"))
     # Whether the overlay follows the route at all. Off, it is a map of the game's objects alone:
     # no route, no checklist and no word about being off it, the open map found by itself, and
-    # only the cubes and resources drawn. The route stays chosen for when it is turned back on.
+    # only the cubes, resources and pets drawn. The route stays chosen for when it is back on.
     route_mode: bool = True
     # Far off the route, say so over the map and offer to go on from a later point.
     route_far_notice: bool = True
@@ -114,6 +114,13 @@ class Settings:
     # assets/marks/resources.json). The list is kept while the switch is off.
     show_resources: bool = False
     resources: list[str] = field(default_factory=list)
+    # The spots of the pets listed in `pets` (soul item ids from assets/pets/) over the game, no
+    # more than store/pets.py's MAX_PICKED; the list is kept while the switch is off.
+    show_pets: bool = False
+    pets: list[str] = field(default_factory=list)
+    # The pets' checklist: each pet's level, 1 to 3, under "<map>:<pet id>". A pet not named is
+    # at 0.
+    pet_levels: dict[str, int] = field(default_factory=dict)
     # The same in the route editor, which always draws every point: "dim" fades the route away
     # from the selected point and the steps after it, "all" draws it all in full.
     editor_route_view: str = field(default="dim", metadata=choices("dim", "all"))
@@ -195,6 +202,8 @@ class State:
     timers_plaque_visible: bool = False
     # The day timeline's window, where it was left.
     timers_timeline_region: Region | None = None
+    # The pets' map window, where it was left.
+    pets_map_region: Region | None = None
 
 
 # --------------------------------------------------------------------------- schema export
@@ -327,6 +336,21 @@ def _coerce_timer_events(value: Any) -> dict[str, dict[str, Any]] | None:
     return out
 
 
+# The levels a pet's checklist entry may hold; 0 is not kept, as a pet not named is at 0.
+PET_LEVELS = (1, 2, 3)
+
+
+def _coerce_pet_levels(value: Any) -> dict[str, int] | None:
+    """Each pet's level, keeping only a named pet at a level there is."""
+    if not isinstance(value, dict):
+        return None
+    return {
+        k: int(v)
+        for k, v in value.items()
+        if isinstance(k, str) and k and _finite(v) and v == int(v) and int(v) in PET_LEVELS
+    }
+
+
 # Fields with a shape of their own, each checked by its coercer, which returns None for a
 # value it cannot use.
 _STRUCTURED: dict[str, Callable[[Any], Any]] = {
@@ -336,10 +360,13 @@ _STRUCTURED: dict[str, Callable[[Any], Any]] = {
     "route_order": _coerce_ids,
     "seeded_routes": _coerce_ids,
     "resources": _coerce_ids,
+    "pets": _coerce_ids,
+    "pet_levels": _coerce_pet_levels,
     "timers_events": _coerce_timer_events,
     "timers_world_shown": _coerce_ids,
     "timers_plaque_region": _coerce_region,
     "timers_timeline_region": _coerce_region,
+    "pets_map_region": _coerce_region,
 }
 
 

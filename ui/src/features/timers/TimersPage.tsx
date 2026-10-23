@@ -4,6 +4,7 @@ import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
 import { useSettingsPatch } from "@/shared/backend/useSettingsPatch";
+import { useRemembered } from "@/shared/hooks/useRemembered";
 import { type MessageKey, useI18n } from "@/shared/i18n";
 import Icon, { type IconName } from "@/shared/ui/Icon";
 import Sheen from "@/shared/ui/Sheen";
@@ -12,7 +13,6 @@ import ScheduleView from "./components/ScheduleView";
 import TimersHero from "./components/TimersHero";
 import TimersSettings from "./components/TimersSettings";
 import { useNow } from "./hooks/useNow";
-import { useRemembered } from "./hooks/useRemembered";
 import { byTime, type Filter, type Realm, timersAt } from "./lib/model";
 import "./timers.css";
 

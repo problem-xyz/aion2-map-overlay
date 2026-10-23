@@ -67,6 +67,19 @@ Festival and the sieges) and the daily and weekly resets, in your own time.
   plaque over the game. With the sound off, the plaque shows itself for a moment instead.
 - **Day timeline.** A wide window with one or two days at a glance: every event on its own line.
 
+## Pets
+
+The third tool, **Pets**, is a checklist of the pets whose souls drop on your map: 108 on
+Altgard, 113 on Verteron, each with the monsters that drop it.
+
+- **Levels.** Mark how far you have each pet: 5 souls for level 1, 25 for level 2, 75 for level 3.
+- **On the map.** Click up to five portraits and the overlay shows where those monsters stand,
+  each pet in its own colour. **Pets** under Start turns them on and off, and **Map** in the tool
+  opens a large window with the same spots, to look at before you go.
+- **Best spots.** The map, and the overlay over the game, mark with a star where each picked pet
+  is best farmed, and name the other pets farmed in that place. A pet with many more monsters on
+  the other side says it is better farmed there, through a rift.
+
 ## Updates
 
 The app checks for updates by itself, downloads them in the background and installs them when

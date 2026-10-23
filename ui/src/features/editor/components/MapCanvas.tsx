@@ -12,12 +12,12 @@ import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 import type { RouteStyle } from "@/shared/backend/contract";
 import { useLatest } from "@/shared/hooks/useLatest";
+import { mapBounds, pixelCRS, toPoint } from "@/shared/map/crs";
 import { iconSprite, type ObjectIconName } from "@/shared/ui/markIcons";
 
 import { useEditorActions, useEditorState } from "../EditorContext";
 import createCanvasOverlay, { type CanvasOverlayLayer } from "../lib/CanvasOverlay";
 import { coveredEdges } from "../lib/coveredEdges";
-import { mapBounds, pixelCRS, toPoint } from "../lib/crs";
 import {
   ARROW_L,
   ARROW_W,

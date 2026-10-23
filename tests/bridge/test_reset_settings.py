@@ -112,6 +112,17 @@ def test_reset_keeps_the_updater_fields(backend: Backend) -> None:
     assert backend.settings == Settings(updates_auto_check=False, updates_skipped_version="1.2.0")
 
 
+def test_reset_keeps_the_pets_picked_and_their_levels(backend: Backend) -> None:
+    """The pets are a tool of their own: their checklist is the player's progress."""
+    backend.updateSettings(
+        json.dumps({"show_pets": True, "pets": ["534660047"], "pet_levels": {"altgard:1": 2}})
+    )
+
+    backend.resetSettings()
+
+    assert backend.settings == Settings(pets=["534660047"], pet_levels={"altgard:1": 2})
+
+
 def test_reset_leaves_the_map_area_alone(backend: Backend) -> None:
     """The map area is state, not a setting: resetting preferences must not make the user
     pick it again."""

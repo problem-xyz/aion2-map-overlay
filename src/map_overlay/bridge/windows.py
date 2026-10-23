@@ -21,7 +21,7 @@ from map_overlay.qt.overlay import OverlayWindow, primary_screen_geometry
 from map_overlay.qt.prompt import PromptWindow
 from map_overlay.qt.region_selector import RegionSelector
 from map_overlay.qt.steps_window import WebStepsWindow
-from map_overlay.qt.timeline_window import TimelineWindow
+from map_overlay.qt.timeline_window import PetsMapWindow, TimelineWindow
 
 log = logging.getLogger(__name__)
 
@@ -54,6 +54,7 @@ class WindowManager(QObject):
         self._selector = None
         self._editor = None
         self._timeline: TimelineWindow | None = None
+        self._pets_map: PetsMapWindow | None = None
 
     def retitle(self) -> None:
         """Re-read every window title after a language change.
@@ -69,6 +70,8 @@ class WindowManager(QObject):
             self._editor.retitle()
         if self._timeline is not None:
             self._timeline.retitle()
+        if self._pets_map is not None:
+            self._pets_map.retitle()
         if self._selector is not None:
             self._selector.retitle()
 
@@ -198,6 +201,27 @@ class WindowManager(QObject):
         if self._timeline:
             self._timeline.hide()
 
+    # ------------------------------------------------------------------ pets map
+    def pets_map_visible(self) -> bool:
+        return bool(self._pets_map and self._pets_map.isVisible())
+
+    def raise_pets_map(self, backend, url, scale, region, on_moved) -> PetsMapWindow:
+        """Show the pets' map, built on first use, and bring it to the front."""
+        from PySide6.QtCore import Qt  # noqa: PLC0415 -- only needed for this one flag
+
+        if self._pets_map is None:
+            self._pets_map = PetsMapWindow(backend, url, scale, region, on_moved)
+        window = self._pets_map
+        window.show()
+        window.setWindowState(window.windowState() & ~Qt.WindowState.WindowMinimized)
+        window.raise_()
+        window.activateWindow()
+        return window
+
+    def close_pets_map(self) -> None:
+        if self._pets_map:
+            self._pets_map.hide()
+
     # ------------------------------------------------------------------ shutdown
     def hide_all(self) -> None:
         """Take every window off the screen and keep it, pages and channels included.
@@ -208,6 +232,7 @@ class WindowManager(QObject):
         """
         self.close_editor()
         self.close_timeline()
+        self.close_pets_map()
         self.steps.hide()
         self.overlay.hide()
         self.prompt.hide()
@@ -223,6 +248,9 @@ class WindowManager(QObject):
         if self._timeline:
             self._timeline.force_close()
             self._timeline = None
+        if self._pets_map:
+            self._pets_map.force_close()
+            self._pets_map = None
         # The plaque is deleted, not detached. Its channel and the bridge object it serves both
         # die with the window, page first, so nothing is left calling into a half-destroyed
         # object. Detaching a page that is still loading is itself a crash: an access violation
