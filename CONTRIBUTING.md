@@ -207,7 +207,7 @@ own token: a normal release, never a pre-release, named `<APP_NAME> <version>`, 
 `scripts/release_notes.py`'s output -- the version's CHANGELOG section and how to install. The
 run's summary lists the SHA-256 of `Setup.exe`, `Portable.zip` and the packages.
 
-A third job announces the published release in the Discord server's two download channels,
+A third job, `announce.yml`, announces the published release in the Discord server's two download channels,
 English and Russian, each seen only by its language role: a short note on what is new, with
 buttons for `Setup.exe`, `Portable.zip` and the release page, which
 `scripts/discord_announce.py` writes and posts. Write `.github/discord/<version>.en.md` and
@@ -237,6 +237,11 @@ workflow*, the tag as the ref, its version, `dry_run` off. GitHub keeps one wait
 concurrency group and cancels an older waiting one, so a third tag pushed while a release runs
 cancels the second tag's run; re-run that one the same way. Dry runs wait in a group of their
 own and cannot cancel a release.
+
+When the release went out and only its Discord post failed, announce it on its own: *Actions >
+Announce > Run workflow* with the version, or `gh workflow run announce.yml -f version=1.0.0`.
+It runs from `main`, so a fix to the announcement reaches a release already out, and it stops
+before posting when that version has no release.
 
 To try the whole pipeline without publishing, run it on a branch with `dry_run` on and the
 version equal to that branch's `__version__`; the output is kept as the run's artifact for five

@@ -1,0 +1,67 @@
+name: Announce
+
+# The news in the Discord server's download channels, once a release is out: one for the English
+# players, one for the Russian, each seen only by its language role; a channel gets
+# .github/discord/<version>.<lang>.md when it exists (see discord_announce.py). The release
+# workflow calls it after publishing; run it by hand for a release whose announcement failed, or
+# was never made. A channel's webhook (Edit Channel > Integrations > Webhooks) is kept in
+# DISCORD_RELEASES_WEBHOOK_EN or _RU; a channel without one is not announced to, and nothing
+# fails. The repository variables DISCORD_RELEASES_ROLE_EN and _RU, role ids, ping the players
+# who took that role. With DISCORD_BOT_TOKEN, a bot allowed to pin messages there pins the post
+# in place of the last.
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+    secrets:
+      DISCORD_RELEASES_WEBHOOK_EN:
+        required: false
+      DISCORD_RELEASES_WEBHOOK_RU:
+        required: false
+      DISCORD_BOT_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Released version to announce, without the v, such as 1.0.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # uv brings its own CPython, so the runner image's Python builds do not matter: a pinned
+      # setup-python version once went missing when ubuntu-latest moved on. The script needs
+      # nothing outside the standard library, so no uv sync.
+      - uses: astral-sh/setup-uv@v10.2.0
+      - name: Post to Discord
+        env:
+          WEBHOOK_EN: ${{ secrets.DISCORD_RELEASES_WEBHOOK_EN }}
+          WEBHOOK_RU: ${{ secrets.DISCORD_RELEASES_WEBHOOK_RU }}
+          ROLE_EN: ${{ vars.DISCORD_RELEASES_ROLE_EN }}
+          ROLE_RU: ${{ vars.DISCORD_RELEASES_ROLE_RU }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          # The buttons link to this release's files: a version with no release would post dead
+          # links, so a run by hand stops here instead.
+          gh release view "v$VERSION" --repo "$GITHUB_REPOSITORY" > /dev/null
+          for lang in EN RU; do
+            webhook="WEBHOOK_$lang"; role="ROLE_$lang"
+            if [ -z "${!webhook}" ]; then
+              echo "::notice::DISCORD_RELEASES_WEBHOOK_$lang is not set: that channel is not announced to"
+              continue
+            fi
+            DISCORD_WEBHOOK="${!webhook}" uv run --no-project --python 3.14 \
+              python scripts/discord_announce.py "$VERSION" --role "${!role}" --lang "${lang,,}" --post
+          done
