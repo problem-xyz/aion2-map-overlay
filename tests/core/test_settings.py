@@ -551,3 +551,26 @@ def test_a_reset_is_shown_but_not_announced_by_default() -> None:
     assert timer_defaults("reset")["lead"] == 0
     assert timer_defaults("event") == {"shown": True, "lead": 5, "signal": "chime"}
     assert all(timer_defaults(k)["lead"] in TIMER_LEADS for k in ("event", "boss", "reset"))
+
+
+def test_a_pet_level_is_kept_only_at_a_level_there_is() -> None:
+    raw = {"altgard:1": 1, "altgard:2": 3, "altgard:3": 0, "altgard:4": 4, "altgard:5": 2.5}
+    raw |= {"altgard:6": True, "altgard:7": "2", "": 2, "verteron:1": 2.0}
+
+    settings, reset = coerce({"pet_levels": raw}, Settings)
+
+    assert settings.pet_levels == {"altgard:1": 1, "altgard:2": 3, "verteron:1": 2}
+    assert reset == []
+
+
+def test_pet_levels_that_are_no_map_are_reset() -> None:
+    settings, reset = coerce({"pet_levels": [1, 2]}, Settings)
+
+    assert settings.pet_levels == {}
+    assert reset == ["pet_levels"]
+
+
+def test_the_pets_picked_are_ids_each_once() -> None:
+    settings, _ = coerce({"pets": ["1", "", 2, "1", "3"]}, Settings)
+
+    assert settings.pets == ["1", "3"]

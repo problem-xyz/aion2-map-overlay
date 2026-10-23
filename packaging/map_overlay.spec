@@ -40,6 +40,12 @@ a = Analysis(  # noqa: F821
         # overlay draws them by
         (str(ROOT / "assets" / "marks" / "resources.json"), "assets/marks"),
         (str(ROOT / "assets" / "marks" / "cubes.json"), "assets/marks"),
+        # the pets, their monsters, spots and portraits, which the overlay draws the picked ones by
+        *(
+            (str(p), "assets/pets")
+            for p in (ROOT / "assets" / "pets").iterdir()
+            if p.suffix in (".json", ".webp")
+        ),
         # the timers' schedule and world bosses, the copy used until a newer one is fetched
         *((str(p), "assets/timers") for p in (ROOT / "assets" / "timers").glob("*.json")),
         # the reminders' chime, and the spoken phrases beside it as they arrive

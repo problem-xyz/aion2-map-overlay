@@ -59,7 +59,8 @@ export type IconName =
   | "minus"
   | "fit"
   | "info"
-  | "external";
+  | "external"
+  | "paw";
 
 const PATHS: Record<IconName, ReactNode> = {
   // Drawn as the client draws its glyphs, not in outline: solid and cut into facets, the
@@ -270,6 +271,20 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <circle cx="8" cy="8" r="6.25" />
       <path d="M8 7.25v4M8 4.75v.01" />
+    </>
+  ),
+  // A paw: the pets, as the overlay marks their spots
+  paw: (
+    <>
+      <path
+        d="M8 8.25c-2 0-3.75 2-3.75 3.6 0 1.1.9 1.65 1.9 1.4.7-.2 1.2-.45 1.85-.45s1.15.25 1.85.45c1 .25 1.9-.3 1.9-1.4 0-1.6-1.75-3.6-3.75-3.6z"
+        fill="currentColor"
+        stroke="none"
+      />
+      <ellipse cx="3.4" cy="7" rx="1.2" ry="1.5" fill="currentColor" stroke="none" />
+      <ellipse cx="6.1" cy="4" rx="1.2" ry="1.55" fill="currentColor" stroke="none" />
+      <ellipse cx="9.9" cy="4" rx="1.2" ry="1.55" fill="currentColor" stroke="none" />
+      <ellipse cx="12.6" cy="7" rx="1.2" ry="1.5" fill="currentColor" stroke="none" />
     </>
   ),
   // A page that opens in the browser, outside the app: an arrow leaving its box

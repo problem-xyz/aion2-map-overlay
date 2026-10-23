@@ -10,6 +10,7 @@ import { useAsk } from "@/shared/hooks/useAsk";
 import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
 import { useLatest } from "@/shared/hooks/useLatest";
 import { useT } from "@/shared/i18n";
+import { mapBounds, toLatLng } from "@/shared/map/crs";
 import { useToasts } from "@/shared/ui/ToastProvider";
 import Toasts from "@/shared/ui/Toasts";
 
@@ -26,7 +27,6 @@ import { useEditorHotkeys } from "./hooks/useEditorHotkeys";
 import { useMapObjects } from "./hooks/useMapObjects";
 import { useRouteDocument } from "./hooks/useRouteDocument";
 import { coveredEdges } from "./lib/coveredEdges";
-import { mapBounds, toLatLng } from "./lib/crs";
 import { SNAP_PX, type Point } from "./lib/geometry";
 import { ZOOM_STEP } from "./lib/smoothZoom";
 

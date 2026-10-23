@@ -3,6 +3,7 @@ import { type CSSProperties, type PointerEvent, useEffect, useMemo, useRef, useS
 import { useBackendState } from "@/shared/backend/BackendProvider";
 import type { AppState } from "@/shared/backend/contract";
 import { useApi } from "@/shared/backend/hooks";
+import { useRemembered } from "@/shared/hooks/useRemembered";
 import { type MessageKey, useI18n } from "@/shared/i18n";
 import Segmented from "@/shared/ui/Segmented";
 import TimerMark from "@/shared/ui/TimerMark";
@@ -10,7 +11,6 @@ import { timerHue } from "@/shared/ui/timerMarks";
 
 import DropMark from "../components/DropMark";
 import { useNow } from "../hooks/useNow";
-import { useRemembered } from "../hooks/useRemembered";
 import { clock, day } from "../lib/format";
 import { type Filter, type Realm, timersAt } from "../lib/model";
 import { timerName } from "../lib/names";

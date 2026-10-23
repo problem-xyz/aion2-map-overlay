@@ -4,11 +4,12 @@ import { type MessageKey, useT } from "@/shared/i18n";
 import Icon, { type IconName } from "@/shared/ui/Icon";
 import Sheen from "@/shared/ui/Sheen";
 
-export type Tool = "map" | "timers" | "app";
+export type Tool = "map" | "timers" | "pets" | "app";
 
 const TOOLS: readonly { id: Exclude<Tool, "app">; label: MessageKey; icon: IconName }[] = [
   { id: "map", label: "app.tools.map", icon: "map" },
   { id: "timers", label: "app.tools.timers", icon: "clock" },
+  { id: "pets", label: "app.tools.pets", icon: "paw" },
 ];
 
 export function toolPanelId(tool: Tool): string {
@@ -23,13 +24,13 @@ export interface ToolSwitchProps {
 }
 
 /**
- * The panel's two tools, as the client's selected tabs, and the gear that opens what both share.
+ * The panel's tools, as the client's selected tabs, and the gear that opens what they share.
  * The tabs are a tablist over the tool below; the gear is a third tab, since it swaps the same
  * area for the app's own settings.
  */
 export default function ToolSwitch({ active, onSelect, updateWaiting }: ToolSwitchProps) {
   const t = useT();
-  const all: Tool[] = ["map", "timers", "app"];
+  const all: Tool[] = ["map", "timers", "pets", "app"];
 
   const onKey = (e: ReactKeyboardEvent, tool: Tool) => {
     const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];

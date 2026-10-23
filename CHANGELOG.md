@@ -10,11 +10,36 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+### Added
+
+- Pets, the panel's third tool: a checklist of every pet whose souls drop on your map, 108 on
+  Altgard and 113 on Verteron, with the monsters that drop them. Mark each pet's level as you
+  collect it: 5 souls for the first, 25 for the second, 75 for the third.
+- Pick up to five pets and the overlay shows where their monsters stand on the game map, each
+  pet's portrait in its own colour. **Pets** beside Cubes and Resources turns them on and off.
+  **Map** in the Pets tool opens a large window, like the route editor's, with the checklist
+  beside the map of those spots, to look at before you go.
+- The pets' map marks each picked pet's best spot with a star: the most of its monsters within
+  a round, and among places with nearly as many, the one where other pets still to collect stand
+  too. The Best spots card flies the map to each, and the overlay marks the same spot over the
+  game.
+- A pet you picked says how many monsters its best spot has and names the other pets farmed in
+  that one place, a click from showing them too. A spot on the map names them as well.
+- A pet whose monsters are many more on the other side says so, with both counts: its souls come
+  faster there, through a rift.
+- The route editor's Map objects fold: the arrow beside a group hides its categories, and each map
+  remembers which groups you folded.
+
 ### Changed
 
 - The hidden cubes are coloured by group. Each group is the set of spots one cube can appear
   at, so the cubes of one colour in an area are one cube to look for; groups side by side never
   share a colour. Over the game the ring around a cube takes its colour too.
+
+### Fixed
+
+- Artifact Siege, Siege Bosses and Guardian General Nahma on the Global servers counted down to
+  21:00 UTC; they start at 21:00 on your region's clock, two hours earlier in Europe in summer.
 
 ## [1.6.0] - 2026-10-07
 

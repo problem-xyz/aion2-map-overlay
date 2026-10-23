@@ -21,11 +21,13 @@ function mount(props: Partial<OverlayFiltersProps> = {}) {
     resources: false,
     picked: [],
     available: ["odyle", "orichalcum", "ruby"],
+    pets: false,
     traces: true,
     seals: true,
     onCubes: vi.fn(),
     onResources: vi.fn(),
     onPick: vi.fn(),
+    onPets: vi.fn(),
     onTraces: vi.fn(),
     onSeals: vi.fn(),
     ...props,
@@ -60,6 +62,15 @@ describe("OverlayFilters", () => {
     expect(props.onCubes).not.toHaveBeenCalled();
     expect(props.onTraces).not.toHaveBeenCalled();
     expect(props.onResources).not.toHaveBeenCalled();
+  });
+
+  it("switches the pets on and off, which are picked elsewhere", () => {
+    const props = mount({ pets: true });
+
+    expect(box("panel.filters.pets").checked).toBe(true);
+    fireEvent.click(box("panel.filters.pets"));
+
+    expect(props.onPets).toHaveBeenCalledWith(false);
   });
 });
 
