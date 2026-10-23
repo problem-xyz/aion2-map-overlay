@@ -258,6 +258,28 @@ def test_the_command_reads_the_translation_or_falls_back_to_english(
     assert capsys.readouterr().err == ""
 
 
+def test_a_short_english_text_replaces_the_changelog_and_is_the_fallback_too(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(CHANGELOG, encoding="utf-8")
+    monkeypatch.setattr(announce, "CHANGELOG", changelog)
+    monkeypatch.setattr(announce, "TRANSLATIONS", tmp_path)
+    short = "### New\n\n- One short line."
+    (tmp_path / "1.0.0-beta.1.en.md").write_text(short, encoding="utf-8")
+    out = tmp_path / "announce.json"
+    expected = announce.announcement(CHANGELOG, "1.0.0-beta.1", translation=short)
+
+    assert announce.main(["1.0.0-beta.1", "--output", str(out)]) == 0
+    assert json.loads(out.read_text(encoding="utf-8")) == expected
+    assert capsys.readouterr().err == ""
+
+    # A channel with no text of its own gets the short English one, not the CHANGELOG.
+    assert announce.main(["1.0.0-beta.1", "--lang", "ru", "--output", str(out)]) == 0
+    assert json.loads(out.read_text(encoding="utf-8")) == expected
+    assert "the ru channel gets the English notes" in capsys.readouterr().err
+
+
 def test_every_translation_in_the_repository_is_one_the_script_can_post() -> None:
     for path in sorted((REPO / ".github" / "discord").glob("*.md")):
         version, lang, _ = path.name.rsplit(".", 2)
