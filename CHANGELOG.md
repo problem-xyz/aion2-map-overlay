@@ -10,6 +10,8 @@ changes are left out unless they change how the app is installed, run or updated
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-23
+
 ### Added
 
 - Pets, the panel's third tool: a checklist of every pet whose souls drop on your map, 108 on
