@@ -42,6 +42,8 @@ export interface IndexPoint {
   cat: string;
   /** A hidden cube above (1) or below (-1) the ground about it, as the set says. */
   level?: 1 | -1;
+  /** A hidden cube's group colour, an index into assets/marks/cubes.json. */
+  tint?: number;
 }
 
 /** Which categories to show: category id -> visible or not. */
@@ -96,6 +98,7 @@ export function buildIndex(
         description: n.d,
         cat: cat.id,
         ...(n.l ? { level: n.l } : {}),
+        ...(n.g !== undefined ? { tint: n.g } : {}),
       });
     }
   }

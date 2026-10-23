@@ -243,7 +243,8 @@ def steps_state(settings, state) -> StepsPayload:
 # 35: settings has show_pets, pets and pet_levels: the spots of the pets picked over the game, and
 #     each pet's level in the pets' checklist.
 # 36: openPetsMap and closePetsMap, the pets' map in a window of its own.
-API_VERSION = 36
+# 37: an object node may carry "g", a hidden cube's group colour (assets/marks/cubes.json).
+API_VERSION = 37
 
 
 def build_state(

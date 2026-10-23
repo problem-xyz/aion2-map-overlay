@@ -337,7 +337,14 @@ export function scenarioNotices(s: Scenario) {
 const SET_FILES = import.meta.glob<{
   mapName?: string;
   categories?: { id: string; name?: string; parentId?: string | null; color?: string }[];
-  nodes?: { categoryId: string; x: number; y: number; title?: string; description?: string }[];
+  nodes?: {
+    categoryId: string;
+    x: number;
+    y: number;
+    title?: string;
+    description?: string;
+    tint?: number;
+  }[];
 }>("../../../assets/object-sets/*.json", { import: "default" });
 
 export async function loadObjectSets(mapId: string): Promise<ObjectSet[] | null> {
@@ -361,6 +368,8 @@ export async function loadObjectSets(mapId: string): Promise<ObjectSet[] | null>
         y: n.y,
         t: n.title ?? "",
         d: n.description ?? "",
+        // a hidden cube's group colour, as validate_objects passes it on
+        ...(n.tint !== undefined ? { g: n.tint } : {}),
       })),
     },
   ];

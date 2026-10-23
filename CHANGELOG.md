@@ -30,6 +30,12 @@ changes are left out unless they change how the app is installed, run or updated
 - The route editor's Map objects fold: the arrow beside a group hides its categories, and each map
   remembers which groups you folded.
 
+### Changed
+
+- The hidden cubes are coloured by group. Each group is the set of spots one cube can appear
+  at, so the cubes of one colour in an area are one cube to look for; groups side by side never
+  share a colour. Over the game the ring around a cube takes its colour too.
+
 ### Fixed
 
 - Artifact Siege, Siege Bosses and Guardian General Nahma on the Global servers counted down to

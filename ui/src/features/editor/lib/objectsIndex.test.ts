@@ -148,6 +148,21 @@ describe("buildIndex, the cubes above and below the ground", () => {
     expect(points.map((p) => p.level)).toEqual([1, -1, undefined]);
     expect(points[2]).not.toHaveProperty("level");
   });
+
+  it("keeps a cube's group colour where the set gives one", () => {
+    const tinted: ObjectSet[] = [
+      {
+        ...sets[0]!,
+        nodes: [
+          { ...at("hidden-cube-altgard", 10, 10), g: 0 },
+          { ...at("hidden-cube-altgard", 20, 20), g: 4 },
+          at("hidden-cube-altgard", 30, 30),
+        ],
+      },
+    ];
+
+    expect(buildIndex(tinted, SIZE).points.map((p) => p.tint)).toEqual([0, 4, undefined]);
+  });
 });
 
 describe("buildIndex colour inheritance", () => {

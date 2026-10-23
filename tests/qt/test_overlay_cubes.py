@@ -14,7 +14,7 @@ from PySide6.QtGui import QColor, QImage, QPainter
 from PySide6.QtWidgets import QApplication
 
 from map_overlay.qt.overlay import OverlayWindow
-from map_overlay.store.objects import cube_points
+from map_overlay.store.objects import cube_points, cube_tints
 
 SIZE = 200
 CUBE = (60.0, 60.0)
@@ -106,13 +106,32 @@ def test_cube_points_are_the_hidden_cubes_in_map_pixels() -> None:
             "categories": [{"id": "hidden-cube-verteron"}, {"id": "teleports"}],
             "nodes": [
                 {"c": "hidden-cube-verteron", "x": 25.0, "y": 50.0},
-                {"c": "hidden-cube-verteron", "x": 50.0, "y": 25.0, "l": -1},
+                {"c": "hidden-cube-verteron", "x": 50.0, "y": 25.0, "l": -1, "g": 2},
                 {"c": "teleports", "x": 10.0, "y": 10.0},
             ],
         }
     ]
 
-    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0), (2048.0, 512.0, -1)]
+    assert cube_points(sets, (4096, 2048)) == [(1024.0, 1024.0, 0, 0), (2048.0, 512.0, -1, 2)]
+
+
+def test_a_cube_is_painted_in_its_group_s_tint(overlay: OverlayWindow) -> None:
+    sky = QColor(cube_tints()[2]["left"])
+    overlay.set_cubes([(*CUBE, 0, 2)], 0)
+
+    # the left face, below and left of the middle
+    face = frame(overlay).pixelColor(int(CUBE[0] - 4), int(CUBE[1] + 4))
+
+    assert (face.red(), face.green(), face.blue()) == (sky.red(), sky.green(), sky.blue())
+
+
+def test_a_tint_past_the_palette_is_painted_coral(overlay: OverlayWindow) -> None:
+    coral = QColor(cube_tints()[0]["left"])
+    overlay.set_cubes([(*CUBE, 0, 99)], 0)
+
+    face = frame(overlay).pixelColor(int(CUBE[0] - 4), int(CUBE[1] + 4))
+
+    assert (face.red(), face.green(), face.blue()) == (coral.red(), coral.green(), coral.blue())
 
 
 # Where the arrow beside the cube falls: right of it, at its top corner for up, its bottom for down.

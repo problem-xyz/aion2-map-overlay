@@ -36,8 +36,10 @@ a = Analysis(  # noqa: F821
         (str(ROOT / "assets" / "maps"), "assets/maps"),  # the two bundled maps, ~11 MB
         # their object sets, ~1.4 MB; the README in that folder is for the repository only
         *((str(p), "assets/object-sets") for p in (ROOT / "assets" / "object-sets").glob("*.json")),
-        # the drawings of the gathering resources, which the overlay draws them by
+        # the drawings of the gathering resources and the cube groups' colours, which the
+        # overlay draws them by
         (str(ROOT / "assets" / "marks" / "resources.json"), "assets/marks"),
+        (str(ROOT / "assets" / "marks" / "cubes.json"), "assets/marks"),
         # the pets, their monsters, spots and portraits, which the overlay draws the picked ones by
         *(
             (str(p), "assets/pets")

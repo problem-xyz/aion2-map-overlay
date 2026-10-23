@@ -13,6 +13,8 @@
 
 import type { MarkerIcon } from "@/shared/backend/contract";
 
+import cubeTints from "../../../../assets/marks/cubes.json";
+
 import { isResourceIcon, resourceLayers, type ResourceIconName } from "./resourceMarks";
 
 type DrawnIconName = "trace" | "teleport" | "teleportElyos" | "seal" | "cube";
@@ -89,8 +91,35 @@ const RIGHT: [Vec, Vec, Vec] = [
   [0, 9.6],
 ];
 const FACES = [TOP, LEFT, RIGHT];
-const CUBE_INK = "#3a0c08";
-const CUBE_WHEEL = "#ffd6cb";
+
+/** A cube group's colours, out of assets/marks/cubes.json, which the overlay paints by too. */
+interface CubeTint {
+  top: string;
+  left: string;
+  right: string;
+  wheel: string;
+  ink: string;
+}
+
+const CUBE_TINTS: readonly CubeTint[] = cubeTints.tints;
+
+/**
+ * The hidden cube in one of the tints its group can wear (the `g` of its node), the first, coral,
+ * the game's own: the lit top palest, the far side darkest, a spoked wheel on each face.
+ */
+function cubeLayers(tint: number): readonly IconLayer[] {
+  const t = CUBE_TINTS[tint] ?? CUBE_TINTS[0]!;
+  return [
+    { d: "M12 2.5L20.5 7.2L12 11.9L3.5 7.2Z", fill: t.top },
+    { d: "M3.5 7.2L12 11.9V21.5L3.5 16.8Z", fill: t.left },
+    { d: "M20.5 7.2L12 11.9V21.5L20.5 16.8Z", fill: t.right },
+    { d: FACES.map((f) => faceSpokes(...f, 0.3, 3)).join(""), stroke: t.wheel, width: 0.7 },
+    { d: FACES.map((f) => faceRing(...f, 0.32)).join(""), stroke: t.wheel, width: 1 },
+    { d: FACES.map((f) => faceRing(...f, 0.1)).join(""), fill: t.wheel },
+    { d: "M3.5 7.2L12 11.9L20.5 7.2M12 11.9V21.5", stroke: t.ink, width: 0.9 },
+    { d: "M12 2.5L20.5 7.2V16.8L12 21.5L3.5 16.8V7.2Z", stroke: t.ink, width: 1.5 },
+  ];
+}
 
 const ICONS: Record<DrawnIconName | QuestIconName, readonly IconLayer[]> = {
   // a pale feather, quill to the lower left
@@ -159,17 +188,8 @@ const ICONS: Record<DrawnIconName | QuestIconName, readonly IconLayer[]> = {
     { d: "M10.55 18.9a1.45 1.45 0 1 0 2.9 0a1.45 1.45 0 1 0-2.9 0Z", fill: "#f3cd62" },
   ],
   // a coral cube seen from above a corner, a spoked wheel on each of its three faces, as the
-  // game's red hidden cube: the lit top palest, the far side darkest
-  cube: [
-    { d: "M12 2.5L20.5 7.2L12 11.9L3.5 7.2Z", fill: "#f4a08c" },
-    { d: "M3.5 7.2L12 11.9V21.5L3.5 16.8Z", fill: "#d9624f" },
-    { d: "M20.5 7.2L12 11.9V21.5L20.5 16.8Z", fill: "#a83a2f" },
-    { d: FACES.map((f) => faceSpokes(...f, 0.3, 3)).join(""), stroke: CUBE_WHEEL, width: 0.7 },
-    { d: FACES.map((f) => faceRing(...f, 0.32)).join(""), stroke: CUBE_WHEEL, width: 1 },
-    { d: FACES.map((f) => faceRing(...f, 0.1)).join(""), fill: CUBE_WHEEL },
-    { d: "M3.5 7.2L12 11.9L20.5 7.2M12 11.9V21.5", stroke: CUBE_INK, width: 0.9 },
-    { d: "M12 2.5L20.5 7.2V16.8L12 21.5L3.5 16.8V7.2Z", stroke: CUBE_INK, width: 1.5 },
-  ],
+  // game's red hidden cube; on the map each group's cubes wear their own tint (cubeSprite)
+  cube: cubeLayers(0),
   // a yellow four-pointed star, a main quest, a lighter one inside it for the gem's face
   questMain: [
     { d: STAR, fill: "#f2b544", stroke: "#3a2a06", width: 1.2 },
@@ -199,7 +219,20 @@ export function iconSprite(
   px: number,
   ratio: number,
 ): HTMLCanvasElement | null {
-  const key = `${name}@${px}@${ratio}`;
+  return sprite(`${name}@${px}@${ratio}`, () => iconLayers(name), px, ratio);
+}
+
+/** A hidden cube in its group's tint, as iconSprite draws the coral one; tint 0 is that one. */
+export function cubeSprite(tint: number, px: number, ratio: number): HTMLCanvasElement | null {
+  return sprite(`cube#${tint}@${px}@${ratio}`, () => cubeLayers(tint), px, ratio);
+}
+
+function sprite(
+  key: string,
+  layers: () => readonly IconLayer[],
+  px: number,
+  ratio: number,
+): HTMLCanvasElement | null {
   const known = sprites.get(key);
   if (known !== undefined) return known;
   const side = Math.ceil(px * ratio);
@@ -214,7 +247,7 @@ export function iconSprite(
   ctx.scale(side / 24, side / 24);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  for (const layer of iconLayers(name)) {
+  for (const layer of layers()) {
     const path = new Path2D(layer.d);
     if (layer.fill) {
       ctx.fillStyle = layer.fill;

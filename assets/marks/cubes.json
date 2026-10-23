@@ -1,0 +1,11 @@
+{
+  "tints": [
+    { "id": "coral", "top": "#f4a08c", "left": "#d9624f", "right": "#a83a2f", "wheel": "#ffd6cb", "ink": "#3a0c08", "ring": "#ff7a5c" },
+    { "id": "gold", "top": "#ffe39a", "left": "#f2b544", "right": "#b8801a", "wheel": "#fff4d1", "ink": "#3a2a06", "ring": "#ffc94d" },
+    { "id": "sky", "top": "#b4dcff", "left": "#5aa2ee", "right": "#2f68ad", "wheel": "#e2f1ff", "ink": "#0b2238", "ring": "#6fb6ff" },
+    { "id": "violet", "top": "#d9c4ff", "left": "#9a72e8", "right": "#6443ab", "wheel": "#efe6ff", "ink": "#1f1238", "ring": "#b18cff" },
+    { "id": "pink", "top": "#ffbfe2", "left": "#e85aa8", "right": "#a52f6d", "wheel": "#ffe6f3", "ink": "#3a0a24", "ring": "#ff70bf" },
+    { "id": "teal", "top": "#a6f2ea", "left": "#2fc4b8", "right": "#1a857c", "wheel": "#dcfbf7", "ink": "#06302c", "ring": "#3fe0d2" },
+    { "id": "silver", "top": "#ffffff", "left": "#d3d9e3", "right": "#97a1b1", "wheel": "#ffffff", "ink": "#1c2230", "ring": "#eef2f8" }
+  ]
+}
